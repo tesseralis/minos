@@ -4,6 +4,8 @@ import { css } from 'glamor'
 import { nodes, links } from './minos.json'
 import { lineRadial, curveNatural } from 'd3-shape'
 
+import Mino from './Mino'
+
 const tau = 2 * Math.PI
 const canvasLength = 500
 const ringRadiusBase = 500
@@ -37,11 +39,6 @@ function getCoords(turn, gen) {
   return [rad * Math.sin(turn * tau), rad * -Math.cos(turn * tau)]
 }
 
-function blockSize(gen) {
-  return 40
-  // return 7 * (10 - gen)
-}
-
 function radiusAndAngle([gen, i]) {
   const radius = ringRadius(gen)
   const angle = (i / nodes[gen].length) * tau
@@ -71,42 +68,6 @@ const curve = lineRadial()
   .radius(d => d.radius)
   .angle(d => d.angle)
   .curve(curveNatural)
-
-const colors = [
-  '',
-  'tomato',
-  'darkorange',
-  'gold',
-  'lightgreen',
-  'lightskyblue',
-  'plum',
-]
-
-function Mino({ mino, cx, cy, onHover }) {
-  const size = blockSize(mino.length)
-  const xAvg = avg(...mino.map(c => c[0]))
-  const yAvg = avg(...mino.map(c => c[1]))
-
-  const color = colors[mino.length]
-
-  return (
-    <g onMouseOver={onHover}>
-      {mino.map(([x, y], i) => {
-        return (
-          <rect
-            key={i}
-            x={cx + (x - xAvg) * size - size / 2}
-            y={cy + (y - yAvg) * size - size / 2}
-            width={size}
-            height={size}
-            stroke="slategray"
-            fill={color}
-          />
-        )
-      })}
-    </g>
-  )
-}
 
 function Orbital({ minos, gen, onHover }) {
   const radius = ringRadius(gen)
@@ -202,24 +163,21 @@ class Polyominoes extends Component {
   }
 }
 
-class App extends Component {
-  render() {
-    const style = css({
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-    })
-    return (
-      <div {...style}>
-        <Polyominoes minos={nodes} linkData={links} />
-      </div>
-    )
-  }
-}
+export default function App() {
+  const style = css({
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+  })
 
-export default App
+  return (
+    <div {...style}>
+      <Polyominoes minos={nodes} linkData={links} />
+    </div>
+  )
+}
