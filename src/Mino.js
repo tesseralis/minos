@@ -1,5 +1,6 @@
 import React from 'react'
 import { getOutline } from './mino/draw'
+import { getPoints } from './mino/mino'
 
 const colors = [
   '',
@@ -9,7 +10,13 @@ const colors = [
   'lightgreen',
   'lightskyblue',
   'plum',
+  'tan',
+  'grey',
 ]
+
+function getBlockSize(gen) {
+  return 40 * (9 - gen)
+}
 
 function getCenter(points) {
   const xs = points.map(p => p[0])
@@ -21,19 +28,19 @@ function getCenter(points) {
   return [(minX + maxX) / 2, (minY + maxY) / 2]
 }
 
-export default function Mino({ mino, cx, cy, onHover }) {
-  const color = colors[mino.length]
-  const outline = getOutline(mino)
+export default function Mino({ mino, cx, cy }) {
+  const minoPoints = [...getPoints(mino)]
+  const color = colors[minoPoints.length]
+  const outline = getOutline(minoPoints)
 
-  const blockSize = 50
+  const blockSize = getBlockSize(minoPoints.length)
   const scaledPoints = outline.map(([x, y]) => [x * blockSize, y * blockSize])
   const [avgX, avgY] = getCenter(scaledPoints)
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
-
   const pointStr = points.map(x => x.join(',')).join(' ')
 
   return (
-    <g onMouseOver={onHover}>
+    <g>
       <polygon points={pointStr} stroke="slategray" fill={color} />
     </g>
   )
