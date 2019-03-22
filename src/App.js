@@ -8,7 +8,7 @@ import { generateGraph } from './mino/generate'
 import Mino from './Mino'
 
 const tau = 2 * Math.PI
-const canvasLength = 1000
+const canvasLength = 1200
 const ringRadiusBase = 4000
 const numGenerations = 8
 
@@ -37,8 +37,12 @@ function ringRadius(gen) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
 
+const scale = 1 / 3
+
+// FIXME get use `radiusAndAngle`
 function getCoords(turn, gen) {
   const rad = ringRadius(gen)
+  turn = turn * scale + (1 - scale) / 2
   return [rad * Math.sin(turn * tau), rad * -Math.cos(turn * tau)]
 }
 
@@ -46,11 +50,9 @@ const indices = {}
 function getIndex(mino) {
   if (!indices[mino]) {
     const gen = getSize(mino) - 1
-    console.log('index of', mino.toString(2), 'is', gen)
     if (!nodes[gen]) {
       throw new Error('gen not found')
     }
-    console.log(gen)
     const pos = nodes[gen].indexOf(mino)
     indices[mino] = [gen, pos]
   }
@@ -59,7 +61,11 @@ function getIndex(mino) {
 
 function radiusAndAngle([gen, i]) {
   const radius = ringRadius(gen)
-  const angle = (i / nodes[gen].length) * tau
+  const total = nodes[gen].length
+  const denom = total === 1 ? total : total - 1
+  const turn = i / denom
+  const scaledTurn = turn * scale + (1 - scale) / 2
+  const angle = scaledTurn * tau
   return { radius, angle }
 }
 
@@ -88,12 +94,11 @@ const curve = lineRadial()
   .curve(curveNatural)
 
 function Orbital({ minos, gen }) {
-  const radius = ringRadius(gen)
+  const total = minos.length > 1 ? minos.length - 1 : minos.length
   return (
     <g>
-      <circle r={radius} fill="none" stroke="black" />
       {minos.map((mino, i) => {
-        const [x, y] = getCoords(i / minos.length, gen)
+        const [x, y] = getCoords(i / total, gen)
         return <Mino key={i} cx={x} cy={y} mino={mino} />
       })}
     </g>
@@ -101,9 +106,8 @@ function Orbital({ minos, gen }) {
 }
 
 function Svg({ children }) {
-  const viewLength = ringRadius(numGenerations - 1) + 20
-  const viewBox = `${-viewLength} ${-viewLength} ${2 * viewLength} ${2 *
-    viewLength}`
+  const viewLength = ringRadius(numGenerations - 1) + 50
+  const viewBox = `${-viewLength} ${-500} ${2 * viewLength} ${2 * viewLength}`
   return (
     <svg width={canvasLength} height={canvasLength} viewBox={viewBox}>
       {children}
@@ -116,7 +120,7 @@ function MinoLink({ link }) {
     <path
       d={curve(spline(link))}
       fill="none"
-      stroke="black"
+      stroke="grey"
       stroke-width="5px"
     />
   )
