@@ -18,14 +18,16 @@ function getBlockSize(gen) {
   return 20 * (9 - gen)
 }
 
+function center(points) {
+  const min = Math.min(...points)
+  const max = Math.max(...points)
+  return (min + max) / 2
+}
+
 function getCenter(points) {
   const xs = points.map(p => p[0])
   const ys = points.map(p => p[1])
-  const minX = Math.min(...xs)
-  const maxX = Math.max(...xs)
-  const minY = Math.min(...ys)
-  const maxY = Math.max(...ys)
-  return [(minX + maxX) / 2, (minY + maxY) / 2]
+  return [center(xs), center(ys)]
 }
 
 export default function Mino({ mino, cx, cy }) {

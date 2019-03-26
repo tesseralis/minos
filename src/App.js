@@ -12,6 +12,9 @@ const canvasLength = 1200
 const ringRadiusBase = 4000
 const numGenerations = 8
 
+const minScale = 1 / 12
+const maxScale = 1 / 2
+
 const { nodes, links } = generateGraph(numGenerations)
 
 function sum(arr) {
@@ -51,8 +54,6 @@ function getIndex(mino) {
 }
 
 // const scale = 5 / 12
-const minScale = 1 / 12
-const maxScale = 1 / 2
 
 function radiusAndAngle([gen, i]) {
   const radius = ringRadius(gen)
