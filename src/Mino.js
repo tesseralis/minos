@@ -4,14 +4,14 @@ import { getPoints } from './mino/mino'
 
 const colors = [
   '',
+  'grey',
+  'tan',
   'tomato',
   'darkorange',
   'gold',
   'lightgreen',
   'lightskyblue',
   'plum',
-  'tan',
-  'grey',
 ]
 
 function getBlockSize(gen) {

@@ -37,15 +37,6 @@ function ringRadius(gen) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
 
-const scale = 1 / 3
-
-// FIXME get use `radiusAndAngle`
-function getCoords(turn, gen) {
-  const rad = ringRadius(gen)
-  turn = turn * scale + (1 - scale) / 2
-  return [rad * Math.sin(turn * tau), rad * -Math.cos(turn * tau)]
-}
-
 const indices = {}
 function getIndex(mino) {
   if (!indices[mino]) {
@@ -59,14 +50,23 @@ function getIndex(mino) {
   return indices[mino]
 }
 
+// const scale = 5 / 12
+const minScale = 1 / 12
+const maxScale = 1 / 2
+
 function radiusAndAngle([gen, i]) {
   const radius = ringRadius(gen)
   const total = nodes[gen].length
-  const denom = total === 1 ? total : total - 1
-  const turn = i / denom
+  const turn = total === 1 ? 0.5 : i / (total - 1)
+  const scale = minScale + (gen / (numGenerations - 1)) * (maxScale - minScale)
   const scaledTurn = turn * scale + (1 - scale) / 2
   const angle = scaledTurn * tau
   return { radius, angle }
+}
+
+function getCoords(gen, i) {
+  const { radius, angle } = radiusAndAngle([gen, i])
+  return [radius * Math.sin(angle), radius * -Math.cos(angle)]
 }
 
 function interpolatePolar(a, b, n = 0) {
@@ -94,11 +94,10 @@ const curve = lineRadial()
   .curve(curveNatural)
 
 function Orbital({ minos, gen }) {
-  const total = minos.length > 1 ? minos.length - 1 : minos.length
   return (
     <g>
       {minos.map((mino, i) => {
-        const [x, y] = getCoords(i / total, gen)
+        const [x, y] = getCoords(gen, i)
         return <Mino key={i} cx={x} cy={y} mino={mino} />
       })}
     </g>

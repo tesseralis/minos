@@ -7,6 +7,8 @@ import {
   getWidth,
   getPoints,
 } from './mino'
+import uniqWith from 'lodash/uniqWith'
+import isEqual from 'lodash/isEqual'
 
 import { getTransforms } from './transform'
 
@@ -23,6 +25,8 @@ function contains(mino, [i, j]) {
 }
 
 function* nbrs(i, j) {
+  // TODO it turns out this order greatly impacts the order of the minos
+  // either standardize it or sort the minos independently
   yield [i + 1, j]
   yield [i - 1, j]
   yield [i, j + 1]
@@ -149,5 +153,5 @@ export function generateGraph(n) {
     nodes.push(currentGen)
     currentGen = nextGen
   }
-  return { nodes, links }
+  return { nodes, links: uniqWith(links, isEqual) }
 }
