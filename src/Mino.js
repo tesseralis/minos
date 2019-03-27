@@ -15,7 +15,7 @@ const colors = [
 ]
 
 function getBlockSize(gen) {
-  return 20 * (9 - gen)
+  return 15 * (9 - gen)
 }
 
 function center(points) {

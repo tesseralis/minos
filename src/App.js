@@ -9,11 +9,11 @@ import Mino from './Mino'
 
 const tau = 2 * Math.PI
 const canvasLength = 1200
-const ringRadiusBase = 4000
+const ringRadiusBase = 2000
 const numGenerations = 8
 
 const minScale = 1 / 12
-const maxScale = 1 / 2
+const maxScale = 5 / 7
 
 const { nodes, links } = generateGraph(numGenerations)
 
@@ -52,8 +52,6 @@ function getIndex(mino) {
   }
   return indices[mino]
 }
-
-// const scale = 5 / 12
 
 function radiusAndAngle([gen, i]) {
   const radius = ringRadius(gen)
@@ -106,8 +104,9 @@ function Orbital({ minos, gen }) {
 }
 
 function Svg({ children }) {
-  const viewLength = ringRadius(numGenerations - 1) + 50
-  const viewBox = `${-viewLength} ${-500} ${2 * viewLength} ${2 * viewLength}`
+  const viewLength = ringRadius(numGenerations - 1) + 500
+  const viewBox = `${-viewLength} ${-viewLength} ${2 * viewLength} ${2 *
+    viewLength}`
   return (
     <svg width={canvasLength} height={canvasLength} viewBox={viewBox}>
       {children}
@@ -140,9 +139,6 @@ function Polyominoes({ minos, linkData }) {
 }
 
 export default function App() {
-  for (let [src, tgt] of links) {
-    console.log(src.toString(2), tgt.toString(2))
-  }
   const style = css({
     // position: 'fixed',
     // top: 0,
@@ -152,6 +148,7 @@ export default function App() {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+    overflowX: 'scroll',
   })
 
   return (
