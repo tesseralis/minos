@@ -12,8 +12,8 @@ const canvasLength = 1200
 const ringRadiusBase = 2000
 const numGenerations = 8
 
-const minScale = 1 / 12
-const maxScale = 5 / 7
+const minScale = 1 / 6
+const maxScale = 1 / 2
 
 const { nodes, links } = generateGraph(numGenerations)
 
@@ -105,8 +105,7 @@ function Orbital({ minos, gen }) {
 
 function Svg({ children }) {
   const viewLength = ringRadius(numGenerations - 1) + 500
-  const viewBox = `${-viewLength} ${-viewLength} ${2 * viewLength} ${2 *
-    viewLength}`
+  const viewBox = `${-viewLength} ${-500} ${2 * viewLength} ${2 * viewLength}`
   return (
     <svg width={canvasLength} height={canvasLength} viewBox={viewBox}>
       {children}
