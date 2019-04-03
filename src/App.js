@@ -140,15 +140,15 @@ const Polyominoes = memo(function Polyominoes({ minos, linkData }) {
 
 export default function App() {
   const style = css({
-    // position: 'fixed',
-    // top: 0,
-    // left: 0,
-    // right: 0,
-    // bottom: 0,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    overflowX: 'scroll',
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    // display: 'flex',
+    // alignItems: 'center',
+    // justifyContent: 'center',
+    // overflowX: 'scroll',
   })
 
   return (

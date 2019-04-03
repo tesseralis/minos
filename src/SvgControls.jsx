@@ -1,4 +1,5 @@
-import React, { useCallback, useState, useRef } from 'react'
+import React, { useEffect, useCallback, useState, useRef } from 'react'
+import { css } from 'glamor'
 
 // https://css-tricks.com/creating-a-panning-effect-for-svg/
 
@@ -17,17 +18,28 @@ function getPointFromEvent(event) {
   return point
 }
 
-export default function SvgControls({ children, ...svgProps }) {
+export default function SvgControls({ children }) {
   const svg = useRef()
   const isPointerDown = useRef(false)
   const pointerOrigin = useRef({ x: 0, y: 0 })
-  const len = 1000
+  const len = 1200
   const [viewBox, setViewBox] = useState({
     x: -len,
-    y: -len,
+    y: -100,
     width: 2 * len,
-    height: 2 * len,
+    height: 0,
   })
+
+  useEffect(() => {
+    if (svg.current) {
+      const rect = svg.current.getBoundingClientRect()
+      const aspectRatio = rect.width / rect.height
+      setViewBox(viewBox => ({
+        ...viewBox,
+        height: viewBox.width / aspectRatio,
+      }))
+    }
+  }, [svg.current])
 
   const [newViewBox, setNewViewBox] = useState({
     x: viewBox.x,
@@ -63,17 +75,20 @@ export default function SvgControls({ children, ...svgProps }) {
     viewBox.height
   }`
 
+  const style = css({
+    width: '100%',
+    height: '100%',
+  })
+
   return (
     <svg
-      width={1200}
-      height={1200}
+      {...style}
       ref={svg}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}
       onPointerLeave={onPointerUp}
       viewBox={viewBoxStr}
-      {...svgProps}
     >
       {children}
     </svg>
