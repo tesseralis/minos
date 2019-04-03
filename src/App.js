@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { memo } from 'react'
 import { css } from 'glamor'
 // TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
@@ -6,10 +6,11 @@ import { lineRadial, curveNatural } from 'd3-shape'
 import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
 import Mino from './Mino'
+import SvgControls from './SvgControls'
 
 const tau = 2 * Math.PI
 const canvasLength = 1200
-const ringRadiusBase = 2000
+const ringRadiusBase = 600
 const numGenerations = 8
 
 const minScale = 1 / 6
@@ -119,23 +120,23 @@ function MinoLink({ link }) {
       d={curve(spline(link))}
       fill="none"
       stroke="grey"
-      stroke-width="5px"
+      stroke-width="0.5px"
     />
   )
 }
 
-function Polyominoes({ minos, linkData }) {
+const Polyominoes = memo(function Polyominoes({ minos, linkData }) {
   return (
-    <Svg>
+    <>
       {linkData.map((link, i) => {
         return <MinoLink link={link} key={i} />
       })}
       {minos.map((minoGen, i) => {
         return <Orbital minos={minoGen} gen={i} key={i} />
       })}
-    </Svg>
+    </>
   )
-}
+})
 
 export default function App() {
   const style = css({
@@ -152,7 +153,9 @@ export default function App() {
 
   return (
     <div {...style}>
-      <Polyominoes minos={nodes} linkData={links} />
+      <SvgControls>
+        <Polyominoes minos={nodes} linkData={links} />
+      </SvgControls>
     </div>
   )
 }
