@@ -4,8 +4,8 @@ import { css } from 'glamor'
 // https://css-tricks.com/creating-a-panning-effect-for-svg/
 
 // This function returns an object with X & Y values from the pointer event
-function getPointFromEvent(event) {
-  var point = { x: 0, y: 0 }
+function getPointFromEvent(event, svg) {
+  const point = svg.createSVGPoint()
   // If event is triggered by a touch event, we get the position of the first finger
   if (event.targetTouches) {
     point.x = event.targetTouches[0].clientX
@@ -15,13 +15,18 @@ function getPointFromEvent(event) {
     point.y = event.clientY
   }
 
-  return point
+  const invertedSVGMatrix = svg.getScreenCTM().inverse()
+  return point.matrixTransform(invertedSVGMatrix)
 }
 
 export default function SvgControls({ children }) {
   const svg = useRef()
   const isPointerDown = useRef(false)
   const pointerOrigin = useRef({ x: 0, y: 0 })
+
+  const [scale, setScale] = useState(1)
+
+  // TODO generalize
   const len = 1200
   const [viewBox, setViewBox] = useState({
     x: -len,
@@ -30,6 +35,7 @@ export default function SvgControls({ children }) {
     height: 0,
   })
 
+  // Set the viewbox to have the same aspect ratio as the canvas
   useEffect(() => {
     if (svg.current) {
       const rect = svg.current.getBoundingClientRect()
@@ -41,39 +47,36 @@ export default function SvgControls({ children }) {
     }
   }, [svg.current])
 
-  const [newViewBox, setNewViewBox] = useState({
-    x: viewBox.x,
-    y: viewBox.y,
-  })
-
   const onPointerDown = useCallback(e => {
     isPointerDown.current = true
-    pointerOrigin.current = getPointFromEvent(e)
+    pointerOrigin.current = getPointFromEvent(e, svg.current)
   }, [])
 
-  const onPointerMove = useCallback(
-    e => {
-      if (!isPointerDown.current) {
-        return
-      }
-      e.preventDefault()
-      const pointerPosition = getPointFromEvent(e)
-      const ratio = viewBox.width / svg.current.getBoundingClientRect().width
-      setNewViewBox({
-        x: viewBox.x - (pointerPosition.x - pointerOrigin.current.x) * ratio,
-        y: viewBox.y - (pointerPosition.y - pointerOrigin.current.y) * ratio,
-      })
-    },
-    [viewBox],
-  )
+  const onPointerMove = useCallback(e => {
+    if (!isPointerDown.current) {
+      return
+    }
+    e.preventDefault()
+    const pointerPosition = getPointFromEvent(e, svg.current)
+    setViewBox(viewBox => ({
+      ...viewBox,
+      x: viewBox.x - (pointerPosition.x - pointerOrigin.current.x),
+      y: viewBox.y - (pointerPosition.y - pointerOrigin.current.y),
+    }))
+  }, [])
 
   const onPointerUp = useCallback(() => {
     isPointerDown.current = false
-    setViewBox(viewBox => ({ ...viewBox, ...newViewBox }))
-  }, [newViewBox])
-  const viewBoxStr = `${newViewBox.x} ${newViewBox.y} ${viewBox.width} ${
+  }, [])
+  const viewBoxStr = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${
     viewBox.height
   }`
+
+  useEffect(() => {
+    window.addEventListener('wheel', e => {
+      setScale(scale => scale + e.deltaY / 100)
+    })
+  }, [])
 
   const style = css({
     width: '100%',

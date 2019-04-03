@@ -9,7 +9,6 @@ import Mino from './Mino'
 import SvgControls from './SvgControls'
 
 const tau = 2 * Math.PI
-const canvasLength = 1200
 const ringRadiusBase = 600
 const numGenerations = 8
 
@@ -101,16 +100,6 @@ function Orbital({ minos, gen }) {
         return <Mino key={i} cx={x} cy={y} mino={mino} />
       })}
     </g>
-  )
-}
-
-function Svg({ children }) {
-  const viewLength = ringRadius(numGenerations - 1) + 500
-  const viewBox = `${-viewLength} ${-500} ${2 * viewLength} ${2 * viewLength}`
-  return (
-    <svg width={canvasLength} height={canvasLength} viewBox={viewBox}>
-      {children}
-    </svg>
   )
 }
 
