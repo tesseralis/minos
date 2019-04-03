@@ -72,11 +72,21 @@ export default function SvgControls({ children }) {
     viewBox.height
   }`
 
-  useEffect(() => {
-    window.addEventListener('wheel', e => {
-      setScale(scale => scale + e.deltaY / 100)
-    })
-  }, [])
+  // useEffect(() => {
+  //   window.addEventListener('wheel', e => {
+  //     e.preventDefault()
+  //     const delta = e.deltaY / 100
+  //     setScale(scale => scale + delta)
+
+  //     setViewBox(viewBox => {
+  //       return {
+  //         ...viewBox,
+  //         width: viewBox.width - delta,
+  //         height: viewBox.height - delta,
+  //       }
+  //     })
+  //   })
+  // }, [])
 
   const style = css({
     width: '100%',
