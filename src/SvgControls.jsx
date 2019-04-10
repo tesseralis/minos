@@ -24,7 +24,7 @@ export default function SvgControls({ children }) {
   const isPointerDown = useRef(false)
   const pointerOrigin = useRef({ x: 0, y: 0 })
 
-  const [scale, setScale] = useState(1)
+  // const [scale, setScale] = useState(1)
 
   // TODO generalize
   const len = 1200
@@ -72,21 +72,22 @@ export default function SvgControls({ children }) {
     viewBox.height
   }`
 
-  // useEffect(() => {
-  //   window.addEventListener('wheel', e => {
-  //     e.preventDefault()
-  //     const delta = e.deltaY / 100
-  //     setScale(scale => scale + delta)
+  useEffect(() => {
+    window.addEventListener('wheel', e => {
+      e.preventDefault()
+      const delta = 1 + (e.deltaY > 0 ? 1 : -1) * 0.05
+      const pointerPosition = getPointFromEvent(e, svg.current)
 
-  //     setViewBox(viewBox => {
-  //       return {
-  //         ...viewBox,
-  //         width: viewBox.width - delta,
-  //         height: viewBox.height - delta,
-  //       }
-  //     })
-  //   })
-  // }, [])
+      setViewBox(viewBox => {
+        return {
+          x: pointerPosition.x + delta * (viewBox.x - pointerPosition.x),
+          y: pointerPosition.y + delta * (viewBox.y - pointerPosition.y),
+          width: viewBox.width * delta,
+          height: viewBox.height * delta,
+        }
+      })
+    })
+  }, [])
 
   const style = css({
     width: '100%',
