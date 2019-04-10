@@ -19,23 +19,22 @@ function getPointFromEvent(event, svg) {
   return point.matrixTransform(invertedSVGMatrix)
 }
 
-const minScale = 1
-const maxScale = 3
-
-export default function SvgControls({ children }) {
+export default function SvgControls({
+  children,
+  initialWidth,
+  zoomMin,
+  zoomMax,
+  scaleFactor = 0.05,
+}) {
   const svg = useRef()
   const isPointerDown = useRef(false)
   const pointerOrigin = useRef({ x: 0, y: 0 })
   const scale = useRef(1)
 
-  // const [scale, setScale] = useState(1)
-
-  // TODO generalize
-  const len = 3200
   const [viewBox, setViewBox] = useState({
-    x: -len,
+    x: -initialWidth / 2,
     y: -100,
-    width: 2 * len,
+    width: initialWidth,
     height: 0,
   })
 
@@ -79,11 +78,11 @@ export default function SvgControls({ children }) {
   useEffect(() => {
     window.addEventListener('wheel', e => {
       e.preventDefault()
-      let delta = 1 + (e.deltaY > 0 ? 1 : -1) * 0.05
-      if (scale.current / delta >= maxScale) {
-        delta = scale.current / maxScale
-      } else if (scale.current / delta <= minScale) {
-        delta = scale.current / minScale
+      let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
+      if (scale.current / delta >= zoomMax) {
+        delta = scale.current / zoomMax
+      } else if (scale.current / delta <= zoomMin) {
+        delta = scale.current / zoomMin
       }
       // TODO deal with float issues
       scale.current /= delta

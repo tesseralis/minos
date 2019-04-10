@@ -11,6 +11,7 @@ import SvgControls from './SvgControls'
 const tau = 2 * Math.PI
 const ringRadiusBase = 600
 const numGenerations = 8
+const width = 6400
 
 const minScale = 1 / 6
 const maxScale = 1 / 2
@@ -134,15 +135,11 @@ export default function App() {
     left: 0,
     right: 0,
     bottom: 0,
-    // display: 'flex',
-    // alignItems: 'center',
-    // justifyContent: 'center',
-    // overflowX: 'scroll',
   })
 
   return (
     <div {...style}>
-      <SvgControls>
+      <SvgControls initialWidth={width} zoomMin={1} zoomMax={5}>
         <Polyominoes minos={nodes} linkData={links} />
       </SvgControls>
     </div>
