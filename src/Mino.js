@@ -36,7 +36,7 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
   const color = colors[minoPoints.length]
   const outline = getOutline(minoPoints)
 
-  const multiplier = hovered || selected ? 2 : 1
+  const multiplier = hovered ? 2 : 1
   const blockSize = getBlockSize(minoPoints.length) * multiplier
   const scaledPoints = outline.map(([x, y]) => [x * blockSize, y * blockSize])
   const [avgX, avgY] = getCenter(scaledPoints)

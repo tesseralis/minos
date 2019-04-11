@@ -1,4 +1,4 @@
-import React, { memo, useState, useMemo } from 'react'
+import React, { memo, useState, useMemo, useCallback } from 'react'
 import { css } from 'glamor'
 // TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
@@ -93,14 +93,14 @@ const curve = lineRadial()
   .angle(d => d.angle)
   .curve(curveNatural)
 
-function Orbital({ minos, gen, selected, onSelect }) {
+const Orbital = ({ minos, gen, selected, onSelect }) => {
   return (
     <>
       {minos.map((mino, i) => {
         const [x, y] = getCoords(gen, i)
         return (
           <Mino
-            selected={selected === mino}
+            selected={!!selected && selected.has(mino)}
             key={i}
             cx={x}
             cy={y}
@@ -128,20 +128,29 @@ const MinoLinks = memo(({ links, stroke }) => {
   )
 })
 
-function getSelectedLinks(mino) {
-  if (!mino) {
-    return []
-  }
-  const { parents, children } = meta[mino]
-  console.log('children', children)
-  return [...children, ...parents].map(relative => {
-    return [mino, relative]
-  })
-}
-
 const Polyominoes = memo(({ minos, linkData }) => {
   const [selected, setSelected] = useState(null)
-  const selectedLinks = useMemo(() => getSelectedLinks(selected), [selected])
+  const { parents, children } = meta[selected] || {}
+  const selectedLinks = selected
+    ? [...children, ...parents].map(relative => [selected, relative])
+    : []
+
+  const getSelected = useCallback(
+    gen => {
+      if (!selected) return null
+      const selectedGen = getSize(selected) - 1
+      if (gen === selectedGen) {
+        return new Set([selected])
+      } else if (gen === selectedGen - 1) {
+        return parents
+      } else if (gen === selectedGen + 1) {
+        return children
+      }
+      return null
+    },
+    [selected],
+  )
+
   return (
     <>
       <MinoLinks links={linkData} stroke="grey" />
@@ -152,7 +161,7 @@ const Polyominoes = memo(({ minos, linkData }) => {
             minos={minoGen}
             gen={i}
             key={i}
-            selected={selected}
+            selected={getSelected(i)}
             onSelect={setSelected}
           />
         )
