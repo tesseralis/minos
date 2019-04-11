@@ -1,9 +1,9 @@
-import React, { memo, useState } from 'react'
+import React, { memo, useState, useMemo } from 'react'
 import { css } from 'glamor'
 // TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
 
-import { getSize } from './mino/mino'
+import { getSize, printMino } from './mino/mino'
 import { generateGraph } from './mino/generate'
 import Mino from './Mino'
 import SvgControls from './SvgControls'
@@ -16,7 +16,7 @@ const width = 6400
 const minScale = 1 / 6
 const maxScale = 1 / 2
 
-const { nodes, links } = generateGraph(numGenerations)
+const { nodes, links, meta } = generateGraph(numGenerations)
 
 function sum(arr) {
   return arr.reduce((a, b) => a + b, 0)
@@ -45,6 +45,7 @@ const indices = {}
 function getIndex(mino) {
   if (!indices[mino]) {
     const gen = getSize(mino) - 1
+    printMino(mino)
     if (!nodes[gen]) {
       throw new Error('gen not found')
     }
@@ -113,32 +114,38 @@ function Orbital({ minos, gen, selected, onSelect }) {
   )
 }
 
-function MinoLink({ link }) {
-  return (
-    <path
-      d={curve(spline(link))}
-      fill="none"
-      stroke="grey"
-      strokeWidth="0.5px"
-    />
-  )
-}
-
-const MinoLinks = memo(({ links }) => {
+const MinoLinks = memo(({ links, stroke }) => {
   return (
     <>
-      {links.map((link, i) => {
-        return <MinoLink link={link} key={i} />
-      })}
+      {links.map(link => (
+        <path
+          d={curve(spline(link))}
+          fill="none"
+          stroke={stroke}
+          strokeWidth="0.5px"
+        />
+      ))}
     </>
   )
 })
 
-const Polyominoes = memo(function Polyominoes({ minos, linkData }) {
+function getSelectedLinks(mino) {
+  if (!mino) {
+    return []
+  }
+  const { parents, children } = meta[mino]
+  return [...children, ...parents].map(relative => {
+    return [mino, relative]
+  })
+}
+
+const Polyominoes = memo(({ minos, linkData }) => {
   const [selected, setSelected] = useState(null)
+  const selectedLinks = useMemo(() => getSelectedLinks(selected), [selected])
   return (
     <>
-      <MinoLinks links={linkData} />
+      <MinoLinks links={linkData} stroke="grey" />
+      {selected && <MinoLinks links={selectedLinks} stroke="red" />}
       {minos.map((minoGen, i) => {
         return (
           <Orbital

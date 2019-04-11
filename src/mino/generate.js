@@ -134,7 +134,8 @@ export function generateGraph(n) {
   // * (symmetry info)
   const meta = {
     [MONOMINO]: {
-      parents: [],
+      parents: new Set(),
+      children: new Set(),
     },
   }
   const equivalences = {}
@@ -143,17 +144,13 @@ export function generateGraph(n) {
     const nextGen = []
     const isLast = nodes.length === n - 1
     for (let mino of currentGen) {
-      if (!meta[mino]) {
-        meta[mino] = {}
-      }
-      if (!meta[mino].children) {
-        meta[mino].children = []
-      }
       for (let child of getChildren(mino)) {
         if (!!equivalences[child]) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
           const canonChild = equivalences[child]
+          meta[mino].children.add(canonChild)
+          meta[canonChild].parents.add(mino)
           if (!isLast) links.push([mino, canonChild])
         } else {
           // If it's a completely new mino, log its transforms
@@ -162,6 +159,11 @@ export function generateGraph(n) {
             equivalences[transform] = child
           }
           nextGen.push(child)
+          meta[mino].children.add(child)
+          meta[child] = {
+            children: new Set(),
+            parents: new Set([mino]),
+          }
           if (!isLast) links.push([mino, child])
         }
       }
@@ -169,5 +171,5 @@ export function generateGraph(n) {
     nodes.push(currentGen)
     currentGen = nextGen
   }
-  return { nodes, links: uniqWith(links, isEqual), equivalences }
+  return { nodes, links: uniqWith(links, isEqual), equivalences, meta }
 }
