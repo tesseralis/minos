@@ -154,7 +154,7 @@ const Polyominoes = memo(({ minos, linkData }) => {
     <>
       <MinoLinks links={linkData} stroke="grey" strokeWidth={0.5} />
       {selected && (
-        <MinoLinks links={selectedLinks} stroke="red" strokeWidth={2} />
+        <MinoLinks links={selectedLinks} stroke="steelblue" strokeWidth={2} />
       )}
       {minos.map((minoGen, i) => {
         return (

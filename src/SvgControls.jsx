@@ -3,6 +3,10 @@ import { css } from 'glamor'
 
 // https://css-tricks.com/creating-a-panning-effect-for-svg/
 
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value))
+}
+
 // This function returns an object with X & Y values from the pointer event
 function getPointFromEvent(event, svg) {
   const point = svg.createSVGPoint()
@@ -80,13 +84,8 @@ export default function SvgControls({
 
   const handleWheel = useCallback(e => {
     let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
-    if (scale.current / delta >= zoomMax) {
-      delta = scale.current / zoomMax
-    } else if (scale.current / delta <= zoomMin) {
-      delta = scale.current / zoomMin
-    }
-    // TODO deal with float issues
-    scale.current /= delta
+    delta = clamp(delta, scale.current / zoomMax, scale.current / zoomMin)
+    scale.current = clamp(scale.current / delta, zoomMin, zoomMax)
     const pointerPosition = getPointFromEvent(e, svg.current)
 
     setViewBox(viewBox => {

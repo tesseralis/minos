@@ -64,7 +64,7 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
   })
 
   const svgProps = {
-    stroke: selected ? 'red' : 'slategray',
+    stroke: selected ? 'steelblue' : 'slategray',
     strokeWidth: getStrokeWidth(minoPoints.length),
   }
 
