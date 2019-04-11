@@ -141,20 +141,17 @@ export function generateGraph(n) {
   const equivalences = {}
   let currentGen = [MONOMINO]
   // TODO don't need to iterate over children of last generation!
-  while (nodes.length < n) {
+  while (nodes.length < n - 1) {
     const nextGen = []
-    const isLast = nodes.length === n - 1
     for (let mino of currentGen) {
       for (let child of getChildren(mino)) {
         if (!!equivalences[child]) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
           const canonChild = equivalences[child]
-          if (!isLast) {
-            meta[mino].children.add(canonChild)
-            meta[canonChild].parents.add(mino)
-            links.push([mino, canonChild])
-          }
+          meta[mino].children.add(canonChild)
+          meta[canonChild].parents.add(mino)
+          links.push([mino, canonChild])
         } else {
           // If it's a completely new mino, log its transforms
           // and add it to the next gen
@@ -162,13 +159,11 @@ export function generateGraph(n) {
             equivalences[transform] = child
           }
           nextGen.push(child)
-          if (!isLast) {
-            links.push([mino, child])
-            meta[mino].children.add(child)
-            meta[child] = {
-              children: new Set(),
-              parents: new Set([mino]),
-            }
+          links.push([mino, child])
+          meta[mino].children.add(child)
+          meta[child] = {
+            children: new Set(),
+            parents: new Set([mino]),
           }
         }
       }
@@ -176,5 +171,6 @@ export function generateGraph(n) {
     nodes.push(currentGen)
     currentGen = nextGen
   }
+  nodes.push(currentGen)
   return { nodes, links: uniqWith(links, isEqual), equivalences, meta }
 }

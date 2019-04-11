@@ -78,27 +78,32 @@ export default function SvgControls({
     viewBox.height
   }`
 
-  useEffect(() => {
-    window.addEventListener('wheel', e => {
-      let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
-      if (scale.current / delta >= zoomMax) {
-        delta = scale.current / zoomMax
-      } else if (scale.current / delta <= zoomMin) {
-        delta = scale.current / zoomMin
-      }
-      // TODO deal with float issues
-      scale.current /= delta
-      const pointerPosition = getPointFromEvent(e, svg.current)
+  const handleWheel = useCallback(e => {
+    let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
+    if (scale.current / delta >= zoomMax) {
+      delta = scale.current / zoomMax
+    } else if (scale.current / delta <= zoomMin) {
+      delta = scale.current / zoomMin
+    }
+    // TODO deal with float issues
+    scale.current /= delta
+    const pointerPosition = getPointFromEvent(e, svg.current)
 
-      setViewBox(viewBox => {
-        return {
-          x: pointerPosition.x + delta * (viewBox.x - pointerPosition.x),
-          y: pointerPosition.y + delta * (viewBox.y - pointerPosition.y),
-          width: viewBox.width * delta,
-          height: viewBox.height * delta,
-        }
-      })
+    setViewBox(viewBox => {
+      return {
+        x: pointerPosition.x + delta * (viewBox.x - pointerPosition.x),
+        y: pointerPosition.y + delta * (viewBox.y - pointerPosition.y),
+        width: viewBox.width * delta,
+        height: viewBox.height * delta,
+      }
     })
+  }, [])
+
+  useEffect(() => {
+    window.addEventListener('wheel', handleWheel)
+    return () => {
+      window.removeEventListener('wheel', handleWheel)
+    }
   }, [])
 
   const style = css({
