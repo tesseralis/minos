@@ -1,8 +1,6 @@
 export const WIDTH_BITS = 4
 export const MAX_WIDTH = 1 << WIDTH_BITS
 
-export const MONOMINO = (1 << WIDTH_BITS) | 1
-
 export function getData(mino) {
   return mino >> WIDTH_BITS
 }
@@ -38,6 +36,8 @@ export function getShape(mino) {
 export function getMino(data, width) {
   return (data << WIDTH_BITS) | (width === MAX_WIDTH ? 0 : width)
 }
+
+export const MONOMINO = getMino(1, 1)
 
 export function* getPoints(mino) {
   let data = getData(mino)

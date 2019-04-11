@@ -1,6 +1,5 @@
 import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
-// TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
 
 import { getSize } from './mino/mino'

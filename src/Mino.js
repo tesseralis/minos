@@ -1,7 +1,9 @@
 import React, { useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { getOutline } from './mino/draw'
-import { getPoints } from './mino/mino'
+import { getPoints, getMino } from './mino/mino'
+
+const oOctomino = getMino(0b111101111, 3)
 
 const colors = [
   '',
@@ -31,6 +33,12 @@ function getCenter(points) {
   return [center(xs), center(ys)]
 }
 
+function Square({ cx, cy, r, ...svgProps }) {
+  return (
+    <rect x={cx - r} y={cy - r} width={r * 2} height={r * 2} {...svgProps} />
+  )
+}
+
 export default function Mino({ mino, cx, cy, selected, onSelect }) {
   const [hovered, setHovered] = useState(false)
   const minoPoints = [...getPoints(mino)]
@@ -58,6 +66,15 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
         stroke={selected ? 'red' : 'slategray'}
         fill={color}
       />
+      {mino === oOctomino && (
+        <Square
+          cx={cx}
+          cy={cy}
+          r={blockSize / 2}
+          stroke={selected ? 'red' : 'slategray'}
+          fill="white"
+        />
+      )}
       <circle
         {...circleStyle}
         onClick={handleClick}
