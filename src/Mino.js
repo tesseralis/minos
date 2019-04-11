@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { getOutline } from './mino/draw'
 import { getPoints } from './mino/mino'
 
@@ -31,11 +31,12 @@ function getCenter(points) {
 }
 
 export default function Mino({ mino, cx, cy }) {
+  const [selected, setSelected] = useState(false)
   const minoPoints = [...getPoints(mino)]
   const color = colors[minoPoints.length]
   const outline = getOutline(minoPoints)
 
-  const blockSize = getBlockSize(minoPoints.length)
+  const blockSize = getBlockSize(minoPoints.length) * (selected ? 2 : 1)
   const scaledPoints = outline.map(([x, y]) => [x * blockSize, y * blockSize])
   const [avgX, avgY] = getCenter(scaledPoints)
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
@@ -44,6 +45,14 @@ export default function Mino({ mino, cx, cy }) {
   return (
     <g>
       <polygon points={pointStr} stroke="slategray" fill={color} />
+      <circle
+        onMouseOver={() => setSelected(true)}
+        onMouseOut={() => setSelected(false)}
+        opacity={0}
+        cx={cx}
+        cy={cy}
+        r={(minoPoints.length * blockSize) / 2}
+      />
     </g>
   )
 }
