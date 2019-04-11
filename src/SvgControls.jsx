@@ -77,7 +77,6 @@ export default function SvgControls({
 
   useEffect(() => {
     window.addEventListener('wheel', e => {
-      e.preventDefault()
       let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
       if (scale.current / delta >= zoomMax) {
         delta = scale.current / zoomMax

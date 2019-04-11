@@ -110,7 +110,7 @@ function MinoLink({ link }) {
       d={curve(spline(link))}
       fill="none"
       stroke="grey"
-      stroke-width="0.5px"
+      strokeWidth="0.5px"
     />
   )
 }
