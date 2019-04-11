@@ -1,4 +1,4 @@
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { css } from 'glamor'
 // TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
@@ -93,14 +93,23 @@ const curve = lineRadial()
   .angle(d => d.angle)
   .curve(curveNatural)
 
-function Orbital({ minos, gen }) {
+function Orbital({ minos, gen, selected, onSelect }) {
   return (
-    <g>
+    <>
       {minos.map((mino, i) => {
         const [x, y] = getCoords(gen, i)
-        return <Mino key={i} cx={x} cy={y} mino={mino} />
+        return (
+          <Mino
+            selected={selected === mino}
+            key={i}
+            cx={x}
+            cy={y}
+            mino={mino}
+            onSelect={onSelect}
+          />
+        )
       })}
-    </g>
+    </>
   )
 }
 
@@ -115,14 +124,31 @@ function MinoLink({ link }) {
   )
 }
 
-const Polyominoes = memo(function Polyominoes({ minos, linkData }) {
+const MinoLinks = memo(({ links }) => {
   return (
     <>
-      {linkData.map((link, i) => {
+      {links.map((link, i) => {
         return <MinoLink link={link} key={i} />
       })}
+    </>
+  )
+})
+
+const Polyominoes = memo(function Polyominoes({ minos, linkData }) {
+  const [selected, setSelected] = useState(null)
+  return (
+    <>
+      <MinoLinks links={linkData} />
       {minos.map((minoGen, i) => {
-        return <Orbital minos={minoGen} gen={i} key={i} />
+        return (
+          <Orbital
+            minos={minoGen}
+            gen={i}
+            key={i}
+            selected={selected}
+            onSelect={setSelected}
+          />
+        )
       })}
     </>
   )

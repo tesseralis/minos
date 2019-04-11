@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useCallback } from 'react'
 import { getOutline } from './mino/draw'
 import { getPoints } from './mino/mino'
 
@@ -30,29 +30,37 @@ function getCenter(points) {
   return [center(xs), center(ys)]
 }
 
-export default function Mino({ mino, cx, cy }) {
-  const [selected, setSelected] = useState(false)
+export default function Mino({ mino, cx, cy, selected, onSelect }) {
+  const [hovered, setHovered] = useState(false)
   const minoPoints = [...getPoints(mino)]
   const color = colors[minoPoints.length]
   const outline = getOutline(minoPoints)
 
-  const blockSize = getBlockSize(minoPoints.length) * (selected ? 2 : 1)
+  const multiplier = hovered || selected ? 2 : 1
+  const blockSize = getBlockSize(minoPoints.length) * multiplier
   const scaledPoints = outline.map(([x, y]) => [x * blockSize, y * blockSize])
   const [avgX, avgY] = getCenter(scaledPoints)
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
   const pointStr = points.map(x => x.join(',')).join(' ')
 
+  const handleClick = useCallback(() => onSelect(mino), [mino])
+
   return (
-    <g>
-      <polygon points={pointStr} stroke="slategray" fill={color} />
+    <>
+      <polygon
+        points={pointStr}
+        stroke={selected ? 'red' : 'slategray'}
+        fill={color}
+      />
       <circle
-        onMouseOver={() => setSelected(true)}
-        onMouseOut={() => setSelected(false)}
+        onClick={handleClick}
         opacity={0}
         cx={cx}
         cy={cy}
         r={(minoPoints.length * blockSize) / 2}
+        onMouseOver={() => setHovered(true)}
+        onMouseOut={() => setHovered(false)}
       />
-    </g>
+    </>
   )
 }

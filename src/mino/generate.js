@@ -127,12 +127,28 @@ export function generateGraph(n) {
   }
   const nodes = []
   const links = []
+  // An object containing metadata for each mino including:
+  // * generation and index
+  // * parents
+  // * children
+  // * (symmetry info)
+  const meta = {
+    [MONOMINO]: {
+      parents: [],
+    },
+  }
   const equivalences = {}
   let currentGen = [MONOMINO]
   while (nodes.length < n) {
     const nextGen = []
     const isLast = nodes.length === n - 1
     for (let mino of currentGen) {
+      if (!meta[mino]) {
+        meta[mino] = {}
+      }
+      if (!meta[mino].children) {
+        meta[mino].children = []
+      }
       for (let child of getChildren(mino)) {
         if (!!equivalences[child]) {
           // If we have a rotation/translation of this child,
@@ -153,5 +169,5 @@ export function generateGraph(n) {
     nodes.push(currentGen)
     currentGen = nextGen
   }
-  return { nodes, links: uniqWith(links, isEqual) }
+  return { nodes, links: uniqWith(links, isEqual), equivalences }
 }
