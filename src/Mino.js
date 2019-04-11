@@ -7,14 +7,14 @@ import { getSymmetry } from './mino/transform'
 const oOctomino = getMino(0b111101111, 3)
 
 const colorMap = {
-  none: 'lightgrey',
+  none: 'wheat',
   reflectOrtho: 'lightcoral',
   reflectDiag: 'mediumseagreen',
   rotate2: 'royalblue',
-  dihedralOrtho: 'violet',
-  dihedralDiag: 'orange',
-  rotate4: 'gold',
-  all: 'turquoise',
+  dihedralOrtho: 'gold',
+  dihedralDiag: 'turquoise',
+  rotate4: 'violet',
+  all: 'azure',
 }
 
 function getBlockSize(gen) {
