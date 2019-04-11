@@ -140,6 +140,7 @@ export function generateGraph(n) {
   }
   const equivalences = {}
   let currentGen = [MONOMINO]
+  // TODO don't need to iterate over children of last generation!
   while (nodes.length < n) {
     const nextGen = []
     const isLast = nodes.length === n - 1
@@ -149,9 +150,11 @@ export function generateGraph(n) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
           const canonChild = equivalences[child]
-          meta[mino].children.add(canonChild)
-          meta[canonChild].parents.add(mino)
-          if (!isLast) links.push([mino, canonChild])
+          if (!isLast) {
+            meta[mino].children.add(canonChild)
+            meta[canonChild].parents.add(mino)
+            links.push([mino, canonChild])
+          }
         } else {
           // If it's a completely new mino, log its transforms
           // and add it to the next gen
@@ -159,12 +162,14 @@ export function generateGraph(n) {
             equivalences[transform] = child
           }
           nextGen.push(child)
-          meta[mino].children.add(child)
-          meta[child] = {
-            children: new Set(),
-            parents: new Set([mino]),
+          if (!isLast) {
+            links.push([mino, child])
+            meta[mino].children.add(child)
+            meta[child] = {
+              children: new Set(),
+              parents: new Set([mino]),
+            }
           }
-          if (!isLast) links.push([mino, child])
         }
       }
     }

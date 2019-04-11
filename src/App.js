@@ -3,7 +3,7 @@ import { css } from 'glamor'
 // TODO don't copy over from the other one
 import { lineRadial, curveNatural } from 'd3-shape'
 
-import { getSize, printMino } from './mino/mino'
+import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
 import Mino from './Mino'
 import SvgControls from './SvgControls'
@@ -45,7 +45,6 @@ const indices = {}
 function getIndex(mino) {
   if (!indices[mino]) {
     const gen = getSize(mino) - 1
-    printMino(mino)
     if (!nodes[gen]) {
       throw new Error('gen not found')
     }
@@ -134,6 +133,7 @@ function getSelectedLinks(mino) {
     return []
   }
   const { parents, children } = meta[mino]
+  console.log('children', children)
   return [...children, ...parents].map(relative => {
     return [mino, relative]
   })
