@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react'
+import { css } from 'glamor'
 import { getOutline } from './mino/draw'
 import { getPoints } from './mino/mino'
 
@@ -45,6 +46,11 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
 
   const handleClick = useCallback(() => onSelect(mino), [mino])
 
+  const circleStyle = css({
+    opacity: 0,
+    cursor: 'pointer',
+  })
+
   return (
     <>
       <polygon
@@ -53,8 +59,8 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
         fill={color}
       />
       <circle
+        {...circleStyle}
         onClick={handleClick}
-        opacity={0}
         cx={cx}
         cy={cy}
         r={(minoPoints.length * blockSize) / 2}

@@ -27,7 +27,7 @@ export default function SvgControls({
   scaleFactor = 0.05,
 }) {
   const svg = useRef()
-  const isPointerDown = useRef(false)
+  const [isPointerDown, setPointerDown] = useState(false)
   const pointerOrigin = useRef({ x: 0, y: 0 })
   const scale = useRef(1)
 
@@ -51,25 +51,28 @@ export default function SvgControls({
   }, [svg.current])
 
   const onPointerDown = useCallback(e => {
-    isPointerDown.current = true
+    setPointerDown(true)
     pointerOrigin.current = getPointFromEvent(e, svg.current)
   }, [])
 
-  const onPointerMove = useCallback(e => {
-    if (!isPointerDown.current) {
-      return
-    }
-    e.preventDefault()
-    const pointerPosition = getPointFromEvent(e, svg.current)
-    setViewBox(viewBox => ({
-      ...viewBox,
-      x: viewBox.x - (pointerPosition.x - pointerOrigin.current.x),
-      y: viewBox.y - (pointerPosition.y - pointerOrigin.current.y),
-    }))
-  }, [])
+  const onPointerMove = useCallback(
+    e => {
+      if (!isPointerDown) {
+        return
+      }
+      e.preventDefault()
+      const pointerPosition = getPointFromEvent(e, svg.current)
+      setViewBox(viewBox => ({
+        ...viewBox,
+        x: viewBox.x - (pointerPosition.x - pointerOrigin.current.x),
+        y: viewBox.y - (pointerPosition.y - pointerOrigin.current.y),
+      }))
+    },
+    [isPointerDown],
+  )
 
   const onPointerUp = useCallback(() => {
-    isPointerDown.current = false
+    setPointerDown(false)
   }, [])
   const viewBoxStr = `${viewBox.x} ${viewBox.y} ${viewBox.width} ${
     viewBox.height
@@ -101,6 +104,7 @@ export default function SvgControls({
   const style = css({
     width: '100%',
     height: '100%',
+    cursor: isPointerDown ? 'grabbing' : 'grab',
   })
 
   return (
