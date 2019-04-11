@@ -113,7 +113,7 @@ const Orbital = ({ minos, gen, selected, onSelect }) => {
   )
 }
 
-const MinoLinks = memo(({ links, stroke }) => {
+const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
   return (
     <>
       {links.map(link => (
@@ -121,7 +121,7 @@ const MinoLinks = memo(({ links, stroke }) => {
           d={curve(spline(link))}
           fill="none"
           stroke={stroke}
-          strokeWidth="0.5px"
+          strokeWidth={strokeWidth}
         />
       ))}
     </>
@@ -153,8 +153,10 @@ const Polyominoes = memo(({ minos, linkData }) => {
 
   return (
     <>
-      <MinoLinks links={linkData} stroke="grey" />
-      {selected && <MinoLinks links={selectedLinks} stroke="red" />}
+      <MinoLinks links={linkData} stroke="grey" strokeWidth={0.5} />
+      {selected && (
+        <MinoLinks links={selectedLinks} stroke="red" strokeWidth={1} />
+      )}
       {minos.map((minoGen, i) => {
         return (
           <Orbital
