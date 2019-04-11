@@ -42,6 +42,40 @@ export function getTransforms(mino) {
   ])
 }
 
+// TODO this function is kind of cumbersome...
+export function getSymmetry(mino) {
+  const transforms = getTransforms(mino)
+  switch (transforms.size) {
+    case 1:
+      return 'all'
+    case 2:
+      if (mino === reflect(mino, 'horiz')) {
+        return 'dihedralOrtho'
+      } else if (mino === reflect(mino, 'mainDiag')) {
+        return 'dihedralDiag'
+      } else if (mino === rotate(mino, 'half')) {
+        return 'rotate4'
+      }
+      break
+    case 4:
+      if (mino === reflect(mino, 'horiz') || mino === reflect(mino, 'vert')) {
+        return 'reflectOrtho'
+      } else if (
+        mino === reflect(mino, 'mainDiag') ||
+        mino === reflect(mino, 'minorDiag')
+      ) {
+        return 'reflectDiag'
+      } else if (mino === rotate(mino, 'half')) {
+        return 'rotate2'
+      }
+      break
+    case 8:
+      return 'none'
+    default:
+      throw new Error('invalid symmetry')
+  }
+}
+
 /**
  *
  * @param minos

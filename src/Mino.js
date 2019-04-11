@@ -2,23 +2,27 @@ import React, { useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { getOutline } from './mino/draw'
 import { getPoints, getMino } from './mino/mino'
+import { getSymmetry } from './mino/transform'
 
 const oOctomino = getMino(0b111101111, 3)
 
-const colors = [
-  '',
-  'grey',
-  'tan',
-  'tomato',
-  'darkorange',
-  'gold',
-  'lightgreen',
-  'lightskyblue',
-  'plum',
-]
+const colorMap = {
+  none: 'lightgrey',
+  reflectOrtho: 'lightcoral',
+  reflectDiag: 'mediumseagreen',
+  rotate2: 'royalblue',
+  dihedralOrtho: 'violet',
+  dihedralDiag: 'orange',
+  rotate4: 'gold',
+  all: 'turquoise',
+}
 
 function getBlockSize(gen) {
   return 3 * (9 - gen)
+}
+
+function getStrokeWidth(gen) {
+  return 0.5 * (9 - gen)
 }
 
 function center(points) {
@@ -42,7 +46,7 @@ function Square({ cx, cy, r, ...svgProps }) {
 export default function Mino({ mino, cx, cy, selected, onSelect }) {
   const [hovered, setHovered] = useState(false)
   const minoPoints = [...getPoints(mino)]
-  const color = colors[minoPoints.length]
+  const color = colorMap[getSymmetry(mino)]
   const outline = getOutline(minoPoints)
 
   const multiplier = hovered ? 2 : 1
@@ -59,21 +63,16 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
     cursor: 'pointer',
   })
 
+  const svgProps = {
+    stroke: selected ? 'red' : 'slategray',
+    strokeWidth: getStrokeWidth(minoPoints.length),
+  }
+
   return (
     <>
-      <polygon
-        points={pointStr}
-        stroke={selected ? 'red' : 'slategray'}
-        fill={color}
-      />
+      <polygon points={pointStr} fill={color} {...svgProps} />
       {mino === oOctomino && (
-        <Square
-          cx={cx}
-          cy={cy}
-          r={blockSize / 2}
-          stroke={selected ? 'red' : 'slategray'}
-          fill="white"
-        />
+        <Square cx={cx} cy={cy} r={blockSize / 2} fill="white" {...svgProps} />
       )}
       <circle
         {...circleStyle}
