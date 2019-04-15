@@ -115,8 +115,9 @@ const Orbital = ({ minos, gen, selected, onSelect }) => {
 const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
   return (
     <>
-      {links.map(link => (
+      {links.map((link, i) => (
         <path
+          key={i}
           d={curve(spline(link))}
           fill="none"
           stroke={stroke}

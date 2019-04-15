@@ -10,7 +10,7 @@ const colorMap = {
   none: 'wheat',
   reflectOrtho: 'lightcoral',
   reflectDiag: 'mediumseagreen',
-  rotate2: 'royalblue',
+  rotate2: 'dodgerblue',
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
   rotate4: 'violet',
@@ -50,11 +50,21 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
   const outline = getOutline(minoPoints)
 
   const multiplier = hovered ? 2 : 1
+  // TODO refactor these calculations
   const blockSize = getBlockSize(minoPoints.length) * multiplier
-  const scaledPoints = outline.map(([x, y]) => [x * blockSize, y * blockSize])
-  const [avgX, avgY] = getCenter(scaledPoints)
+  const scaledOutline = outline.map(([x, y]) => [x * blockSize, y * blockSize])
+  const [avgX, avgY] = getCenter(scaledOutline)
+  const outlinePoints = scaledOutline.map(([x, y]) => [
+    x - avgX + cx,
+    y - avgY + cy,
+  ])
+  const outlineStr = outlinePoints.map(x => x.join(',')).join(' ')
+
+  const scaledPoints = minoPoints.map(([x, y]) => [
+    x * blockSize,
+    y * blockSize,
+  ])
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
-  const pointStr = points.map(x => x.join(',')).join(' ')
 
   const handleClick = useCallback(() => onSelect(mino), [mino])
 
@@ -70,7 +80,18 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
 
   return (
     <>
-      <polygon points={pointStr} fill={color} {...style} />
+      {points.map(point => (
+        <rect
+          x={point[0]}
+          y={point[1]}
+          width={blockSize}
+          height={blockSize}
+          fill={color}
+          stroke="slategray"
+          strokeWidth={getStrokeWidth(minoPoints.length) / 2}
+        />
+      ))}
+      <polygon points={outlineStr} fill="none" {...style} />
       {mino === oOctomino && (
         <Square cx={cx} cy={cy} r={blockSize / 2} fill="white" {...style} />
       )}
