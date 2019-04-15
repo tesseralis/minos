@@ -93,7 +93,7 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
       ))}
       <polygon points={outlineStr} fill="none" {...style} />
       {mino === oOctomino && (
-        <Square cx={cx} cy={cy} r={blockSize / 2} fill="white" {...style} />
+        <Square cx={cx} cy={cy} r={blockSize / 2} fill="none" {...style} />
       )}
       <circle
         {...circleStyle}
