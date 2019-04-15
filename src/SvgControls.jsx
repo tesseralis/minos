@@ -82,7 +82,8 @@ export default function SvgControls({
     viewBox.height
   }`
 
-  const handleWheel = useCallback(e => {
+  const onWheel = useCallback(e => {
+    e.preventDefault()
     let delta = 1 + (e.deltaY > 0 ? 1 : -1) * scaleFactor
     delta = clamp(delta, scale.current / zoomMax, scale.current / zoomMin)
     scale.current = clamp(scale.current / delta, zoomMin, zoomMax)
@@ -98,13 +99,6 @@ export default function SvgControls({
     })
   }, [])
 
-  useEffect(() => {
-    window.addEventListener('wheel', handleWheel)
-    return () => {
-      window.removeEventListener('wheel', handleWheel)
-    }
-  }, [])
-
   const style = css({
     width: '100%',
     height: '100%',
@@ -115,6 +109,7 @@ export default function SvgControls({
     <svg
       {...style}
       ref={svg}
+      onWheel={onWheel}
       onPointerDown={onPointerDown}
       onPointerMove={onPointerMove}
       onPointerUp={onPointerUp}

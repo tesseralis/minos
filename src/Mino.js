@@ -63,16 +63,16 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
     cursor: 'pointer',
   })
 
-  const svgProps = {
+  const style = css({
     stroke: selected ? 'steelblue' : 'slategray',
     strokeWidth: getStrokeWidth(minoPoints.length),
-  }
+  })
 
   return (
     <>
-      <polygon points={pointStr} fill={color} {...svgProps} />
+      <polygon points={pointStr} fill={color} {...style} />
       {mino === oOctomino && (
-        <Square cx={cx} cy={cy} r={blockSize / 2} fill="white" {...svgProps} />
+        <Square cx={cx} cy={cy} r={blockSize / 2} fill="white" {...style} />
       )}
       <circle
         {...circleStyle}
