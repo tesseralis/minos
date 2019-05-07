@@ -5,7 +5,8 @@ import { lineRadial, curveNatural } from 'd3-shape'
 import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
 import Mino from './Mino'
-import SvgControls from './SvgControls'
+// import SvgControls from './SvgControls'
+import SvgPanZoom from './SvgPanZoom'
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 600
@@ -183,9 +184,9 @@ export default function App() {
 
   return (
     <div {...style}>
-      <SvgControls initialWidth={width} zoomMin={1} zoomMax={5}>
+      <SvgPanZoom initialWidth={width} zoomMin={1} zoomMax={5}>
         <Polyominoes minos={nodes} linkData={links} />
-      </SvgControls>
+      </SvgPanZoom>
     </div>
   )
 }

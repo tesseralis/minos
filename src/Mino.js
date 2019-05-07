@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react'
+import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { getOutline } from './mino/draw'
 import { getPoints, getMino } from './mino/mino'
@@ -43,7 +43,7 @@ function Square({ cx, cy, r, ...svgProps }) {
   )
 }
 
-export default function Mino({ mino, cx, cy, selected, onSelect }) {
+const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
   const [hovered, setHovered] = useState(false)
   const minoPoints = [...getPoints(mino)]
   const color = colorMap[getSymmetry(mino)]
@@ -51,7 +51,8 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
 
   const multiplier = hovered ? 2 : 1
   // TODO refactor these calculations
-  const blockSize = getBlockSize(minoPoints.length) * multiplier
+  const unitSize = getBlockSize(minoPoints.length)
+  const blockSize = unitSize * multiplier
   const scaledOutline = outline.map(([x, y]) => [x * blockSize, y * blockSize])
   const [avgX, avgY] = getCenter(scaledOutline)
   const outlinePoints = scaledOutline.map(([x, y]) => [
@@ -100,10 +101,12 @@ export default function Mino({ mino, cx, cy, selected, onSelect }) {
         onClick={handleClick}
         cx={cx}
         cy={cy}
-        r={(minoPoints.length * blockSize) / 2}
+        r={(minoPoints.length * unitSize) / 2}
         onMouseOver={() => setHovered(true)}
         onMouseOut={() => setHovered(false)}
       />
     </>
   )
-}
+})
+
+export default Mino
