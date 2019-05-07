@@ -49,7 +49,7 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
   const color = colorMap[getSymmetry(mino)]
   const outline = getOutline(minoPoints)
 
-  const multiplier = hovered ? 2 : 1
+  const multiplier = hovered ? 1.25 : 1
   // TODO refactor these calculations
   const unitSize = getBlockSize(minoPoints.length)
   const blockSize = unitSize * multiplier
