@@ -84,7 +84,7 @@ function interpolatePolar(a, b, n = 0) {
 function spline([source, target]) {
   const src = radiusAndAngle(getIndex(source))
   const tgt = radiusAndAngle(getIndex(target))
-  return [src, ...interpolatePolar(src, tgt, 5), tgt]
+  return [src, ...interpolatePolar(src, tgt, 2), tgt]
 }
 
 const curve = lineRadial()
