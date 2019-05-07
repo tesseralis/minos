@@ -67,7 +67,7 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
   ])
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
 
-  const handleClick = useCallback(() => onSelect(mino), [mino])
+  const handleClick = useCallback(() => onSelect(mino), [mino, onSelect])
 
   const circleStyle = css({
     opacity: 0,
@@ -81,8 +81,9 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
 
   return (
     <>
-      {points.map(point => (
+      {points.map((point, i) => (
         <rect
+          key={i}
           x={point[0]}
           y={point[1]}
           width={blockSize}

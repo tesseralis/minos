@@ -1,26 +1,44 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { css } from 'glamor'
 import panzoom from 'panzoom'
 
-export default function SvgPanZoom({ children }) {
+export default function SvgPanZoom({
+  children,
+  initialWidth,
+  minZoom,
+  maxZoom,
+}) {
   const group = useRef(null)
+  const [panning, setPanning] = useState(false)
 
   useEffect(() => {
-    panzoom(group.current, {
+    const pz = panzoom(group.current, {
       smoothScroll: false,
-      minZoom: 0.2,
-      maxZoom: 1,
+      minZoom,
+      maxZoom,
     })
-  }, [])
+
+    pz.on('panstart', () => {
+      setPanning(true)
+    })
+
+    pz.on('panend', () => {
+      setPanning(false)
+    })
+  }, [minZoom, maxZoom])
 
   const style = css({
     width: '100%',
     height: '100%',
-    // cursor: isPointerDown ? 'grabbing' : 'grab',
+    cursor: panning ? 'grabbing' : 'grab',
   })
 
+  // TODO make sure this ratio makes sense
+  const viewBox = `-${initialWidth / 2} ${-initialWidth /
+    100} ${initialWidth} ${initialWidth / 2}`
+
   return (
-    <svg {...style} viewBox="-3200 -100 6400 3000">
+    <svg {...style} viewBox={viewBox}>
       <g ref={group}>{children}</g>
     </svg>
   )
