@@ -7,8 +7,6 @@ import {
   getWidth,
   getPoints,
 } from './mino'
-import uniqWith from 'lodash/uniqWith'
-import isEqual from 'lodash/isEqual'
 
 import { getTransforms } from './transform'
 
@@ -172,5 +170,6 @@ export function generateGraph(n) {
     currentGen = nextGen
   }
   nodes.push(currentGen)
-  return { nodes, links: uniqWith(links, isEqual), equivalences, meta }
+  // TODO these links are duplicated; uniqWith adds 500ms
+  return { nodes, links, equivalences, meta }
 }
