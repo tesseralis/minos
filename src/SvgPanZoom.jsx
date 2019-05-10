@@ -35,7 +35,7 @@ export default function SvgPanZoom({
 
   // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
   const viewBox = `-${initialWidth / 2} ${-initialWidth /
-    100} ${initialWidth} ${initialWidth / 2}`
+    25} ${initialWidth} ${initialWidth / 2}`
 
   return (
     <svg {...style} viewBox={viewBox}>
