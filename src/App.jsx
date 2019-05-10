@@ -8,9 +8,9 @@ import Mino from './Mino'
 import SvgPanZoom from './SvgPanZoom'
 
 const tau = 2 * Math.PI
-const ringRadiusBase = 600
+const ringRadiusBase = 800
 const numGenerations = 8
-const width = 2200
+const width = 2800
 
 const minScale = 1 / 6
 const maxScale = 1 / 2
@@ -186,7 +186,7 @@ export default function App() {
   })
 
   const textStyle = css({
-    fontSize: '80px',
+    fontSize: '100px',
     fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
     fontStyle: 'italic',
     fill: 'gray',
@@ -202,10 +202,10 @@ export default function App() {
   return (
     <div {...style}>
       <SvgPanZoom initialWidth={width} zoomMin={0.2} zoomMax={1}>
-        <text {...textStyle} x={-1000} y={25}>
+        <text {...textStyle} x={-1200} y={40}>
           The Labyrinth of Minos
         </text>
-        <text {...subHeaderStyle} x={-900} y={80}>
+        <text {...subHeaderStyle} x={-1100} y={100}>
           by @tesseralis
         </text>
         <Polyominoes minos={nodes} linkData={links} />
