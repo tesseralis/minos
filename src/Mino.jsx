@@ -102,7 +102,7 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
         onClick={handleClick}
         cx={cx}
         cy={cy}
-        r={(minoPoints.length * unitSize) / 2}
+        r={(minoPoints.length * unitSize) / 1.5}
         onMouseOver={() => setHovered(true)}
         onMouseOut={() => setHovered(false)}
       />
