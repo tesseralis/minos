@@ -123,7 +123,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
             d={curve(spline(link))}
             fill="none"
             stroke={stroke}
-            opacity={1 - gen / 8}
+            opacity={1 - gen / 10}
             strokeWidth={strokeWidth}
           />
         )
