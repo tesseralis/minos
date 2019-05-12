@@ -18,7 +18,7 @@ const colorMap = {
 }
 
 function getBlockSize(gen) {
-  return 3 * (9 - gen)
+  return 4 + (8 - gen) ** 2
 }
 
 function getStrokeWidth(gen) {
