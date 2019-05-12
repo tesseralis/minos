@@ -185,29 +185,29 @@ export default function App() {
     bottom: 0,
   })
 
-  const textStyle = css({
-    fontSize: '100px',
-    fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-    fontStyle: 'italic',
-    fill: 'gray',
-  })
+  // const textStyle = css({
+  //   fontSize: '100px',
+  //   fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+  //   fontStyle: 'italic',
+  //   fill: 'gray',
+  // })
 
-  const subHeaderStyle = css({
-    fontSize: '40px',
-    fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-    fontStyle: 'italic',
-    fill: 'gray',
-  })
+  // const subHeaderStyle = css({
+  //   fontSize: '40px',
+  //   fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
+  //   fontStyle: 'italic',
+  //   fill: 'gray',
+  // })
 
   return (
     <div {...style}>
       <SvgPanZoom initialWidth={width} zoomMin={0.2} zoomMax={1}>
-        <text {...textStyle} x={-1200} y={40}>
+        {/* <text {...textStyle} x={-1200} y={40}>
           The Labyrinth of Minos
         </text>
         <text {...subHeaderStyle} x={-1100} y={100}>
           by @tesseralis
-        </text>
+        </text> */}
         <Polyominoes minos={nodes} linkData={links} />
       </SvgPanZoom>
     </div>
