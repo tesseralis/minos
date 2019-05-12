@@ -9,12 +9,12 @@ const oOctomino = getMino(0b111101111, 3)
 const colorMap = {
   none: 'wheat',
   reflectOrtho: 'lightcoral',
-  reflectDiag: 'mediumseagreen',
-  rotate2: 'dodgerblue',
+  reflectDiag: 'dodgerblue',
+  rotate2: 'mediumseagreen',
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
   rotate4: 'violet',
-  all: 'azure',
+  all: 'ivory',
 }
 
 function getBlockSize(gen) {
