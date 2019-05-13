@@ -1,6 +1,7 @@
 import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { lineRadial, curveNatural } from 'd3-shape'
+import tinycolor from 'tinycolor2'
 
 import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
@@ -104,6 +105,7 @@ const Orbital = ({ minos, gen, selected, onSelect }) => {
             cx={x}
             cy={y}
             mino={mino}
+            color={meta[mino].color.toHexString()}
             onSelect={onSelect}
           />
         )
@@ -116,15 +118,20 @@ const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
   return (
     <>
       {links.map((link, i) => {
-        const gen = getIndex(link[0])[0]
+        const srcMino = link[0]
+        const tgtMino = link[1]
+
+        const color = tinycolor
+          .mix(meta[srcMino].color, meta[tgtMino].color)
+          .toHexString()
+        const gen = getIndex(srcMino)[0]
         return (
           <path
             key={i}
             d={curve(spline(link))}
             fill="none"
-            stroke={stroke}
-            opacity={1 - gen / 10}
-            strokeWidth={strokeWidth}
+            stroke={stroke || color}
+            strokeWidth={strokeWidth || 10 / (gen / 2 + 1) ** 2}
           />
         )
       })}
@@ -157,9 +164,9 @@ const Polyominoes = memo(({ minos, linkData }) => {
 
   return (
     <>
-      <MinoLinks links={linkData} stroke="grey" strokeWidth={0.5} />
+      <MinoLinks links={linkData} />
       {selected && (
-        <MinoLinks links={selectedLinks} stroke="purple" strokeWidth={2} />
+        <MinoLinks links={selectedLinks} stroke="white" strokeWidth={2} />
       )}
       {minos.map((minoGen, i) => {
         return (

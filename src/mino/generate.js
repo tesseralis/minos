@@ -8,7 +8,8 @@ import {
   getPoints,
 } from './mino'
 
-import { getTransforms } from './transform'
+import { getSymmetry, getTransforms } from './transform'
+import tinycolor from 'tinycolor2'
 
 function getPointMask(i, j, w) {
   return 1 << (i * w + j + WIDTH_BITS)
@@ -119,6 +120,50 @@ export function generate(n) {
   }
 }
 
+const colorMap = {
+  none: 'dimgray',
+  reflectOrtho: 'crimson',
+  reflectDiag: '#22f',
+  rotate2: 'limegreen',
+  dihedralOrtho: 'gold',
+  dihedralDiag: 'turquoise',
+  rotate4: 'violet',
+  all: 'white',
+}
+
+for (let key of Object.keys(colorMap)) {
+  colorMap[key] = tinycolor(colorMap[key])
+}
+
+const mixMap = {
+  none: 40,
+  reflectOrtho: 33,
+  reflectDiag: 33,
+  rotate2: 33,
+  dihedralOrtho: 25,
+  dihedralDiag: 25,
+  rotate4: 25,
+  all: 10,
+}
+
+function sum(nums) {
+  return nums.reduce((s, n) => s + n, 0)
+}
+
+function avg(nums) {
+  return sum(nums) / nums.length
+}
+
+function mixColors(colors) {
+  const rgbs = colors.map(c => c.toRgb())
+  return tinycolor({
+    r: avg(rgbs.map(c => c.r)),
+    g: avg(rgbs.map(c => c.g)),
+    b: avg(rgbs.map(c => c.b)),
+    a: avg(rgbs.map(c => c.a)),
+  })
+}
+
 export function generateGraph(n) {
   if (n === 0) {
     return {}
@@ -170,6 +215,22 @@ export function generateGraph(n) {
     currentGen = nextGen
   }
   nodes.push(currentGen)
+
+  // TODO can we separate out this logic?
+  for (let generation of nodes) {
+    for (let mino of generation) {
+      if (mino === MONOMINO) {
+        meta[mino].color = colorMap[getSymmetry(mino)]
+        continue
+      }
+      const color = mixColors(
+        [...meta[mino].parents].map(parent => meta[parent].color),
+      )
+      const sym = getSymmetry(mino)
+      meta[mino].color = tinycolor.mix(colorMap[sym], color, mixMap[sym])
+    }
+  }
+
   // TODO these links are duplicated; uniqWith adds 500ms
   return { nodes, links, equivalences, meta }
 }

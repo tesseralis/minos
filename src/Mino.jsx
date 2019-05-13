@@ -2,23 +2,11 @@ import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { getOutline } from './mino/draw'
 import { getPoints, getMino } from './mino/mino'
-import { getSymmetry } from './mino/transform'
 
 const oOctomino = getMino(0b111101111, 3)
 
-const colorMap = {
-  none: 'wheat',
-  reflectOrtho: 'lightcoral',
-  reflectDiag: 'dodgerblue',
-  rotate2: 'mediumseagreen',
-  dihedralOrtho: 'gold',
-  dihedralDiag: 'turquoise',
-  rotate4: 'violet',
-  all: 'ivory',
-}
-
 function getBlockSize(gen) {
-  return 4 + (8 - gen) ** 2
+  return 5 + (8 - gen) ** 2
 }
 
 function getStrokeWidth(gen) {
@@ -43,10 +31,9 @@ function Square({ cx, cy, r, ...svgProps }) {
   )
 }
 
-const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
+const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
   const [hovered, setHovered] = useState(false)
   const minoPoints = [...getPoints(mino)]
-  const color = colorMap[getSymmetry(mino)]
   const outline = getOutline(minoPoints)
 
   const multiplier = hovered ? 1.25 : 1
@@ -74,8 +61,10 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
     cursor: 'pointer',
   })
 
+  const outlineColor = selected ? 'white' : 'black'
+
   const style = css({
-    stroke: selected ? 'steelblue' : 'slategray',
+    stroke: outlineColor,
     strokeWidth: getStrokeWidth(minoPoints.length),
   })
 
@@ -89,7 +78,7 @@ const Mino = memo(({ mino, cx, cy, selected, onSelect }) => {
           width={blockSize}
           height={blockSize}
           fill={color}
-          stroke="slategray"
+          stroke={outlineColor}
           strokeWidth={getStrokeWidth(minoPoints.length) / 2}
         />
       ))}

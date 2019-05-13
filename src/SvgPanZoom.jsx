@@ -31,6 +31,7 @@ export default function SvgPanZoom({
     width: '100%',
     height: '100%',
     cursor: panning ? 'grabbing' : 'grab',
+    backgroundColor: '#222',
   })
 
   // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
