@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react'
+import React, { memo, useState, useRef, useCallback } from 'react'
 import { css } from 'glamor'
 import { lineRadial, curveNatural } from 'd3-shape'
 import tinycolor from 'tinycolor2'
@@ -140,8 +140,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   )
 })
 
-const Polyominoes = memo(({ minos, linkData }) => {
-  const [selected, setSelected] = useState(null)
+const MinoGraph = memo(({ minos, linkData, selected, onSelect }) => {
   const { parents, children } = meta[selected] || {}
   const selectedLinks = selected
     ? [...children, ...parents].map(relative => [selected, relative])
@@ -181,7 +180,7 @@ const Polyominoes = memo(({ minos, linkData }) => {
             gen={i}
             key={i}
             selected={getSelected(i)}
-            onSelect={setSelected}
+            onSelect={onSelect}
           />
         )
       })}
@@ -205,7 +204,42 @@ function Svg({ width, children }) {
   )
 }
 
+/**
+ * An empty background element that can accept clicks
+ */
+function Background({ onClick }) {
+  const dragged = useRef(false)
+  function onMouseDown() {
+    dragged.current = false
+  }
+
+  function onMouseMove() {
+    dragged.current = true
+  }
+
+  function onMouseUp() {
+    if (!dragged.current) {
+      onClick()
+    }
+  }
+
+  return (
+    <rect
+      x={0}
+      y={0}
+      width="100%"
+      height="100%"
+      opacity={0}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+    />
+  )
+}
+
 export default function App() {
+  const [selected, setSelected] = useState(null)
+
   const style = css({
     position: 'fixed',
     top: 0,
@@ -214,16 +248,17 @@ export default function App() {
     bottom: 0,
   })
 
-  const backgroundStyle = css({
-    fill: 'none',
-  })
-
   return (
     <div {...style}>
       <Svg width={width}>
-        <rect {...backgroundStyle} x={0} y={0} width="100%" height="100%" />
+        <Background onClick={() => setSelected(null)} />
         <PanZoom minZoom={0.25} maxZoom={1.5} zoomSpeed={0.065}>
-          <Polyominoes minos={nodes} linkData={links} />
+          <MinoGraph
+            minos={nodes}
+            linkData={links}
+            selected={selected}
+            onSelect={setSelected}
+          />
         </PanZoom>
       </Svg>
     </div>
