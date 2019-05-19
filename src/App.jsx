@@ -187,7 +187,6 @@ function Svg({ width, children }) {
   const style = css({
     width: '100%',
     height: '100%',
-    backgroundColor: '#222',
   })
   // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
   const viewBox = `-${width / 2} ${-width / 25} ${width} ${width / 2}`
