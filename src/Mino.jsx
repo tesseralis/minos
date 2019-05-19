@@ -1,18 +1,14 @@
-import React, { memo, useState, useCallback } from 'react'
+import React from 'react'
 import { css } from 'glamor'
 
-import { getOutline } from './mino/draw'
 import { getPoints, getMino } from './mino/mino'
+import { getOutline } from './mino/draw'
 import useClickHandler from './useClickHandler'
 
-const oOctomino = getMino(0b111101111, 3)
-
-function getBlockSize(gen) {
-  return 2 + (8 - gen) ** 2 / 2
-}
-
-function getStrokeWidth(gen) {
-  return 0.25 * (9 - gen)
+function Square({ cx, cy, r, ...svgProps }) {
+  return (
+    <rect x={cx - r} y={cy - r} width={r * 2} height={r * 2} {...svgProps} />
+  )
 }
 
 function center(points) {
@@ -27,22 +23,26 @@ function getCenter(points) {
   return [center(xs), center(ys)]
 }
 
-function Square({ cx, cy, r, ...svgProps }) {
-  return (
-    <rect x={cx - r} y={cy - r} width={r * 2} height={r * 2} {...svgProps} />
-  )
-}
-
-const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
-  const [hovered, setHovered] = useState(false)
+const oOctomino = getMino(0b111101111, 3)
+/**
+ * Draws a mino in SVG using the given center x and y coordinates,
+ * size, stroke width, color, etc.
+ */
+export default function Mino({
+  mino,
+  cx,
+  cy,
+  size,
+  fill,
+  stroke,
+  onClick,
+  onMouseOver,
+  onMouseOut,
+}) {
+  const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
   const outline = getOutline(minoPoints)
-
-  const multiplier = hovered ? 1.25 : 1
-  // TODO refactor these calculations
-  const unitSize = getBlockSize(minoPoints.length)
-  const blockSize = unitSize * multiplier
-  const scaledOutline = outline.map(([x, y]) => [x * blockSize, y * blockSize])
+  const scaledOutline = outline.map(([x, y]) => [x * size, y * size])
   const [avgX, avgY] = getCenter(scaledOutline)
   const outlinePoints = scaledOutline.map(([x, y]) => [
     x - avgX + cx,
@@ -50,13 +50,8 @@ const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
   ])
   const outlineStr = outlinePoints.map(x => x.join(',')).join(' ')
 
-  const scaledPoints = minoPoints.map(([x, y]) => [
-    x * blockSize,
-    y * blockSize,
-  ])
+  const scaledPoints = minoPoints.map(([x, y]) => [x * size, y * size])
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
-
-  const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
 
   const handleClick = useClickHandler(onClick)
 
@@ -65,11 +60,9 @@ const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
     cursor: 'pointer',
   })
 
-  const outlineColor = selected ? 'white' : 'black'
-
   const style = css({
-    stroke: outlineColor,
-    strokeWidth: getStrokeWidth(minoPoints.length),
+    stroke,
+    strokeWidth,
   })
 
   return (
@@ -79,28 +72,26 @@ const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
           key={i}
           x={point[0]}
           y={point[1]}
-          width={blockSize}
-          height={blockSize}
-          fill={color}
-          stroke={outlineColor}
-          strokeWidth={getStrokeWidth(minoPoints.length) / 2}
+          width={size}
+          height={size}
+          fill={fill}
+          stroke={stroke}
+          strokeWidth={strokeWidth * 0.75}
         />
       ))}
       <polygon points={outlineStr} fill="none" {...style} />
       {mino === oOctomino && (
-        <Square cx={cx} cy={cy} r={blockSize / 2} fill="none" {...style} />
+        <Square cx={cx} cy={cy} r={size / 2} fill="none" {...style} />
       )}
       <circle
         {...circleStyle}
         {...handleClick}
         cx={cx}
         cy={cy}
-        r={(minoPoints.length * unitSize) / 1.5}
-        onMouseOver={() => setHovered(true)}
-        onMouseOut={() => setHovered(false)}
+        r={(minoPoints.length * size) / 2}
+        onMouseOver={onMouseOver}
+        onMouseOut={onMouseOut}
       />
     </>
   )
-})
-
-export default Mino
+}

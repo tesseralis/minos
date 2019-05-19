@@ -7,13 +7,13 @@ import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
 
 import useClickHandler from './useClickHandler'
-import Mino from './Mino'
+import Mino from './SelectableMino'
 import PanZoom from './PanZoom'
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 400
 const numGenerations = 8
-const width = 2800
+const width = 1400
 
 const minScale = 1 / 6
 const maxScale = 1 / 2
@@ -239,7 +239,7 @@ export default function App() {
     <div {...style}>
       <Svg width={width}>
         <Background onClick={() => setSelected(null)} />
-        <PanZoom minZoom={0.25} maxZoom={1.5} zoomSpeed={0.065}>
+        <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
           <MinoGraph
             minos={nodes}
             linkData={links}

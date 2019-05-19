@@ -123,7 +123,7 @@ export function generate(n) {
 const colorMap = {
   none: 'dimgray',
   reflectOrtho: 'crimson',
-  reflectDiag: '#22f',
+  reflectDiag: '#33f',
   rotate2: 'limegreen',
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
