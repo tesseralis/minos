@@ -1,10 +1,12 @@
-import React, { memo, useState, useRef, useCallback } from 'react'
+import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 import { lineRadial, curveNatural } from 'd3-shape'
 import tinycolor from 'tinycolor2'
 
 import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
+
+import useClickHandler from './useClickHandler'
 import Mino from './Mino'
 import PanZoom from './PanZoom'
 
@@ -208,20 +210,7 @@ function Svg({ width, children }) {
  * An empty background element that can accept clicks
  */
 function Background({ onClick }) {
-  const dragged = useRef(false)
-  function onMouseDown() {
-    dragged.current = false
-  }
-
-  function onMouseMove() {
-    dragged.current = true
-  }
-
-  function onMouseUp() {
-    if (!dragged.current) {
-      onClick()
-    }
-  }
+  const clickHandler = useClickHandler(onClick)
 
   return (
     <rect
@@ -230,9 +219,7 @@ function Background({ onClick }) {
       width="100%"
       height="100%"
       opacity={0}
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
+      {...clickHandler}
     />
   )
 }

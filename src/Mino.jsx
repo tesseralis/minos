@@ -1,7 +1,9 @@
 import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
+
 import { getOutline } from './mino/draw'
 import { getPoints, getMino } from './mino/mino'
+import useClickHandler from './useClickHandler'
 
 const oOctomino = getMino(0b111101111, 3)
 
@@ -54,7 +56,9 @@ const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
   ])
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
 
-  const handleClick = useCallback(() => onSelect(mino), [mino, onSelect])
+  const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
+
+  const handleClick = useClickHandler(onClick)
 
   const circleStyle = css({
     opacity: 0,
@@ -88,7 +92,7 @@ const Mino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
       )}
       <circle
         {...circleStyle}
-        onClick={handleClick}
+        {...handleClick}
         cx={cx}
         cy={cy}
         r={(minoPoints.length * unitSize) / 1.5}
