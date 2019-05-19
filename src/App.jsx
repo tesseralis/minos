@@ -6,7 +6,7 @@ import tinycolor from 'tinycolor2'
 import { getSize } from './mino/mino'
 import { generateGraph } from './mino/generate'
 import Mino from './Mino'
-import SvgPanZoom from './SvgPanZoom'
+import PanZoom from './PanZoom'
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 800
@@ -183,6 +183,22 @@ const Polyominoes = memo(({ minos, linkData }) => {
   )
 })
 
+function Svg({ width, children }) {
+  const style = css({
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#222',
+  })
+  // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
+  const viewBox = `-${width / 2} ${-width / 25} ${width} ${width / 2}`
+
+  return (
+    <svg {...style} viewBox={viewBox}>
+      {children}
+    </svg>
+  )
+}
+
 export default function App() {
   const style = css({
     position: 'fixed',
@@ -208,15 +224,17 @@ export default function App() {
 
   return (
     <div {...style}>
-      <SvgPanZoom initialWidth={width} zoomMin={0.2} zoomMax={1}>
-        {/* <text {...textStyle} x={-1200} y={40}>
+      <Svg width={width}>
+        <PanZoom zoomMin={0.2} zoomMax={1}>
+          {/* <text {...textStyle} x={-1200} y={40}>
           The Labyrinth of Minos
         </text>
         <text {...subHeaderStyle} x={-1100} y={100}>
           by @tesseralis
         </text> */}
-        <Polyominoes minos={nodes} linkData={links} />
-      </SvgPanZoom>
+          <Polyominoes minos={nodes} linkData={links} />
+        </PanZoom>
+      </Svg>
     </div>
   )
 }
