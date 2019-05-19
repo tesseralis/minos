@@ -9,10 +9,10 @@ export default function PanZoom({ children, zoomSpeed, minZoom, maxZoom }) {
     panzoom(group.current, {
       smoothScroll: false,
       zoomSpeed,
-      minZoom,
       maxZoom,
+      minZoom,
     })
-  }, [minZoom, maxZoom, zoomSpeed])
+  })
 
   return <g ref={group}>{children}</g>
 }

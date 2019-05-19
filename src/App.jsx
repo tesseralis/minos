@@ -9,7 +9,7 @@ import Mino from './Mino'
 import PanZoom from './PanZoom'
 
 const tau = 2 * Math.PI
-const ringRadiusBase = 800
+const ringRadiusBase = 400
 const numGenerations = 8
 const width = 2800
 
@@ -114,7 +114,7 @@ const Orbital = ({ minos, gen, selected, onSelect }) => {
   )
 }
 
-const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
+const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   return (
     <>
       {links.map((link, i) => {
@@ -131,7 +131,8 @@ const MinoLinks = memo(({ links, stroke, strokeWidth }) => {
             d={curve(spline(link))}
             fill="none"
             stroke={stroke || color}
-            strokeWidth={strokeWidth || 10 / (gen / 2 + 1) ** 2}
+            opacity={opacity}
+            strokeWidth={strokeWidth || 3 / (gen / 2 + 1) ** 2}
           />
         )
       })}
@@ -166,7 +167,12 @@ const Polyominoes = memo(({ minos, linkData }) => {
     <>
       <MinoLinks links={linkData} />
       {selected && (
-        <MinoLinks links={selectedLinks} stroke="white" strokeWidth={2} />
+        <MinoLinks
+          links={selectedLinks}
+          stroke="white"
+          strokeWidth={1.5}
+          opacity={0.33}
+        />
       )}
       {minos.map((minoGen, i) => {
         return (
@@ -187,6 +193,7 @@ function Svg({ width, children }) {
   const style = css({
     width: '100%',
     height: '100%',
+    backgroundColor: '#202020',
   })
   // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
   const viewBox = `-${width / 2} ${-width / 25} ${width} ${width / 2}`
@@ -208,14 +215,14 @@ export default function App() {
   })
 
   const backgroundStyle = css({
-    fill: '#202020',
+    fill: 'none',
   })
 
   return (
     <div {...style}>
       <Svg width={width}>
         <rect {...backgroundStyle} x={0} y={0} width="100%" height="100%" />
-        <PanZoom zoomMin={0.2} zoomMax={1} zoomSpeed={0.065}>
+        <PanZoom minZoom={0.25} maxZoom={1.5} zoomSpeed={0.065}>
           <Polyominoes minos={nodes} linkData={links} />
         </PanZoom>
       </Svg>

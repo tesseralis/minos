@@ -6,11 +6,11 @@ import { getPoints, getMino } from './mino/mino'
 const oOctomino = getMino(0b111101111, 3)
 
 function getBlockSize(gen) {
-  return 5 + (8 - gen) ** 2
+  return 2 + (8 - gen) ** 2 / 2
 }
 
 function getStrokeWidth(gen) {
-  return 0.5 * (9 - gen)
+  return 0.25 * (9 - gen)
 }
 
 function center(points) {
