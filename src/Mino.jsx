@@ -26,7 +26,7 @@ function getCenter(points) {
 const oOctomino = getMino(0b111101111, 3)
 /**
  * Draws a mino in SVG using the given center x and y coordinates,
- * size, stroke width, color, etc.
+ * size, fill, stroke color, etc.
  */
 export default function Mino({
   mino,
