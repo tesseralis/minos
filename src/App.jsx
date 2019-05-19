@@ -208,30 +208,15 @@ export default function App() {
     bottom: 0,
   })
 
-  // const textStyle = css({
-  //   fontSize: '100px',
-  //   fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-  //   fontStyle: 'italic',
-  //   fill: 'gray',
-  // })
-
-  // const subHeaderStyle = css({
-  //   fontSize: '40px',
-  //   fontFamily: '"Palatino Linotype", "Book Antiqua", Palatino, serif',
-  //   fontStyle: 'italic',
-  //   fill: 'gray',
-  // })
+  const backgroundStyle = css({
+    fill: '#202020',
+  })
 
   return (
     <div {...style}>
       <Svg width={width}>
-        <PanZoom zoomMin={0.2} zoomMax={1}>
-          {/* <text {...textStyle} x={-1200} y={40}>
-          The Labyrinth of Minos
-        </text>
-        <text {...subHeaderStyle} x={-1100} y={100}>
-          by @tesseralis
-        </text> */}
+        <rect {...backgroundStyle} x={0} y={0} width="100%" height="100%" />
+        <PanZoom zoomMin={0.2} zoomMax={1} zoomSpeed={0.065}>
           <Polyominoes minos={nodes} linkData={links} />
         </PanZoom>
       </Svg>
