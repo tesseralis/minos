@@ -1,7 +1,9 @@
 import React, { memo, useState, useCallback } from 'react'
+import { css } from 'glamor'
 
 import { getSize } from './mino/mino'
 
+import useClickHandler from './useClickHandler'
 import Mino from './Mino'
 
 function getBlockSize(gen) {
@@ -13,19 +15,34 @@ const SelectableMino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
 
   const n = getSize(mino)
   const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
+  const handleClick = useClickHandler(onClick)
+  const size = getBlockSize(n)
+
+  const circleStyle = css({
+    opacity: 0,
+    cursor: 'pointer',
+  })
 
   return (
-    <Mino
-      mino={mino}
-      cx={cx}
-      cy={cy}
-      size={getBlockSize(n) * (hovered ? 1.25 : 1)}
-      fill={color}
-      stroke={selected ? 'white' : 'black'}
-      onClick={onClick}
-      onMouseOver={() => setHovered(true)}
-      onMouseOut={() => setHovered(false)}
-    />
+    <>
+      <Mino
+        mino={mino}
+        cx={cx}
+        cy={cy}
+        size={size * (hovered ? 1.25 : 1)}
+        fill={color}
+        stroke={selected ? 'white' : 'black'}
+      />
+      <circle
+        {...circleStyle}
+        {...handleClick}
+        cx={cx}
+        cy={cy}
+        r={(n * size) / 2}
+        onMouseOver={() => setHovered(true)}
+        onMouseOut={() => setHovered(false)}
+      />
+    </>
   )
 })
 

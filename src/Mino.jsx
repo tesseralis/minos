@@ -3,7 +3,6 @@ import { css } from 'glamor'
 
 import { getPoints, getMino } from './mino/mino'
 import { getOutline } from './mino/draw'
-import useClickHandler from './useClickHandler'
 
 function Square({ cx, cy, r, ...svgProps }) {
   return (
@@ -28,17 +27,7 @@ const oOctomino = getMino(0b111101111, 3)
  * Draws a mino in SVG using the given center x and y coordinates,
  * size, fill, stroke color, etc.
  */
-export default function Mino({
-  mino,
-  cx,
-  cy,
-  size,
-  fill,
-  stroke,
-  onClick,
-  onMouseOver,
-  onMouseOut,
-}) {
+export default function Mino({ mino, cx, cy, size, fill, stroke }) {
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
   const outline = getOutline(minoPoints)
@@ -52,13 +41,6 @@ export default function Mino({
 
   const scaledPoints = minoPoints.map(([x, y]) => [x * size, y * size])
   const points = scaledPoints.map(([x, y]) => [x - avgX + cx, y - avgY + cy])
-
-  const handleClick = useClickHandler(onClick)
-
-  const circleStyle = css({
-    opacity: 0,
-    cursor: 'pointer',
-  })
 
   const style = css({
     stroke,
@@ -83,16 +65,6 @@ export default function Mino({
       {mino === oOctomino && (
         <Square cx={cx} cy={cy} r={size / 2} fill="none" {...style} />
       )}
-      {/* TODO maybe move this logic out of here? */}
-      <circle
-        {...circleStyle}
-        {...handleClick}
-        cx={cx}
-        cy={cy}
-        r={(minoPoints.length * size) / 2}
-        onMouseOver={onMouseOver}
-        onMouseOut={onMouseOut}
-      />
     </>
   )
 }
