@@ -136,14 +136,14 @@ for (let key of Object.keys(colorMap)) {
 }
 
 const mixMap = {
-  none: 40,
-  reflectOrtho: 33,
-  reflectDiag: 33,
-  rotate2: 33,
-  dihedralOrtho: 25,
-  dihedralDiag: 25,
-  rotate4: 25,
-  all: 10,
+  none: 50,
+  reflectOrtho: 40,
+  reflectDiag: 40,
+  rotate2: 40,
+  dihedralOrtho: 30,
+  dihedralDiag: 30,
+  rotate4: 30,
+  all: 20,
 }
 
 function sum(nums) {
