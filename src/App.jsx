@@ -15,7 +15,7 @@ const ringRadiusBase = 400
 const numGenerations = 8
 const width = 1400
 
-const minScale = 1 / 6
+const minScale = 1 / 9
 const maxScale = 1 / 2
 
 const { nodes, links, meta } = generateGraph(numGenerations)

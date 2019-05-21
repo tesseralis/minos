@@ -83,6 +83,7 @@ export default function Mino({
       {mino === oOctomino && (
         <Square cx={cx} cy={cy} r={size / 2} fill="none" {...style} />
       )}
+      {/* TODO maybe move this logic out of here? */}
       <circle
         {...circleStyle}
         {...handleClick}
