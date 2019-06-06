@@ -25,7 +25,6 @@ export default function InfoModal({ isOpen, onClose }) {
     height: '32rem',
     backgroundColor: '#222',
     border: '2px solid #AAA',
-    outline: 'none', // FIXME need what-input
     padding: '2rem',
     color: '#AAA',
     fontFamily: 'Garamond',
