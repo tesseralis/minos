@@ -9,6 +9,7 @@ import { generateGraph } from './mino/generate'
 import useClickHandler from './useClickHandler'
 import Mino from './SelectableMino'
 import PanZoom from './PanZoom'
+import InfoButton from './InfoButton'
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 400
@@ -235,8 +236,17 @@ export default function App() {
     bottom: 0,
   })
 
+  const popupStyle = css({
+    position: 'fixed',
+    top: '2rem',
+    right: '2rem',
+  })
+
   return (
     <div {...style}>
+      <div {...popupStyle}>
+        <InfoButton />
+      </div>
       <Svg width={width}>
         <Background onClick={() => setSelected(null)} />
         <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
