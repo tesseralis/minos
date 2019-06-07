@@ -39,7 +39,7 @@ function Content() {
       </p>
 
       <p {...pStyle}>
-        Polyominoes are shaded according to their symmetry and the colors of its
+        Each polyomino is shaded according to its symmetry and the colors of its
         parents.
       </p>
 
@@ -101,20 +101,22 @@ export default function InfoModal({ isOpen, onClose }) {
     },
   })
 
+  function requestClose() {
+    setOpened(false)
+    onClose()
+  }
+
   return (
     <Modal
       isOpen={isOpen}
       className={`${style}`}
       overlayClassName={`${overlayStyle}`}
       onAfterOpen={() => setOpened(true)}
-      onRequestClose={() => {
-        setOpened(false)
-        onClose()
-      }}
+      onRequestClose={requestClose}
       closeTimeoutMS={timeout}
     >
       <Content />
-      <button {...enterButtonStyle} onClick={onClose}>
+      <button {...enterButtonStyle} onClick={requestClose}>
         Enter
       </button>
     </Modal>
