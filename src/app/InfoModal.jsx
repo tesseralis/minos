@@ -6,47 +6,59 @@ import { colors } from 'style/theme'
 
 Modal.setAppElement('#root')
 
+function P({ children }) {
+  const style = css({
+    fontSize: '1rem',
+    lineHeight: 1.4,
+    marginBottom: '1rem',
+  })
+  return <p {...style}>{children}</p>
+}
+
+function Em({ children }) {
+  const style = css({
+    fontStyle: 'italic',
+  })
+  return <em {...style}>{children}</em>
+}
+
 function Content() {
   const style = css({
-    fontSize: '1.125rem',
+    fontFamily: 'Garamond',
     lineHeight: 1.25,
     display: 'flex',
     flexDirection: 'column',
     height: '100%',
-    alignItems: 'center',
   })
   const headingStyle = css({
     fontWeight: 400,
+    fontSize: '1.75rem',
     marginBottom: '1.25rem',
-  })
-
-  const pStyle = css({
-    marginBottom: '1rem',
   })
 
   return (
     <div {...style}>
       <h1 {...headingStyle}>The Labyrinth of Minos</h1>
-      <p {...pStyle}>
-        A <em>polyomino</em> is a shape composed of squares joined together at
+      <P>
+        A <Em>polyomino</Em> is a shape composed of squares joined together at
         their edges.
-      </p>
+      </P>
 
-      <p {...pStyle}>
+      <P>
         This labyrinth shows the family tree of polyominoes up to 8 squares. Two
-        polyominoes are connected if one is a <em>child</em> of another—that is,
+        polyominoes are connected if one is a <Em>child</Em> of another—that is,
         if it can be created by adding a single square to the parent.
-      </p>
+      </P>
 
-      <p {...pStyle}>
+      <P>
         Each polyomino is shaded according to its symmetry and the colors of its
         parents.
-      </p>
+      </P>
 
-      <p {...pStyle}>
+      <P>
         Click/tap on a mino to highlight its parents and children. Drag to pan
         across the graph and scroll/pinch to zoom.
-      </p>
+      </P>
     </div>
   )
 }
