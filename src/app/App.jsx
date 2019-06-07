@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react'
+import React, { memo, useState, useEffect, useCallback } from 'react'
 import { css } from 'glamor'
 import { lineRadial, curveNatural } from 'd3-shape'
 import tinycolor from 'tinycolor2'
@@ -213,10 +213,27 @@ function Svg({ width, children }) {
 }
 
 /**
- * An empty background element that can accept clicks
+ * An empty background element that can deselect on clicks or pressing ESC
  */
 function Background({ onClick }) {
   const clickHandler = useClickHandler(onClick)
+
+  const handleEscape = useCallback(
+    e => {
+      if (e.which === 27) {
+        onClick()
+      }
+    },
+    [onClick],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleEscape)
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape)
+    }
+  }, [handleEscape])
 
   return (
     <rect
