@@ -8,7 +8,8 @@ import { generateGraph } from 'mino/generate'
 
 import { colors } from 'style/theme'
 import useClickHandler from './useClickHandler'
-import Mino from './SelectableMino'
+import SelectableMino from './SelectableMino'
+import Mino from './Mino'
 import PanZoom from './PanZoom'
 import InfoButton from './InfoButton'
 
@@ -97,13 +98,13 @@ const curve = lineRadial()
   .angle(d => d.angle)
   .curve(curveNatural)
 
-const Orbital = ({ minos, gen, selected, onSelect }) => {
+const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
   return (
     <>
       {minos.map((mino, i) => {
         const [x, y] = getCoords(gen, i)
         return (
-          <Mino
+          <SelectableMino
             selected={!!selected && selected.has(mino)}
             key={i}
             cx={x}
@@ -111,6 +112,7 @@ const Orbital = ({ minos, gen, selected, onSelect }) => {
             mino={mino}
             color={meta[mino].color.toHexString()}
             onSelect={onSelect}
+            onHover={onHover}
           />
         )
       })}
@@ -148,7 +150,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   )
 })
 
-const MinoGraph = memo(({ minos, linkData, selected, onSelect }) => {
+const MinoGraph = memo(({ minos, linkData, selected, onSelect, onHover }) => {
   const { parents, children } = meta[selected] || {}
   const selectedLinks = selected
     ? [...children, ...parents].map(relative => [selected, relative])
@@ -189,6 +191,7 @@ const MinoGraph = memo(({ minos, linkData, selected, onSelect }) => {
             key={i}
             selected={getSelected(i)}
             onSelect={onSelect}
+            onHover={onHover}
           />
         )
       })}
@@ -249,6 +252,7 @@ function Background({ onClick }) {
 
 export default function App() {
   const [selected, setSelected] = useState(null)
+  const [hovered, setHovered] = useState(null)
 
   const style = css({
     position: 'fixed',
@@ -277,8 +281,20 @@ export default function App() {
             linkData={links}
             selected={selected}
             onSelect={setSelected}
+            onHover={setHovered}
           />
         </PanZoom>
+        {hovered && (
+          <Mino
+            mino={hovered}
+            fill={meta[hovered].color}
+            stroke="black"
+            size={32}
+            cx={32}
+            cy={32}
+            anchor="top left"
+          />
+        )}
       </Svg>
     </div>
   )

@@ -10,41 +10,59 @@ function getBlockSize(gen) {
   return 2 + (8 - gen) ** 2 / 2
 }
 
-const SelectableMino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
-  const [hovered, setHovered] = useState(false)
+const SelectableMino = memo(
+  ({
+    mino,
+    cx,
+    cy,
+    color,
+    selected,
+    onSelect = () => {},
+    onHover = () => {},
+  }) => {
+    const [hovered, setHovered] = useState(false)
 
-  const n = getSize(mino)
-  const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
-  const handleClick = useClickHandler(onClick)
-  const size = getBlockSize(n)
+    const n = getSize(mino)
+    const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
+    const handleHover = useCallback(
+      value => {
+        setHovered(value)
+        console.log('calling onHover with ', value ? mino : null)
+        onHover(value ? mino : null)
+      },
+      [mino, onHover],
+    )
+    const handleClick = useClickHandler(onClick)
+    const size = getBlockSize(n)
 
-  const circleStyle = css({
-    opacity: 0,
-    cursor: 'pointer',
-  })
+    const circleStyle = css({
+      opacity: 0,
+      cursor: 'pointer',
+    })
 
-  return (
-    <>
-      <Mino
-        mino={mino}
-        cx={cx}
-        cy={cy}
-        size={size * (hovered ? 1.25 : 1)}
-        fill={color}
-        stroke={selected ? 'white' : 'black'}
-      />
-      <circle
-        {...circleStyle}
-        {...handleClick}
-        tabIndex={0}
-        cx={cx}
-        cy={cy}
-        r={(n * size) / 2}
-        onMouseOver={() => setHovered(true)}
-        onMouseOut={() => setHovered(false)}
-      />
-    </>
-  )
-})
+    return (
+      <>
+        <Mino
+          mino={mino}
+          cx={cx}
+          cy={cy}
+          size={size * (hovered ? 1.25 : 1)}
+          fill={color}
+          stroke={selected ? 'white' : 'black'}
+        />
+        <circle
+          {...circleStyle}
+          {...handleClick}
+          tabIndex={0}
+          cx={cx}
+          cy={cy}
+          r={(n * size) / 2}
+          onMouseOver={() => handleHover(true)}
+          onMouseOut={() => handleHover(false)}
+        />
+      </>
+    )
+  },
+)
 
 export default SelectableMino
