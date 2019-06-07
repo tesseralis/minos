@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Modal from 'react-modal'
 import { css } from 'glamor'
 
@@ -51,9 +51,11 @@ function Content() {
   )
 }
 
+const timeout = 350
 export default function InfoModal({ isOpen, onClose }) {
+  const [isOpened, setOpened] = useState(isOpen)
   const overlayStyle = css({
-    backgroundColor: 'rgba(128, 128, 128, .4)',
+    backgroundColor: 'rgba(32, 32, 32, .75)',
 
     position: 'fixed',
     top: 0,
@@ -64,6 +66,9 @@ export default function InfoModal({ isOpen, onClose }) {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
+
+    opacity: isOpened ? 1 : 0,
+    transition: `opacity ${timeout}ms ease-in-out`,
   })
   const style = css({
     width: '32rem',
@@ -101,7 +106,12 @@ export default function InfoModal({ isOpen, onClose }) {
       isOpen={isOpen}
       className={`${style}`}
       overlayClassName={`${overlayStyle}`}
-      onRequestClose={onClose}
+      onAfterOpen={() => setOpened(true)}
+      onRequestClose={() => {
+        setOpened(false)
+        onClose()
+      }}
+      closeTimeoutMS={timeout}
     >
       <Content />
       <button {...enterButtonStyle} onClick={onClose}>

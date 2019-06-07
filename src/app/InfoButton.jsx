@@ -7,7 +7,7 @@ import InfoModal from './InfoModal'
 import { colors } from 'style/theme'
 
 export default function InfoButton() {
-  const [open, setOpen] = useState(true)
+  const [open, setOpen] = useState(false)
 
   const style = css({
     display: 'flex',
