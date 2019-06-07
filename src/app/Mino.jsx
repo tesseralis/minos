@@ -42,6 +42,9 @@ const oOctomino = getMino(0b111101111, 3)
 /**
  * Draws a mino in SVG using the given center x and y coordinates,
  * size, fill, stroke color, etc.
+ *
+ * @param anchor a string representing where edge of the mino should be anchored
+ * (e.g. "top left", "bottom right", "center center")
  */
 export default function Mino({
   mino,
@@ -50,7 +53,7 @@ export default function Mino({
   size,
   fill,
   stroke,
-  anchor = 'center',
+  anchor = 'center center',
 }) {
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
