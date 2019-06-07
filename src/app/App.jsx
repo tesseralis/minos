@@ -250,7 +250,7 @@ export default function App() {
       </div>
       <Svg width={width}>
         <Background onClick={() => setSelected(null)} />
-        <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
+        <PanZoom minZoom={0.25} maxZoom={2} zoomSpeed={0.065}>
           <MinoGraph
             minos={nodes}
             linkData={links}

@@ -70,6 +70,7 @@ export default function InfoModal({ isOpen, onClose }) {
     opacity: isOpened ? 1 : 0,
     transition: `opacity ${timeout}ms ease-in-out`,
   })
+
   const style = css({
     width: '32rem',
     height: '32rem',
@@ -81,6 +82,9 @@ export default function InfoModal({ isOpen, onClose }) {
 
     display: 'flex',
     flexDirection: 'column',
+
+    transform: `scale(${isOpened ? 1 : 0})`,
+    transition: `transform ${timeout}ms ease-in-out`,
   })
 
   const enterButtonStyle = css({
