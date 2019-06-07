@@ -124,6 +124,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   const style = css({
     pointerEvents: 'none',
   })
+
   return (
     <>
       {links.map((link, i) => {
@@ -140,8 +141,8 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
             key={i}
             d={curve(spline(link))}
             fill="none"
-            stroke={stroke || color}
             opacity={opacity}
+            stroke={stroke || color}
             strokeWidth={strokeWidth || 4 / (gen / 2 + 1) ** 2}
           />
         )

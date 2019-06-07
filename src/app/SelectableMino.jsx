@@ -27,7 +27,6 @@ const SelectableMino = memo(
     const handleHover = useCallback(
       value => {
         setHovered(value)
-        console.log('calling onHover with ', value ? mino : null)
         onHover(value ? mino : null)
       },
       [mino, onHover],

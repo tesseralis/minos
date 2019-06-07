@@ -1,5 +1,4 @@
 import React from 'react'
-import { css } from 'glamor'
 
 import { getPoints } from 'mino/mino'
 import { getOutline } from 'mino/draw'
@@ -61,11 +60,6 @@ export default function Mino({
 
   const points = minoPoints.map(scale).map(translate)
 
-  const style = css({
-    stroke,
-    strokeWidth,
-  })
-
   return (
     <>
       {points.map((point, i) => (
@@ -80,7 +74,12 @@ export default function Mino({
           strokeWidth={strokeWidth * 0.75}
         />
       ))}
-      <polygon points={outlineStr} fill="none" {...style} />
+      <polygon
+        points={outlineStr}
+        fill="none"
+        stroke={stroke}
+        strokeWidth={strokeWidth}
+      />
     </>
   )
 }
