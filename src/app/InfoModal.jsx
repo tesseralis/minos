@@ -55,7 +55,7 @@ const timeout = 350
 export default function InfoModal({ isOpen, onClose }) {
   const [isOpened, setOpened] = useState(isOpen)
   const overlayStyle = css({
-    backgroundColor: 'rgba(32, 32, 32, .75)',
+    backgroundColor: 'rgba(32, 32, 32, .5)',
 
     position: 'fixed',
     top: 0,
@@ -101,7 +101,8 @@ export default function InfoModal({ isOpen, onClose }) {
     fontFamily: 'Garamond',
 
     ':hover': {
-      backgroundColor: '#555',
+      // TODO make this a "lighten" function
+      backgroundColor: '#444',
     },
   })
 
