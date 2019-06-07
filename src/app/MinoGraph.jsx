@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react'
+import React, { memo, useState, useEffect, useCallback } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
 import { lineRadial, curveNatural } from 'd3-shape'
@@ -6,11 +6,17 @@ import { lineRadial, curveNatural } from 'd3-shape'
 import { generateGraph } from 'mino/generate'
 import { getSize } from 'mino/mino'
 
+import { colors } from 'style/theme'
+
+import useClickHandler from './useClickHandler'
+import Mino from './Mino'
 import SelectableMino from './SelectableMino'
+import PanZoom from './PanZoom'
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 400
 const numGenerations = 8
+const width = 1400
 
 const minScale = 1 / 9
 const maxScale = 1 / 2
@@ -146,7 +152,61 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   )
 })
 
-export default memo(function MinoGraph({ selected, onSelect, onHover }) {
+function Svg({ width, children }) {
+  const style = css({
+    width: '100%',
+    height: '100%',
+    backgroundColor: colors.bg,
+  })
+  // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
+  const viewBox = `-${width / 2} ${-width / 25} ${width} ${width / 2}`
+
+  return (
+    <svg {...style} viewBox={viewBox}>
+      {children}
+    </svg>
+  )
+}
+
+/**
+ * An empty background element that can deselect on clicks or pressing ESC
+ */
+function Background({ onClick }) {
+  const clickHandler = useClickHandler(onClick)
+
+  const handleEscape = useCallback(
+    e => {
+      if (e.which === 27) {
+        onClick()
+      }
+    },
+    [onClick],
+  )
+
+  useEffect(() => {
+    window.addEventListener('keydown', handleEscape)
+
+    return () => {
+      window.removeEventListener('keydown', handleEscape)
+    }
+  }, [handleEscape])
+
+  return (
+    <rect
+      x={0}
+      y={0}
+      width="100%"
+      height="100%"
+      opacity={0}
+      {...clickHandler}
+    />
+  )
+}
+
+export default memo(function MinoGraph() {
+  const [selected, setSelected] = useState(null)
+  const [hovered, setHovered] = useState(null)
+
   const { parents, children } = meta[selected] || {}
   const selectedLinks = selected
     ? [...children, ...parents].map(relative => [selected, relative])
@@ -168,34 +228,43 @@ export default memo(function MinoGraph({ selected, onSelect, onHover }) {
     [selected, children, parents],
   )
 
-  const handleHover = useCallback(
-    mino => onHover(mino ? { mino, color: meta[mino].color } : null),
-    [onHover],
-  )
-
   return (
-    <>
-      <MinoLinks links={links} />
-      {selected && (
-        <MinoLinks
-          links={selectedLinks}
-          stroke="white"
-          strokeWidth={1.5}
-          opacity={0.33}
+    <Svg width={width}>
+      <Background onClick={() => setSelected(null)} />
+      <PanZoom minZoom={0.25} maxZoom={2} zoomSpeed={0.065}>
+        <MinoLinks links={links} />
+        {selected && (
+          <MinoLinks
+            links={selectedLinks}
+            stroke="white"
+            strokeWidth={1.5}
+            opacity={0.33}
+          />
+        )}
+        {nodes.map((minoGen, i) => {
+          return (
+            <Orbital
+              minos={minoGen}
+              gen={i}
+              key={i}
+              selected={getSelected(i)}
+              onSelect={setSelected}
+              onHover={setHovered}
+            />
+          )
+        })}
+      </PanZoom>
+      {hovered && (
+        <Mino
+          mino={hovered}
+          fill={meta[hovered].color}
+          stroke="black"
+          size={32}
+          cx={32}
+          cy={32}
+          anchor="top left"
         />
       )}
-      {nodes.map((minoGen, i) => {
-        return (
-          <Orbital
-            minos={minoGen}
-            gen={i}
-            key={i}
-            selected={getSelected(i)}
-            onSelect={onSelect}
-            onHover={handleHover}
-          />
-        )
-      })}
-    </>
+    </Svg>
   )
 })
