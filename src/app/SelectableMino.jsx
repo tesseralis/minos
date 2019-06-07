@@ -36,6 +36,7 @@ const SelectableMino = memo(({ mino, cx, cy, color, selected, onSelect }) => {
       <circle
         {...circleStyle}
         {...handleClick}
+        tabIndex={0}
         cx={cx}
         cy={cy}
         r={(n * size) / 2}

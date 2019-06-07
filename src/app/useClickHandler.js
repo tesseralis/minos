@@ -20,6 +20,12 @@ export default function useClickHandler(onClick) {
           onClick()
         }
       },
+
+      onKeyPress(e) {
+        if (e.which === 32 || e.which === 13) {
+          onClick()
+        }
+      },
     }),
     [onClick],
   )
