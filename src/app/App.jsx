@@ -136,7 +136,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
             fill="none"
             stroke={stroke || color}
             opacity={opacity}
-            strokeWidth={strokeWidth || 3 / (gen / 2 + 1) ** 2}
+            strokeWidth={strokeWidth || 4 / (gen / 2 + 1) ** 2}
           />
         )
       })}
@@ -237,7 +237,7 @@ export default function App() {
     bottom: 0,
   })
 
-  const popupStyle = css({
+  const infoButtonStyle = css({
     position: 'fixed',
     bottom: '2rem',
     right: '2rem',
@@ -245,7 +245,7 @@ export default function App() {
 
   return (
     <div {...style}>
-      <div {...popupStyle}>
+      <div {...infoButtonStyle}>
         <InfoButton />
       </div>
       <Svg width={width}>
