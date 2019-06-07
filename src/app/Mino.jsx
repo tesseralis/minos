@@ -1,14 +1,8 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { getPoints, getMino } from 'mino/mino'
+import { getPoints } from 'mino/mino'
 import { getOutline } from 'mino/draw'
-
-function Square({ cx, cy, r, ...svgProps }) {
-  return (
-    <rect x={cx - r} y={cy - r} width={r * 2} height={r * 2} {...svgProps} />
-  )
-}
 
 function getCoordAnchor(ns, anchor) {
   const min = Math.min(...ns)
@@ -38,7 +32,6 @@ function getAnchor(points, anchor) {
   return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
 }
 
-const oOctomino = getMino(0b111101111, 3)
 /**
  * Draws a mino in SVG using the given center x and y coordinates,
  * size, fill, stroke color, etc.
@@ -88,9 +81,6 @@ export default function Mino({
         />
       ))}
       <polygon points={outlineStr} fill="none" {...style} />
-      {mino === oOctomino && (
-        <Square cx={cx} cy={cy} r={size / 2} fill="none" {...style} />
-      )}
     </>
   )
 }
