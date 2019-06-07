@@ -128,7 +128,7 @@ const colorMap = {
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
   rotate4: 'violet',
-  all: 'ddd',
+  all: '#ddd',
 }
 
 for (let key of Object.keys(colorMap)) {

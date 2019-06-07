@@ -1,8 +1,8 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { getPoints, getMino } from './mino/mino'
-import { getOutline } from './mino/draw'
+import { getPoints, getMino } from 'mino/mino'
+import { getOutline } from 'mino/draw'
 
 function Square({ cx, cy, r, ...svgProps }) {
   return (

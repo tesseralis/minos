@@ -2,6 +2,8 @@ import React from 'react'
 import Modal from 'react-modal'
 import { css } from 'glamor'
 
+import { colors } from 'style/theme'
+
 Modal.setAppElement('#root')
 
 function Content() {
@@ -66,10 +68,10 @@ export default function InfoModal({ isOpen, onClose }) {
   const style = css({
     width: '32rem',
     height: '32rem',
-    backgroundColor: '#222',
-    border: '2px solid #AAA',
+    backgroundColor: colors.bg,
+    border: `2px solid ${colors.fg}`,
     padding: '2rem',
-    color: '#AAA',
+    color: colors.fg,
     fontFamily: 'Garamond',
 
     display: 'flex',
@@ -77,14 +79,17 @@ export default function InfoModal({ isOpen, onClose }) {
   })
 
   const enterButtonStyle = css({
-    marginTop: 'auto',
     width: '8rem',
     height: '4rem',
-    backgroundColor: '#444',
-    color: '#CCC',
+
+    alignSelf: 'center',
+    marginTop: 'auto',
+
+    backgroundColor: colors.bg2,
+    color: colors.fg,
+
     fontSize: '1.5rem',
     fontFamily: 'Garamond',
-    alignSelf: 'center',
 
     ':hover': {
       backgroundColor: '#555',

@@ -3,9 +3,10 @@ import { css } from 'glamor'
 import { lineRadial, curveNatural } from 'd3-shape'
 import tinycolor from 'tinycolor2'
 
-import { getSize } from './mino/mino'
-import { generateGraph } from './mino/generate'
+import { getSize } from 'mino/mino'
+import { generateGraph } from 'mino/generate'
 
+import { colors } from 'style/theme'
 import useClickHandler from './useClickHandler'
 import Mino from './SelectableMino'
 import PanZoom from './PanZoom'
@@ -195,7 +196,7 @@ function Svg({ width, children }) {
   const style = css({
     width: '100%',
     height: '100%',
-    backgroundColor: '#202020',
+    backgroundColor: colors.bg,
   })
   // TODO make sure this viewbox definition makes sense for a variety of aspect ratios
   const viewBox = `-${width / 2} ${-width / 25} ${width} ${width / 2}`
@@ -238,7 +239,7 @@ export default function App() {
 
   const popupStyle = css({
     position: 'fixed',
-    top: '2rem',
+    bottom: '2rem',
     right: '2rem',
   })
 

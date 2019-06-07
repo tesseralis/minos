@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 
-import { getSize } from './mino/mino'
+import { getSize } from '../mino/mino'
 
 import useClickHandler from './useClickHandler'
 import Mino from './Mino'
