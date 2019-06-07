@@ -1,10 +1,53 @@
 import React from 'react'
 import Modal from 'react-modal'
 import { css } from 'glamor'
-import Icon from '@mdi/react'
-import { mdiClose } from '@mdi/js'
 
 Modal.setAppElement('#root')
+
+function Content() {
+  const style = css({
+    fontSize: '1.125rem',
+    lineHeight: 1.25,
+    display: 'flex',
+    flexDirection: 'column',
+    height: '100%',
+    alignItems: 'center',
+  })
+  const headingStyle = css({
+    fontWeight: 400,
+    marginBottom: '1.25rem',
+  })
+
+  const pStyle = css({
+    marginBottom: '1rem',
+  })
+
+  return (
+    <div {...style}>
+      <h1 {...headingStyle}>The Labyrinth of Minos</h1>
+      <p {...pStyle}>
+        A <em>polyomino</em> is a shape composed of squares joined together at
+        their edges.
+      </p>
+
+      <p {...pStyle}>
+        This labyrinth shows the family tree of polyominoes up to 8 squares. Two
+        polyominoes are connected if one is a <em>child</em> of another—that is,
+        if it can be created by adding a single square to the parent.
+      </p>
+
+      <p {...pStyle}>
+        Polyominoes are shaded according to their symmetry and the colors of its
+        parents.
+      </p>
+
+      <p {...pStyle}>
+        Click/tap on a mino to highlight its parents and children. Drag to pan
+        across the graph and scroll/pinch to zoom.
+      </p>
+    </div>
+  )
+}
 
 export default function InfoModal({ isOpen, onClose }) {
   const overlayStyle = css({
@@ -28,32 +71,11 @@ export default function InfoModal({ isOpen, onClose }) {
     padding: '2rem',
     color: '#AAA',
     fontFamily: 'Garamond',
-  })
-  const headerStyle = css({
-    display: 'flex',
-    marginBottom: '1.5rem',
-  })
 
-  const headingStyle = css({
-    fontWeight: 400,
-  })
-
-  const descriptionStyle = css({
-    fontSize: '1.25rem',
-    lineHeight: 1.25,
     display: 'flex',
     flexDirection: 'column',
-    height: '80%',
-    alignItems: 'center',
   })
 
-  const closeButtonStyle = css({
-    marginLeft: 'auto',
-    fontSize: '2rem',
-    backgroundColor: 'Transparent',
-    color: '#AAA',
-    border: 'none',
-  })
   const enterButtonStyle = css({
     marginTop: 'auto',
     width: '8rem',
@@ -62,6 +84,11 @@ export default function InfoModal({ isOpen, onClose }) {
     color: '#CCC',
     fontSize: '1.5rem',
     fontFamily: 'Garamond',
+    alignSelf: 'center',
+
+    ':hover': {
+      backgroundColor: '#555',
+    },
   })
 
   return (
@@ -71,25 +98,10 @@ export default function InfoModal({ isOpen, onClose }) {
       overlayClassName={`${overlayStyle}`}
       onRequestClose={onClose}
     >
-      <header {...headerStyle}>
-        <h1 {...headingStyle}>The Labyrinth of Minos</h1>
-        <button {...closeButtonStyle} onClick={onClose}>
-          <Icon path={mdiClose} size="1.5rem" color="#AAA" />
-        </button>
-      </header>
-      <main {...descriptionStyle}>
-        <p>This app displays the hierachy of polyominoes up to 8 squares.</p>
-
-        <p>
-          Clicking each mino will highlights its direct parents and children.
-        </p>
-
-        <p>Drag the screen to pan, and scroll or pinch to zoom.</p>
-
-        <button {...enterButtonStyle} onClick={onClose}>
-          Enter
-        </button>
-      </main>
+      <Content />
+      <button {...enterButtonStyle} onClick={onClose}>
+        Enter
+      </button>
     </Modal>
   )
 }

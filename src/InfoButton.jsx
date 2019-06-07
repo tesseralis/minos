@@ -14,6 +14,13 @@ export default function InfoButton() {
     border: '1px black #AAA',
     color: '#AAA',
     fontSize: '3rem',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+
+    ':hover': {
+      backgroundColor: '#333',
+    },
   })
 
   return (
@@ -23,7 +30,7 @@ export default function InfoButton() {
         aria-label="App Information"
         onClick={() => setOpen(true)}
       >
-        <Icon path={mdiInformationVariant} color="#AAA" />
+        <Icon size="2.5rem" path={mdiInformationVariant} color="#AAA" />
       </button>
       <InfoModal isOpen={open} onClose={() => setOpen(false)} />
     </>
