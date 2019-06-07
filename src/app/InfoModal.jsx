@@ -6,6 +6,7 @@ import { colors } from 'style/theme'
 
 Modal.setAppElement('#root')
 
+// TODO use markdown instead when we'll have lots of paragraphs
 function P({ children }) {
   const style = css({
     fontSize: '1rem',
