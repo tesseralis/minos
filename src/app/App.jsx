@@ -63,7 +63,7 @@ function radiusAndAngle([gen, i]) {
   const total = nodes[gen].length
   const turn = total === 1 ? 0.5 : i / (total - 1)
   const scale = minScale + (gen / (numGenerations - 1)) * (maxScale - minScale)
-  const scaledTurn = turn * scale + (1 - scale) / 2
+  const scaledTurn = (scale - 1) / 2 - turn * scale
   const angle = scaledTurn * tau
   return { radius, angle }
 }
