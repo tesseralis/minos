@@ -64,6 +64,7 @@ function spline([source, target]) {
   const src = radiusAndAngle(getIndex(source))
   const tgt = radiusAndAngle(getIndex(target))
   return [src, ...interpolatePolar(src, tgt, 2), tgt]
+  // return [src, tgt]
 }
 
 const curve = lineRadial()
@@ -121,6 +122,12 @@ const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
   )
 }
 
+const linkColors = links.map(link => {
+  const srcMino = link[0]
+  const tgtMino = link[1]
+  return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
+})
+
 const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   const style = css({
     pointerEvents: 'none',
@@ -130,11 +137,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
     <>
       {links.map((link, i) => {
         const srcMino = link[0]
-        const tgtMino = link[1]
-
-        const color = tinycolor
-          .mix(meta[srcMino].color, meta[tgtMino].color)
-          .toHexString()
+        const color = linkColors[i]
         const gen = getIndex(srcMino)[0]
         return (
           <path
