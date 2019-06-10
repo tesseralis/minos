@@ -7,15 +7,15 @@ export default function useClickHandler(onClick) {
 
   return useMemo(
     () => ({
-      onMouseDown() {
+      onPointerDown() {
         dragged.current = false
       },
 
-      onMouseMove() {
+      onPointerMove() {
         dragged.current = true
       },
 
-      onMouseUp() {
+      onPointerUp() {
         if (!dragged.current) {
           onClick()
         }
