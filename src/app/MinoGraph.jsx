@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
+import memoize from 'lodash/memoize'
 
 import { generateGraph } from 'mino/generate'
 import { getSize } from 'mino/mino'
@@ -59,15 +60,11 @@ function getCenterAndRadus([x1, y1], [x2, y2], [x3, y3]) {
   return { center, radius }
 }
 
-function normalizeAngle(theta) {
-  return theta > 0 ? theta : theta + 2 * Math.PI
-}
-
 /**
  * Get the angle of point against origin (x0, y0)
  */
 function getAngle([x0, y0], [x1, y1]) {
-  return normalizeAngle(Math.atan2(y1 - y0, x1 - x0))
+  return Math.atan2(y1 - y0, x1 - x0)
 }
 
 const indices = {}
@@ -104,7 +101,7 @@ const linkColors = links.map(link => {
   return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
 })
 
-function getPath(link) {
+const getPath = memoize(function(link) {
   const srcMino = link[0]
   const tgtMino = link[1]
   const gen = getSize(srcMino)
@@ -133,7 +130,7 @@ function getPath(link) {
     ccw,
   )
   return path.toString()
-}
+})
 
 const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
   return (
@@ -263,7 +260,7 @@ export default memo(function MinoGraph() {
   return (
     <Svg width={width}>
       <Background onClick={() => setSelected(null)} />
-      <PanZoom minZoom={0.25} maxZoom={2} zoomSpeed={0.065}>
+      <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
         <MinoLinks links={links} />
         {selected && (
           <MinoLinks
