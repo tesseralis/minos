@@ -238,7 +238,9 @@ export default memo(function MinoGraph() {
 
   const { parents, children } = meta[selected] || {}
   const selectedLinks = selected
-    ? [...children, ...parents].map(relative => [selected, relative])
+    ? [...parents]
+        .map(p => [p, selected])
+        .concat([...children].map(c => [selected, c]))
     : []
 
   const getSelected = useCallback(
