@@ -20,7 +20,7 @@ const numGenerations = 8
 const width = 1400
 
 const minScale = 1 / 9
-const maxScale = 1 / 2
+const maxScale = 1 / 2 - 1 / 64 // make sure the angles are strictly negative
 
 function sum(arr) {
   return arr.reduce((a, b) => a + b, 0)
@@ -140,6 +140,31 @@ function getCoords(gen, i) {
   return [radius * Math.sin(angle), radius * -Math.cos(angle)]
 }
 
+const linkColors = links.map(link => {
+  const srcMino = link[0]
+  const tgtMino = link[1]
+  return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
+})
+
+const linkPaths = links.map(link => {
+  const srcMino = link[0]
+  const tgtMino = link[1]
+  const gen = getSize(srcMino)
+  const origin = [0, -ringRadius(gen) / 2]
+  const src = getCoords(...getIndex(srcMino))
+  const tgt = getCoords(...getIndex(tgtMino))
+
+  const { radius, center } = getCenterAndRadus(src, tgt, origin)
+  const angle1 = getAngle(center, src)
+  const angle2 = getAngle(center, tgt)
+  const ccw = angle1 > angle2
+  const path = d3.path()
+
+  path.moveTo(...src)
+  path.arc(center[0], center[1], radius, angle1, angle2, ccw)
+  return path.toString()
+})
+
 const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
   return (
     <>
@@ -161,31 +186,6 @@ const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
     </>
   )
 }
-
-const linkColors = links.map(link => {
-  const srcMino = link[0]
-  const tgtMino = link[1]
-  return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
-})
-
-const linkPaths = links.map(link => {
-  const origin = [0, 0]
-  const srcMino = link[0]
-  const tgtMino = link[1]
-  const src = getCoords(...getIndex(srcMino))
-  const tgt = getCoords(...getIndex(tgtMino))
-  const { radius, center } = getCenterAndRadus(src, tgt, origin)
-  const angle1 = getAngle(center, src)
-  const angle2 = getAngle(center, tgt)
-  // const ccw = Math.abs(angle1 - angle2) > Math.PI
-  // const ccw = angle1 > angle2
-  const path = d3.path()
-
-  const ccw = getAngle(origin, src) > getAngle(origin, tgt)
-  path.moveTo(...src)
-  path.arc(center[0], center[1], radius, angle1, angle2, ccw)
-  return path.toString()
-})
 
 const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   const style = css({
