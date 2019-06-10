@@ -1,7 +1,6 @@
 import React, { memo, useState, useEffect, useCallback } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
-import { lineRadial, curveNatural } from 'd3-shape'
 import * as d3 from 'd3-path'
 
 import { generateGraph } from 'mino/generate'
@@ -22,51 +21,11 @@ const width = 1400
 const minScale = 1 / 9
 const maxScale = 1 / 2 - 1 / 64 // make sure the angles are strictly negative
 
-function sum(arr) {
-  return arr.reduce((a, b) => a + b, 0)
-}
-
-function avg(...arr) {
-  return sum(arr) / arr.length
-}
-function avgAngle(a, b) {
-  const x = Math.abs(a - b)
-  const result = x < Math.PI ? (a + b) / 2 : (a + b) / 2 + Math.PI
-  return result % (2 * Math.PI)
-}
-
-function avgPolar(a, b) {
-  const radius = avg(a.radius, b.radius)
-  const angle = avgAngle(a.angle, b.angle)
-  return { radius, angle }
-}
-
-function interpolatePolar(a, b, n = 0) {
-  const half = avgPolar(a, b)
-  if (n === 0) {
-    return [half]
-  } else {
-    return [
-      ...interpolatePolar(a, half, n - 1),
-      half,
-      ...interpolatePolar(half, b, n - 1),
-    ]
-  }
-}
-
 function ringRadius(gen) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
 
 const { nodes, links, meta } = generateGraph(numGenerations)
-
-// Add inbetween values in between the edges so we have a curve
-function spline([source, target]) {
-  const src = radiusAndAngle(getIndex(source))
-  const tgt = radiusAndAngle(getIndex(target))
-  return [src, ...interpolatePolar(src, tgt, 2), tgt]
-  // return [src, tgt]
-}
 
 function det2([[x1, x2], [x3, x4]]) {
   return x1 * x4 - x2 * x3
@@ -100,17 +59,16 @@ function getCenterAndRadus([x1, y1], [x2, y2], [x3, y3]) {
   return { center, radius }
 }
 
+function normalizeAngle(theta) {
+  return theta > 0 ? theta : theta + 2 * Math.PI
+}
+
 /**
  * Get the angle of point against origin (x0, y0)
  */
 function getAngle([x0, y0], [x1, y1]) {
-  return Math.atan2(y1 - y0, x1 - x0)
+  return normalizeAngle(Math.atan2(y1 - y0, x1 - x0))
 }
-
-const curve = lineRadial()
-  .radius(d => d.radius)
-  .angle(d => d.angle)
-  .curve(curveNatural)
 
 const indices = {}
 function getIndex(mino) {
@@ -146,24 +104,36 @@ const linkColors = links.map(link => {
   return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
 })
 
-const linkPaths = links.map(link => {
+function getPath(link) {
   const srcMino = link[0]
   const tgtMino = link[1]
   const gen = getSize(srcMino)
-  const origin = [0, -ringRadius(gen) / 2]
+  const origin = [0, -ringRadius(gen) * 0.75]
   const src = getCoords(...getIndex(srcMino))
   const tgt = getCoords(...getIndex(tgtMino))
 
+  if (Math.abs(getAngle(origin, src) - getAngle(origin, tgt)) < 0.0001) {
+    const path = d3.path()
+    path.moveTo(...src)
+    path.lineTo(...tgt)
+    return path.toString()
+  }
+
   const { radius, center } = getCenterAndRadus(src, tgt, origin)
-  const angle1 = getAngle(center, src)
-  const angle2 = getAngle(center, tgt)
-  const ccw = angle1 > angle2
+  const ccw = getAngle(origin, src) > getAngle(origin, tgt)
   const path = d3.path()
 
   path.moveTo(...src)
-  path.arc(center[0], center[1], radius, angle1, angle2, ccw)
+  path.arc(
+    center[0],
+    center[1],
+    radius,
+    getAngle(center, src),
+    getAngle(center, tgt),
+    ccw,
+  )
   return path.toString()
-})
+}
 
 const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
   return (
@@ -202,7 +172,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
           <path
             {...style}
             key={i}
-            d={linkPaths[i]}
+            d={getPath(link)}
             fill="none"
             opacity={opacity}
             stroke={stroke || color}
