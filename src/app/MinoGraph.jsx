@@ -2,6 +2,7 @@ import React, { memo, useState, useEffect, useCallback } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
 import { lineRadial, curveNatural } from 'd3-shape'
+import * as d3 from 'd3-path'
 
 import { generateGraph } from 'mino/generate'
 import { getSize } from 'mino/mino'
@@ -67,6 +68,45 @@ function spline([source, target]) {
   // return [src, tgt]
 }
 
+function det2([[x1, x2], [x3, x4]]) {
+  return x1 * x4 - x2 * x3
+}
+
+function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]) {
+  return (
+    x1 * det2([[x5, x6], [x8, x9]]) -
+    x2 * det2([[x4, x6], [x7, x9]]) +
+    x3 * det2([[x4, x5], [x7, x8]])
+  )
+}
+
+function sumOfSq(x1, x2) {
+  return x1 ** 2 + x2 ** 2
+}
+
+/**
+ * Get the center and radius of a circle containing the three given points
+ */
+function getCenterAndRadus([x1, y1], [x2, y2], [x3, y3]) {
+  const A = det3([[x1, y1, 1], [x2, y2, 1], [x3, y3, 1]])
+  const d1 = sumOfSq(x1, y1)
+  const d2 = sumOfSq(x2, y2)
+  const d3 = sumOfSq(x3, y3)
+  const B = -det3([[d1, y1, 1], [d2, y2, 1], [d3, y3, 1]])
+  const C = det3([[d1, x1, 1], [d2, x2, 1], [d3, x3, 1]])
+  const D = -det3([[d1, x1, y1], [d2, x2, y2], [d3, x3, y3]])
+  const center = [-B / (2 * A), -C / (2 * A)]
+  const radius = Math.sqrt((B ** 2 + C ** 2 - 4 * A * D) / (4 * A ** 2))
+  return { center, radius }
+}
+
+/**
+ * Get the angle of point against origin (x0, y0)
+ */
+function getAngle([x0, y0], [x1, y1]) {
+  return Math.atan2(y1 - y0, x1 - x0)
+}
+
 const curve = lineRadial()
   .radius(d => d.radius)
   .angle(d => d.angle)
@@ -128,6 +168,25 @@ const linkColors = links.map(link => {
   return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
 })
 
+const linkPaths = links.map(link => {
+  const origin = [0, 0]
+  const srcMino = link[0]
+  const tgtMino = link[1]
+  const src = getCoords(...getIndex(srcMino))
+  const tgt = getCoords(...getIndex(tgtMino))
+  const { radius, center } = getCenterAndRadus(src, tgt, origin)
+  const angle1 = getAngle(center, src)
+  const angle2 = getAngle(center, tgt)
+  // const ccw = Math.abs(angle1 - angle2) > Math.PI
+  // const ccw = angle1 > angle2
+  const path = d3.path()
+
+  const ccw = getAngle(origin, src) > getAngle(origin, tgt)
+  path.moveTo(...src)
+  path.arc(center[0], center[1], radius, angle1, angle2, ccw)
+  return path.toString()
+})
+
 const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
   const style = css({
     pointerEvents: 'none',
@@ -143,7 +202,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
           <path
             {...style}
             key={i}
-            d={curve(spline(link))}
+            d={linkPaths[i]}
             fill="none"
             opacity={opacity}
             stroke={stroke || color}
