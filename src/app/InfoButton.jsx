@@ -17,7 +17,7 @@ export default function InfoButton() {
     width: '3rem',
     height: '3rem',
 
-    border: `1px black ${colors.fg}`,
+    border: `2px solid ${colors.fg}`,
     backgroundColor: colors.bg,
     color: colors.fg,
     fontSize: '3rem',
