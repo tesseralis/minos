@@ -1,4 +1,4 @@
-import React, { memo, useState, useEffect, useCallback } from 'react'
+import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
@@ -9,7 +9,7 @@ import { getSize } from 'mino/mino'
 
 import { colors } from 'style/theme'
 
-import useClickHandler from './useClickHandler'
+import Background from './Background'
 import Mino from './Mino'
 import SelectableMino from './SelectableMino'
 import PanZoom from './PanZoom'
@@ -20,7 +20,7 @@ const numGenerations = 8
 const width = 1400
 
 const minScale = 1 / 9
-const maxScale = 1 / 2 - 1 / 64 // make sure the angles are strictly negative
+const maxScale = 1 / 2
 
 const { nodes, links, meta } = generateGraph(numGenerations)
 
@@ -194,41 +194,6 @@ function Svg({ width, children }) {
     <svg {...style} viewBox={viewBox}>
       {children}
     </svg>
-  )
-}
-
-/**
- * An empty background element that can deselect on clicks or pressing ESC
- */
-function Background({ onClick }) {
-  const clickHandler = useClickHandler(onClick)
-
-  const handleEscape = useCallback(
-    e => {
-      if (e.which === 27) {
-        onClick()
-      }
-    },
-    [onClick],
-  )
-
-  useEffect(() => {
-    window.addEventListener('keydown', handleEscape)
-
-    return () => {
-      window.removeEventListener('keydown', handleEscape)
-    }
-  }, [handleEscape])
-
-  return (
-    <rect
-      x={0}
-      y={0}
-      width="100%"
-      height="100%"
-      opacity={0}
-      {...clickHandler}
-    />
   )
 }
 
