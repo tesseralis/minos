@@ -135,7 +135,7 @@ const colorMap = {
 const borderColors = mapValues(colorMap, col =>
   tinycolor(col)
     .darken(35)
-    .desaturate(30)
+    .desaturate(40)
     .spin(-30)
     .toString(),
 )
