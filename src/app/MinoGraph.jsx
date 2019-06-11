@@ -22,11 +22,11 @@ const width = 1400
 const minScale = 1 / 9
 const maxScale = 1 / 2 - 1 / 64 // make sure the angles are strictly negative
 
+const { nodes, links, meta } = generateGraph(numGenerations)
+
 function ringRadius(gen) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
-
-const { nodes, links, meta } = generateGraph(numGenerations)
 
 function det2([[x1, x2], [x3, x4]]) {
   return x1 * x4 - x2 * x3
@@ -47,7 +47,7 @@ function sumOfSq(x1, x2) {
 /**
  * Get the center and radius of a circle containing the three given points
  */
-function getCenterAndRadus([x1, y1], [x2, y2], [x3, y3]) {
+function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
   const A = det3([[x1, y1, 1], [x2, y2, 1], [x3, y3, 1]])
   const d1 = sumOfSq(x1, y1)
   const d2 = sumOfSq(x2, y2)
@@ -105,7 +105,7 @@ const getPath = memoize(function(link) {
   const srcMino = link[0]
   const tgtMino = link[1]
   const gen = getSize(srcMino)
-  const origin = [0, -ringRadius(gen) * 0.75]
+  const origin = [0, -ringRadius(gen) * 0.5]
   const src = getCoords(...getIndex(srcMino))
   const tgt = getCoords(...getIndex(tgtMino))
 
@@ -116,7 +116,7 @@ const getPath = memoize(function(link) {
     return path.toString()
   }
 
-  const { radius, center } = getCenterAndRadus(src, tgt, origin)
+  const { radius, center } = getCenterAndRadius(src, tgt, origin)
   const ccw = getAngle(origin, src) > getAngle(origin, tgt)
   const path = d3.path()
 
