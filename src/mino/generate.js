@@ -9,6 +9,7 @@ import {
 } from './mino'
 
 import { getSymmetry, getTransforms } from './transform'
+import mapValues from 'lodash/mapValues'
 import tinycolor from 'tinycolor2'
 
 function getPointMask(i, j, w) {
@@ -128,13 +129,23 @@ const colorMap = {
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
   rotate4: 'violet',
-  all: '#eee',
+  all: '#ddd',
 }
+
+const borderColors = mapValues(colorMap, col =>
+  tinycolor(col)
+    .darken(35)
+    .desaturate(30)
+    .spin(-30)
+    .toString(),
+)
 
 for (let key of Object.keys(colorMap)) {
   colorMap[key] = tinycolor(colorMap[key])
 }
 
+// Use different mix percentages for different symmetries
+// since we want desaturation in nonsymmetric minos to be prominent
 const mixMap = {
   none: 50,
   reflectOrtho: 40,
@@ -174,7 +185,7 @@ export function generateGraph(n) {
   // * generation and index
   // * parents
   // * children
-  // * (symmetry info)
+  // * symmetry info
   const meta = {
     [MONOMINO]: {
       parents: new Set(),
@@ -221,6 +232,7 @@ export function generateGraph(n) {
     for (let mino of generation) {
       if (mino === MONOMINO) {
         meta[mino].color = colorMap[getSymmetry(mino)]
+        meta[mino].borderColor = borderColors[getSymmetry(mino)]
         continue
       }
       const color = mixColors(
@@ -228,9 +240,10 @@ export function generateGraph(n) {
       )
       const sym = getSymmetry(mino)
       meta[mino].color = tinycolor.mix(colorMap[sym], color, mixMap[sym])
+      meta[mino].borderColor = borderColors[sym]
     }
   }
 
   // TODO these links are duplicated; uniqWith adds 500ms
-  return { nodes, links, equivalences, meta }
+  return { nodes, links, meta }
 }

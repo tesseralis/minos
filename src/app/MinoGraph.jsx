@@ -46,6 +46,7 @@ function sumOfSq(x1, x2) {
 
 /**
  * Get the center and radius of a circle containing the three given points
+ * http://www.ambrsoft.com/trigocalc/circle3d.htm
  */
 function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
   const A = det3([[x1, y1, 1], [x2, y2, 1], [x3, y3, 1]])
@@ -95,20 +96,25 @@ function getCoords(gen, i) {
   return [radius * Math.sin(angle), radius * -Math.cos(angle)]
 }
 
+// Cached colors of each link
 const linkColors = links.map(link => {
   const srcMino = link[0]
   const tgtMino = link[1]
   return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
 })
 
-const getPath = memoize(function(link) {
-  const srcMino = link[0]
-  const tgtMino = link[1]
+/**
+ * Return the path for the link that goes from the source to target mino.
+ * The link is a circular that intersects both points as well as a third point
+ * scaled according to the radius of the generation.
+ */
+const getLinkPath = memoize(function([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
   const origin = [0, -ringRadius(gen) * 0.5]
   const src = getCoords(...getIndex(srcMino))
   const tgt = getCoords(...getIndex(tgtMino))
 
+  // Special case: If we're colinear, just draw a straight line
   if (Math.abs(getAngle(origin, src) - getAngle(origin, tgt)) < 0.0001) {
     const path = d3.path()
     path.moveTo(...src)
@@ -118,8 +124,8 @@ const getPath = memoize(function(link) {
 
   const { radius, center } = getCenterAndRadius(src, tgt, origin)
   const ccw = getAngle(origin, src) > getAngle(origin, tgt)
-  const path = d3.path()
 
+  const path = d3.path()
   path.moveTo(...src)
   path.arc(
     center[0],
@@ -145,6 +151,7 @@ const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
             cy={y}
             mino={mino}
             color={meta[mino].color.toHexString()}
+            stroke={meta[mino].borderColor}
             onSelect={onSelect}
             onHover={onHover}
           />
@@ -169,7 +176,7 @@ const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
           <path
             {...style}
             key={i}
-            d={getPath(link)}
+            d={getLinkPath(link)}
             fill="none"
             opacity={opacity}
             stroke={stroke || color}
@@ -202,12 +209,14 @@ export default memo(function MinoGraph() {
   const [hovered, setHovered] = useState(null)
 
   const { parents, children } = meta[selected] || {}
+  // Get the selected links
   const selectedLinks = selected
     ? [...parents]
         .map(p => [p, selected])
         .concat([...children].map(c => [selected, c]))
     : []
 
+  // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
     gen => {
       if (!selected) return null
@@ -229,6 +238,8 @@ export default memo(function MinoGraph() {
       <Background onClick={() => setSelected(null)} />
       <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
         <MinoLinks links={links} />
+        {/* When a mino is selected, just draw "selected" UI over
+            since it's more efficient than comparing all the links */}
         {selected && (
           <MinoLinks
             links={selectedLinks}
@@ -250,11 +261,12 @@ export default memo(function MinoGraph() {
           )
         })}
       </PanZoom>
+      {/* Overlay showing the currently hovered mino */}
       {hovered && (
         <Mino
           mino={hovered}
           fill={meta[hovered].color}
-          stroke="black"
+          stroke={meta[hovered].borderColor}
           size={32}
           cx={32}
           cy={32}

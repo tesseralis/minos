@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback } from 'react'
 import { css } from 'glamor'
 
-import { getSize } from '../mino/mino'
+import { getSize } from 'mino/mino'
 
 import useClickHandler from './useClickHandler'
 import Mino from './Mino'
@@ -16,6 +16,7 @@ const SelectableMino = memo(
     cx,
     cy,
     color,
+    stroke,
     selected,
     onSelect = () => {},
     onHover = () => {},
@@ -47,7 +48,7 @@ const SelectableMino = memo(
           cy={cy}
           size={size * (hovered ? 1.25 : 1)}
           fill={color}
-          stroke={selected ? 'white' : 'black'}
+          stroke={selected ? 'white' : stroke}
         />
         <circle
           {...circleStyle}
