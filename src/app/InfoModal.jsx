@@ -29,7 +29,6 @@ function Content() {
     lineHeight: 1.25,
     display: 'flex',
     flexDirection: 'column',
-    height: '100%',
   })
   const headingStyle = css({
     fontWeight: 400,
@@ -85,10 +84,7 @@ export default function InfoModal({ isOpen, onClose }) {
   })
 
   const style = css({
-    width: '32rem',
-    height: '32rem',
     backgroundColor: colors.bg,
-    border: `2px solid ${colors.fg}`,
     padding: '2rem',
     color: colors.fg,
     fontFamily: 'Garamond',
@@ -96,8 +92,20 @@ export default function InfoModal({ isOpen, onClose }) {
     display: 'flex',
     flexDirection: 'column',
 
-    transform: `scale(${isOpened ? 1 : 0})`,
     transition: `transform ${timeout}ms ease-in-out`,
+
+    '@media (min-device-width: 813px)': {
+      width: '32rem',
+      height: '32rem',
+      border: `2px solid ${colors.fg}`,
+      transform: `scale(${isOpened ? 1 : 0})`,
+    },
+
+    '@media (max-device-width: 812px)': {
+      width: '100%',
+      height: '100%',
+      transform: `translate3d(0, ${isOpened ? 0 : '100%'}, 0)`,
+    },
   })
 
   const enterButtonStyle = css({
