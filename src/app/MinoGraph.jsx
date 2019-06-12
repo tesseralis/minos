@@ -172,25 +172,27 @@ const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
       d={getLinkPath(link)}
       fill="none"
       opacity={opacity}
-      strokeWidth={strokeWidth}
+      strokeWidth={strokeWidth * (isSelected ? 2 : 1)}
     />
   )
 })
 
-const MinoLinks = memo(({ links, selected, strokeWidth, opacity = 1 }) => {
+const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
   return (
     <>
       {links.map((link, i) => {
         const srcMino = link[0]
         const gen = getIndex(srcMino)[0]
+        const isSelected = selected.has(link.toString())
+        const strokeWidth = 4 / (gen / 2 + 1) ** 2
         return (
           <MinoLink
             key={i}
             link={link}
             color={linkColors[i]}
-            isSelected={selected.has(link.toString())}
+            isSelected={isSelected}
             opacity={opacity}
-            strokeWidth={strokeWidth || 4 / (gen / 2 + 1) ** 2}
+            strokeWidth={strokeWidth}
           />
         )
       })}
