@@ -124,17 +124,17 @@ export function generate(n) {
 const colorMap = {
   none: 'dimgray',
   reflectOrtho: 'crimson',
-  reflectDiag: '#33f',
+  reflectDiag: '#22d',
   rotate2: 'limegreen',
   dihedralOrtho: 'gold',
   dihedralDiag: 'turquoise',
   rotate4: 'violet',
-  all: '#ddd',
+  all: '#ccc',
 }
 
 const borderColors = mapValues(colorMap, col =>
   tinycolor(col)
-    .darken(35)
+    .darken(30)
     .desaturate(40)
     .spin(-30)
     .toString(),
