@@ -254,7 +254,7 @@ export default memo(function MinoGraph() {
   return (
     <Svg width={width}>
       <Background onClick={() => setSelected(null)} />
-      <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
+      <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.065}>
         <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
           return (
