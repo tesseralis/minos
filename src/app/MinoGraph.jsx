@@ -180,7 +180,7 @@ const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
 
 const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
   return (
-    <>
+    <g>
       {links.map((link, i) => {
         const srcMino = link[0]
         const gen = getIndex(srcMino)[0]
@@ -197,7 +197,7 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
           />
         )
       })}
-    </>
+    </g>
   )
 })
 

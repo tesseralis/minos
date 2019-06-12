@@ -6,13 +6,15 @@ export default function PanZoom({ children, zoomSpeed, minZoom, maxZoom }) {
   const group = useRef(null)
 
   useEffect(() => {
-    panzoom(group.current, {
+    const instance = panzoom(group.current, {
       smoothScroll: false,
       zoomSpeed,
       maxZoom,
       minZoom,
     })
-  })
+
+    return () => instance.dispose()
+  }, [maxZoom, minZoom, zoomSpeed])
 
   return <g ref={group}>{children}</g>
 }

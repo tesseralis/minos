@@ -41,7 +41,7 @@ const SelectableMino = memo(
     })
 
     return (
-      <>
+      <g>
         <Mino
           mino={mino}
           cx={cx}
@@ -60,7 +60,7 @@ const SelectableMino = memo(
           onMouseOver={() => handleHover(true)}
           onMouseOut={() => handleHover(false)}
         />
-      </>
+      </g>
     )
   },
 )
