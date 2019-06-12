@@ -7,6 +7,8 @@ export default function useClickHandler(onClick) {
 
   return useMemo(
     () => ({
+      // Get PEPjs to work: https://github.com/jquery/PEP#using-pep-with-react
+      'touch-action': 'none',
       onPointerDown() {
         dragged.current = false
       },
