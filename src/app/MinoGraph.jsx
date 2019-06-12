@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from 'react'
+import React, { memo, useState, useCallback, useMemo } from 'react'
 import { css } from 'glamor'
 import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
@@ -160,26 +160,36 @@ const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
     </>
   )
 }
+const linkStyle = css({
+  transition: 'stroke 350ms ease-in-out',
+  pointerEvents: 'none',
+})
+const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
+  return (
+    <path
+      {...linkStyle}
+      style={{ stroke: isSelected ? 'white' : color }}
+      d={getLinkPath(link)}
+      fill="none"
+      opacity={opacity}
+      strokeWidth={strokeWidth}
+    />
+  )
+})
 
-const MinoLinks = memo(({ links, stroke, strokeWidth, opacity = 1 }) => {
-  const style = css({
-    pointerEvents: 'none',
-  })
-
+const MinoLinks = memo(({ links, selected, strokeWidth, opacity = 1 }) => {
   return (
     <>
       {links.map((link, i) => {
         const srcMino = link[0]
-        const color = linkColors[i]
         const gen = getIndex(srcMino)[0]
         return (
-          <path
-            {...style}
+          <MinoLink
             key={i}
-            d={getLinkPath(link)}
-            fill="none"
+            link={link}
+            color={linkColors[i]}
+            isSelected={selected.has(link.toString())}
             opacity={opacity}
-            stroke={stroke || color}
             strokeWidth={strokeWidth || 4 / (gen / 2 + 1) ** 2}
           />
         )
@@ -208,13 +218,17 @@ export default memo(function MinoGraph() {
   const [selected, setSelected] = useState(null)
   const [hovered, setHovered] = useState(null)
 
-  const { parents, children } = meta[selected] || {}
   // Get the selected links
-  const selectedLinks = selected
-    ? [...parents]
-        .map(p => [p, selected])
-        .concat([...children].map(c => [selected, c]))
-    : []
+  const { parents, children } = meta[selected] || {}
+
+  const selectedLinks = useMemo(() => {
+    const selectedLinks = selected
+      ? [...parents]
+          .map(p => [p, selected])
+          .concat([...children].map(c => [selected, c]))
+      : []
+    return new Set(selectedLinks.map(link => link.toString()))
+  }, [selected, parents, children])
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
@@ -237,17 +251,7 @@ export default memo(function MinoGraph() {
     <Svg width={width}>
       <Background onClick={() => setSelected(null)} />
       <PanZoom minZoom={0.25} maxZoom={3} zoomSpeed={0.065}>
-        <MinoLinks links={links} />
-        {/* When a mino is selected, just draw "selected" UI over
-            since it's more efficient than comparing all the links */}
-        {selected && (
-          <MinoLinks
-            links={selectedLinks}
-            stroke="white"
-            strokeWidth={1.5}
-            opacity={0.33}
-          />
-        )}
+        <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
           return (
             <Orbital

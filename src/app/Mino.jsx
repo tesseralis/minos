@@ -1,4 +1,5 @@
 import React from 'react'
+import { css } from 'glamor'
 
 import { getPoints } from 'mino/mino'
 import { getOutline } from 'mino/draw'
@@ -30,6 +31,11 @@ function getAnchor(points, anchor) {
   const [yAnchor, xAnchor = yAnchor] = anchor.split(' ')
   return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
 }
+
+// TODO figure out why this particular styling is efficient
+const style = css({
+  transition: 'stroke 350ms ease-in-out',
+})
 
 /**
  * Draws a mino in SVG using the given center x and y coordinates,
@@ -64,20 +70,22 @@ export default function Mino({
     <>
       {points.map((point, i) => (
         <rect
+          {...style}
+          style={{ stroke }}
           key={i}
           x={point[0]}
           y={point[1]}
           width={size}
           height={size}
           fill={fill}
-          stroke={stroke}
           strokeWidth={strokeWidth * 0.75}
         />
       ))}
       <polygon
+        {...style}
+        style={{ stroke }}
         points={outlineStr}
         fill="none"
-        stroke={stroke}
         strokeWidth={strokeWidth}
       />
     </>
