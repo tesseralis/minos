@@ -20,7 +20,6 @@ export default function InfoButton() {
     border: `2px solid ${colors.fg}`,
     backgroundColor: colors.bg,
     color: colors.fg,
-    fontSize: '3rem',
 
     ':hover': {
       backgroundColor: '#333',
