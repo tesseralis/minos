@@ -110,7 +110,7 @@ const linkColors = links.map(link => {
  */
 const getLinkPath = memoize(function([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
-  const origin = [0, -ringRadius(gen) * 0.5]
+  const origin = [0, -ringRadius(gen) * 0.75]
   const src = getCoords(...getIndex(srcMino))
   const tgt = getCoords(...getIndex(tgtMino))
 
@@ -138,7 +138,7 @@ const getLinkPath = memoize(function([srcMino, tgtMino]) {
   return path.toString()
 })
 
-const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
+const Orbital = memo(({ minos, gen, selected, onSelect, onHover }) => {
   return (
     <>
       {minos.map((mino, i) => {
@@ -159,7 +159,8 @@ const Orbital = ({ minos, gen, selected, onSelect, onHover }) => {
       })}
     </>
   )
-}
+})
+
 const linkStyle = css({
   transition: 'stroke 350ms ease-in-out',
   pointerEvents: 'none',
