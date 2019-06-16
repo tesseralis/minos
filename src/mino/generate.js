@@ -227,20 +227,20 @@ export function generateGraph(n) {
   }
   nodes.push(currentGen)
 
-  // TODO can we separate out this logic?
+  // Generate mino colors
+  // TODO can we seperate out this logic?
   for (let generation of nodes) {
     for (let mino of generation) {
+      const sym = getSymmetry(mino)
+      meta[mino].borderColor = borderColors[sym]
       if (mino === MONOMINO) {
-        meta[mino].color = colorMap[getSymmetry(mino)]
-        meta[mino].borderColor = borderColors[getSymmetry(mino)]
+        meta[mino].color = colorMap[sym]
         continue
       }
       const color = mixColors(
         [...meta[mino].parents].map(parent => meta[parent].color),
       )
-      const sym = getSymmetry(mino)
       meta[mino].color = tinycolor.mix(colorMap[sym], color, mixMap[sym])
-      meta[mino].borderColor = borderColors[sym]
     }
   }
 

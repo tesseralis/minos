@@ -1,8 +1,11 @@
 import React from 'react'
 import { css } from 'glamor'
 
-import { getPoints } from 'mino/mino'
+import { getMino, getPoints } from 'mino/mino'
 import { getOutline } from 'mino/draw'
+import { colors } from 'style/theme'
+
+const oOctomino = getMino(0b111101111, 3)
 
 function getCoordAnchor(ns, anchor) {
   const min = Math.min(...ns)
@@ -68,6 +71,23 @@ export default function Mino({
 
   return (
     <>
+      <polygon
+        {...style}
+        style={{ stroke }}
+        points={outlineStr}
+        fill={fill}
+        strokeWidth={strokeWidth}
+      />
+      {mino === oOctomino && (
+        <rect
+          fill={colors.bg}
+          x={cx - size / 2}
+          y={cy - size / 2}
+          width={size}
+          height={size}
+          stroke="none"
+        />
+      )}
       {points.map((point, i) => (
         <rect
           {...style}
@@ -77,17 +97,10 @@ export default function Mino({
           y={point[1]}
           width={size}
           height={size}
-          fill={fill}
+          fill="none"
           strokeWidth={strokeWidth * 0.75}
         />
       ))}
-      <polygon
-        {...style}
-        style={{ stroke }}
-        points={outlineStr}
-        fill="none"
-        strokeWidth={strokeWidth}
-      />
     </>
   )
 }

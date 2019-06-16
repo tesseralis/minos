@@ -162,18 +162,20 @@ const Orbital = memo(({ minos, gen, selected, onSelect, onHover }) => {
 })
 
 const linkStyle = css({
-  transition: 'stroke 350ms ease-in-out',
+  transition: 'all 350ms ease-in-out',
   pointerEvents: 'none',
 })
 const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
   return (
     <path
       {...linkStyle}
-      style={{ stroke: isSelected ? 'white' : color }}
+      style={{
+        stroke: isSelected ? 'white' : color,
+        strokeWidth: strokeWidth * (isSelected ? 3 : 1),
+      }}
       d={getLinkPath(link)}
       fill="none"
       opacity={opacity}
-      strokeWidth={strokeWidth * (isSelected ? 2 : 1)}
     />
   )
 })
