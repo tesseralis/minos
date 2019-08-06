@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
+import Icon from '@mdi/react'
+import { mdiClose } from '@mdi/js'
 import { css } from 'glamor'
 
 import { colors } from 'style/theme'
@@ -10,8 +12,8 @@ Modal.setAppElement('#root')
 function P({ children }) {
   const style = css({
     fontSize: '1rem',
-    lineHeight: 1.4,
-    marginBottom: '1rem',
+    lineHeight: 1.5,
+    marginBottom: '1.25rem',
   })
   return <p {...style}>{children}</p>
 }
@@ -34,8 +36,10 @@ function Content() {
   })
   const headingStyle = css({
     fontSize: '1.875rem',
-    fontFamily: 'fantasy',
-    marginBottom: '1.25rem',
+    fontFamily: 'serif',
+    fontStyle: 'italic',
+    marginTop: '.5rem',
+    marginBottom: '1.5rem',
     letterSpacing: '1px',
     textAlign: 'center',
   })
@@ -89,10 +93,11 @@ export default function InfoModal({ isOpen, onClose }) {
 
   const style = css({
     backgroundColor: colors.bg,
-    padding: '3rem 2rem',
+    padding: '1rem 2rem',
     color: colors.fg,
     lineHeight: 1.5,
     fontFamily: 'sans-serif',
+    overflow: 'visible',
 
     display: 'flex',
     flexDirection: 'column',
@@ -113,28 +118,13 @@ export default function InfoModal({ isOpen, onClose }) {
     },
   })
 
-  const enterButtonStyle = css({
-    width: '8rem',
-    height: '4rem',
-
-    alignSelf: 'center',
-    marginTop: 'auto',
-    paddingTop: 8,
-
-    backgroundColor: colors.bg2,
-    color: colors.fg,
-    border: `2px solid ${colors.fg}`,
+  const closeButtonStyle = css({
+    marginRight: '-1rem',
+    marginLeft: 'auto',
+    padding: 0,
+    background: 'none',
+    border: 'none',
     cursor: 'pointer',
-
-    fontSize: '1.5rem',
-    fontFamily: 'fantasy',
-    fontWeight: 300,
-    letterSpacing: '1px',
-
-    ':hover': {
-      // TODO make this a "lighten" function
-      backgroundColor: '#444',
-    },
   })
 
   function requestClose() {
@@ -151,10 +141,10 @@ export default function InfoModal({ isOpen, onClose }) {
       onRequestClose={requestClose}
       closeTimeoutMS={timeout}
     >
-      <Content />
-      <button {...enterButtonStyle} onClick={requestClose}>
-        Enter
+      <button {...closeButtonStyle} onClick={requestClose}>
+        <Icon size="2rem" color={colors.fg} path={mdiClose} />
       </button>
+      <Content />
     </Modal>
   )
 }
