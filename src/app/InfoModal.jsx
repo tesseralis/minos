@@ -19,21 +19,25 @@ function P({ children }) {
 function Em({ children }) {
   const style = css({
     fontStyle: 'italic',
+    fontWeight: 400,
   })
   return <em {...style}>{children}</em>
 }
 
 function Content() {
   const style = css({
-    fontFamily: 'Garamond',
+    fontFamily: 'sans-serif',
+    fontWeight: 300,
     lineHeight: 1.25,
     display: 'flex',
     flexDirection: 'column',
   })
   const headingStyle = css({
-    fontWeight: 400,
-    fontSize: '1.75rem',
+    fontSize: '1.875rem',
+    fontFamily: 'fantasy',
     marginBottom: '1.25rem',
+    letterSpacing: '1px',
+    textAlign: 'center',
   })
 
   return (
@@ -85,9 +89,10 @@ export default function InfoModal({ isOpen, onClose }) {
 
   const style = css({
     backgroundColor: colors.bg,
-    padding: '2rem',
+    padding: '3rem 2rem',
     color: colors.fg,
-    fontFamily: 'Garamond',
+    lineHeight: 1.5,
+    fontFamily: 'sans-serif',
 
     display: 'flex',
     flexDirection: 'column',
@@ -114,6 +119,7 @@ export default function InfoModal({ isOpen, onClose }) {
 
     alignSelf: 'center',
     marginTop: 'auto',
+    paddingTop: 8,
 
     backgroundColor: colors.bg2,
     color: colors.fg,
@@ -121,7 +127,9 @@ export default function InfoModal({ isOpen, onClose }) {
     cursor: 'pointer',
 
     fontSize: '1.5rem',
-    fontFamily: 'Garamond',
+    fontFamily: 'fantasy',
+    fontWeight: 300,
+    letterSpacing: '1px',
 
     ':hover': {
       // TODO make this a "lighten" function
