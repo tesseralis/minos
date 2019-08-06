@@ -161,11 +161,11 @@ const Orbital = memo(({ minos, gen, selected, onSelect, onHover }) => {
   )
 })
 
-const linkStyle = css({
-  transition: 'all 350ms ease-in-out',
-  pointerEvents: 'none',
-})
 const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
+  const linkStyle = css({
+    transition: `all 250ms ease-${isSelected ? 'out' : 'in'}`,
+    pointerEvents: 'none',
+  })
   return (
     <path
       {...linkStyle}
@@ -210,8 +210,11 @@ function Svg({ width, children }) {
     backgroundColor: colors.bg,
   })
 
-  const height = (width / window.innerWidth) * window.innerHeight
-  const viewBox = `-${width / 2} ${-height / 10} ${width} ${height}`
+  // Only change the viewbox if the prop width changes, not the window ratio
+  const viewBox = useMemo(() => {
+    const height = (width / window.innerWidth) * window.innerHeight
+    return `-${width / 2} ${-height / 10} ${width} ${height}`
+  }, [width])
 
   return (
     <svg {...style} viewBox={viewBox}>
