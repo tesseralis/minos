@@ -170,7 +170,7 @@ const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
     <path
       {...linkStyle}
       style={{
-        stroke: isSelected ? 'white' : color,
+        stroke: isSelected ? colors.fg : color,
         strokeWidth: strokeWidth * (isSelected ? 3 : 1),
       }}
       d={getLinkPath(link)}
