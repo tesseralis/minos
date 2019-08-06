@@ -118,6 +118,7 @@ export default function InfoModal({ isOpen, onClose }) {
     backgroundColor: colors.bg2,
     color: colors.fg,
     border: `2px solid ${colors.fg}`,
+    cursor: 'pointer',
 
     fontSize: '1.5rem',
     fontFamily: 'Garamond',
