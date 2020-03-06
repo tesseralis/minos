@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback, useMemo } from 'react'
-import { css } from 'glamor'
+import { css } from 'emotion'
 import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
 import memoize from 'lodash/memoize'
@@ -34,9 +34,21 @@ function det2([[x1, x2], [x3, x4]]) {
 
 function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]) {
   return (
-    x1 * det2([[x5, x6], [x8, x9]]) -
-    x2 * det2([[x4, x6], [x7, x9]]) +
-    x3 * det2([[x4, x5], [x7, x8]])
+    x1 *
+      det2([
+        [x5, x6],
+        [x8, x9],
+      ]) -
+    x2 *
+      det2([
+        [x4, x6],
+        [x7, x9],
+      ]) +
+    x3 *
+      det2([
+        [x4, x5],
+        [x7, x8],
+      ])
   )
 }
 
@@ -49,13 +61,29 @@ function sumOfSq(x1, x2) {
  * http://www.ambrsoft.com/trigocalc/circle3d.htm
  */
 function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
-  const A = det3([[x1, y1, 1], [x2, y2, 1], [x3, y3, 1]])
+  const A = det3([
+    [x1, y1, 1],
+    [x2, y2, 1],
+    [x3, y3, 1],
+  ])
   const d1 = sumOfSq(x1, y1)
   const d2 = sumOfSq(x2, y2)
   const d3 = sumOfSq(x3, y3)
-  const B = -det3([[d1, y1, 1], [d2, y2, 1], [d3, y3, 1]])
-  const C = det3([[d1, x1, 1], [d2, x2, 1], [d3, x3, 1]])
-  const D = -det3([[d1, x1, y1], [d2, x2, y2], [d3, x3, y3]])
+  const B = -det3([
+    [d1, y1, 1],
+    [d2, y2, 1],
+    [d3, y3, 1],
+  ])
+  const C = det3([
+    [d1, x1, 1],
+    [d2, x2, 1],
+    [d3, x3, 1],
+  ])
+  const D = -det3([
+    [d1, x1, y1],
+    [d2, x2, y2],
+    [d3, x3, y3],
+  ])
   const center = [-B / (2 * A), -C / (2 * A)]
   const radius = Math.sqrt((B ** 2 + C ** 2 - 4 * A * D) / (4 * A ** 2))
   return { center, radius }
@@ -162,13 +190,12 @@ const Orbital = memo(({ minos, gen, selected, onSelect, onHover }) => {
 })
 
 const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
-  const linkStyle = css({
-    transition: `all 250ms ease-${isSelected ? 'out' : 'in'}`,
-    pointerEvents: 'none',
-  })
   return (
     <path
-      {...linkStyle}
+      className={css`
+        transition: all 250ms ${isSelected ? 'ease-out' : 'ease-in'};
+        pointer-events: none;
+      `}
       style={{
         stroke: isSelected ? colors.fg : color,
         strokeWidth: strokeWidth * (isSelected ? 3 : 1),
@@ -204,12 +231,6 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
 })
 
 function Svg({ width, children }) {
-  const style = css({
-    width: '100%',
-    height: '100%',
-    backgroundColor: colors.bg,
-  })
-
   // Only change the viewbox if the prop width changes, not the window ratio
   const viewBox = useMemo(() => {
     const height = (width / window.innerWidth) * window.innerHeight
@@ -217,7 +238,14 @@ function Svg({ width, children }) {
   }, [width])
 
   return (
-    <svg {...style} viewBox={viewBox}>
+    <svg
+      className={css`
+        width: 100%;
+        height: 100%;
+        background-color: ${colors.bg};
+      `}
+      viewBox={viewBox}
+    >
       {children}
     </svg>
   )

@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from 'react'
-import { css } from 'glamor'
+import { css } from 'emotion'
 
 import { colors } from 'style/theme'
 import { getSize } from 'mino/mino'
@@ -36,11 +36,6 @@ const SelectableMino = memo(
     const handleClick = useClickHandler(onClick)
     const size = getBlockSize(n)
 
-    const circleStyle = css({
-      opacity: 0,
-      cursor: 'pointer',
-    })
-
     return (
       <g>
         <Mino
@@ -52,8 +47,11 @@ const SelectableMino = memo(
           stroke={selected ? colors.fg : stroke}
         />
         <circle
-          {...circleStyle}
           {...handleClick}
+          className={css`
+            opacity: 0;
+            cursor: pointer;
+          `}
           tabIndex={0}
           cx={cx}
           cy={cy}

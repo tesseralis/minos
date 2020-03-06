@@ -1,5 +1,5 @@
+import { css } from 'emotion'
 import React from 'react'
-import { css } from 'glamor'
 
 import { getMino, getPoints } from 'mino/mino'
 import { getOutline } from 'mino/draw'
@@ -36,9 +36,9 @@ function getAnchor(points, anchor) {
 }
 
 // TODO figure out why this particular styling is efficient
-const style = css({
-  transition: 'stroke 350ms ease-in-out',
-})
+const style = css`
+  transition: stroke 350ms ease-in-out;
+`
 
 /**
  * Draws a mino in SVG using the given center x and y coordinates,
@@ -72,7 +72,7 @@ export default function Mino({
   return (
     <>
       <polygon
-        {...style}
+        className={style}
         style={{ stroke }}
         points={outlineStr}
         fill={fill}
@@ -90,7 +90,7 @@ export default function Mino({
       )}
       {points.map((point, i) => (
         <rect
-          {...style}
+          className={style}
           style={{ stroke }}
           key={i}
           x={point[0]}

@@ -6,11 +6,12 @@
     "react-scripts": "^3.4.0"
   },
   "dependencies": {
+    "@emotion/styled": "^10.0.27",
     "@mdi/js": "^4.8.95",
     "@mdi/react": "^1.2.1",
     "d3-path": "^1.0.9",
+    "emotion": "^10.0.27",
     "focus-visible": "^5.0.2",
-    "glamor": "^2.20.40",
     "lodash": "^4.17.15",
     "panzoom": "^8.0.0",
     "pepjs": "^0.5.2",
