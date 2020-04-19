@@ -125,7 +125,7 @@ function getCoords(gen, i) {
 }
 
 // Cached colors of each link
-const linkColors = links.map(link => {
+const linkColors = links.map((link) => {
   const srcMino = link[0]
   const tgtMino = link[1]
   return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
@@ -136,7 +136,7 @@ const linkColors = links.map(link => {
  * The link is a circular that intersects both points as well as a third point
  * scaled according to the radius of the generation.
  */
-const getLinkPath = memoize(function([srcMino, tgtMino]) {
+const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
   const origin = [0, -ringRadius(gen) * 0.75]
   const src = getCoords(...getIndex(srcMino))
@@ -261,15 +261,15 @@ export default memo(function MinoGraph() {
   const selectedLinks = useMemo(() => {
     const selectedLinks = selected
       ? [...parents]
-          .map(p => [p, selected])
-          .concat([...children].map(c => [selected, c]))
+          .map((p) => [p, selected])
+          .concat([...children].map((c) => [selected, c]))
       : []
-    return new Set(selectedLinks.map(link => link.toString()))
+    return new Set(selectedLinks.map((link) => link.toString()))
   }, [selected, parents, children])
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
-    gen => {
+    (gen) => {
       if (!selected) return null
       const selectedGen = getSize(selected) - 1
       if (gen === selectedGen) {
@@ -287,7 +287,7 @@ export default memo(function MinoGraph() {
   return (
     <Svg width={width}>
       <Background onClick={() => setSelected(null)} />
-      <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.065}>
+      <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
         <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
           return (

@@ -3,21 +3,22 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
-    "react-scripts": "^3.4.0"
+    "react-scripts": "^3.4.1"
   },
   "dependencies": {
+    "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
-    "@mdi/js": "^4.8.95",
-    "@mdi/react": "^1.2.1",
+    "@mdi/js": "^5.1.45",
+    "@mdi/react": "^1.4.0",
     "d3-path": "^1.0.9",
     "emotion": "^10.0.27",
-    "focus-visible": "^5.0.2",
+    "focus-visible": "^5.1.0",
     "lodash": "^4.17.15",
-    "panzoom": "^8.0.0",
+    "panzoom": "^9.2.4",
     "pepjs": "^0.5.2",
-    "react": "^16.13.0",
-    "react-dom": "^16.13.0",
-    "react-modal": "^3.11.1",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-modal": "^3.11.2",
     "tinycolor2": "^1.4.1"
   },
   "scripts": {
