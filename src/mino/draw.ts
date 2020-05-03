@@ -2,10 +2,14 @@ import some from 'lodash/some'
 import isEqual from 'lodash/isEqual'
 import minBy from 'lodash/minBy'
 
-function hasPoint(points, p) {
-  return some(points, p2 => isEqual(p, p2))
+type Direction = 'left' | 'right' | 'up' | 'down'
+
+type Point = [number, number]
+
+function hasPoint(points: Point[], p: Point) {
+  return some(points, (p2) => isEqual(p, p2))
 }
-function canTurn(points, [x, y], dir) {
+function canTurn(points: Point[], [x, y]: Point, dir: Direction) {
   switch (dir) {
     case 'left':
       return !hasPoint(points, [x - 1, y])
@@ -19,7 +23,7 @@ function canTurn(points, [x, y], dir) {
       throw new Error('invalid direction')
   }
 }
-function isBlocked(points, [x, y], dir) {
+function isBlocked(points: Point[], [x, y]: Point, dir: Direction) {
   switch (dir) {
     case 'up':
       return hasPoint(points, [x, y - 1])
@@ -34,7 +38,7 @@ function isBlocked(points, [x, y], dir) {
   }
 }
 
-function move([x, y], dir) {
+function move([x, y]: Point, dir: Direction): Point {
   switch (dir) {
     case 'left':
       return [x - 1, y]
@@ -48,7 +52,7 @@ function move([x, y], dir) {
       throw new Error('invalid direction')
   }
 }
-function turnLeft(dir) {
+function turnLeft(dir: Direction) {
   switch (dir) {
     case 'left':
       return 'down'
@@ -63,7 +67,7 @@ function turnLeft(dir) {
   }
 }
 
-function turnRight(dir) {
+function turnRight(dir: Direction) {
   switch (dir) {
     case 'left':
       return 'up'
@@ -78,10 +82,10 @@ function turnRight(dir) {
   }
 }
 
-export function getOutline(minoPoints) {
-  const origin = minBy(minoPoints)
+export function getOutline(minoPoints: Point[]) {
+  const origin = minBy(minoPoints)!
   let pos = origin
-  let dir = 'down'
+  let dir: Direction = 'down'
   const result = [origin]
   do {
     if (canTurn(minoPoints, pos, dir)) {

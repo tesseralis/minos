@@ -146,22 +146,24 @@ export function generate(n: number): Set<Mino> {
   }
 }
 
-const colorMap: Record<Symmetry, tinycolor.Instance> = mapValues(
-  {
-    none: 'dimgray',
-    reflectOrtho: 'crimson',
-    reflectDiag: '#22d',
-    rotate2: 'limegreen',
-    dihedralOrtho: 'gold',
-    dihedralDiag: 'turquoise',
-    rotate4: 'violet',
-    all: '#ccc',
-  },
-  (name) => tinycolor(name),
+const baseColorMap: Record<Symmetry, string> = {
+  none: 'dimgray',
+  reflectOrtho: 'crimson',
+  reflectDiag: '#22d',
+  rotate2: 'limegreen',
+  dihedralOrtho: 'gold',
+  dihedralDiag: 'turquoise',
+  rotate4: 'violet',
+  all: '#ccc',
+}
+
+const borderColors = mapValues(baseColorMap, (col) =>
+  tinycolor(col).darken(30).desaturate(40).spin(-30).toString(),
 )
 
-const borderColors = mapValues(colorMap, (col) =>
-  col.darken(30).desaturate(40).spin(-30).toString(),
+const colorMap: Record<Symmetry, tinycolor.Instance> = mapValues(
+  baseColorMap,
+  (col) => tinycolor(col),
 )
 
 // Use different mix percentages for different symmetries
