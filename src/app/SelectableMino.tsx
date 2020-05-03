@@ -6,7 +6,7 @@ import { getSize } from 'mino/mino'
 import type { Mino } from 'mino/mino'
 
 import useClickHandler from './useClickHandler'
-import { default as MinoComponent } from './Mino'
+import MinoSvg from './Mino'
 
 function getBlockSize(gen: number) {
   return 2 + (8 - gen) ** 2 / 2
@@ -50,7 +50,7 @@ const SelectableMino = memo(
 
     return (
       <g>
-        <MinoComponent
+        <MinoSvg
           mino={mino}
           cx={cx}
           cy={cy}

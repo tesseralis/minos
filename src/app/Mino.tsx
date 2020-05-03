@@ -60,7 +60,7 @@ interface Props {
  * @param anchor a string representing where edge of the mino should be anchored
  * (e.g. "top left", "bottom right", "center center")
  */
-export default function Mino({
+export default function MinoSvg({
   mino,
   cx,
   cy,
