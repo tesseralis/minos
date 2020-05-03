@@ -52,7 +52,7 @@ export function getTransforms(mino: Mino) {
   ])
 }
 
-type Symmetry =
+export type Symmetry =
   | 'all'
   | 'dihedralOrtho'
   | 'dihedralDiag'
