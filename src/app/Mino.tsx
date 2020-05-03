@@ -50,7 +50,7 @@ interface Props {
   size: number
   fill: string
   stroke: string
-  anchor: string
+  anchor?: string
 }
 
 /**

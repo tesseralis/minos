@@ -3,12 +3,24 @@ import { css } from 'emotion'
 
 import { colors } from 'style/theme'
 import { getSize } from 'mino/mino'
+import type { Mino } from 'mino/mino'
 
 import useClickHandler from './useClickHandler'
-import Mino from './Mino'
+import { default as MinoComponent } from './Mino'
 
-function getBlockSize(gen) {
+function getBlockSize(gen: number) {
   return 2 + (8 - gen) ** 2 / 2
+}
+
+interface Props {
+  mino: Mino
+  cx: number
+  cy: number
+  color: string
+  stroke: string
+  selected: boolean
+  onSelect(mino: Mino): void
+  onHover(mino?: Mino): void
 }
 
 const SelectableMino = memo(
@@ -21,15 +33,15 @@ const SelectableMino = memo(
     selected,
     onSelect = () => {},
     onHover = () => {},
-  }) => {
+  }: Props) => {
     const [hovered, setHovered] = useState(false)
 
     const n = getSize(mino)
     const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
     const handleHover = useCallback(
-      value => {
+      (value) => {
         setHovered(value)
-        onHover(value ? mino : null)
+        onHover(value ? mino : undefined)
       },
       [mino, onHover],
     )
@@ -38,7 +50,7 @@ const SelectableMino = memo(
 
     return (
       <g>
-        <Mino
+        <MinoComponent
           mino={mino}
           cx={cx}
           cy={cy}

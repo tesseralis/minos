@@ -2,21 +2,25 @@ import React, { useCallback, useEffect } from 'react'
 
 import useClickHandler from './useClickHandler'
 
-function useWindowEvent(eventType, fn) {
+function useWindowEvent(eventType: any, fn: any) {
   useEffect(() => {
     window.addEventListener(eventType, fn)
     return () => window.removeEventListener(eventType, fn)
   }, [eventType, fn])
 }
 
+interface Props {
+  onClick(): void
+}
+
 /**
  * An empty SVG background element that can deselect on clicks or pressing ESC
  */
-export default function Background({ onClick }) {
+export default function Background({ onClick }: Props) {
   const clickHandler = useClickHandler(onClick)
 
   const handleEscape = useCallback(
-    e => {
+    (e) => {
       if (e.which === 27) {
         onClick()
       }

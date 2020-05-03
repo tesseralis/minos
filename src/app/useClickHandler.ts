@@ -2,7 +2,7 @@ import { useRef, useMemo } from 'react'
 /**
  * Provides handlers that activate on click but not on drag
  */
-export default function useClickHandler(onClick) {
+export default function useClickHandler(onClick: () => void) {
   const dragged = useRef(false)
 
   return useMemo(
@@ -23,7 +23,7 @@ export default function useClickHandler(onClick) {
         }
       },
 
-      onKeyPress(e) {
+      onKeyPress(e: React.KeyboardEvent<any>) {
         if (e.which === 32 || e.which === 13) {
           onClick()
         }
