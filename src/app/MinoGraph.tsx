@@ -281,8 +281,8 @@ function Svg({ width, children }: { width: number; children: any }) {
 }
 
 export default memo(function MinoGraph() {
-  const [selected, setSelected] = useState<Mino | undefined>(undefined)
-  const [hovered, setHovered] = useState<Mino | undefined>(undefined)
+  const [selected, setSelected] = useState<Mino | undefined>()
+  const [hovered, setHovered] = useState<Mino | undefined>()
 
   // Get the selected links
   const { parents, children } = !!selected ? meta[selected] : ({} as any)
