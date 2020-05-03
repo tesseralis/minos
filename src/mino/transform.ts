@@ -1,35 +1,45 @@
-import { getShape, getPoints, fromPoints } from './mino'
+/**
+ * This modules describes functions to apply transformations to polyominoes:
+ * rotation and reflection.
+ */
 
-const rotations = {
+import { getShape, getPoints, fromPoints } from './mino'
+import type { Mino, Coord, Dims } from './mino'
+
+type Transform = (p: Coord, dims: Dims) => Coord
+
+type Direction = 'left' | 'right' | 'half'
+const rotations: Record<Direction, Transform> = {
   left: ([i, j], [w, h]) => [w - 1 - j, i],
   half: ([i, j], [w, h]) => [h - 1 - i, w - 1 - j],
   right: ([i, j], [w, h]) => [j, h - 1 - i],
 }
 
-const reflections = {
+type Axis = 'horiz' | 'vert' | 'mainDiag' | 'minorDiag'
+const reflections: Record<Axis, Transform> = {
   horiz: ([i, j], [w, h]) => [i, w - 1 - j],
   vert: ([i, j], [w, h]) => [h - 1 - i, j],
   mainDiag: ([i, j]) => [j, i],
   minorDiag: ([i, j], [w, h]) => [w - 1 - j, h - 1 - i],
 }
 
-function transform(mino, fn) {
+function transform(mino: Mino, fn: Transform) {
   const shape = getShape(mino)
-  const newPoints = [...getPoints(mino)].map(p => fn(p, shape))
+  const newPoints = [...getPoints(mino)].map((p) => fn(p, shape))
   return fromPoints(newPoints)
 }
 
-export function rotate(mino, direction) {
+export function rotate(mino: Mino, direction: Direction) {
   const fn = rotations[direction]
   return transform(mino, fn)
 }
 
-export function reflect(mino, axis) {
+export function reflect(mino: Mino, axis: Axis) {
   const fn = reflections[axis]
   return transform(mino, fn)
 }
 
-export function getTransforms(mino) {
+export function getTransforms(mino: Mino) {
   return new Set([
     mino,
     rotate(mino, 'left'),
@@ -42,8 +52,22 @@ export function getTransforms(mino) {
   ])
 }
 
+type Symmetry =
+  | 'all'
+  | 'dihedralOrtho'
+  | 'dihedralDiag'
+  | 'rotate4'
+  | 'reflectOrtho'
+  | 'reflectDiag'
+  | 'rotate2'
+  | 'none'
+
 // TODO this function is kind of cumbersome...
-export function getSymmetry(mino) {
+/**
+ * Get the symmetry of the polyomino
+ * @param mino
+ */
+export function getSymmetry(mino: Mino): Symmetry {
   const transforms = getTransforms(mino)
   switch (transforms.size) {
     case 1:
@@ -71,9 +95,8 @@ export function getSymmetry(mino) {
       break
     case 8:
       return 'none'
-    default:
-      throw new Error('invalid symmetry')
   }
+  throw new Error('invalid symmetry')
 }
 
 /**
@@ -81,7 +104,7 @@ export function getSymmetry(mino) {
  * @param minos
  * @return the set of minos with rotations/reflections removed
  */
-export function getFree(minos) {
+export function getFree(minos: Mino[]) {
   const result = new Set()
   const dupes = new Set()
   for (let mino of minos) {
