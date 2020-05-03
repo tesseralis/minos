@@ -6,7 +6,7 @@ import { getSize } from 'mino/mino'
 import type { Mino } from 'mino/mino'
 
 import useClickHandler from './useClickHandler'
-import MinoSvg from './Mino'
+import MinoSvg from './MinoSvg'
 
 function getBlockSize(gen: number) {
   return 2 + (8 - gen) ** 2 / 2

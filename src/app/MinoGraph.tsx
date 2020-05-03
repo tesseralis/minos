@@ -6,11 +6,12 @@ import memoize from 'lodash/memoize'
 
 import { generateGraph } from 'mino/generate'
 import { getSize } from 'mino/mino'
+import type { Mino } from 'mino/mino'
 
 import { colors } from 'style/theme'
 
 import Background from './Background'
-import Mino from './Mino'
+import MinoSvg from './MinoSvg'
 import SelectableMino from './SelectableMino'
 import PanZoom from './PanZoom'
 
@@ -24,15 +25,17 @@ const maxScale = 1 / 2
 
 const { nodes, links, meta } = generateGraph(numGenerations)
 
-function ringRadius(gen) {
+function ringRadius(gen: number) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
 
-function det2([[x1, x2], [x3, x4]]) {
+type Point = [number, number]
+
+function det2([[x1, x2], [x3, x4]]: any) {
   return x1 * x4 - x2 * x3
 }
 
-function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]) {
+function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]: any) {
   return (
     x1 *
       det2([
@@ -52,7 +55,7 @@ function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]) {
   )
 }
 
-function sumOfSq(x1, x2) {
+function sumOfSq(x1: number, x2: number) {
   return x1 ** 2 + x2 ** 2
 }
 
@@ -60,7 +63,7 @@ function sumOfSq(x1, x2) {
  * Get the center and radius of a circle containing the three given points
  * http://www.ambrsoft.com/trigocalc/circle3d.htm
  */
-function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
+function getCenterAndRadius([x1, y1]: Point, [x2, y2]: Point, [x3, y3]: Point) {
   const A = det3([
     [x1, y1, 1],
     [x2, y2, 1],
@@ -84,7 +87,7 @@ function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
     [d2, x2, y2],
     [d3, x3, y3],
   ])
-  const center = [-B / (2 * A), -C / (2 * A)]
+  const center: Point = [-B / (2 * A), -C / (2 * A)]
   const radius = Math.sqrt((B ** 2 + C ** 2 - 4 * A * D) / (4 * A ** 2))
   return { center, radius }
 }
@@ -92,12 +95,12 @@ function getCenterAndRadius([x1, y1], [x2, y2], [x3, y3]) {
 /**
  * Get the angle of point against origin (x0, y0)
  */
-function getAngle([x0, y0], [x1, y1]) {
+function getAngle([x0, y0]: Point, [x1, y1]: Point) {
   return Math.atan2(y1 - y0, x1 - x0)
 }
 
-const indices = {}
-function getIndex(mino) {
+const indices: Record<number, [number, number]> = {}
+function getIndex(mino: Mino) {
   if (!indices[mino]) {
     const gen = getSize(mino) - 1
     if (!nodes[gen]) {
@@ -109,7 +112,7 @@ function getIndex(mino) {
   return indices[mino]
 }
 
-function radiusAndAngle([gen, i]) {
+function radiusAndAngle([gen, i]: [number, number]) {
   const radius = ringRadius(gen)
   const total = nodes[gen].length
   const turn = total === 1 ? 0.5 : i / (total - 1)
@@ -119,7 +122,7 @@ function radiusAndAngle([gen, i]) {
   return { radius, angle }
 }
 
-function getCoords(gen, i) {
+function getCoords(gen: number, i: number): Point {
   const { radius, angle } = radiusAndAngle([gen, i])
   return [radius * Math.sin(angle), radius * -Math.cos(angle)]
 }
@@ -128,7 +131,7 @@ function getCoords(gen, i) {
 const linkColors = links.map((link) => {
   const srcMino = link[0]
   const tgtMino = link[1]
-  return tinycolor.mix(meta[srcMino].color, meta[tgtMino].color).toHexString()
+  return tinycolor.mix(meta[srcMino].color!, meta[tgtMino].color!).toHexString()
 })
 
 /**
@@ -138,7 +141,7 @@ const linkColors = links.map((link) => {
  */
 const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
-  const origin = [0, -ringRadius(gen) * 0.75]
+  const origin: Point = [0, -ringRadius(gen) * 0.75]
   const src = getCoords(...getIndex(srcMino))
   const tgt = getCoords(...getIndex(tgtMino))
 
@@ -166,48 +169,74 @@ const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   return path.toString()
 })
 
-const Orbital = memo(({ minos, gen, selected, onSelect, onHover }) => {
-  return (
-    <>
-      {minos.map((mino, i) => {
-        const [x, y] = getCoords(gen, i)
-        return (
-          <SelectableMino
-            selected={!!selected && selected.has(mino)}
-            key={i}
-            cx={x}
-            cy={y}
-            mino={mino}
-            color={meta[mino].color.toHexString()}
-            stroke={meta[mino].borderColor}
-            onSelect={onSelect}
-            onHover={onHover}
-          />
-        )
-      })}
-    </>
-  )
-})
+interface OrbitalProps {
+  minos: Mino[]
+  gen: number
+  selected?: Set<Mino>
+  onSelect(mino: Mino): void
+  onHover(mino: Mino): void
+}
 
-const MinoLink = memo(({ link, color, isSelected, opacity, strokeWidth }) => {
-  return (
-    <path
-      className={css`
-        transition: all 250ms ${isSelected ? 'ease-out' : 'ease-in'};
-        pointer-events: none;
-      `}
-      style={{
-        stroke: isSelected ? colors.fg : color,
-        strokeWidth: strokeWidth * (isSelected ? 3 : 1),
-      }}
-      d={getLinkPath(link)}
-      fill="none"
-      opacity={opacity}
-    />
-  )
-})
+const Orbital = memo(
+  ({ minos, gen, selected, onSelect, onHover }: OrbitalProps) => {
+    return (
+      <>
+        {minos.map((mino, i) => {
+          const [x, y] = getCoords(gen, i)
+          return (
+            <SelectableMino
+              selected={!!selected?.has(mino)}
+              key={i}
+              cx={x}
+              cy={y}
+              mino={mino}
+              color={meta[mino].color!.toHexString()}
+              stroke={meta[mino].borderColor!}
+              onSelect={onSelect}
+              onHover={onHover}
+            />
+          )
+        })}
+      </>
+    )
+  },
+)
 
-const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
+interface MinoLinkProps {
+  link: [Mino, Mino]
+  color: string
+  isSelected: boolean
+  opacity: number
+  strokeWidth: number
+}
+
+const MinoLink = memo(
+  ({ link, color, isSelected, opacity, strokeWidth }: MinoLinkProps) => {
+    return (
+      <path
+        className={css`
+          transition: all 250ms ${isSelected ? 'ease-out' : 'ease-in'};
+          pointer-events: none;
+        `}
+        style={{
+          stroke: isSelected ? colors.fg : color,
+          strokeWidth: strokeWidth * (isSelected ? 3 : 1),
+        }}
+        d={getLinkPath(link)}
+        fill="none"
+        opacity={opacity}
+      />
+    )
+  },
+)
+
+interface MinoLinksProps {
+  links: any[]
+  selected: Set<string>
+  opacity?: number
+}
+
+const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
   return (
     <g>
       {links.map((link, i) => {
@@ -230,7 +259,7 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }) => {
   )
 })
 
-function Svg({ width, children }) {
+function Svg({ width, children }: { width: number; children: any }) {
   // Only change the viewbox if the prop width changes, not the window ratio
   const viewBox = useMemo(() => {
     const height = (width / window.innerWidth) * window.innerHeight
@@ -252,11 +281,11 @@ function Svg({ width, children }) {
 }
 
 export default memo(function MinoGraph() {
-  const [selected, setSelected] = useState(null)
-  const [hovered, setHovered] = useState(null)
+  const [selected, setSelected] = useState<Mino | undefined>(undefined)
+  const [hovered, setHovered] = useState<Mino | undefined>(undefined)
 
   // Get the selected links
-  const { parents, children } = meta[selected] || {}
+  const { parents, children } = !!selected ? meta[selected] : ({} as any)
 
   const selectedLinks = useMemo(() => {
     const selectedLinks = selected
@@ -286,7 +315,7 @@ export default memo(function MinoGraph() {
 
   return (
     <Svg width={width}>
-      <Background onClick={() => setSelected(null)} />
+      <Background onClick={() => setSelected(undefined)} />
       <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
         <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
@@ -304,10 +333,10 @@ export default memo(function MinoGraph() {
       </PanZoom>
       {/* Overlay showing the currently hovered mino */}
       {hovered && (
-        <Mino
+        <MinoSvg
           mino={hovered}
-          fill={meta[hovered].color}
-          stroke={meta[hovered].borderColor}
+          fill={meta[hovered].color!.toString()}
+          stroke={meta[hovered].borderColor!}
           size={32}
           cx={32}
           cy={32}

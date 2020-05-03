@@ -205,11 +205,11 @@ interface MinoMeta {
 }
 
 export function generateGraph(n: number) {
+  const nodes: number[][] = []
+  const links: number[][] = []
   if (n === 0) {
-    return {}
+    return { nodes, links, meta: {} }
   }
-  const nodes = []
-  const links = []
   // An object containing metadata for each mino including:
   // * generation and index
   // * parents

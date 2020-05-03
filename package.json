@@ -10,6 +10,7 @@
     "@emotion/styled": "^10.0.27",
     "@mdi/js": "^5.1.45",
     "@mdi/react": "^1.4.0",
+    "@types/d3-path": "^1.0.8",
     "@types/jest": "^25.2.1",
     "@types/lodash": "^4.14.150",
     "@types/node": "^13.13.4",
