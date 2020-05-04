@@ -3,10 +3,11 @@
  * rotation and reflection.
  */
 
+import type { Point } from 'types'
 import { getShape, getPoints, fromPoints } from './mino'
-import type { Mino, Coord, Dims } from './mino'
+import type { Mino, Dims } from './mino'
 
-type Transform = (p: Coord, dims: Dims) => Coord
+type Transform = (p: Point, dims: Dims) => Point
 
 type Direction = 'left' | 'right' | 'half'
 const rotations: Record<Direction, Transform> = {

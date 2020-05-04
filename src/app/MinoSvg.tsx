@@ -1,12 +1,11 @@
 import { css } from 'emotion'
 import React from 'react'
 
+import type { Point } from 'types'
 import { getMino, getPoints } from 'mino/mino'
 import type { Mino } from 'mino/mino'
 import { getOutline } from 'mino/draw'
 import { colors } from 'style/theme'
-
-type Point = [number, number]
 
 const oOctomino = getMino(0b111_101_111, 3)
 

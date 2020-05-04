@@ -25,8 +25,9 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
+import type { Point } from 'types'
+
 export type Mino = number
-export type Coord = [number, number]
 export type Dims = [number, number]
 
 /**
@@ -86,7 +87,7 @@ export const MONOMINO = getMino(1, 1)
 /**
  * Return the mino as a set of coordinate points.
  */
-export function* getPoints(mino: Mino): Generator<Coord> {
+export function* getPoints(mino: Mino): Generator<Point> {
   let data = getData(mino)
   let w = getWidth(mino)
   let k = 0
@@ -102,7 +103,7 @@ export function* getPoints(mino: Mino): Generator<Coord> {
 /**
  * Create a mino given a list of coordinate points.
  */
-export function fromPoints(points: Coord[]) {
+export function fromPoints(points: Point[]) {
   const w = Math.max(...points.map((p) => p[1])) + 1
   let result = 0
   for (let [i, j] of points) {

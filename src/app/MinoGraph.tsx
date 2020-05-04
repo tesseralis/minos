@@ -4,6 +4,8 @@ import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
 import memoize from 'lodash/memoize'
 
+import type { Point } from 'types'
+
 import { generateGraph } from 'mino/generate'
 import { getSize } from 'mino/mino'
 import type { Mino } from 'mino/mino'
@@ -28,8 +30,6 @@ const { nodes, links, meta } = generateGraph(numGenerations)
 function ringRadius(gen: number) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
-
-type Point = [number, number]
 
 function det2([[x1, x2], [x3, x4]]: any) {
   return x1 * x4 - x2 * x3

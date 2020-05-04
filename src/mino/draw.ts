@@ -2,9 +2,9 @@ import some from 'lodash/some'
 import isEqual from 'lodash/isEqual'
 import minBy from 'lodash/minBy'
 
-type Direction = 'left' | 'right' | 'up' | 'down'
+import type { Point } from 'types'
 
-type Point = [number, number]
+type Direction = 'left' | 'right' | 'up' | 'down'
 
 function hasPoint(points: Point[], p: Point) {
   return some(points, (p2) => isEqual(p, p2))

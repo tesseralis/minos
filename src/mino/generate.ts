@@ -8,7 +8,8 @@ import {
   getPoints,
 } from './mino'
 
-import type { Mino, Coord } from './mino'
+import type { Point } from 'types'
+import type { Mino } from './mino'
 
 import { getSymmetry, getTransforms } from './transform'
 import type { Symmetry } from './transform'
@@ -29,7 +30,7 @@ function getPointMask(i: number, j: number, w: number) {
 /**
  * Returns true if the mino contains the given point
  */
-function contains(mino: Mino, [i, j]: Coord) {
+function contains(mino: Mino, [i, j]: Point) {
   const w = getWidth(mino)
   if (i < 0 || j < 0 || j >= w) {
     return false
@@ -40,7 +41,7 @@ function contains(mino: Mino, [i, j]: Coord) {
 /**
  * Return the neighbors of the point [i,j]
  */
-function* nbrs([i, j]: Coord): Generator<Coord> {
+function* nbrs([i, j]: Point): Generator<Point> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
   yield [i + 1, j]
@@ -95,7 +96,7 @@ function doAppend(mino: Mino, i: number, j: number) {
 }
 
 // Append the point [i,j] to the mino
-function append(mino: Mino, [i, j]: Coord) {
+function append(mino: Mino, [i, j]: Point) {
   const w = getWidth(mino)
   if (i < 0) {
     return doAppend(shiftUp(mino), 0, j)
