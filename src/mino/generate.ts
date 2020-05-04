@@ -1,3 +1,6 @@
+import { mapValues } from 'lodash-es'
+import tinycolor from 'tinycolor2'
+
 import {
   WIDTH_BITS,
   MAX_WIDTH,
@@ -13,8 +16,6 @@ import type { Mino } from './mino'
 
 import { getSymmetry, getTransforms } from './transform'
 import type { Symmetry } from './transform'
-import mapValues from 'lodash/mapValues'
-import tinycolor from 'tinycolor2'
 
 /**
  * Functions dealing with generation of polyominoes.

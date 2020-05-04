@@ -1,13 +1,11 @@
-import some from 'lodash/some'
-import isEqual from 'lodash/isEqual'
-import minBy from 'lodash/minBy'
+import { isEqual, minBy } from 'lodash-es'
 
 import type { Point } from 'math'
 
 type Direction = 'left' | 'right' | 'up' | 'down'
 
 function hasPoint(points: Point[], p: Point) {
-  return some(points, (p2) => isEqual(p, p2))
+  return points.some((p2) => isEqual(p, p2))
 }
 function canTurn(points: Point[], [x, y]: Point, dir: Direction) {
   switch (dir) {

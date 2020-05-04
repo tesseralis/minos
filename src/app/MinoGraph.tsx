@@ -2,7 +2,7 @@ import React, { memo, useState, useCallback, useMemo } from 'react'
 import { css } from 'emotion'
 import tinycolor from 'tinycolor2'
 import * as d3 from 'd3-path'
-import memoize from 'lodash/memoize'
+import { memoize } from 'lodash-es'
 
 import type { Point } from 'math'
 
