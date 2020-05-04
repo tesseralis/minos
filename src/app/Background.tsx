@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useEffect } from "react"
 
-import useClickHandler from './useClickHandler'
+import useClickHandler from "./useClickHandler"
 
 function useWindowEvent(eventType: any, fn: any) {
   useEffect(() => {
@@ -28,7 +28,7 @@ export default function Background({ onClick }: Props) {
     [onClick],
   )
 
-  useWindowEvent('keydown', handleEscape)
+  useWindowEvent("keydown", handleEscape)
 
   return (
     <rect

@@ -25,7 +25,7 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
-import type { Point } from 'math'
+import type { Point } from "math"
 
 export type Mino = number
 export type Dims = [number, number]
@@ -126,18 +126,18 @@ interface DisplayOpts {
  */
 export function displayMino(
   mino: Mino,
-  { block = '□', space = ' ️' }: DisplayOpts,
+  { block = "□", space = " ️" }: DisplayOpts,
 ) {
   const w = getWidth(mino)
   let data = getData(mino)
   const result = []
   while (data) {
     const row = data % (1 << w)
-    const str = padLeft(row.toString(2), '0', w)
-    result.push([...str].join(' '))
+    const str = padLeft(row.toString(2), "0", w)
+    result.push([...str].join(" "))
     data = data >> w
   }
-  return result.reverse().join('\n').replace(/1/g, block).replace(/0/g, space)
+  return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)
 }
 
 export function printMino(mino: Mino, opts: DisplayOpts = {}) {

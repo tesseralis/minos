@@ -1,12 +1,12 @@
-import React, { memo, useState, useCallback } from 'react'
-import { css } from 'emotion'
+import React, { memo, useState, useCallback } from "react"
+import { css } from "emotion"
 
-import { colors } from 'style/theme'
-import { getSize } from 'mino/mino'
-import type { Mino } from 'mino/mino'
+import { colors } from "style/theme"
+import { getSize } from "mino/mino"
+import type { Mino } from "mino/mino"
 
-import useClickHandler from './useClickHandler'
-import MinoSvg from './MinoSvg'
+import useClickHandler from "./useClickHandler"
+import MinoSvg from "./MinoSvg"
 
 function getBlockSize(gen: number) {
   return 2 + (8 - gen) ** 2 / 2

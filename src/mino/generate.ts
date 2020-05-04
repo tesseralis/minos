@@ -1,5 +1,5 @@
-import { mapValues } from 'lodash-es'
-import tinycolor from 'tinycolor2'
+import { mapValues } from "lodash-es"
+import tinycolor from "tinycolor2"
 
 import {
   WIDTH_BITS,
@@ -9,13 +9,13 @@ import {
   getData,
   getWidth,
   getPoints,
-} from './mino'
+} from "./mino"
 
-import type { Point } from 'math'
-import type { Mino } from './mino'
+import type { Point } from "math"
+import type { Mino } from "./mino"
 
-import { getSymmetry, getTransforms } from './transform'
-import type { Symmetry } from './transform'
+import { getSymmetry, getTransforms } from "./transform"
+import type { Symmetry } from "./transform"
 
 /**
  * Functions dealing with generation of polyominoes.
@@ -72,7 +72,7 @@ function shiftUp(mino: Mino) {
 
 function incWidth(mino: Mino) {
   const w = getWidth(mino)
-  if (w === MAX_WIDTH) throw new Error('Already at maximum width')
+  if (w === MAX_WIDTH) throw new Error("Already at maximum width")
   let result = 0
   let i = 0
   let data = getData(mino)
@@ -149,14 +149,14 @@ export function generate(n: number): Set<Mino> {
 }
 
 const baseColorMap: Record<Symmetry, string> = {
-  none: 'dimgray',
-  reflectOrtho: 'crimson',
-  reflectDiag: '#22d',
-  rotate2: 'limegreen',
-  dihedralOrtho: 'gold',
-  dihedralDiag: 'turquoise',
-  rotate4: 'violet',
-  all: '#ccc',
+  none: "dimgray",
+  reflectOrtho: "crimson",
+  reflectDiag: "#22d",
+  rotate2: "limegreen",
+  dihedralOrtho: "gold",
+  dihedralDiag: "turquoise",
+  rotate4: "violet",
+  all: "#ccc",
 }
 
 const borderColors = mapValues(baseColorMap, (col) =>

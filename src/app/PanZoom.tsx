@@ -1,5 +1,5 @@
-import React, { useRef, useEffect } from 'react'
-import panzoom from 'panzoom'
+import React, { useRef, useEffect } from "react"
+import panzoom from "panzoom"
 
 interface Props {
   children: any

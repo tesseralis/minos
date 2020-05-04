@@ -1,11 +1,11 @@
-import { css } from 'emotion'
-import React from 'react'
+import { css } from "emotion"
+import React from "react"
 
-import type { Point } from 'math'
-import { getMino, getPoints } from 'mino/mino'
-import type { Mino } from 'mino/mino'
-import { getOutline } from 'mino/draw'
-import { colors } from 'style/theme'
+import type { Point } from "math"
+import { getMino, getPoints } from "mino/mino"
+import type { Mino } from "mino/mino"
+import { getOutline } from "mino/draw"
+import { colors } from "style/theme"
 
 const oOctomino = getMino(0b111_101_111, 3)
 
@@ -14,18 +14,18 @@ function getCoordAnchor(ns: number[], anchor: string) {
   const max = Math.max(...ns)
 
   switch (anchor) {
-    case 'left':
-    case 'top':
-    case 'start':
+    case "left":
+    case "top":
+    case "start":
       return min
-    case 'right':
-    case 'bottom':
-    case 'end':
+    case "right":
+    case "bottom":
+    case "end":
       return max
-    case 'center':
+    case "center":
       return (min + max) / 2
     default:
-      throw new Error('invalid anchor')
+      throw new Error("invalid anchor")
   }
 }
 
@@ -33,7 +33,7 @@ function getAnchor(points: Point[], anchor: string) {
   const xs = points.map((p) => p[0])
   const ys = points.map((p) => p[1])
 
-  const [yAnchor, xAnchor = yAnchor] = anchor.split(' ')
+  const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
   return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
 }
 
@@ -66,7 +66,7 @@ export default function MinoSvg({
   size,
   fill,
   stroke,
-  anchor = 'center center',
+  anchor = "center center",
 }: Props) {
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
@@ -77,7 +77,7 @@ export default function MinoSvg({
 
   const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy]
   const outlinePoints = scaledOutline.map(translate)
-  const outlineStr = outlinePoints.map((x) => x.join(',')).join(' ')
+  const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
 
   const points = minoPoints.map(scale).map(translate)
 

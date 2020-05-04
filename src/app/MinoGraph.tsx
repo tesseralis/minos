@@ -1,28 +1,28 @@
-import React, { memo, useState, useCallback, useMemo } from 'react'
-import { css } from 'emotion'
-import tinycolor from 'tinycolor2'
-import * as d3 from 'd3-path'
-import { memoize } from 'lodash-es'
+import React, { memo, useState, useCallback, useMemo } from "react"
+import { css } from "emotion"
+import tinycolor from "tinycolor2"
+import * as d3 from "d3-path"
+import { memoize } from "lodash-es"
 
-import type { Point } from 'math'
+import type { Point } from "math"
 
 import {
   equalsToPrecision,
   toCartesian,
   getPointAngle,
   getCircleFromPoints,
-} from 'math'
+} from "math"
 
-import { generateGraph } from 'mino/generate'
-import { getSize } from 'mino/mino'
-import type { Mino } from 'mino/mino'
+import { generateGraph } from "mino/generate"
+import { getSize } from "mino/mino"
+import type { Mino } from "mino/mino"
 
-import { colors } from 'style/theme'
+import { colors } from "style/theme"
 
-import Background from './Background'
-import MinoSvg from './MinoSvg'
-import SelectableMino from './SelectableMino'
-import PanZoom from './PanZoom'
+import Background from "./Background"
+import MinoSvg from "./MinoSvg"
+import SelectableMino from "./SelectableMino"
+import PanZoom from "./PanZoom"
 
 const tau = 2 * Math.PI
 const ringRadiusBase = 400
@@ -43,7 +43,7 @@ function getIndex(mino: Mino) {
   if (!indices[mino]) {
     const gen = getSize(mino) - 1
     if (!nodes[gen]) {
-      throw new Error('gen not found')
+      throw new Error("gen not found")
     }
     const pos = nodes[gen].indexOf(mino)
     indices[mino] = [gen, pos]
@@ -152,7 +152,7 @@ const MinoLink = memo(
     return (
       <path
         className={css`
-          transition: all 250ms ${isSelected ? 'ease-out' : 'ease-in'};
+          transition: all 250ms ${isSelected ? "ease-out" : "ease-in"};
           pointer-events: none;
         `}
         style={{

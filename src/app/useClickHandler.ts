@@ -1,4 +1,4 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo } from "react"
 /**
  * Provides handlers that activate on click but not on drag
  */
@@ -8,7 +8,7 @@ export default function useClickHandler(onClick: () => void) {
   return useMemo(
     () => ({
       // Get PEPjs to work: https://github.com/jquery/PEP#using-pep-with-react
-      'touch-action': 'none',
+      "touch-action": "none",
       onPointerDown() {
         dragged.current = false
       },

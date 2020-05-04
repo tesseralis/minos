@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "devDependencies": {
+    "prettier": "^2.0.5",
     "react-scripts": "^3.4.1"
   },
   "dependencies": {
@@ -33,7 +34,10 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!(lodash-es))/\"",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "prettier": "prettier 'src/**/*.{ts,tsx,json,css}'",
+    "lint": "yarn prettier -- --check",
+    "format": "yarn prettier -- --write"
   },
   "eslintConfig": {
     "extends": "react-app"

@@ -3,20 +3,20 @@
  * rotation and reflection.
  */
 
-import type { Point } from 'math'
-import { getShape, getPoints, fromPoints } from './mino'
-import type { Mino, Dims } from './mino'
+import type { Point } from "math"
+import { getShape, getPoints, fromPoints } from "./mino"
+import type { Mino, Dims } from "./mino"
 
 type Transform = (p: Point, dims: Dims) => Point
 
-type Direction = 'left' | 'right' | 'half'
+type Direction = "left" | "right" | "half"
 const rotations: Record<Direction, Transform> = {
   left: ([i, j], [w, h]) => [w - 1 - j, i],
   half: ([i, j], [w, h]) => [h - 1 - i, w - 1 - j],
   right: ([i, j], [w, h]) => [j, h - 1 - i],
 }
 
-type Axis = 'horiz' | 'vert' | 'mainDiag' | 'minorDiag'
+type Axis = "horiz" | "vert" | "mainDiag" | "minorDiag"
 const reflections: Record<Axis, Transform> = {
   horiz: ([i, j], [w, h]) => [i, w - 1 - j],
   vert: ([i, j], [w, h]) => [h - 1 - i, j],
@@ -43,25 +43,25 @@ export function reflect(mino: Mino, axis: Axis) {
 export function getTransforms(mino: Mino) {
   return new Set([
     mino,
-    rotate(mino, 'left'),
-    rotate(mino, 'half'),
-    rotate(mino, 'right'),
-    reflect(mino, 'horiz'),
-    reflect(mino, 'vert'),
-    reflect(mino, 'mainDiag'),
-    reflect(mino, 'minorDiag'),
+    rotate(mino, "left"),
+    rotate(mino, "half"),
+    rotate(mino, "right"),
+    reflect(mino, "horiz"),
+    reflect(mino, "vert"),
+    reflect(mino, "mainDiag"),
+    reflect(mino, "minorDiag"),
   ])
 }
 
 export type Symmetry =
-  | 'all'
-  | 'dihedralOrtho'
-  | 'dihedralDiag'
-  | 'rotate4'
-  | 'reflectOrtho'
-  | 'reflectDiag'
-  | 'rotate2'
-  | 'none'
+  | "all"
+  | "dihedralOrtho"
+  | "dihedralDiag"
+  | "rotate4"
+  | "reflectOrtho"
+  | "reflectDiag"
+  | "rotate2"
+  | "none"
 
 // TODO this function is kind of cumbersome...
 /**
@@ -72,32 +72,32 @@ export function getSymmetry(mino: Mino): Symmetry {
   const transforms = getTransforms(mino)
   switch (transforms.size) {
     case 1:
-      return 'all'
+      return "all"
     case 2:
-      if (mino === reflect(mino, 'horiz')) {
-        return 'dihedralOrtho'
-      } else if (mino === reflect(mino, 'mainDiag')) {
-        return 'dihedralDiag'
-      } else if (mino === rotate(mino, 'half')) {
-        return 'rotate4'
+      if (mino === reflect(mino, "horiz")) {
+        return "dihedralOrtho"
+      } else if (mino === reflect(mino, "mainDiag")) {
+        return "dihedralDiag"
+      } else if (mino === rotate(mino, "half")) {
+        return "rotate4"
       }
       break
     case 4:
-      if (mino === reflect(mino, 'horiz') || mino === reflect(mino, 'vert')) {
-        return 'reflectOrtho'
+      if (mino === reflect(mino, "horiz") || mino === reflect(mino, "vert")) {
+        return "reflectOrtho"
       } else if (
-        mino === reflect(mino, 'mainDiag') ||
-        mino === reflect(mino, 'minorDiag')
+        mino === reflect(mino, "mainDiag") ||
+        mino === reflect(mino, "minorDiag")
       ) {
-        return 'reflectDiag'
-      } else if (mino === rotate(mino, 'half')) {
-        return 'rotate2'
+        return "reflectDiag"
+      } else if (mino === rotate(mino, "half")) {
+        return "rotate2"
       }
       break
     case 8:
-      return 'none'
+      return "none"
   }
-  throw new Error('invalid symmetry')
+  throw new Error("invalid symmetry")
 }
 
 /**
