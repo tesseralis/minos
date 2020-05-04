@@ -1,7 +1,7 @@
 import { css } from 'emotion'
 import React from 'react'
 
-import type { Point } from 'types'
+import type { Point } from 'math'
 import { getMino, getPoints } from 'mino/mino'
 import type { Mino } from 'mino/mino'
 import { getOutline } from 'mino/draw'

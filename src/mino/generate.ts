@@ -8,7 +8,7 @@ import {
   getPoints,
 } from './mino'
 
-import type { Point } from 'types'
+import type { Point } from 'math'
 import type { Mino } from './mino'
 
 import { getSymmetry, getTransforms } from './transform'

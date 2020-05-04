@@ -25,17 +25,10 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
-import type { Point } from 'types'
+import type { Point } from 'math'
 
 export type Mino = number
 export type Dims = [number, number]
-
-/**
- * Get log_x (y)
- */
-function getBaseLog(x: number, y: number) {
-  return Math.log(y) / Math.log(x)
-}
 
 // The number of bits reserved for the width
 export const WIDTH_BITS = 4
@@ -65,7 +58,7 @@ export function getWidth(mino: Mino) {
 export function getHeight(mino: Mino) {
   const w = getWidth(mino)
   const data = getData(mino)
-  return Math.floor(getBaseLog(2, data) / w) + 1
+  return Math.floor(Math.log2(data) / w) + 1
 }
 
 /**

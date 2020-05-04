@@ -2,7 +2,7 @@ import some from 'lodash/some'
 import isEqual from 'lodash/isEqual'
 import minBy from 'lodash/minBy'
 
-import type { Point } from 'types'
+import type { Point } from 'math'
 
 type Direction = 'left' | 'right' | 'up' | 'down'
 

@@ -3,7 +3,7 @@
  * rotation and reflection.
  */
 
-import type { Point } from 'types'
+import type { Point } from 'math'
 import { getShape, getPoints, fromPoints } from './mino'
 import type { Mino, Dims } from './mino'
 
