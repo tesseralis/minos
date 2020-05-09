@@ -227,7 +227,11 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-function Sidebar() {
+interface SidebarProps {
+  mino: Mino
+}
+
+function Sidebar({ mino }: SidebarProps) {
   return (
     <div
       className={css`
@@ -237,7 +241,24 @@ function Sidebar() {
         grid-row: 1;
         grid-column: 2;
       `}
-    ></div>
+    >
+      <svg
+        viewBox="-200 -200 400 400"
+        className={css`
+          width: 100%;
+          height: 24rem;
+        `}
+      >
+        <MinoSvg
+          mino={mino}
+          cx={0}
+          cy={0}
+          size={25}
+          fill={meta[mino].color!.toString()}
+          stroke={meta[mino].borderColor!}
+        />
+      </svg>
+    </div>
   )
 }
 
@@ -306,7 +327,7 @@ export default memo(function MinoGraph() {
         />
       )} */}
       </Svg>
-      <Sidebar />
+      {selected && <Sidebar key={selected} mino={selected} />}
     </Wrapper>
   )
 })
