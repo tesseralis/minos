@@ -1,8 +1,8 @@
-import styled from '@emotion/styled'
-import React from 'react'
+import styled from "@emotion/styled"
+import React from "react"
 
-import InfoButton from './InfoButton'
-import MinoGraph from './MinoGraph'
+import InfoButton from "./InfoButton"
+import MinoGraph from "./MinoGraph"
 
 const FullScreen = styled.div`
   position: fixed;
@@ -21,9 +21,9 @@ const ButtonWrapper = styled.div`
 export default function App() {
   return (
     <FullScreen>
-      <ButtonWrapper>
+      {/* <ButtonWrapper>
         <InfoButton />
-      </ButtonWrapper>
+      </ButtonWrapper> */}
       <MinoGraph />
     </FullScreen>
   )

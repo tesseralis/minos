@@ -1,5 +1,6 @@
 import React, { memo, useState, useCallback, useMemo } from "react"
 import { css } from "emotion"
+import styled from "@emotion/styled"
 import tinycolor from "tinycolor2"
 import * as d3 from "d3-path"
 import { memoize } from "lodash-es"
@@ -208,12 +209,35 @@ function Svg({ width, children }: { width: number; children: any }) {
       className={css`
         width: 100%;
         height: 100%;
+        grid-row: 1;
+        grid-column: 1 / span 2;
         background-color: ${colors.bg};
       `}
       viewBox={viewBox}
     >
       {children}
     </svg>
+  )
+}
+
+const Wrapper = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 24rem;
+  width: 100%;
+  height: 100%;
+`
+
+function Sidebar() {
+  return (
+    <div
+      className={css`
+        width: 100%;
+        height: 100%;
+        background-color: rgba(255, 255, 255, 0.125);
+        grid-row: 1;
+        grid-column: 2;
+      `}
+    ></div>
   )
 }
 
@@ -251,25 +275,26 @@ export default memo(function MinoGraph() {
   )
 
   return (
-    <Svg width={width}>
-      <Background onClick={() => setSelected(undefined)} />
-      <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
-        <MinoLinks links={links} selected={selectedLinks} />
-        {nodes.map((minoGen, i) => {
-          return (
-            <Orbital
-              minos={minoGen}
-              gen={i}
-              key={i}
-              selected={getSelected(i)}
-              onSelect={setSelected}
-              onHover={setHovered}
-            />
-          )
-        })}
-      </PanZoom>
-      {/* Overlay showing the currently hovered mino */}
-      {hovered && (
+    <Wrapper>
+      <Svg width={width}>
+        <Background onClick={() => setSelected(undefined)} />
+        <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
+          <MinoLinks links={links} selected={selectedLinks} />
+          {nodes.map((minoGen, i) => {
+            return (
+              <Orbital
+                minos={minoGen}
+                gen={i}
+                key={i}
+                selected={getSelected(i)}
+                onSelect={setSelected}
+                onHover={setHovered}
+              />
+            )
+          })}
+        </PanZoom>
+        {/* Overlay showing the currently hovered mino */}
+        {/* {hovered && (
         <MinoSvg
           mino={hovered}
           fill={meta[hovered].color!.toString()}
@@ -279,7 +304,9 @@ export default memo(function MinoGraph() {
           cy={32}
           anchor="top left"
         />
-      )}
-    </Svg>
+      )} */}
+      </Svg>
+      <Sidebar />
+    </Wrapper>
   )
 })
