@@ -39,6 +39,10 @@ function ringRadius(gen: number) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
 
+function getBlockSize(gen: number) {
+  return 2 + (8 - gen) ** 2 / 2
+}
+
 const indices: Record<number, [number, number]> = {}
 function getIndex(mino: Mino) {
   if (!indices[mino]) {
@@ -128,7 +132,8 @@ const Orbital = memo(
               cx={x}
               cy={y}
               mino={mino}
-              color={meta[mino].color!.toHexString()}
+              size={getBlockSize(gen + 1)}
+              fill={meta[mino].color!.toHexString()}
               stroke={meta[mino].borderColor!}
               onSelect={onSelect}
               onHover={onHover}
@@ -227,17 +232,63 @@ const Wrapper = styled.div`
   height: 100%;
 `
 
-interface SidebarProps {
+interface RadarProps {
   mino: Mino
+  onSelect?(mino: Mino): void
+}
+function Radar({ mino, onSelect }: RadarProps) {
+  const { parents, children } = meta[mino]
+  return (
+    <>
+      <MinoSvg
+        mino={mino}
+        cx={0}
+        cy={0}
+        size={25}
+        fill={meta[mino].color!.toString()}
+        stroke={meta[mino].borderColor!}
+      />
+      {[...parents].map((parent, i) => {
+        return (
+          <SelectableMino
+            mino={parent}
+            cx={-100 + i * 50}
+            cy={-100}
+            size={10}
+            fill={meta[parent].color!.toString()}
+            stroke={meta[parent].borderColor!}
+            onSelect={onSelect}
+          />
+        )
+      })}
+      {[...children].map((child, i) => {
+        return (
+          <SelectableMino
+            mino={child}
+            cx={-100 + i * 50}
+            cy={100}
+            size={10}
+            fill={meta[child].color!.toString()}
+            stroke={meta[child].borderColor!}
+            onSelect={onSelect}
+          />
+        )
+      })}
+    </>
+  )
 }
 
-function Sidebar({ mino }: SidebarProps) {
+interface SidebarProps {
+  mino?: Mino
+  onSelect?(mino: Mino): void
+}
+function Sidebar({ mino, onSelect }: SidebarProps) {
   return (
     <div
       className={css`
         width: 100%;
         height: 100%;
-        background-color: rgba(255, 255, 255, 0.125);
+        background-color: rgba(80, 80, 80, 0.25);
         grid-row: 1;
         grid-column: 2;
       `}
@@ -249,14 +300,7 @@ function Sidebar({ mino }: SidebarProps) {
           height: 24rem;
         `}
       >
-        <MinoSvg
-          mino={mino}
-          cx={0}
-          cy={0}
-          size={25}
-          fill={meta[mino].color!.toString()}
-          stroke={meta[mino].borderColor!}
-        />
+        {mino && <Radar mino={mino} onSelect={onSelect} />}
       </svg>
     </div>
   )
@@ -314,20 +358,8 @@ export default memo(function MinoGraph() {
             )
           })}
         </PanZoom>
-        {/* Overlay showing the currently hovered mino */}
-        {/* {hovered && (
-        <MinoSvg
-          mino={hovered}
-          fill={meta[hovered].color!.toString()}
-          stroke={meta[hovered].borderColor!}
-          size={32}
-          cx={32}
-          cy={32}
-          anchor="top left"
-        />
-      )} */}
       </Svg>
-      {selected && <Sidebar key={selected} mino={selected} />}
+      <Sidebar key={selected} mino={selected} onSelect={setSelected} />
     </Wrapper>
   )
 })

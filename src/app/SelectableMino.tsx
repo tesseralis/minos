@@ -8,19 +8,16 @@ import type { Mino } from "mino/mino"
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"
 
-function getBlockSize(gen: number) {
-  return 2 + (8 - gen) ** 2 / 2
-}
-
 interface Props {
   mino: Mino
   cx: number
   cy: number
-  color: string
+  size: number
+  fill: string
   stroke: string
-  selected: boolean
-  onSelect(mino: Mino): void
-  onHover(mino?: Mino): void
+  selected?: boolean
+  onSelect?(mino: Mino): void
+  onHover?(mino?: Mino): void
 }
 
 const SelectableMino = memo(
@@ -28,9 +25,10 @@ const SelectableMino = memo(
     mino,
     cx,
     cy,
-    color,
+    size,
+    fill,
     stroke,
-    selected,
+    selected = false,
     onSelect = () => {},
     onHover = () => {},
   }: Props) => {
@@ -46,7 +44,7 @@ const SelectableMino = memo(
       [mino, onHover],
     )
     const handleClick = useClickHandler(onClick)
-    const size = getBlockSize(n)
+    // const size = getBlockSize(n)
 
     return (
       <g>
@@ -55,7 +53,7 @@ const SelectableMino = memo(
           cx={cx}
           cy={cy}
           size={size * (hovered ? 1.25 : 1)}
-          fill={color}
+          fill={fill}
           stroke={selected ? colors.fg : stroke}
         />
         <circle
