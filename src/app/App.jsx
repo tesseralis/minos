@@ -15,15 +15,15 @@ const FullScreen = styled.div`
 const ButtonWrapper = styled.div`
   position: fixed;
   bottom: 2rem;
-  right: 2rem;
+  left: 2rem;
 `
 
 export default function App() {
   return (
     <FullScreen>
-      {/* <ButtonWrapper>
+      <ButtonWrapper>
         <InfoButton />
-      </ButtonWrapper> */}
+      </ButtonWrapper>
       <MinoGraph />
     </FullScreen>
   )
