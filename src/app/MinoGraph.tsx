@@ -68,11 +68,18 @@ function getCoords([gen, i]: [number, number]) {
 }
 
 // Cached colors of each link
-const linkColors = links.map((link) => {
-  const srcMino = link[0]
-  const tgtMino = link[1]
-  return tinycolor.mix(meta[srcMino].color!, meta[tgtMino].color!).toHexString()
-})
+const linkColors: Record<number, Record<number, string>> = {}
+for (const [src, tgt] of links) {
+  linkColors[src] = linkColors[src] ?? {}
+  linkColors[src][tgt] = tinycolor
+    .mix(meta[src].color!, meta[tgt].color!)
+    .toHexString()
+}
+// const linkColors = links.map((link) => {
+//   const srcMino = link[0]
+//   const tgtMino = link[1]
+//   return tinycolor.mix(meta[srcMino].color!, meta[tgtMino].color!).toHexString()
+// })
 
 /**
  * Get the path of the circular arc connecting `src` to `tgt`
@@ -199,7 +206,7 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
           <MinoLink
             key={i}
             link={link}
-            color={linkColors[i]}
+            color={linkColors[link[0]][link[1]]}
             isSelected={isSelected}
             opacity={opacity}
             strokeWidth={strokeWidth}
@@ -288,7 +295,7 @@ function Compass({ mino, onSelect }: CompassProps) {
         return (
           <>
             <path
-              stroke={meta[parent].color!.toString()}
+              stroke={linkColors[parent][mino]}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -318,7 +325,7 @@ function Compass({ mino, onSelect }: CompassProps) {
         return (
           <>
             <path
-              stroke={meta[child].color!.toString()}
+              stroke={linkColors[mino][child]}
               d={linkPath}
               fill="none"
               opacity={0.5}
