@@ -1,7 +1,6 @@
 import styled from "@emotion/styled"
 import React from "react"
 
-import InfoButton from "./InfoButton"
 import MinoGraph from "./MinoGraph"
 
 const FullScreen = styled.div`
@@ -12,18 +11,9 @@ const FullScreen = styled.div`
   bottom: 0;
 `
 
-const ButtonWrapper = styled.div`
-  position: fixed;
-  bottom: 2rem;
-  left: 2rem;
-`
-
 export default function App() {
   return (
     <FullScreen>
-      <ButtonWrapper>
-        <InfoButton />
-      </ButtonWrapper>
       <MinoGraph />
     </FullScreen>
   )

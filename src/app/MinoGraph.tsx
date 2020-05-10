@@ -19,6 +19,7 @@ import type { Mino } from "mino/mino"
 
 import { colors } from "style/theme"
 
+import InfoButton from "./InfoButton"
 import Background from "./Background"
 import MinoSvg from "./MinoSvg"
 import SelectableMino from "./SelectableMino"
@@ -209,7 +210,8 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
   )
 })
 
-function Svg({ width, children }: { width: number; children: any }) {
+// A full screen SVG
+function FullScreenSvg({ width, children }: { width: number; children: any }) {
   // Only change the viewbox if the prop width changes, not the window ratio
   const viewBox = useMemo(() => {
     const height = (width / window.innerWidth) * window.innerHeight
@@ -246,8 +248,8 @@ function Compass({ mino, onSelect }: CompassProps) {
     <svg
       viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
       className={css`
-        width: 24rem;
-        height: 24rem;
+        width: 20rem;
+        height: 20rem;
         pointer-events: initial;
       `}
     >
@@ -373,11 +375,10 @@ export default memo(function MinoGraph() {
     >
       <div
         className={css`
-          grid-row: 1;
-          grid-column: 1;
+          grid-area: 1 / 1;
         `}
       >
-        <Svg width={width}>
+        <FullScreenSvg width={width}>
           <Background onClick={() => setSelected(undefined)} />
           <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
             <MinoLinks links={links} selected={selectedLinks} />
@@ -394,16 +395,25 @@ export default memo(function MinoGraph() {
               )
             })}
           </PanZoom>
-        </Svg>
+        </FullScreenSvg>
+      </div>
+      <div
+        className={css`
+          grid-area: 1 / 1;
+          align-self: end;
+          justify-self: start;
+          padding: 2rem;
+        `}
+      >
+        <InfoButton />
       </div>
       {selected && (
         <div
           key={selected}
           className={css`
-            grid-row: 1;
-            grid-column: 1;
-            align-self: flex-start;
-            justify-self: flex-end;
+            grid-area: 1 / 1;
+            align-self: start;
+            justify-self: end;
             padding: 2rem;
             pointer-events: none;
           `}
