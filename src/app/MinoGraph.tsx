@@ -75,16 +75,10 @@ const linkColors = links.map((link) => {
 })
 
 /**
- * Return the path for the link that goes from the source to target mino.
- * The link is a circular that intersects both points as well as a third point
- * scaled according to the radius of the generation.
+ * Get the path of the circular arc connecting `src` to `tgt`
+ * that also passes through `base`.
  */
-const getLinkPath = memoize(function ([srcMino, tgtMino]) {
-  const gen = getSize(srcMino)
-  const origin: Point = [0, -ringRadius(gen) * 0.75]
-  const src = getCoords(getIndex(srcMino))
-  const tgt = getCoords(getIndex(tgtMino))
-
+function getArc(src: Point, tgt: Point, origin: Point) {
   // Special case: If we're colinear, just draw a straight line
   if (
     equalsToPrecision(getPointAngle(origin, src), getPointAngle(origin, tgt))
@@ -109,6 +103,20 @@ const getLinkPath = memoize(function ([srcMino, tgtMino]) {
     ccw,
   )
   return path.toString()
+}
+
+/**
+ * Return the path for the link that goes from the source to target mino.
+ * The link is a circular that intersects both points as well as a third point
+ * scaled according to the radius of the generation.
+ */
+const getLinkPath = memoize(function ([srcMino, tgtMino]) {
+  const gen = getSize(srcMino)
+  const origin: Point = [0, -ringRadius(gen) * 0.75]
+  const src = getCoords(getIndex(srcMino))
+  const tgt = getCoords(getIndex(tgtMino))
+
+  return getArc(src, tgt, origin)
 })
 
 interface OrbitalProps {
@@ -240,42 +248,80 @@ interface RadarProps {
 // FIXME rename this: something like "MiniTree"?
 function Radar({ mino, onSelect }: RadarProps) {
   const { parents, children } = meta[mino]
+  const radius = 110
+  const gen = getSize(mino)
+  const parentBlockSize = getBlockSize(gen - 1)
+  const childBlockSize = getBlockSize(gen + 1)
   return (
     <>
+      <circle cx={0} cy={0} r={radius + 10} fill="black" opacity={0.25} />
+      {[...parents].map((parent, i) => {
+        const numParents = parents.size
+        const spread = (1 / 3) * ((numParents - 1) / numParents)
+        const angle =
+          -tau / 4 +
+          tau *
+            ((0.5 - spread) / 2 + (i / Math.max(numParents - 1, 1)) * spread)
+        const [x, y] = toCartesian({ radius, angle })
+        const linkPath = getArc([x, y], [0, 0], [0, radius * 2])
+        return (
+          <>
+            <path
+              stroke={meta[parent].color!.toString()}
+              d={linkPath}
+              fill="none"
+              opacity={0.5}
+            />
+            <SelectableMino
+              mino={parent}
+              cx={x}
+              cy={y}
+              size={parentBlockSize}
+              fill={meta[parent].color!.toString()}
+              stroke={meta[parent].borderColor!}
+              onSelect={onSelect}
+            />
+          </>
+        )
+      })}
+      {[...children].map((child, i) => {
+        const numChildren = children.size
+        const spread = (7 / 16) * ((numChildren - 1) / numChildren)
+        const angle =
+          tau / 4 +
+          tau *
+            ((0.5 - spread) / 2 + (i / Math.max(numChildren - 1, 1)) * spread)
+        const [x, y] = toCartesian({ radius, angle })
+        const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
+        // FIXME use the color of the actual path link
+        return (
+          <>
+            <path
+              stroke={meta[child].color!.toString()}
+              d={linkPath}
+              fill="none"
+              opacity={0.5}
+            />
+            <SelectableMino
+              mino={child}
+              cx={x}
+              cy={y}
+              size={childBlockSize}
+              fill={meta[child].color!.toString()}
+              stroke={meta[child].borderColor!}
+              onSelect={onSelect}
+            />
+          </>
+        )
+      })}
       <MinoSvg
         mino={mino}
         cx={0}
         cy={0}
-        size={25}
+        size={75 / (gen + 1)}
         fill={meta[mino].color!.toString()}
         stroke={meta[mino].borderColor!}
       />
-      {[...parents].map((parent, i) => {
-        return (
-          <SelectableMino
-            mino={parent}
-            cx={-100 + i * 50}
-            cy={-100}
-            size={10}
-            fill={meta[parent].color!.toString()}
-            stroke={meta[parent].borderColor!}
-            onSelect={onSelect}
-          />
-        )
-      })}
-      {[...children].map((child, i) => {
-        return (
-          <SelectableMino
-            mino={child}
-            cx={-100 + i * 50}
-            cy={100}
-            size={10}
-            fill={meta[child].color!.toString()}
-            stroke={meta[child].borderColor!}
-            onSelect={onSelect}
-          />
-        )
-      })}
     </>
   )
 }
@@ -285,18 +331,22 @@ interface SidebarProps {
   onSelect?(mino: Mino): void
 }
 function Sidebar({ mino, onSelect }: SidebarProps) {
+  const svgSize = 250
   return (
     <div
       className={css`
         width: 100%;
         height: 100%;
-        background-color: rgba(80, 80, 80, 0.25);
+        background-color: rgba(40, 40, 40, 0.5);
         grid-row: 1;
         grid-column: 2;
+
+        display: flex;
+        align-items: center;
       `}
     >
       <svg
-        viewBox="-200 -200 400 400"
+        viewBox={`${-svgSize / 2} ${-svgSize / 2} ${svgSize} ${svgSize}`}
         className={css`
           width: 100%;
           height: 24rem;
