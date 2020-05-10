@@ -236,6 +236,8 @@ interface RadarProps {
   mino: Mino
   onSelect?(mino: Mino): void
 }
+
+// FIXME rename this: something like "MiniTree"?
 function Radar({ mino, onSelect }: RadarProps) {
   const { parents, children } = meta[mino]
   return (
