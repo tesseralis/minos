@@ -124,7 +124,7 @@ interface OrbitalProps {
   gen: number
   selected?: Set<Mino>
   onSelect(mino: Mino): void
-  onHover(mino: Mino): void
+  onHover?(mino: Mino): void
 }
 
 const Orbital = memo(
@@ -237,13 +237,28 @@ interface CompassProps {
   onSelect?(mino: Mino): void
 }
 
+function getCompassBlockSize(gen: number) {
+  return 20 / (gen + 1)
+}
+
+/**
+ * Displays a mino and its direct children and parents.
+ */
 function Compass({ mino, onSelect }: CompassProps) {
+  // TODO these return a set, but we'd like them to return in the same
+  // order as the full graph
   const { parents, children } = meta[mino]
   const radius = 90
   const svgSize = radius + 10
   const gen = getSize(mino)
-  const parentBlockSize = getBlockSize(gen - 1)
-  const childBlockSize = getBlockSize(gen + 1)
+
+  const parentBlockSize = getCompassBlockSize(gen - 1) * 2
+
+  // Scale the size of the child blocks so that they are bigger
+  // when the mino doesn't have as many children
+  const maxNumChildren = 2 * gen + 1
+  const childBlockSizeMult = 2 - children.size / maxNumChildren
+  const childBlockSize = getCompassBlockSize(gen + 1) * childBlockSizeMult
   return (
     <svg
       viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
@@ -292,14 +307,14 @@ function Compass({ mino, onSelect }: CompassProps) {
       })}
       {[...children].map((child, i) => {
         const numChildren = children.size
-        const spread = (7 / 16) * ((numChildren - 1) / numChildren)
+        const spread = (15 / 32) * ((numChildren - 1) / numChildren)
         const angle =
           tau / 4 +
           tau *
             ((0.5 - spread) / 2 + (i / Math.max(numChildren - 1, 1)) * spread)
         const [x, y] = toCartesian({ radius, angle })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
-        // FIXME use the color of the actual path link
+        // TODO use the color of the actual path link
         return (
           <>
             <path
@@ -324,7 +339,7 @@ function Compass({ mino, onSelect }: CompassProps) {
         mino={mino}
         cx={0}
         cy={0}
-        size={75 / (gen + 1)}
+        size={getCompassBlockSize(gen) * 3}
         fill={meta[mino].color!.toString()}
         stroke={meta[mino].borderColor!}
       />
@@ -334,7 +349,7 @@ function Compass({ mino, onSelect }: CompassProps) {
 
 export default memo(function MinoGraph() {
   const [selected, setSelected] = useState<Mino | undefined>()
-  const [hovered, setHovered] = useState<Mino | undefined>()
+  // const [hovered, setHovered] = useState<Mino | undefined>()
 
   // Get the selected links
   const { parents, children } = !!selected ? meta[selected] : ({} as any)
@@ -390,7 +405,6 @@ export default memo(function MinoGraph() {
                   key={i}
                   selected={getSelected(i)}
                   onSelect={setSelected}
-                  onHover={setHovered}
                 />
               )
             })}
