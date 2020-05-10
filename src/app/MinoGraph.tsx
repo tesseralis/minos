@@ -235,7 +235,7 @@ function Svg({ width, children }: { width: number; children: any }) {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 28rem;
+  grid-template-columns: 1fr 24rem;
   width: 100%;
   height: 100%;
 `
@@ -248,13 +248,20 @@ interface RadarProps {
 // FIXME rename this: something like "MiniTree"?
 function Radar({ mino, onSelect }: RadarProps) {
   const { parents, children } = meta[mino]
-  const radius = 110
+  const radius = 90
   const gen = getSize(mino)
   const parentBlockSize = getBlockSize(gen - 1)
   const childBlockSize = getBlockSize(gen + 1)
   return (
     <>
-      <circle cx={0} cy={0} r={radius + 10} fill="black" opacity={0.5} />
+      <circle
+        cx={0}
+        cy={0}
+        r={radius + 10}
+        fill="#222"
+        stroke="#aaa"
+        opacity={2 / 3}
+      />
       {[...parents].map((parent, i) => {
         const numParents = parents.size
         const spread = (1 / 3) * ((numParents - 1) / numParents)
@@ -331,25 +338,22 @@ interface SidebarProps {
   onSelect?(mino: Mino): void
 }
 function Sidebar({ mino, onSelect }: SidebarProps) {
-  const svgSize = 250
+  const svgSize = 200
   return (
     <div
       className={css`
         width: 100%;
         height: 100%;
-        background-color: rgba(40, 40, 40, 0.5);
+        /* background-color: rgba(40, 40, 40, 0.5); */
         grid-row: 1;
         grid-column: 2;
-
-        display: flex;
-        align-items: center;
       `}
     >
       <svg
         viewBox={`${-svgSize / 2} ${-svgSize / 2} ${svgSize} ${svgSize}`}
         className={css`
-          width: 100%;
-          height: 28rem;
+          width: 24rem;
+          height: 24rem;
         `}
       >
         {mino && <Radar mino={mino} onSelect={onSelect} />}
