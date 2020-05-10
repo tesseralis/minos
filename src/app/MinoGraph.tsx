@@ -235,7 +235,7 @@ function Svg({ width, children }: { width: number; children: any }) {
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 1fr 24rem;
+  grid-template-columns: 1fr 28rem;
   width: 100%;
   height: 100%;
 `
@@ -254,7 +254,7 @@ function Radar({ mino, onSelect }: RadarProps) {
   const childBlockSize = getBlockSize(gen + 1)
   return (
     <>
-      <circle cx={0} cy={0} r={radius + 10} fill="black" opacity={0.25} />
+      <circle cx={0} cy={0} r={radius + 10} fill="black" opacity={0.5} />
       {[...parents].map((parent, i) => {
         const numParents = parents.size
         const spread = (1 / 3) * ((numParents - 1) / numParents)
@@ -263,7 +263,7 @@ function Radar({ mino, onSelect }: RadarProps) {
           tau *
             ((0.5 - spread) / 2 + (i / Math.max(numParents - 1, 1)) * spread)
         const [x, y] = toCartesian({ radius, angle })
-        const linkPath = getArc([x, y], [0, 0], [0, radius * 2])
+        const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
           <>
             <path
@@ -349,7 +349,7 @@ function Sidebar({ mino, onSelect }: SidebarProps) {
         viewBox={`${-svgSize / 2} ${-svgSize / 2} ${svgSize} ${svgSize}`}
         className={css`
           width: 100%;
-          height: 24rem;
+          height: 28rem;
         `}
       >
         {mino && <Radar mino={mino} onSelect={onSelect} />}
