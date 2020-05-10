@@ -1,6 +1,5 @@
 import React, { memo, useState, useCallback, useMemo } from "react"
 import { css } from "emotion"
-import styled from "@emotion/styled"
 import tinycolor from "tinycolor2"
 import * as d3 from "d3-path"
 import { memoize } from "lodash-es"
@@ -222,8 +221,6 @@ function Svg({ width, children }: { width: number; children: any }) {
       className={css`
         width: 100%;
         height: 100%;
-        grid-row: 1;
-        grid-column: 1 / span 2;
         background-color: ${colors.bg};
       `}
       viewBox={viewBox}
@@ -233,27 +230,27 @@ function Svg({ width, children }: { width: number; children: any }) {
   )
 }
 
-const Wrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 24rem;
-  width: 100%;
-  height: 100%;
-`
-
-interface RadarProps {
+interface CompassProps {
   mino: Mino
   onSelect?(mino: Mino): void
 }
 
-// FIXME rename this: something like "MiniTree"?
-function Radar({ mino, onSelect }: RadarProps) {
+function Compass({ mino, onSelect }: CompassProps) {
   const { parents, children } = meta[mino]
   const radius = 90
+  const svgSize = radius + 10
   const gen = getSize(mino)
   const parentBlockSize = getBlockSize(gen - 1)
   const childBlockSize = getBlockSize(gen + 1)
   return (
-    <>
+    <svg
+      viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
+      className={css`
+        width: 24rem;
+        height: 24rem;
+        pointer-events: initial;
+      `}
+    >
       <circle
         cx={0}
         cy={0}
@@ -329,36 +326,7 @@ function Radar({ mino, onSelect }: RadarProps) {
         fill={meta[mino].color!.toString()}
         stroke={meta[mino].borderColor!}
       />
-    </>
-  )
-}
-
-interface SidebarProps {
-  mino?: Mino
-  onSelect?(mino: Mino): void
-}
-function Sidebar({ mino, onSelect }: SidebarProps) {
-  const svgSize = 200
-  return (
-    <div
-      className={css`
-        width: 100%;
-        height: 100%;
-        /* background-color: rgba(40, 40, 40, 0.5); */
-        grid-row: 1;
-        grid-column: 2;
-      `}
-    >
-      <svg
-        viewBox={`${-svgSize / 2} ${-svgSize / 2} ${svgSize} ${svgSize}`}
-        className={css`
-          width: 24rem;
-          height: 24rem;
-        `}
-      >
-        {mino && <Radar mino={mino} onSelect={onSelect} />}
-      </svg>
-    </div>
+    </svg>
   )
 }
 
@@ -396,26 +364,53 @@ export default memo(function MinoGraph() {
   )
 
   return (
-    <Wrapper>
-      <Svg width={width}>
-        <Background onClick={() => setSelected(undefined)} />
-        <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
-          <MinoLinks links={links} selected={selectedLinks} />
-          {nodes.map((minoGen, i) => {
-            return (
-              <Orbital
-                minos={minoGen}
-                gen={i}
-                key={i}
-                selected={getSelected(i)}
-                onSelect={setSelected}
-                onHover={setHovered}
-              />
-            )
-          })}
-        </PanZoom>
-      </Svg>
-      <Sidebar key={selected} mino={selected} onSelect={setSelected} />
-    </Wrapper>
+    <div
+      className={css`
+        display: grid;
+        width: 100%;
+        height: 100%;
+      `}
+    >
+      <div
+        className={css`
+          grid-row: 1;
+          grid-column: 1;
+        `}
+      >
+        <Svg width={width}>
+          <Background onClick={() => setSelected(undefined)} />
+          <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
+            <MinoLinks links={links} selected={selectedLinks} />
+            {nodes.map((minoGen, i) => {
+              return (
+                <Orbital
+                  minos={minoGen}
+                  gen={i}
+                  key={i}
+                  selected={getSelected(i)}
+                  onSelect={setSelected}
+                  onHover={setHovered}
+                />
+              )
+            })}
+          </PanZoom>
+        </Svg>
+      </div>
+      {selected && (
+        <div
+          key={selected}
+          className={css`
+            grid-row: 1;
+            grid-column: 1;
+            align-self: flex-start;
+            justify-self: flex-end;
+            padding: 2rem;
+            pointer-events: none;
+          `}
+        >
+          <Compass mino={selected} onSelect={setSelected} />
+        </div>
+      )}
+    </div>
   )
 })
