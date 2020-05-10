@@ -249,7 +249,7 @@ function Compass({ mino, onSelect }: CompassProps) {
   // order as the full graph
   const { parents, children } = meta[mino]
   const radius = 90
-  const svgSize = radius + 10
+  const svgSize = radius + 20
   const gen = getSize(mino)
 
   const parentBlockSize = getCompassBlockSize(gen - 1) * 2
