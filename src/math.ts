@@ -13,6 +13,8 @@ export interface Circle {
 
 export const PRECISION = 0.0001
 
+export const TAU = 2 * Math.PI
+
 /**
  * Tests whether the two numbers are equal up to a precision.
  */
