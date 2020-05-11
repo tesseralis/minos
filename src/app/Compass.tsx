@@ -6,7 +6,7 @@ import { getSize } from "mino/mino"
 import { TAU, toCartesian } from "math"
 
 import { getArc } from "./utils"
-import { meta, linkColors, getMinoColor } from "./graph"
+import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
 import MinoSvg from "./MinoSvg"
 import SelectableMino from "./SelectableMino"
 
@@ -19,15 +19,17 @@ interface Props {
   onSelect?(mino: Mino): void
 }
 
+const radius = 90
+const svgSize = radius + 20
+
 /**
  * Displays a mino and its direct children and parents.
  */
 export default function Compass({ mino, onSelect }: Props) {
   // TODO these return a set, but we'd like them to return in the same
   // order as the full graph
-  const { parents, children } = meta[mino]
-  const radius = 90
-  const svgSize = radius + 20
+  const parents = getParents(mino)
+  const children = getChildren(mino)
   const gen = getSize(mino)
 
   const parentBlockSize = getCompassBlockSize(gen - 1) * 2
@@ -66,7 +68,7 @@ export default function Compass({ mino, onSelect }: Props) {
         return (
           <>
             <path
-              stroke={linkColors[parent][mino]}
+              stroke={getLinkColor(parent, mino)}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -95,7 +97,7 @@ export default function Compass({ mino, onSelect }: Props) {
         return (
           <>
             <path
-              stroke={linkColors[mino][child]}
+              stroke={getLinkColor(mino, child)}
               d={linkPath}
               fill="none"
               opacity={0.5}

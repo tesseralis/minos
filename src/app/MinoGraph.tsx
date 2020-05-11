@@ -19,9 +19,10 @@ import {
   numGenerations,
   nodes,
   links,
-  meta,
-  linkColors,
+  getParents,
+  getChildren,
   getMinoColor,
+  getLinkColor,
 } from "./graph"
 
 const ringRadiusBase = 400
@@ -169,7 +170,7 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
   return (
     <g>
       {links.map((link, i) => {
-        const srcMino = link[0]
+        const [srcMino, tgtMino] = link
         const gen = getIndex(srcMino)[0]
         const isSelected = selected.has(link.toString())
         const strokeWidth = 4 / (gen / 2 + 1) ** 2
@@ -177,7 +178,7 @@ const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
           <MinoLink
             key={i}
             link={link}
-            color={linkColors[link[0]][link[1]]}
+            color={getLinkColor(srcMino, tgtMino)}
             isSelected={isSelected}
             opacity={opacity}
             strokeWidth={strokeWidth}
@@ -195,7 +196,8 @@ interface Props {
 
 export default function MinoGraph({ selected, onSelect }: Props) {
   // Get the selected links
-  const { parents, children } = !!selected ? meta[selected] : ({} as any)
+  const parents = !!selected ? getParents(selected) : new Set<Mino>()
+  const children = !!selected ? getChildren(selected) : new Set<Mino>()
 
   const selectedLinks = useMemo(() => {
     const selectedLinks = selected
@@ -209,7 +211,7 @@ export default function MinoGraph({ selected, onSelect }: Props) {
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
     (gen) => {
-      if (!selected) return null
+      if (!selected) return
       const selectedGen = getSize(selected) - 1
       if (gen === selectedGen) {
         return new Set([selected])
@@ -218,7 +220,6 @@ export default function MinoGraph({ selected, onSelect }: Props) {
       } else if (gen === selectedGen + 1) {
         return children
       }
-      return null
     },
     [selected, children, parents],
   )

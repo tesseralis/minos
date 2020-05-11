@@ -15,15 +15,23 @@ for (const [src, tgt] of links) {
     .toHexString()
 }
 
-export { nodes, links, meta, linkColors }
+export { nodes, links }
+
+export function getParents(mino: Mino) {
+  return meta[mino].parents
+}
+
+export function getChildren(mino: Mino) {
+  return meta[mino].children
+}
 
 /** Get the fill color of the given mino */
-export function getMinoFill(mino: Mino) {
+function getMinoFill(mino: Mino) {
   return meta[mino].color!.toString()
 }
 
 /** Get the stroke color of the given mino */
-export function getMinoStroke(mino: Mino) {
+function getMinoStroke(mino: Mino) {
   return meta[mino].borderColor!
 }
 
@@ -37,4 +45,14 @@ export function getMinoColor(mino: Mino) {
     fill: getMinoFill(mino),
     stroke: getMinoStroke(mino),
   }
+}
+
+/**
+ * Return the stroke color of the link between the given pair of minos
+ */
+
+export function getLinkColor(src: Mino, tgt: Mino) {
+  const color = linkColors[src]?.[tgt]
+  if (!color) throw new Error(`Invalid mino pair given`)
+  return color
 }
