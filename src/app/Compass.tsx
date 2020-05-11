@@ -93,7 +93,6 @@ export default function Compass({ mino, onSelect }: Props) {
             ((0.5 - spread) / 2 + (i / Math.max(numChildren - 1, 1)) * spread)
         const [x, y] = toCartesian({ radius, angle })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
-        // TODO use the color of the actual path link
         return (
           <>
             <path
