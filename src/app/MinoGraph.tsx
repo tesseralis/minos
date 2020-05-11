@@ -15,7 +15,15 @@ import SelectableMino from "./SelectableMino"
 
 import { colors } from "style/theme"
 
-import { numGenerations, nodes, links, meta, linkColors } from "./graph"
+import {
+  numGenerations,
+  nodes,
+  links,
+  meta,
+  linkColors,
+  getMinoStroke,
+  getMinoFill,
+} from "./graph"
 
 const ringRadiusBase = 400
 const width = 1400
@@ -99,8 +107,8 @@ const Orbital = memo(
               cy={y}
               mino={mino}
               size={getBlockSize(gen + 1)}
-              fill={meta[mino].color!.toHexString()}
-              stroke={meta[mino].borderColor!}
+              fill={getMinoFill(mino)}
+              stroke={getMinoStroke(mino)}
               onSelect={onSelect}
               onHover={onHover}
             />
