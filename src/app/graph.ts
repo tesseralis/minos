@@ -63,8 +63,8 @@ function mixColors(colors: Color[]) {
 interface MinoMeta {
   parents: Set<Mino>
   children: Set<Mino>
+  symmetry: Symmetry
   color?: Color
-  symmetry?: Symmetry
 }
 
 export function generateGraph(n: number) {
@@ -82,6 +82,7 @@ export function generateGraph(n: number) {
     [MONOMINO]: {
       parents: new Set(),
       children: new Set(),
+      symmetry: getSymmetry(MONOMINO),
     },
   }
   const equivalences: Record<Mino, Mino> = {}
@@ -110,6 +111,7 @@ export function generateGraph(n: number) {
           meta[child] = {
             children: new Set(),
             parents: new Set([mino]),
+            symmetry: getSymmetry(mino),
           }
         }
       }
@@ -123,8 +125,7 @@ export function generateGraph(n: number) {
   // TODO can we seperate out this logic?
   for (let generation of nodes) {
     for (let mino of generation) {
-      const sym = getSymmetry(mino)
-      meta[mino].symmetry = sym
+      const sym = meta[mino].symmetry
       if (mino === MONOMINO) {
         meta[mino].color = colorMap[sym]
         continue
@@ -170,7 +171,7 @@ export function getChildren(mino: Mino) {
 export function getMinoColor(mino: Mino) {
   return {
     fill: meta[mino].color!.toString(),
-    stroke: borderColors[meta[mino].symmetry!].toString(),
+    stroke: borderColors[meta[mino].symmetry].toString(),
   }
 }
 
