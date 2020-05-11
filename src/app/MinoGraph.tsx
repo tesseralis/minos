@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react"
+import React, { useState } from "react"
 import { css } from "emotion"
 
 import type { Mino } from "mino/mino"
@@ -8,7 +8,7 @@ import Compass from "./Compass"
 
 import FullGraph from "./FullGraph"
 
-export default memo(function MinoGraph() {
+export default function MinoGraph() {
   const [selected, setSelected] = useState<Mino | undefined>()
   // const [hovered, setHovered] = useState<Mino | undefined>()
 
@@ -53,4 +53,4 @@ export default memo(function MinoGraph() {
       )}
     </div>
   )
-})
+}
