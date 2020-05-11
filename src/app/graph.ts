@@ -8,6 +8,8 @@ import type { Symmetry } from "mino/transform"
 import { getTransforms, getSymmetry } from "mino/transform"
 import { getChildren as getMinoChildren } from "mino/generate"
 
+type Color = tinycolor.Instance
+
 const baseColorMap: Record<Symmetry, string> = {
   none: "dimgray",
   reflectOrtho: "crimson",
@@ -23,9 +25,8 @@ const borderColors = mapValues(baseColorMap, (col) =>
   tinycolor(col).darken(30).desaturate(40).spin(-30),
 )
 
-const colorMap: Record<Symmetry, tinycolor.Instance> = mapValues(
-  baseColorMap,
-  (col) => tinycolor(col),
+const colorMap: Record<Symmetry, Color> = mapValues(baseColorMap, (col) =>
+  tinycolor(col),
 )
 
 // Use different mix percentages for different symmetries
@@ -49,7 +50,7 @@ function avg(nums: number[]) {
   return sum(nums) / nums.length
 }
 
-function mixColors(colors: tinycolor.Instance[]) {
+function mixColors(colors: Color[]) {
   const rgbs = colors.map((c) => c.toRgb())
   return tinycolor({
     r: avg(rgbs.map((c) => c.r)),
@@ -62,8 +63,8 @@ function mixColors(colors: tinycolor.Instance[]) {
 interface MinoMeta {
   parents: Set<Mino>
   children: Set<Mino>
-  color?: tinycolor.Instance
-  borderColor?: tinycolor.Instance
+  color?: Color
+  symmetry?: Symmetry
 }
 
 export function generateGraph(n: number) {
@@ -123,7 +124,7 @@ export function generateGraph(n: number) {
   for (let generation of nodes) {
     for (let mino of generation) {
       const sym = getSymmetry(mino)
-      meta[mino].borderColor = borderColors[sym]!
+      meta[mino].symmetry = sym
       if (mino === MONOMINO) {
         meta[mino].color = colorMap[sym]
         continue
@@ -169,7 +170,7 @@ export function getChildren(mino: Mino) {
 export function getMinoColor(mino: Mino) {
   return {
     fill: meta[mino].color!.toString(),
-    stroke: meta[mino].borderColor!.toString(),
+    stroke: borderColors[meta[mino].symmetry!].toString(),
   }
 }
 
