@@ -21,8 +21,7 @@ import {
   links,
   meta,
   linkColors,
-  getMinoStroke,
-  getMinoFill,
+  getMinoColor,
 } from "./graph"
 
 const ringRadiusBase = 400
@@ -101,16 +100,15 @@ const Orbital = memo(
           const [x, y] = getCoords([gen, i])
           return (
             <SelectableMino
-              selected={!!selected?.has(mino)}
+              mino={mino}
               key={i}
               cx={x}
               cy={y}
-              mino={mino}
               size={getBlockSize(gen + 1)}
-              fill={getMinoFill(mino)}
-              stroke={getMinoStroke(mino)}
+              selected={!!selected?.has(mino)}
               onSelect={onSelect}
               onHover={onHover}
+              {...getMinoColor(mino)}
             />
           )
         })}
