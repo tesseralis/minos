@@ -15,7 +15,6 @@ export default function App() {
     <div
       className={css`
         display: grid;
-
         position: fixed;
         top: 0;
         left: 0;

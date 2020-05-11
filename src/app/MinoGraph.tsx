@@ -195,10 +195,10 @@ interface Props {
 }
 
 export default function MinoGraph({ selected, onSelect }: Props) {
-  // Get the selected links
   const parents = !!selected ? getParents(selected) : new Set<Mino>()
   const children = !!selected ? getChildren(selected) : new Set<Mino>()
 
+  // Get the links connecting the selected mino to its parents and children
   const selectedLinks = useMemo(() => {
     const selectedLinks = selected
       ? [...parents]
