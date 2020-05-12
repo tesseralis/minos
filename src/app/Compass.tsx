@@ -19,8 +19,43 @@ interface Props {
   onSelect?(mino: Mino): void
 }
 
+const innerRadius = 40
 const radius = 90
+const outerRadius = radius + 10
 const svgSize = radius + 20
+
+function Background() {
+  return (
+    <g>
+      <circle
+        cx={0}
+        cy={0}
+        r={outerRadius}
+        fill="#222"
+        stroke="#aaa"
+        opacity={2 / 3}
+      />
+      <line
+        x1={-outerRadius}
+        y1={0}
+        x2={-innerRadius}
+        y2={0}
+        stroke="#aaa"
+        strokeWidth={3}
+        opacity={2 / 3}
+      />
+      <line
+        x1={innerRadius}
+        y1={0}
+        x2={outerRadius}
+        y2={0}
+        stroke="#aaa"
+        strokeWidth={3}
+        opacity={2 / 3}
+      />
+    </g>
+  )
+}
 
 /**
  * Displays a mino and its direct children and parents.
@@ -54,14 +89,7 @@ export default function Compass({ mino, onSelect }: Props) {
         pointer-events: initial;
       `}
     >
-      <circle
-        cx={0}
-        cy={0}
-        r={radius + 10}
-        fill="#222"
-        stroke="#aaa"
-        opacity={2 / 3}
-      />
+      <Background />
       {[...parents].map((parent, i) => {
         const numParents = parents.size
         const spread = (1 / 3) * ((numParents - 1) / numParents)
@@ -118,6 +146,14 @@ export default function Compass({ mino, onSelect }: Props) {
           </>
         )
       })}
+      <circle
+        cx={0}
+        cy={0}
+        r={innerRadius}
+        fill="#222"
+        stroke="#888"
+        opacity={1 / 2}
+      />
       <MinoSvg
         mino={mino}
         cx={0}
