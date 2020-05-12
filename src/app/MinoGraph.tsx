@@ -1,6 +1,7 @@
 import React, { memo, useMemo, useCallback } from "react"
 import { css } from "emotion"
 import { memoize } from "lodash-es"
+import { scaleLinear } from "d3-scale"
 
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
@@ -28,9 +29,6 @@ import {
 const ringRadiusBase = 400
 const width = 1400
 
-const minScale = 1 / 9
-const maxScale = 1 / 2
-
 function ringRadius(gen: number) {
   return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
 }
@@ -52,15 +50,22 @@ function getIndex(mino: Mino) {
   return indices[mino]
 }
 
+const getSpread = scaleLinear()
+  .domain([0, numGenerations - 1])
+  .range([1 / 9, 1 / 2])
+
+function getAngleScale(gen: number) {
+  const spread = getSpread(gen)
+  const angleStart = 1 / 4 + (1 / 2 - spread) / 2
+  return scaleLinear()
+    .domain([0, nodes[gen].length - 1])
+    .range([TAU * (angleStart + spread), TAU * angleStart])
+}
+
 // Get the coordinates of the mino with the given generation and index
 function getCoords([gen, i]: [number, number]) {
-  const radius = ringRadius(gen)
-  const total = nodes[gen].length
-  const turn = total === 1 ? 0.5 : i / (total - 1)
-  const scale = minScale + (gen / (numGenerations - 1)) * (maxScale - minScale)
-  const scaledTurn = (scale - 1) / 2 - turn * scale
-  const angle = scaledTurn * TAU
-  return toCartesian({ radius, angle })
+  const getAngle = getAngleScale(gen)
+  return toCartesian({ radius: ringRadius(gen), angle: getAngle(i) })
 }
 
 // A full screen SVG

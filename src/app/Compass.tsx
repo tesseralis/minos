@@ -1,5 +1,7 @@
 import React from "react"
 import { css } from "emotion"
+import { scaleLinear } from "d3-scale"
+
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
@@ -10,7 +12,23 @@ import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
 import MinoSvg from "./MinoSvg"
 import SelectableMino from "./SelectableMino"
 
-function getCompassBlockSize(gen: number) {
+/**
+ * Get the scale that can be used to calculate the angle of an index in a list
+ * @param maxSpread The maximum spread, in turns
+ * The "spread" is dependent on the number of elements:
+ * if there is only one element, it will appear in the center.
+ * @param start The start index, in turns
+ * @param numElements The total number of elements
+ */
+function getAngleScale(maxSpread: number, start: number, numElements: number) {
+  const spread = maxSpread * ((numElements - 1) / numElements)
+  const angleStart = start + (1 / 2 - spread) / 2
+  return scaleLinear()
+    .domain([0, numElements - 1])
+    .range([TAU * angleStart, TAU * (angleStart + spread)])
+}
+
+function getBlockSize(gen: number) {
   return 25 / (gen + 4)
 }
 
@@ -67,19 +85,15 @@ export default function Compass({ mino, onSelect }: Props) {
   const children = getChildren(mino)
   const gen = getSize(mino)
 
-  const maxNumParents = 6
-  const maxParentSizeMult = 4
-  const parentBlockSizeMult =
-    maxParentSizeMult - (maxParentSizeMult - 2) * (parents.size / maxNumParents)
-  const parentBlockSize = getCompassBlockSize(gen - 1) * parentBlockSizeMult
-
-  // Scale the size of the child blocks so that they are bigger
+  // Scale the size of the child and parent blocks so that they are bigger
   // when the mino doesn't have as many children
+  const maxNumParents = 6
+  const parentSizeScale = scaleLinear().domain([1, maxNumParents]).range([4, 2])
+  const parentBlockSize = getBlockSize(gen - 1) * parentSizeScale(parents.size)
+
   const maxNumChildren = 15
-  const maxChildSizeMult = 3
-  const childBlockSizeMult =
-    maxChildSizeMult - (maxChildSizeMult - 1) * (children.size / maxNumChildren)
-  const childBlockSize = getCompassBlockSize(gen + 1) * childBlockSizeMult
+  const childSizeScale = scaleLinear().domain([1, maxNumChildren]).range([3, 1])
+  const childBlockSize = getBlockSize(gen + 1) * childSizeScale(children.size)
   return (
     <svg
       viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
@@ -91,13 +105,8 @@ export default function Compass({ mino, onSelect }: Props) {
     >
       <Background />
       {[...parents].map((parent, i) => {
-        const numParents = parents.size
-        const spread = (1 / 3) * ((numParents - 1) / numParents)
-        const angle =
-          -TAU / 4 +
-          TAU *
-            ((0.5 - spread) / 2 + (i / Math.max(numParents - 1, 1)) * spread)
-        const [x, y] = toCartesian({ radius, angle })
+        const getAngle = getAngleScale(1 / 3, -1 / 4, parents.size)
+        const [x, y] = toCartesian({ radius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
           <>
@@ -119,13 +128,8 @@ export default function Compass({ mino, onSelect }: Props) {
         )
       })}
       {[...children].map((child, i) => {
-        const numChildren = children.size
-        const spread = (15 / 32) * ((numChildren - 1) / numChildren)
-        const angle =
-          TAU / 4 +
-          TAU *
-            ((0.5 - spread) / 2 + (i / Math.max(numChildren - 1, 1)) * spread)
-        const [x, y] = toCartesian({ radius, angle })
+        const getAngle = getAngleScale(15 / 32, 1 / 4, children.size)
+        const [x, y] = toCartesian({ radius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
           <>
@@ -158,7 +162,7 @@ export default function Compass({ mino, onSelect }: Props) {
         mino={mino}
         cx={0}
         cy={0}
-        size={getCompassBlockSize(gen) * 5}
+        size={getBlockSize(gen) * 5}
         {...getMinoColor(mino)}
       />
     </svg>
