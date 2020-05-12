@@ -11,18 +11,18 @@ import { getChildren as getMinoChildren } from "mino/generate"
 type Color = tinycolor.Instance
 
 const baseColorMap: Record<Symmetry, string> = {
-  none: "dimgray",
+  none: "#888",
   reflectOrtho: "crimson",
-  reflectDiag: "#22d",
+  reflectDiag: "#44e",
   rotate2: "limegreen",
   dihedralOrtho: "gold",
-  dihedralDiag: "turquoise",
-  rotate4: "violet",
+  dihedralDiag: "violet",
+  rotate4: "turquoise",
   all: "#ccc",
 }
 
 const borderColors = mapValues(baseColorMap, (col) =>
-  tinycolor(col).darken(30).desaturate(40).spin(-30),
+  tinycolor(col).darken(40).desaturate(40).spin(-30),
 )
 
 const colorMap: Record<Symmetry, Color> = mapValues(baseColorMap, (col) =>
@@ -33,13 +33,13 @@ const colorMap: Record<Symmetry, Color> = mapValues(baseColorMap, (col) =>
 // since we want desaturation in nonsymmetric minos to be prominent
 const mixMap = {
   none: 50,
-  reflectOrtho: 40,
-  reflectDiag: 40,
-  rotate2: 40,
-  dihedralOrtho: 30,
-  dihedralDiag: 30,
-  rotate4: 30,
-  all: 20,
+  reflectOrtho: 30,
+  reflectDiag: 30,
+  rotate2: 30,
+  dihedralOrtho: 20,
+  dihedralDiag: 20,
+  rotate4: 20,
+  all: 10,
 }
 
 function sum(nums: number[]) {
