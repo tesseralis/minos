@@ -41,7 +41,7 @@ function Background() {
         x2={-innerRadius}
         y2={0}
         stroke="#aaa"
-        strokeWidth={3}
+        strokeWidth={1}
         opacity={2 / 3}
       />
       <line
@@ -50,7 +50,7 @@ function Background() {
         x2={outerRadius}
         y2={0}
         stroke="#aaa"
-        strokeWidth={3}
+        strokeWidth={1}
         opacity={2 / 3}
       />
     </g>
