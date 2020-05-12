@@ -7,8 +7,8 @@ import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
 import type { Point } from "math"
-import { TAU, toCartesian } from "math"
-import { getArc } from "./utils"
+import { toCartesian } from "math"
+import { getArc, getAngleScale } from "./utils"
 
 import Background from "./Background"
 import PanZoom from "./PanZoom"
@@ -54,17 +54,19 @@ const getSpread = scaleLinear()
   .domain([0, numGenerations - 1])
   .range([1 / 9, 1 / 2])
 
-function getAngleScale(gen: number) {
+function getMinoAngleScale(gen: number) {
   const spread = getSpread(gen)
-  const angleStart = 1 / 4 + (1 / 2 - spread) / 2
-  return scaleLinear()
-    .domain([0, nodes[gen].length - 1])
-    .range([TAU * (angleStart + spread), TAU * angleStart])
+  return getAngleScale({
+    spread,
+    start: 1 / 4,
+    count: nodes[gen].length,
+    reverse: true,
+  })
 }
 
 // Get the coordinates of the mino with the given generation and index
 function getCoords([gen, i]: [number, number]) {
-  const getAngle = getAngleScale(gen)
+  const getAngle = getMinoAngleScale(gen)
   return toCartesian({ radius: ringRadius(gen), angle: getAngle(i) })
 }
 

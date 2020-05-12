@@ -5,27 +5,15 @@ import { scaleLinear } from "d3-scale"
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
-import { TAU, toCartesian } from "math"
+import { toCartesian } from "math"
 
-import { getArc } from "./utils"
+import { getAngleScale, getArc } from "./utils"
 import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
 import MinoSvg from "./MinoSvg"
 import SelectableMino from "./SelectableMino"
 
-/**
- * Get the scale that can be used to calculate the angle of an index in a list
- * @param maxSpread The maximum spread, in turns
- * The "spread" is dependent on the number of elements:
- * if there is only one element, it will appear in the center.
- * @param start The start index, in turns
- * @param numElements The total number of elements
- */
-function getAngleScale(maxSpread: number, start: number, numElements: number) {
-  const spread = maxSpread * ((numElements - 1) / numElements)
-  const angleStart = start + (1 / 2 - spread) / 2
-  return scaleLinear()
-    .domain([0, numElements - 1])
-    .range([TAU * angleStart, TAU * (angleStart + spread)])
+function getSpread(maxSpread: number, count: number) {
+  return maxSpread * ((count - 1) / count)
 }
 
 function getBlockSize(gen: number) {
@@ -105,7 +93,11 @@ export default function Compass({ mino, onSelect }: Props) {
     >
       <Background />
       {[...parents].map((parent, i) => {
-        const getAngle = getAngleScale(1 / 3, -1 / 4, parents.size)
+        const getAngle = getAngleScale({
+          spread: getSpread(1 / 3, parents.size),
+          start: -1 / 4,
+          count: parents.size,
+        })
         const [x, y] = toCartesian({ radius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
@@ -128,7 +120,12 @@ export default function Compass({ mino, onSelect }: Props) {
         )
       })}
       {[...children].map((child, i) => {
-        const getAngle = getAngleScale(15 / 32, 1 / 4, children.size)
+        const getAngle = getAngleScale({
+          spread: getSpread(15 / 32, children.size),
+          start: 1 / 4,
+          count: children.size,
+          reverse: true,
+        })
         const [x, y] = toCartesian({ radius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
