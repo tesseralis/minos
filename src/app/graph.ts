@@ -111,7 +111,7 @@ export function generateGraph(n: number) {
           meta[child] = {
             children: new Set(),
             parents: new Set([mino]),
-            symmetry: getSymmetry(mino),
+            symmetry: getSymmetry(child),
           }
         }
       }
@@ -125,6 +125,7 @@ export function generateGraph(n: number) {
   // TODO can we seperate out this logic?
   for (let generation of nodes) {
     for (let mino of generation) {
+      // const sym = meta[mino].symmetry
       const sym = meta[mino].symmetry
       if (mino === MONOMINO) {
         meta[mino].color = colorMap[sym]
