@@ -11,7 +11,7 @@ import MinoSvg from "./MinoSvg"
 import SelectableMino from "./SelectableMino"
 
 function getCompassBlockSize(gen: number) {
-  return 20 / (gen + 1)
+  return 30 / (gen + 4)
 }
 
 interface Props {
@@ -37,7 +37,9 @@ export default function Compass({ mino, onSelect }: Props) {
   // Scale the size of the child blocks so that they are bigger
   // when the mino doesn't have as many children
   const maxNumChildren = 2 * gen + 1
-  const childBlockSizeMult = 2 - children.size / maxNumChildren
+  const maxChildSizeMult = 2.5
+  const childBlockSizeMult =
+    maxChildSizeMult - (maxChildSizeMult - 1) * (children.size / maxNumChildren)
   const childBlockSize = getCompassBlockSize(gen + 1) * childBlockSizeMult
   return (
     <svg
@@ -116,7 +118,7 @@ export default function Compass({ mino, onSelect }: Props) {
         mino={mino}
         cx={0}
         cy={0}
-        size={getCompassBlockSize(gen) * 3}
+        size={getCompassBlockSize(gen) * 4}
         {...getMinoColor(mino)}
       />
     </svg>
