@@ -13,7 +13,7 @@ type Color = tinycolor.Instance
 const baseColorMap: Record<Symmetry, string> = {
   none: "#888",
   reflectOrtho: "crimson",
-  reflectDiag: "#44e",
+  reflectDiag: "#44d",
   rotate2: "limegreen",
   dihedralOrtho: "gold",
   dihedralDiag: "violet",
