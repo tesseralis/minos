@@ -44,7 +44,6 @@ const SelectableMino = memo(
       [mino, onHover],
     )
     const handleClick = useClickHandler(onClick)
-    // const size = getBlockSize(n)
 
     return (
       <g>
