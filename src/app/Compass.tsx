@@ -27,8 +27,8 @@ interface Props {
 
 const innerRadius = 40
 const radius = 90
-const outerRadius = radius + 10
-const svgSize = radius + 20
+const outerRadius = radius + 30
+const svgSize = outerRadius + 5
 
 function Background() {
   return (
@@ -78,16 +78,19 @@ export default function Compass({ mino, onSelect }: Props) {
   const maxNumParents = 6
   const parentSizeScale = scaleLinear().domain([1, maxNumParents]).range([4, 2])
   const parentBlockSize = getBlockSize(gen - 1) * parentSizeScale(parents.size)
+  const parentRadius = radius + parents.size * 1.25
 
   const maxNumChildren = 15
   const childSizeScale = scaleLinear().domain([1, maxNumChildren]).range([3, 1])
   const childBlockSize = getBlockSize(gen + 1) * childSizeScale(children.size)
+  const childRadius = radius + children.size * 1.25
+
   return (
     <svg
       viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
       className={css`
-        width: 20rem;
-        height: 20rem;
+        width: 22rem;
+        height: 22rem;
         pointer-events: initial;
       `}
     >
@@ -98,7 +101,7 @@ export default function Compass({ mino, onSelect }: Props) {
           start: -1 / 4,
           count: parents.size,
         })
-        const [x, y] = toCartesian({ radius, angle: getAngle(i) })
+        const [x, y] = toCartesian({ radius: parentRadius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
           <>
@@ -126,7 +129,10 @@ export default function Compass({ mino, onSelect }: Props) {
           count: children.size,
           reverse: true,
         })
-        const [x, y] = toCartesian({ radius, angle: getAngle(i) })
+        const [x, y] = toCartesian({
+          radius: childRadius,
+          angle: getAngle(i),
+        })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         return (
           <>
