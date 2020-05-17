@@ -234,7 +234,7 @@ export default function MinoGraph({ selected, onSelect }: Props) {
   return (
     <FullScreenSvg width={width}>
       <Background onClick={() => onSelect?.(undefined)} />
-      <PanZoom minZoom={0.125} maxZoom={3} zoomSpeed={0.075}>
+      <PanZoom minZoom={0.125} maxZoom={2} zoomSpeed={0.075}>
         <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
           return (
