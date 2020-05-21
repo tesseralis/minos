@@ -20,14 +20,10 @@ module.exports = {
     "react/prop-types": "off",
     // This is too annoying for a personal project
     "@typescript-eslint/no-explicit-any": "off",
-    // Want to enable this, but will take lots of fiddling
+    // Too annoying for a personal project -- maybe enable for specific libs?
     "@typescript-eslint/explicit-function-return-type": "off",
     // Lots of places where we use ! for simplicity
     "@typescript-eslint/no-non-null-assertion": "off",
-    // idk why this is a rule, it's better than importing lodash/noop
-    "@typescript-eslint/no-empty-function": "off",
-    // We use `require()` for jest imports
-    "@typescript-eslint/no-var-requires": "off",
     // Enabled only for parameters with defaults for clarity
     "@typescript-eslint/no-inferrable-types": [
       "error",

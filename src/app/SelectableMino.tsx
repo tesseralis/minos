@@ -29,17 +29,17 @@ const SelectableMino = memo(
     fill,
     stroke,
     selected = false,
-    onSelect = () => {},
-    onHover = () => {},
+    onSelect,
+    onHover,
   }: Props) => {
     const [hovered, setHovered] = useState(false)
 
     const n = getSize(mino)
-    const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
+    const onClick = useCallback(() => onSelect?.(mino), [mino, onSelect])
     const handleHover = useCallback(
       (value) => {
         setHovered(value)
-        onHover(value ? mino : undefined)
+        onHover?.(value ? mino : undefined)
       },
       [mino, onHover],
     )
