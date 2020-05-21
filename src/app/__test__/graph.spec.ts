@@ -18,7 +18,7 @@ describe("generateGraph", () => {
   it("does not generate children for the last generation", () => {
     const { nodes, meta } = graph
     const lastGen = nodes[nodes.length - 1]
-    for (let mino of lastGen) {
+    for (const mino of lastGen) {
       expect([...meta[mino].children]).toHaveLength(0)
     }
   })

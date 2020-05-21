@@ -90,9 +90,9 @@ export function generateGraph(n: number) {
   // TODO don't need to iterate over children of last generation!
   while (nodes.length < n - 1) {
     const nextGen = []
-    for (let mino of currentGen) {
-      for (let child of getMinoChildren(mino)) {
-        if (!!equivalences[child]) {
+    for (const mino of currentGen) {
+      for (const child of getMinoChildren(mino)) {
+        if (equivalences[child]) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
           const canonChild = equivalences[child]
@@ -102,7 +102,7 @@ export function generateGraph(n: number) {
         } else {
           // If it's a completely new mino, log its transforms
           // and add it to the next gen
-          for (let transform of getTransforms(child)) {
+          for (const transform of getTransforms(child)) {
             equivalences[transform] = child
           }
           nextGen.push(child)
@@ -123,8 +123,8 @@ export function generateGraph(n: number) {
 
   // Generate mino colors
   // TODO can we seperate out this logic?
-  for (let generation of nodes) {
-    for (let mino of generation) {
+  for (const generation of nodes) {
+    for (const mino of generation) {
       // const sym = meta[mino].symmetry
       const sym = meta[mino].symmetry
       if (mino === MONOMINO) {
