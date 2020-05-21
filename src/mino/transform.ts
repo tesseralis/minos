@@ -108,10 +108,10 @@ export function getSymmetry(mino: Mino): Symmetry {
 export function getFree(minos: Mino[]) {
   const result = new Set()
   const dupes = new Set()
-  for (let mino of minos) {
+  for (const mino of minos) {
     if (!dupes.has(mino)) {
       result.add(mino)
-      for (let t of getTransforms(mino)) {
+      for (const t of getTransforms(mino)) {
         dupes.add(t)
       }
     }

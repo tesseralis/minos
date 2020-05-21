@@ -49,8 +49,8 @@ function* nbrs([i, j]: Point): Generator<Point> {
  * Get all neighboring points of the given mino
  */
 function* getNeighbors(mino: Mino) {
-  for (let point of getPoints(mino)) {
-    for (let nbr of nbrs(point)) {
+  for (const point of getPoints(mino)) {
+    for (const nbr of nbrs(point)) {
       if (!contains(mino, nbr)) {
         yield nbr
       }
@@ -110,16 +110,16 @@ function append(mino: Mino, [i, j]: Point) {
 export function* getChildren(mino: Mino) {
   // get all neighbors
   const nbrs = getNeighbors(mino)
-  for (let nbr of nbrs) {
+  for (const nbr of nbrs) {
     yield append(mino, nbr)
   }
 }
 
 // Get the children of the given collection of minos
 function getAllChildren(minos: Iterable<Mino>): Set<Mino> {
-  let result = new Set<Mino>()
-  for (let parent of minos) {
-    for (let child of getChildren(parent)) {
+  const result = new Set<Mino>()
+  for (const parent of minos) {
+    for (const child of getChildren(parent)) {
       result.add(child)
     }
   }

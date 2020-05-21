@@ -1,14 +1,14 @@
-import { css } from 'emotion'
-import React from 'react'
-import Modal from 'react-modal'
-import Icon from '@mdi/react'
-import { mdiClose } from '@mdi/js'
-import styled from '@emotion/styled'
+import { css } from "emotion"
+import React from "react"
+import Modal from "react-modal"
+import Icon from "@mdi/react"
+import { mdiClose } from "@mdi/js"
+import styled from "@emotion/styled"
 
-import { colors } from 'style/theme'
-import Content from './InfoContent'
+import { colors } from "style/theme"
+import Content from "./InfoContent"
 
-Modal.setAppElement('#root')
+Modal.setAppElement("#root")
 
 const CloseButton = styled.button`
   margin-right: -1rem;
@@ -20,7 +20,7 @@ const CloseButton = styled.button`
 `
 
 const timeout = 350
-export default function InfoModal({ isOpen, onClose }) {
+export default function InfoModal({ isOpen, onClose }: any) {
   const [isOpened, setOpened] = React.useState(isOpen)
   const overlayStyle = css`
     background-color: rgba(32, 32, 32, 0.5);
@@ -62,7 +62,7 @@ export default function InfoModal({ isOpen, onClose }) {
     @media (max-device-width: 812px) {
       width: 100%;
       height: 100%;
-      transform: translate3d(0, ${isOpened ? 0 : '100%'}, 0);
+      transform: translate3d(0, ${isOpened ? 0 : "100%"}, 0);
     }
   `
 

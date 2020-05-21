@@ -82,7 +82,7 @@ export const MONOMINO = getMino(1, 1)
  */
 export function* getPoints(mino: Mino): Generator<Point> {
   let data = getData(mino)
-  let w = getWidth(mino)
+  const w = getWidth(mino)
   let k = 0
   while (data) {
     if (data & 1) {
@@ -99,7 +99,7 @@ export function* getPoints(mino: Mino): Generator<Point> {
 export function fromPoints(points: Point[]) {
   const w = Math.max(...points.map((p) => p[1])) + 1
   let result = 0
-  for (let [i, j] of points) {
+  for (const [i, j] of points) {
     result = result | (1 << (w * i + j))
   }
   return getMino(result, w)

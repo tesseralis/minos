@@ -1,10 +1,10 @@
-import React, { useState } from 'react'
-import styled from '@emotion/styled'
-import Icon from '@mdi/react'
-import { mdiInformationVariant } from '@mdi/js'
-import InfoModal from './InfoModal'
+import React, { useState } from "react"
+import styled from "@emotion/styled"
+import Icon from "@mdi/react"
+import { mdiInformationVariant } from "@mdi/js"
+import InfoModal from "./InfoModal"
 
-import { colors } from 'style/theme'
+import { colors } from "style/theme"
 
 const Button = styled.button`
   display: flex;
