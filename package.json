@@ -40,13 +40,14 @@
     "build": "react-scripts build",
     "test": "react-scripts test --transformIgnorePatterns \"node_modules/(?!(lodash-es))/\"",
     "eject": "react-scripts eject",
-    "prettier": "prettier 'src/**/*.{ts,tsx,json,css}'",
+    "prettier": "prettier 'src/**/*.{json,css}'",
     "eslint": "eslint 'src/**/*.{ts,tsx}'",
-    "lint": "yarn prettier -- --check",
-    "format": "yarn prettier -- --write"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint:other": "yarn prettier --check",
+    "lint:code": "yarn eslint",
+    "lint": "yarn lint:other && yarn lint:code",
+    "format:other": "yarn prettier --write",
+    "format:code": "yarn eslint --fix",
+    "format": "yarn format:other && yarn format:code"
   },
   "browserslist": [
     ">0.2%",
