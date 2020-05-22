@@ -59,6 +59,7 @@ export default memo(function SelectableMino({
         className={css`
           opacity: 0;
           cursor: pointer;
+          pointer-events: initial;
         `}
         tabIndex={0}
         cx={cx}

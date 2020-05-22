@@ -34,6 +34,9 @@ function Background() {
   return (
     <g>
       <circle
+        className={css`
+          pointer-events: initial;
+        `}
         cx={0}
         cy={0}
         r={outerRadius}
@@ -91,7 +94,7 @@ export default function Compass({ mino, onSelect }: Props) {
       className={css`
         width: 22rem;
         height: 22rem;
-        pointer-events: initial;
+        pointer-events: none;
       `}
     >
       <Background />
