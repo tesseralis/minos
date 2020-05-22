@@ -9,7 +9,7 @@ import { toCartesian } from "math"
 
 import { getAngleScale, getArc } from "./utils"
 import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
-import MinoSvg from "./AdjustableMino"
+import AdjustableMino from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
 
 function getSpread(maxSpread: number, count: number) {
@@ -164,11 +164,12 @@ export default function Compass({ mino, onSelect }: Props) {
         stroke="#888"
         opacity={1 / 2}
       />
-      <MinoSvg
+      <AdjustableMino
         mino={mino}
         cx={0}
         cy={0}
         size={getBlockSize(gen) * 5}
+        onSelect={onSelect}
         {...getMinoColor(mino)}
       />
     </svg>

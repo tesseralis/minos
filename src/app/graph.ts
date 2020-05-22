@@ -71,7 +71,7 @@ export function generateGraph(n: number) {
   const nodes: Mino[][] = []
   const links: [Mino, Mino][] = []
   if (n === 0) {
-    return { nodes, links, meta: {} }
+    return { nodes, links, meta: {}, equivalences: {} }
   }
   // An object containing metadata for each mino including:
   // * generation and index
@@ -139,11 +139,11 @@ export function generateGraph(n: number) {
   }
 
   // TODO these links are duplicated; uniqWith adds 500ms
-  return { nodes, links, meta }
+  return { nodes, links, meta, equivalences }
 }
 
 export const numGenerations = 8
-const { nodes, links, meta } = generateGraph(numGenerations)
+const { nodes, links, meta, equivalences } = generateGraph(numGenerations)
 
 // Cached colors of each link
 const linkColors: Record<number, Record<number, string>> = {}
@@ -184,4 +184,8 @@ export function getLinkColor(src: Mino, tgt: Mino) {
   const color = linkColors[src]?.[tgt]
   if (!color) throw new Error(`Invalid mino pair given`)
   return color
+}
+
+export function getCanonical(mino: Mino) {
+  return equivalences[mino]
 }

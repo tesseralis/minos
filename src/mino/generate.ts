@@ -91,7 +91,7 @@ function doAppend(mino: Mino, i: number, j: number): Mino {
 }
 
 // Append the point [i,j] to the mino
-function append(mino: Mino, [i, j]: Point): Mino {
+export function append(mino: Mino, [i, j]: Point): Mino {
   const w = getWidth(mino)
   if (i < 0) {
     return doAppend(shiftUp(mino), 0, j)

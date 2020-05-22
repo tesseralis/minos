@@ -2,11 +2,12 @@ import { css } from "emotion"
 import React from "react"
 
 import type { Point } from "math"
-import { getMino, getPoints } from "mino/mino"
+import { getSize, getMino, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
-import { getNeighbors } from "mino/generate"
+import { getNeighbors, append } from "mino/generate"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
+import { getCanonical } from "./graph"
 
 const oOctomino = getMino(0b111_101_111, 3)
 
@@ -51,6 +52,7 @@ interface Props {
   fill: string
   stroke: string
   anchor?: string
+  onSelect?(mino: Mino): void
 }
 
 /**
@@ -68,6 +70,7 @@ export default function AdjustableMino({
   fill,
   stroke,
   anchor = "center center",
+  onSelect,
 }: Props) {
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
@@ -81,7 +84,8 @@ export default function AdjustableMino({
   const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
 
   const points = minoPoints.map(scale).map(translate)
-  const nbrPoints = [...getNeighbors(mino)].map(scale).map(translate)
+  // const nbrPoints = [...getNeighbors(mino)].map(scale).map(translate)
+  const nbrPoints = [...getNeighbors(mino)]
 
   return (
     <>
@@ -118,26 +122,31 @@ export default function AdjustableMino({
           strokeWidth={strokeWidth * 0.75}
         />
       ))}
-      {nbrPoints.map(([x, y], i) => (
-        <rect
-          className={css`
-            cursor: pointer;
-            pointer-events: initial;
-            opacity: 0;
+      {getSize(mino) < 8 &&
+        nbrPoints.map((nbrPoint, i) => {
+          const [x, y] = translate(scale(nbrPoint))
+          return (
+            <rect
+              className={css`
+                cursor: pointer;
+                pointer-events: initial;
+                opacity: 0;
 
-            :hover {
-              opacity: 0.5;
-            }
-          `}
-          key={i}
-          x={x}
-          y={y}
-          width={size}
-          height={size}
-          fill="white"
-          strokeWidth={strokeWidth * 0.75}
-        />
-      ))}
+                :hover {
+                  opacity: 0.5;
+                }
+              `}
+              key={i}
+              x={x}
+              y={y}
+              width={size}
+              height={size}
+              fill="white"
+              strokeWidth={strokeWidth * 0.75}
+              onClick={() => onSelect?.(getCanonical(append(mino, nbrPoint)))}
+            />
+          )
+        })}
     </>
   )
 }
