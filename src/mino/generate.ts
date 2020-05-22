@@ -48,7 +48,7 @@ function* nbrs([i, j]: Point): Generator<Point> {
 /**
  * Get all neighboring points of the given mino
  */
-function* getNeighbors(mino: Mino) {
+export function* getNeighbors(mino: Mino): Generator<Point> {
   for (const point of getPoints(mino)) {
     for (const nbr of nbrs(point)) {
       if (!contains(mino, nbr)) {
@@ -58,13 +58,13 @@ function* getNeighbors(mino: Mino) {
   }
 }
 
-function shiftUp(mino: Mino) {
+function shiftUp(mino: Mino): Mino {
   const w = getWidth(mino)
   const data = mino >> WIDTH_BITS
   return getMino(data << w, w)
 }
 
-function incWidth(mino: Mino) {
+function incWidth(mino: Mino): Mino {
   const w = getWidth(mino)
   if (w === MAX_WIDTH) throw new Error("Already at maximum width")
   let result = 0
@@ -79,19 +79,19 @@ function incWidth(mino: Mino) {
   return getMino(result, w + 1)
 }
 
-function shiftLeft(mino: Mino) {
+function shiftLeft(mino: Mino): Mino {
   const expanded = incWidth(mino)
   const data = getData(expanded)
 
   return getMino(data << 1, getWidth(expanded))
 }
 
-function doAppend(mino: Mino, i: number, j: number) {
+function doAppend(mino: Mino, i: number, j: number): Mino {
   return mino | getPointMask(i, j, getWidth(mino))
 }
 
 // Append the point [i,j] to the mino
-function append(mino: Mino, [i, j]: Point) {
+function append(mino: Mino, [i, j]: Point): Mino {
   const w = getWidth(mino)
   if (i < 0) {
     return doAppend(shiftUp(mino), 0, j)

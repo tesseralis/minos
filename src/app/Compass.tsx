@@ -9,7 +9,7 @@ import { toCartesian } from "math"
 
 import { getAngleScale, getArc } from "./utils"
 import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
-import MinoSvg from "./MinoSvg"
+import MinoSvg from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
 
 function getSpread(maxSpread: number, count: number) {
