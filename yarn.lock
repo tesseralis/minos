@@ -1325,10 +1325,10 @@
     "@types/yargs" "^15.0.0"
     chalk "^3.0.0"
 
-"@mdi/js@^5.1.45":
-  version "5.1.45"
-  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-5.1.45.tgz#92ac075c7080d29b430bd76ec8dc0536b800f4b0"
-  integrity sha512-44He8VMteUIWE0lIZjAIH/QoxNXbGoeqA1uwzJKwRpiaU6d5n2JjvL+11uH5nQQTJtU1nQFdKpB/j5S6rM3jtQ==
+"@mdi/js@^5.2.45":
+  version "5.2.45"
+  resolved "https://registry.yarnpkg.com/@mdi/js/-/js-5.2.45.tgz#79534928b0e89568cfadc5a456ed3cab8210c232"
+  integrity sha512-YQupWiJMIxcSNDnv7M4EWqRzCbkBKQ4UHLqg55tEAsjYYzRxNKOqCXVrKFyp0DiTH0CQhl52TZnhTxq8H/T3Ow==
 
 "@mdi/react@^1.4.0":
   version "1.4.0"
@@ -7944,11 +7944,6 @@ pbkdf2@^3.0.3:
     ripemd160 "^2.0.1"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
-
-pepjs@^0.5.2:
-  version "0.5.2"
-  resolved "https://registry.yarnpkg.com/pepjs/-/pepjs-0.5.2.tgz#f0d10bb160bcbf4b72d2069d931170661491a05c"
-  integrity sha512-acPfplXnTKaG8p7VBgkNaBJSGsZu7LYrqEmLCQFoeHYl21B74mMBeVoQA/Gl9u5GmysgzrOCeHsEjw0mXo61nw==
 
 performance-now@^2.1.0:
   version "2.1.0"
