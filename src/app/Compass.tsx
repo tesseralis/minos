@@ -78,7 +78,6 @@ function Background() {
 export default function Compass({ mino, onSelect }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
   const [hovered, setHovered] = React.useState<Mino | undefined>()
-  hovered && console.log(hovered)
   // TODO these return a set, but we'd like them to return in the same
   // order as the full graph
   const canonical = getCanonical(mino)
@@ -119,7 +118,7 @@ export default function Compass({ mino, onSelect }: Props) {
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         const { fill, stroke } = getMinoColor(parent)
         return (
-          <>
+          <g key={parent}>
             <path
               stroke={isHovered ? "white" : getLinkColor(parent, canonical)}
               strokeWidth={isHovered ? 2 : 1}
@@ -136,7 +135,7 @@ export default function Compass({ mino, onSelect }: Props) {
               fill={fill}
               stroke={isHovered ? "white" : stroke}
             />
-          </>
+          </g>
         )
       })}
       {[...children].map((child, i) => {
@@ -155,7 +154,7 @@ export default function Compass({ mino, onSelect }: Props) {
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
         const { fill, stroke } = getMinoColor(child)
         return (
-          <>
+          <g key={child}>
             <path
               stroke={isHovered ? "white" : getLinkColor(canonical, child)}
               strokeWidth={isHovered ? 2 : 1}
@@ -172,7 +171,7 @@ export default function Compass({ mino, onSelect }: Props) {
               fill={fill}
               stroke={isHovered ? "white" : stroke}
             />
-          </>
+          </g>
         )
       })}
       <circle

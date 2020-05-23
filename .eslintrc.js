@@ -31,5 +31,6 @@ module.exports = {
         ignoreParameters: true,
       },
     ],
+    "no-console": ["warn"],
   },
 }

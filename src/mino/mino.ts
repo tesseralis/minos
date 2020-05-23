@@ -180,5 +180,6 @@ export function displayMino(
 }
 
 export function printMino(mino: Mino, opts: DisplayOpts = {}) {
+  // eslint-disable-next-line no-console
   console.log(displayMino(mino, opts))
 }

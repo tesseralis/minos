@@ -46,12 +46,10 @@ export default function AdjustableMino({
 
   const hoverEvents = (mino: Mino) => ({
     onMouseOver: () => {
-      console.log("setting hovered to:", mino)
       onHover?.(mino)
       setHovered(true)
     },
     onMouseOut: () => {
-      console.log("setting hovered to undefined")
       onHover?.()
       setHovered(false)
     },
