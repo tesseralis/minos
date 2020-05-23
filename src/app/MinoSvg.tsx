@@ -6,36 +6,9 @@ import { getMino, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
+import { getAnchor } from "./utils"
 
 const oOctomino = getMino(0b111_101_111, 3)
-
-function getCoordAnchor(ns: number[], anchor: string) {
-  const min = Math.min(...ns)
-  const max = Math.max(...ns)
-
-  switch (anchor) {
-    case "left":
-    case "top":
-    case "start":
-      return min
-    case "right":
-    case "bottom":
-    case "end":
-      return max
-    case "center":
-      return (min + max) / 2
-    default:
-      throw new Error("invalid anchor")
-  }
-}
-
-function getAnchor(points: Point[], anchor: string) {
-  const xs = points.map((p) => p[0])
-  const ys = points.map((p) => p[1])
-
-  const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
-  return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
-}
 
 // TODO figure out why this particular styling is efficient
 const style = css`

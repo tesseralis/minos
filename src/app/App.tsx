@@ -3,6 +3,7 @@ import { css } from "emotion"
 
 import type { Mino } from "mino/mino"
 
+import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import MinoGraph from "./MinoGraph"
@@ -27,7 +28,10 @@ export default function App() {
           grid-area: 1 / 1;
         `}
       >
-        <MinoGraph selected={selected} onSelect={setSelected} />
+        <MinoGraph
+          selected={selected && getCanonical(selected)}
+          onSelect={setSelected}
+        />
       </div>
       <div
         className={css`

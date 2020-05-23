@@ -8,8 +8,14 @@ import { getSize } from "mino/mino"
 import { toCartesian } from "math"
 
 import { getAngleScale, getArc } from "./utils"
-import { getParents, getChildren, getMinoColor, getLinkColor } from "./graph"
-import MinoSvg from "./MinoSvg"
+import {
+  getCanonical,
+  getParents,
+  getChildren,
+  getMinoColor,
+  getLinkColor,
+} from "./graph"
+import AdjustableMino from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
 
 function getSpread(maxSpread: number, count: number) {
@@ -72,8 +78,9 @@ function Background() {
 export default function Compass({ mino, onSelect }: Props) {
   // TODO these return a set, but we'd like them to return in the same
   // order as the full graph
-  const parents = getParents(mino)
-  const children = getChildren(mino)
+  const canonical = getCanonical(mino)
+  const parents = getParents(canonical)
+  const children = getChildren(canonical)
   const gen = getSize(mino)
 
   // Scale the size of the child and parent blocks so that they are bigger
@@ -109,7 +116,7 @@ export default function Compass({ mino, onSelect }: Props) {
         return (
           <>
             <path
-              stroke={getLinkColor(parent, mino)}
+              stroke={getLinkColor(parent, canonical)}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -140,7 +147,7 @@ export default function Compass({ mino, onSelect }: Props) {
         return (
           <>
             <path
-              stroke={getLinkColor(mino, child)}
+              stroke={getLinkColor(canonical, child)}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -164,12 +171,13 @@ export default function Compass({ mino, onSelect }: Props) {
         stroke="#888"
         opacity={1 / 2}
       />
-      <MinoSvg
+      <AdjustableMino
         mino={mino}
         cx={0}
         cy={0}
         size={getBlockSize(gen) * 5}
-        {...getMinoColor(mino)}
+        onSelect={onSelect}
+        {...getMinoColor(canonical)}
       />
     </svg>
   )

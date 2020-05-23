@@ -71,7 +71,7 @@ export function generateGraph(n: number) {
   const nodes: Mino[][] = []
   const links: [Mino, Mino][] = []
   if (n === 0) {
-    return { nodes, links, meta: {} }
+    return { nodes, links, meta: {}, equivalences: {} }
   }
   // An object containing metadata for each mino including:
   // * generation and index
@@ -85,7 +85,9 @@ export function generateGraph(n: number) {
       symmetry: getSymmetry(MONOMINO),
     },
   }
-  const equivalences: Record<Mino, Mino> = {}
+  const equivalences: Record<Mino, Mino> = {
+    [MONOMINO]: MONOMINO,
+  }
   let currentGen = [MONOMINO]
   // TODO don't need to iterate over children of last generation!
   while (nodes.length < n - 1) {
@@ -139,11 +141,11 @@ export function generateGraph(n: number) {
   }
 
   // TODO these links are duplicated; uniqWith adds 500ms
-  return { nodes, links, meta }
+  return { nodes, links, meta, equivalences }
 }
 
 export const numGenerations = 8
-const { nodes, links, meta } = generateGraph(numGenerations)
+const { nodes, links, meta, equivalences } = generateGraph(numGenerations)
 
 // Cached colors of each link
 const linkColors: Record<number, Record<number, string>> = {}
@@ -158,6 +160,13 @@ export { nodes, links }
 
 export function getParents(mino: Mino) {
   return meta[mino].parents
+}
+
+/**
+ * Returns whether the first mino is a child of the second
+ */
+export function isParent(parent: Mino, child: Mino) {
+  return meta[child].parents.has(parent)
 }
 
 export function getChildren(mino: Mino) {
@@ -184,4 +193,8 @@ export function getLinkColor(src: Mino, tgt: Mino) {
   const color = linkColors[src]?.[tgt]
   if (!color) throw new Error(`Invalid mino pair given`)
   return color
+}
+
+export function getCanonical(mino: Mino) {
+  return equivalences[mino]
 }

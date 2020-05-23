@@ -105,6 +105,48 @@ export function fromPoints(points: Point[]) {
   return getMino(result, w)
 }
 
+/**
+ * Get the point `[i, j]` in the mino with width `w`.
+ */
+export function getPointMask(i: number, j: number, w: number) {
+  return 1 << (i * w + j + WIDTH_BITS)
+}
+
+/**
+ * Returns true if the mino contains the given point
+ */
+export function contains(mino: Mino, [i, j]: Point) {
+  const w = getWidth(mino)
+  if (i < 0 || j < 0 || j >= w) {
+    return false
+  }
+  return !!(mino & getPointMask(i, j, w))
+}
+
+/**
+ * Get the bitmask corresponding to the jth column of the mino
+ */
+export function getColumnMask(mino: Mino, j: number): number {
+  const [width, height] = getShape(mino)
+  let mask = 0
+  for (let i = 0; i < height; i++) {
+    mask |= getPointMask(i, j, width)
+  }
+  return mino & mask
+}
+
+/**
+ * Get the rows of the mino from bottom-up
+ */
+export function* rowBits(mino: Mino): Generator<number> {
+  const w = getWidth(mino)
+  let data = getData(mino)
+  while (data) {
+    yield data % (1 << w)
+    data >>= w
+  }
+}
+
 function padLeft(str: string, char: string, width: number) {
   if (str.length >= width) {
     return str
@@ -129,13 +171,10 @@ export function displayMino(
   { block = "□", space = " ️" }: DisplayOpts,
 ) {
   const w = getWidth(mino)
-  let data = getData(mino)
   const result = []
-  while (data) {
-    const row = data % (1 << w)
+  for (const row of rowBits(mino)) {
     const str = padLeft(row.toString(2), "0", w)
     result.push([...str].join(" "))
-    data = data >> w
   }
   return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)
 }
