@@ -86,7 +86,7 @@ export default function Compass({ mino, onSelect }: Props) {
 
   // Scale the size of the child and parent blocks so that they are bigger
   // when the mino doesn't have as many children
-  const maxNumParents = 6
+  const maxNumParents = 7
   const parentSizeScale = scaleLinear().domain([1, maxNumParents]).range([4, 2])
   const parentBlockSize = getBlockSize(gen - 1) * parentSizeScale(parents.size)
   const parentRadius = radius + parents.size * 1.25
