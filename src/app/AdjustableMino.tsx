@@ -19,6 +19,7 @@ interface Props {
   fill: string
   stroke: string
   anchor?: string
+  showEditable?: boolean
   onSelect?(mino: Mino): void
 }
 
@@ -34,9 +35,18 @@ export default function AdjustableMino({
   size,
   fill,
   stroke,
+  showEditable,
   anchor = "center center",
   onSelect,
 }: Props) {
+  const [hovered, setHovered] = React.useState(false)
+  const showSquares = showEditable || hovered
+
+  const hoverEvents = {
+    onMouseOver: () => setHovered(true),
+    onMouseOut: () => setHovered(false),
+  }
+
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
   const outline = getOutline(minoPoints)
@@ -73,6 +83,7 @@ export default function AdjustableMino({
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(addSquare(mino, nbrPoint))}
+              {...hoverEvents}
             />
           )
         })}
@@ -90,8 +101,8 @@ export default function AdjustableMino({
               fill: ${fill};
               ${canRemove &&
               css`
-                /* TODO only highlight when entering the inner circle */
-                fill: ${tinycolor(fill).lighten(20).saturate(10).toString()};
+                fill: ${showSquares &&
+                tinycolor(fill).lighten(20).saturate(10).toString()};
                 cursor: pointer;
                 pointer-events: initial;
                 :hover {
@@ -107,6 +118,7 @@ export default function AdjustableMino({
             height={size}
             strokeWidth={strokeWidth * 0.75}
             onClick={() => canRemove && onSelect?.(removeSquare(mino, point))}
+            {...hoverEvents}
           />
         )
       })}

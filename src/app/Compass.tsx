@@ -76,6 +76,7 @@ function Background() {
  * Displays a mino and its direct children and parents.
  */
 export default function Compass({ mino, onSelect }: Props) {
+  const [hovered, setHovered] = React.useState(false)
   // TODO these return a set, but we'd like them to return in the same
   // order as the full graph
   const canonical = getCanonical(mino)
@@ -170,6 +171,11 @@ export default function Compass({ mino, onSelect }: Props) {
         fill="#222"
         stroke="#888"
         opacity={1 / 2}
+        className={css`
+          pointer-events: initial;
+        `}
+        onMouseOver={() => setHovered?.(true)}
+        onMouseOut={() => setHovered?.(false)}
       />
       <AdjustableMino
         mino={mino}
@@ -177,6 +183,7 @@ export default function Compass({ mino, onSelect }: Props) {
         cy={0}
         size={getBlockSize(gen) * 5}
         onSelect={onSelect}
+        showEditable={hovered}
         {...getMinoColor(canonical)}
       />
     </svg>
