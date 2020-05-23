@@ -1,11 +1,12 @@
 import { css } from "emotion"
 import React from "react"
+import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
 import { getSize, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
 import { getNeighbors } from "mino/generate"
-import { append, remove } from "mino/modify"
+import { addSquare, removeSquare } from "mino/modify"
 import { getOutline } from "mino/draw"
 import { isParent, getCanonical } from "./graph"
 import { getAnchor } from "./utils"
@@ -69,8 +70,9 @@ export default function AdjustableMino({
               width={size}
               height={size}
               fill="white"
+              stroke="gray"
               strokeWidth={strokeWidth * 0.75}
-              onClick={() => onSelect?.(append(mino, nbrPoint))}
+              onClick={() => onSelect?.(addSquare(mino, nbrPoint))}
             />
           )
         })}
@@ -79,16 +81,18 @@ export default function AdjustableMino({
         // Make all removable points in the mino selectable
         // TODO I want to replace this with an `isValid` function
         const canRemove = isParent(
-          getCanonical(remove(mino, point)),
+          getCanonical(removeSquare(mino, point)),
           getCanonical(mino),
         )
         return (
           <rect
             className={css`
-              cursor: pointer;
               fill: ${fill};
               ${canRemove &&
               css`
+                /* TODO only highlight when entering the inner circle */
+                fill: ${tinycolor(fill).lighten(20).saturate(10).toString()};
+                cursor: pointer;
                 pointer-events: initial;
                 :hover {
                   fill: white;
@@ -102,7 +106,7 @@ export default function AdjustableMino({
             width={size}
             height={size}
             strokeWidth={strokeWidth * 0.75}
-            onClick={() => canRemove && onSelect?.(remove(mino, point))}
+            onClick={() => canRemove && onSelect?.(removeSquare(mino, point))}
           />
         )
       })}

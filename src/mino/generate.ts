@@ -4,7 +4,7 @@
 
 import { MONOMINO, contains, getPoints } from "./mino"
 
-import { append } from "./modify"
+import { addSquare } from "./modify"
 
 import type { Point } from "math"
 import type { Mino } from "./mino"
@@ -39,7 +39,7 @@ export function* getChildren(mino: Mino) {
   // get all neighbors
   const nbrs = getNeighbors(mino)
   for (const nbr of nbrs) {
-    yield append(mino, nbr)
+    yield addSquare(mino, nbr)
   }
 }
 

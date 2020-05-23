@@ -15,16 +15,6 @@ import {
 import type { Point } from "math"
 import type { Mino } from "./mino"
 
-function shiftDown(mino: Mino): Mino {
-  const w = getWidth(mino)
-  return getMino(getData(mino) >> w, w)
-}
-
-function shiftUp(mino: Mino): Mino {
-  const w = getWidth(mino)
-  return getMino(getData(mino) << w, w)
-}
-
 /**
  * Return the mino with the width adjusted by delta (e.g. +1 or -1)
  */
@@ -64,24 +54,35 @@ function shiftRight(mino: Mino): Mino {
   return getMino(data >> 1, getWidth(decremented))
 }
 
-function doAppend(mino: Mino, i: number, j: number): Mino {
+function shiftDown(mino: Mino): Mino {
+  const w = getWidth(mino)
+  return getMino(getData(mino) >> w, w)
+}
+
+function shiftUp(mino: Mino): Mino {
+  const w = getWidth(mino)
+  return getMino(getData(mino) << w, w)
+}
+
+function doAdd(mino: Mino, i: number, j: number): Mino {
   return mino | getPointMask(i, j, getWidth(mino))
 }
 
-// Append the point [i,j] to the mino
-export function append(mino: Mino, [i, j]: Point): Mino {
-  const w = getWidth(mino)
+/**
+ * Append the point [i,j] to the mino
+ */
+export function addSquare(mino: Mino, [i, j]: Point): Mino {
   if (i < 0) {
-    return doAppend(shiftUp(mino), 0, j)
+    return doAdd(shiftUp(mino), 0, j)
   }
   if (j < 0) {
-    return doAppend(shiftLeft(mino), i, 0)
+    return doAdd(shiftLeft(mino), i, 0)
   }
-  if (j === w) {
-    return doAppend(incWidth(mino), i, j)
+  if (j === getWidth(mino)) {
+    return doAdd(incWidth(mino), i, j)
   }
   // otherwise add the point value to the mino
-  return doAppend(mino, i, j)
+  return doAdd(mino, i, j)
 }
 
 function bottomRowEmpty(mino: Mino): boolean {
@@ -101,7 +102,10 @@ function doRemove(mino: Mino, i: number, j: number): Mino {
   return mino & ~getPointMask(i, j, getWidth(mino))
 }
 
-export function remove(mino: Mino, [i, j]: Point): Mino {
+/**
+ * Remove the square at point [i, j] from the Mino
+ */
+export function removeSquare(mino: Mino, [i, j]: Point): Mino {
   const removed = doRemove(mino, i, j)
   if (bottomRowEmpty(removed)) {
     return shiftDown(removed)
