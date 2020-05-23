@@ -20,6 +20,7 @@ interface Props {
   stroke: string
   anchor?: string
   showEditable?: boolean
+  onHover?(mino?: Mino): void
   onSelect?(mino: Mino): void
 }
 
@@ -37,15 +38,24 @@ export default function AdjustableMino({
   stroke,
   showEditable,
   anchor = "center center",
+  onHover,
   onSelect,
 }: Props) {
   const [hovered, setHovered] = React.useState(false)
   const showSquares = showEditable || hovered
 
-  const hoverEvents = {
-    onMouseOver: () => setHovered(true),
-    onMouseOut: () => setHovered(false),
-  }
+  const hoverEvents = (mino: Mino) => ({
+    onMouseOver: () => {
+      console.log("setting hovered to:", mino)
+      onHover?.(mino)
+      setHovered(true)
+    },
+    onMouseOut: () => {
+      console.log("setting hovered to undefined")
+      onHover?.()
+      setHovered(false)
+    },
+  })
 
   const strokeWidth = size / 8
   const minoPoints = [...getPoints(mino)]
@@ -63,6 +73,7 @@ export default function AdjustableMino({
       {getSize(mino) < 8 &&
         nbrPoints.map((nbrPoint, i) => {
           const [x, y] = translate(scale(nbrPoint))
+          const child = addSquare(mino, nbrPoint)
           return (
             <rect
               className={css`
@@ -82,8 +93,8 @@ export default function AdjustableMino({
               fill="white"
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
-              onClick={() => onSelect?.(addSquare(mino, nbrPoint))}
-              {...hoverEvents}
+              onClick={() => onSelect?.(child)}
+              {...hoverEvents(child)}
             />
           )
         })}
@@ -91,10 +102,8 @@ export default function AdjustableMino({
         const [x, y] = translate(scale(point))
         // Make all removable points in the mino selectable
         // TODO I want to replace this with an `isValid` function
-        const canRemove = isParent(
-          getCanonical(removeSquare(mino, point)),
-          getCanonical(mino),
-        )
+        const parent = removeSquare(mino, point)
+        const canRemove = isParent(getCanonical(parent), getCanonical(mino))
         return (
           <rect
             className={css`
@@ -117,8 +126,8 @@ export default function AdjustableMino({
             width={size}
             height={size}
             strokeWidth={strokeWidth * 0.75}
-            onClick={() => canRemove && onSelect?.(removeSquare(mino, point))}
-            {...hoverEvents}
+            onClick={() => canRemove && onSelect?.(parent)}
+            {...hoverEvents(parent)}
           />
         )
       })}

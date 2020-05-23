@@ -76,7 +76,9 @@ function Background() {
  * Displays a mino and its direct children and parents.
  */
 export default function Compass({ mino, onSelect }: Props) {
-  const [hovered, setHovered] = React.useState(false)
+  const [innerHovered, setInnerHovered] = React.useState(false)
+  const [hovered, setHovered] = React.useState<Mino | undefined>()
+  hovered && console.log(hovered)
   // TODO these return a set, but we'd like them to return in the same
   // order as the full graph
   const canonical = getCanonical(mino)
@@ -112,12 +114,15 @@ export default function Compass({ mino, onSelect }: Props) {
           start: -1 / 4,
           count: parents.size,
         })
+        const isHovered = !!hovered && getCanonical(hovered) === parent
         const [x, y] = toCartesian({ radius: parentRadius, angle: getAngle(i) })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
+        const { fill, stroke } = getMinoColor(parent)
         return (
           <>
             <path
-              stroke={getLinkColor(parent, canonical)}
+              stroke={isHovered ? "white" : getLinkColor(parent, canonical)}
+              strokeWidth={isHovered ? 2 : 1}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -128,7 +133,8 @@ export default function Compass({ mino, onSelect }: Props) {
               cy={y}
               size={parentBlockSize}
               onSelect={onSelect}
-              {...getMinoColor(parent)}
+              fill={fill}
+              stroke={isHovered ? "white" : stroke}
             />
           </>
         )
@@ -140,15 +146,19 @@ export default function Compass({ mino, onSelect }: Props) {
           count: children.size,
           reverse: true,
         })
+
+        const isHovered = !!hovered && getCanonical(hovered) === child
         const [x, y] = toCartesian({
           radius: childRadius,
           angle: getAngle(i),
         })
         const linkPath = getArc([x, y], [0, 0], [0, -radius * 2])
+        const { fill, stroke } = getMinoColor(child)
         return (
           <>
             <path
-              stroke={getLinkColor(canonical, child)}
+              stroke={isHovered ? "white" : getLinkColor(canonical, child)}
+              strokeWidth={isHovered ? 2 : 1}
               d={linkPath}
               fill="none"
               opacity={0.5}
@@ -159,7 +169,8 @@ export default function Compass({ mino, onSelect }: Props) {
               cy={y}
               size={childBlockSize}
               onSelect={onSelect}
-              {...getMinoColor(child)}
+              fill={fill}
+              stroke={isHovered ? "white" : stroke}
             />
           </>
         )
@@ -174,16 +185,17 @@ export default function Compass({ mino, onSelect }: Props) {
         className={css`
           pointer-events: initial;
         `}
-        onMouseOver={() => setHovered?.(true)}
-        onMouseOut={() => setHovered?.(false)}
+        onMouseOver={() => setInnerHovered?.(true)}
+        onMouseOut={() => setInnerHovered?.(false)}
       />
       <AdjustableMino
         mino={mino}
         cx={0}
         cy={0}
         size={getBlockSize(gen) * 5}
+        onHover={setHovered}
         onSelect={onSelect}
-        showEditable={hovered}
+        showEditable={innerHovered}
         {...getMinoColor(canonical)}
       />
     </svg>
