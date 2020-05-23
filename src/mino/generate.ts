@@ -5,7 +5,9 @@ import {
   getMino,
   getData,
   getWidth,
+  getShape,
   getPoints,
+  rowBits,
 } from "./mino"
 
 import type { Point } from "math"
@@ -20,6 +22,18 @@ import type { Mino } from "./mino"
  */
 function getPointMask(i: number, j: number, w: number) {
   return 1 << (i * w + j + WIDTH_BITS)
+}
+
+/**
+ * Get the bitmask corresponding to the jth column of the mino
+ */
+function getColumnMask(mino: Mino, j: number): number {
+  const [width, height] = getShape(mino)
+  let mask = 0
+  for (let i = 0; i < height; i++) {
+    mask |= getPointMask(i, j, width)
+  }
+  return mino & mask
 }
 
 /**
@@ -58,25 +72,27 @@ export function* getNeighbors(mino: Mino): Generator<Point> {
   }
 }
 
+function shiftDown(mino: Mino): Mino {
+  const w = getWidth(mino)
+  return getMino(getData(mino) >> w, w)
+}
+
 function shiftUp(mino: Mino): Mino {
   const w = getWidth(mino)
-  const data = mino >> WIDTH_BITS
-  return getMino(data << w, w)
+  return getMino(getData(mino) << w, w)
 }
 
 function incWidth(mino: Mino): Mino {
-  const w = getWidth(mino)
-  if (w === MAX_WIDTH) throw new Error("Already at maximum width")
+  const w = getWidth(mino) + 1
+  if (w > MAX_WIDTH) throw new Error("Already at maximum width")
   let result = 0
   let i = 0
-  let data = getData(mino)
-  while (data) {
-    const row = data % (1 << w)
-    result = result | (row << (i * (w + 1)))
+
+  for (const row of rowBits(mino)) {
+    result |= row << (i * w)
     i++
-    data = data >> w
   }
-  return getMino(result, w + 1)
+  return getMino(result, w)
 }
 
 function shiftLeft(mino: Mino): Mino {
@@ -84,6 +100,26 @@ function shiftLeft(mino: Mino): Mino {
   const data = getData(expanded)
 
   return getMino(data << 1, getWidth(expanded))
+}
+
+// TODO literally the same as `incWidth` with a different adjustment
+function decWidth(mino: Mino): Mino {
+  let result = 0
+  const w = getWidth(mino) - 1
+  if (w < 1) throw new Error("Already at minimum width")
+  let i = 0
+  for (const row of rowBits(mino)) {
+    result |= row << (i * w)
+    i++
+  }
+  return getMino(result, w)
+}
+
+function shiftRight(mino: Mino): Mino {
+  const decremented = decWidth(mino)
+  const data = getData(decremented)
+
+  return getMino(data >> 1, getWidth(decremented))
 }
 
 function doAppend(mino: Mino, i: number, j: number): Mino {
@@ -104,6 +140,35 @@ export function append(mino: Mino, [i, j]: Point): Mino {
   }
   // otherwise add the point value to the mino
   return doAppend(mino, i, j)
+}
+
+function bottomRowEmpty(mino: Mino): boolean {
+  const row = [...rowBits(mino)][0]
+  return !row
+}
+
+function rightColumnEmpty(mino: Mino): boolean {
+  return !getColumnMask(mino, 0)
+}
+
+function leftColumnEmpty(mino: Mino): boolean {
+  return !getColumnMask(mino, getWidth(mino) - 1)
+}
+
+function doRemove(mino: Mino, i: number, j: number): Mino {
+  return mino & ~getPointMask(i, j, getWidth(mino))
+}
+
+export function remove(mino: Mino, [i, j]: Point): Mino {
+  const removed = doRemove(mino, i, j)
+  if (bottomRowEmpty(removed)) {
+    return shiftDown(removed)
+  } else if (rightColumnEmpty(removed)) {
+    return shiftRight(removed)
+  } else if (leftColumnEmpty(removed)) {
+    return decWidth(removed)
+  }
+  return removed
 }
 
 // Get the children of the given mino

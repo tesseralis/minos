@@ -118,6 +118,18 @@ interface DisplayOpts {
 }
 
 /**
+ * Get the rows of the mino from bottom-up
+ */
+export function* rowBits(mino: Mino): Generator<number> {
+  const w = getWidth(mino)
+  let data = getData(mino)
+  while (data) {
+    yield data % (1 << w)
+    data >>= w
+  }
+}
+
+/**
  * Return a pretty printed representation of the polyomino
  *
  * @param mino the polyomino object
@@ -129,13 +141,10 @@ export function displayMino(
   { block = "□", space = " ️" }: DisplayOpts,
 ) {
   const w = getWidth(mino)
-  let data = getData(mino)
   const result = []
-  while (data) {
-    const row = data % (1 << w)
+  for (const row of rowBits(mino)) {
     const str = padLeft(row.toString(2), "0", w)
     result.push([...str].join(" "))
-    data = data >> w
   }
   return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)
 }

@@ -4,9 +4,10 @@ import React from "react"
 import type { Point } from "math"
 import { getSize, getMino, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
-import { getNeighbors, append } from "mino/generate"
+import { getNeighbors, append, remove } from "mino/generate"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
+import { isParent, getCanonical } from "./graph"
 
 const oOctomino = getMino(0b111_101_111, 3)
 
@@ -79,10 +80,10 @@ export default function AdjustableMino({
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
   const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy]
-  const outlinePoints = scaledOutline.map(translate)
-  const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
+  // const outlinePoints = scaledOutline.map(translate)
+  // const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
 
-  const points = minoPoints.map(scale).map(translate)
+  // const points = minoPoints.map(scale).map(translate)
   // const nbrPoints = [...getNeighbors(mino)].map(scale).map(translate)
   const nbrPoints = [...getNeighbors(mino)]
 
@@ -105,22 +106,36 @@ export default function AdjustableMino({
           stroke="none"
         />
       )}
-      {points.map((point, i) => (
-        <rect
-          className={css`
-            cursor: pointer;
-            pointer-events: initial;
-          `}
-          style={{ stroke }}
-          key={i}
-          x={point[0]}
-          y={point[1]}
-          width={size}
-          height={size}
-          fill={fill}
-          strokeWidth={strokeWidth * 0.75}
-        />
-      ))}
+      {minoPoints.map((point, i) => {
+        const [x, y] = translate(scale(point))
+        const canRemove = isParent(
+          getCanonical(remove(mino, point)),
+          getCanonical(mino),
+        )
+        return (
+          <rect
+            className={css`
+              cursor: pointer;
+              fill: ${fill};
+              ${canRemove &&
+              css`
+                pointer-events: initial;
+                :hover {
+                  fill: white;
+                }
+              `}
+            `}
+            style={{ stroke }}
+            key={i}
+            x={x}
+            y={y}
+            width={size}
+            height={size}
+            strokeWidth={strokeWidth * 0.75}
+            onClick={() => canRemove && onSelect?.(remove(mino, point))}
+          />
+        )
+      })}
       {getSize(mino) < 8 &&
         nbrPoints.map((nbrPoint, i) => {
           const [x, y] = translate(scale(nbrPoint))

@@ -85,7 +85,9 @@ export function generateGraph(n: number) {
       symmetry: getSymmetry(MONOMINO),
     },
   }
-  const equivalences: Record<Mino, Mino> = {}
+  const equivalences: Record<Mino, Mino> = {
+    [MONOMINO]: MONOMINO,
+  }
   let currentGen = [MONOMINO]
   // TODO don't need to iterate over children of last generation!
   while (nodes.length < n - 1) {
@@ -158,6 +160,13 @@ export { nodes, links }
 
 export function getParents(mino: Mino) {
   return meta[mino].parents
+}
+
+/**
+ * Returns whether the first mino is a child of the second
+ */
+export function isParent(parent: Mino, child: Mino) {
+  return meta[child].parents.has(parent)
 }
 
 export function getChildren(mino: Mino) {
