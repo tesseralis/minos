@@ -2,47 +2,13 @@ import { css } from "emotion"
 import React from "react"
 
 import type { Point } from "math"
-import { getSize, getMino, getPoints } from "mino/mino"
+import { getSize, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
-import { getNeighbors, append, remove } from "mino/generate"
+import { getNeighbors } from "mino/generate"
+import { append, remove } from "mino/modify"
 import { getOutline } from "mino/draw"
-import { colors } from "style/theme"
 import { isParent, getCanonical } from "./graph"
-
-const oOctomino = getMino(0b111_101_111, 3)
-
-function getCoordAnchor(ns: number[], anchor: string) {
-  const min = Math.min(...ns)
-  const max = Math.max(...ns)
-
-  switch (anchor) {
-    case "left":
-    case "top":
-    case "start":
-      return min
-    case "right":
-    case "bottom":
-    case "end":
-      return max
-    case "center":
-      return (min + max) / 2
-    default:
-      throw new Error("invalid anchor")
-  }
-}
-
-function getAnchor(points: Point[], anchor: string) {
-  const xs = points.map((p) => p[0])
-  const ys = points.map((p) => p[1])
-
-  const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
-  return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
-}
-
-// TODO figure out why this particular styling is efficient
-// const style = css`
-//   transition: stroke 350ms ease-in-out;
-// `
+import { getAnchor } from "./utils"
 
 interface Props {
   mino: Mino
@@ -55,12 +21,10 @@ interface Props {
   onSelect?(mino: Mino): void
 }
 
+// TODO There's some logic duplicated here from `MinoSvg`.
+
 /**
- * Draws a mino in SVG using the given center x and y coordinates,
- * size, fill, stroke color, etc.
- *
- * @param anchor a string representing where edge of the mino should be anchored
- * (e.g. "top left", "bottom right", "center center")
+ * Renders a mino that can have squares added or removed from it.
  */
 export default function AdjustableMino({
   mino,
@@ -80,34 +44,40 @@ export default function AdjustableMino({
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
   const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy]
-  // const outlinePoints = scaledOutline.map(translate)
-  // const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
-
-  // const points = minoPoints.map(scale).map(translate)
-  // const nbrPoints = [...getNeighbors(mino)].map(scale).map(translate)
   const nbrPoints = [...getNeighbors(mino)]
 
   return (
     <>
-      {/* <polygon
-        className={style}
-        style={{ stroke }}
-        points={outlineStr}
-        fill={fill}
-        strokeWidth={strokeWidth}
-      /> */}
-      {mino === oOctomino && (
-        <rect
-          fill={colors.bg}
-          x={cx - size / 2}
-          y={cy - size / 2}
-          width={size}
-          height={size}
-          stroke="none"
-        />
-      )}
+      {/* Draw the neighboring points of the mino that can be clicked */}
+      {getSize(mino) < 8 &&
+        nbrPoints.map((nbrPoint, i) => {
+          const [x, y] = translate(scale(nbrPoint))
+          return (
+            <rect
+              className={css`
+                cursor: pointer;
+                pointer-events: initial;
+                opacity: 0;
+
+                :hover {
+                  opacity: 0.5;
+                }
+              `}
+              key={i}
+              x={x}
+              y={y}
+              width={size}
+              height={size}
+              fill="white"
+              strokeWidth={strokeWidth * 0.75}
+              onClick={() => onSelect?.(append(mino, nbrPoint))}
+            />
+          )
+        })}
       {minoPoints.map((point, i) => {
         const [x, y] = translate(scale(point))
+        // Make all removable points in the mino selectable
+        // TODO I want to replace this with an `isValid` function
         const canRemove = isParent(
           getCanonical(remove(mino, point)),
           getCanonical(mino),
@@ -136,31 +106,6 @@ export default function AdjustableMino({
           />
         )
       })}
-      {getSize(mino) < 8 &&
-        nbrPoints.map((nbrPoint, i) => {
-          const [x, y] = translate(scale(nbrPoint))
-          return (
-            <rect
-              className={css`
-                cursor: pointer;
-                pointer-events: initial;
-                opacity: 0;
-
-                :hover {
-                  opacity: 0.5;
-                }
-              `}
-              key={i}
-              x={x}
-              y={y}
-              width={size}
-              height={size}
-              fill="white"
-              strokeWidth={strokeWidth * 0.75}
-              onClick={() => onSelect?.(append(mino, nbrPoint))}
-            />
-          )
-        })}
     </>
   )
 }

@@ -69,3 +69,35 @@ export function getArc(src: Point, tgt: Point, origin: Point) {
   )
   return path.toString()
 }
+
+function getCoordAnchor(ns: number[], anchor: string) {
+  const min = Math.min(...ns)
+  const max = Math.max(...ns)
+
+  switch (anchor) {
+    case "left":
+    case "top":
+    case "start":
+      return min
+    case "right":
+    case "bottom":
+    case "end":
+      return max
+    case "center":
+      return (min + max) / 2
+    default:
+      throw new Error("invalid anchor")
+  }
+}
+
+// TODO better typing for anchors
+/**
+ * Gets the "anchor" point given a list of points and anchor string
+ */
+export function getAnchor(points: Point[], anchor: string) {
+  const xs = points.map((p) => p[0])
+  const ys = points.map((p) => p[1])
+
+  const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
+  return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
+}
