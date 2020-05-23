@@ -21,7 +21,7 @@
     "@types/lodash-es": "^4.17.3",
     "@types/node": "^13.13.4",
     "@types/react": "^16.9.34",
-    "@types/react-dom": "^16.9.7",
+    "@types/react-dom": "^16.9.8",
     "@types/react-modal": "^3.10.5",
     "@types/tinycolor2": "^1.4.2",
     "d3-path": "^1.0.9",
