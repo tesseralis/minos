@@ -7,7 +7,6 @@ import type { Mino } from "mino/mino"
 import { getNeighbors, append } from "mino/generate"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
-import { getCanonical } from "./graph"
 
 const oOctomino = getMino(0b111_101_111, 3)
 
@@ -143,7 +142,7 @@ export default function AdjustableMino({
               height={size}
               fill="white"
               strokeWidth={strokeWidth * 0.75}
-              onClick={() => onSelect?.(getCanonical(append(mino, nbrPoint)))}
+              onClick={() => onSelect?.(append(mino, nbrPoint))}
             />
           )
         })}
