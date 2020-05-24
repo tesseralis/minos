@@ -123,3 +123,25 @@ export function Polygon({ points, ...svgProps }: PolygonProps) {
     <polygon {...svgProps} points={points.map((p) => p.join(",")).join(" ")} />
   )
 }
+
+class SVGTransformBuilder {
+  #result = ""
+
+  translate(x: number, y: number): this {
+    this.#result = `translate(${x} ${y}) ${this.#result}`
+    return this
+  }
+
+  rotate(angle: number): this {
+    this.#result = `rotate(${angle}) ${this.#result}`
+    return this
+  }
+
+  toString() {
+    return this.#result
+  }
+}
+
+export function svgTransform() {
+  return new SVGTransformBuilder()
+}

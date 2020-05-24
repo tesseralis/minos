@@ -8,7 +8,7 @@ import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
-import { getAngleScale, getArc } from "./utils"
+import { getAngleScale, getArc, Line } from "./utils"
 import {
   canonicalEquals,
   getSortedParents,
@@ -40,10 +40,11 @@ const innerRadius = 40
 const radius = 90
 const outerRadius = radius + 30
 const svgSize = outerRadius + 5
+const halfRadius = (innerRadius + outerRadius) / 2
 
 function Background() {
   return (
-    <g>
+    <g opacity={2 / 3}>
       <circle
         className={css`
           pointer-events: initial;
@@ -53,26 +54,21 @@ function Background() {
         r={outerRadius}
         fill="#222"
         stroke="#aaa"
-        opacity={2 / 3}
       />
-      {/* <line
-        x1={-outerRadius}
-        y1={0}
-        x2={-innerRadius}
-        y2={0}
+      <Line
+        p1={[-outerRadius, 0]}
+        p2={[-halfRadius, 0]}
         stroke="#aaa"
         strokeWidth={1}
-        opacity={2 / 3}
       />
-      <line
-        x1={innerRadius}
-        y1={0}
-        x2={outerRadius}
-        y2={0}
+      <Line
+        p1={[halfRadius, 0]}
+        p2={[outerRadius, 0]}
         stroke="#aaa"
         strokeWidth={1}
-        opacity={2 / 3}
-      /> */}
+      />
+      <circle cx={-halfRadius} cy={0} r={3} fill="#aaa" />
+      <circle cx={halfRadius} cy={0} r={3} fill="#aaa" />
     </g>
   )
 }
