@@ -14,13 +14,9 @@ interface RotMarkerProps extends Omit<PolygonProps, "points"> {
 }
 
 function RotationMarker({ achiral, ...svgProps }: RotMarkerProps) {
-  const size = 5
-  const points: Point[] = [
-    [0, -size],
-    [size, 0],
-    [0, size],
-  ]
-  if (achiral) points.push([-size, 0])
+  const size = 7.5
+  const points: Point[] = [[0, size], [-size, 0], achiral ? [size, 0] : [0, 0]]
+  // if (achiral) points.push([-size, 0])
   return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 
@@ -39,7 +35,7 @@ function RotationMarkers({
   order,
   ...svgProps
 }: RotMarkersProps) {
-  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : []
+  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : [0]
   return (
     <g>
       {indices.map((index) => (
@@ -49,7 +45,7 @@ function RotationMarkers({
           achiral={achiral}
           transform={svgTransform()
             .translate(-1, radius)
-            .rotate(90 * index)}
+            .rotate(90 * index + 180)}
         />
       ))}
     </g>
@@ -140,7 +136,6 @@ export default function SymmetryRing({ mino, radius, onHover }: Props) {
       />
       <RotationMarkers
         radius={radius}
-        stroke={color}
         fill={color}
         achiral={symmetric}
         order={rotationOrder}
