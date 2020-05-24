@@ -1,12 +1,12 @@
 import tinycolor from "tinycolor2"
-import { mapValues } from "lodash-es"
+import { uniqBy, sortBy, mapValues } from "lodash-es"
 
 import type { Mino } from "mino/mino"
-import { MONOMINO } from "mino/mino"
+import { MONOMINO, getSize } from "mino/mino"
 
 import type { Symmetry } from "mino/transform"
 import { getTransforms, getSymmetry } from "mino/transform"
-import { getChildren as getMinoChildren } from "mino/generate"
+import { getParents, getChildren } from "mino/generate"
 
 type Color = tinycolor.Instance
 
@@ -65,6 +65,7 @@ interface MinoMeta {
   children: Set<Mino>
   symmetry: Symmetry
   color?: Color
+  index: number
 }
 
 export function generateGraph(n: number) {
@@ -74,7 +75,7 @@ export function generateGraph(n: number) {
     return { nodes, links, meta: {}, equivalences: {} }
   }
   // An object containing metadata for each mino including:
-  // * generation and index
+  // * index
   // * parents
   // * children
   // * symmetry info
@@ -83,6 +84,7 @@ export function generateGraph(n: number) {
       parents: new Set(),
       children: new Set(),
       symmetry: getSymmetry(MONOMINO),
+      index: 0,
     },
   }
   const equivalences: Record<Mino, Mino> = {
@@ -92,8 +94,9 @@ export function generateGraph(n: number) {
   // TODO don't need to iterate over children of last generation!
   while (nodes.length < n - 1) {
     const nextGen = []
+    let i = 0
     for (const mino of currentGen) {
-      for (const child of getMinoChildren(mino)) {
+      for (const child of getChildren(mino)) {
         if (equivalences[child]) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
@@ -114,7 +117,9 @@ export function generateGraph(n: number) {
             children: new Set(),
             parents: new Set([mino]),
             symmetry: getSymmetry(child),
+            index: i,
           }
+          i++
         }
       }
     }
@@ -165,19 +170,59 @@ for (const [src, tgt] of links) {
 
 export { nodes, links }
 
-export function getParents(mino: Mino) {
-  return meta[mino].parents
+/**
+ * Get the "canonical" version of the mino in the graph
+ */
+export function getCanonical(mino: Mino) {
+  return equivalences[mino]
 }
 
 /**
- * Returns whether the first mino is a child of the second
+ * Return whether the two minos are the same in the graph
  */
-export function isParent(parent: Mino, child: Mino) {
-  return meta[child].parents.has(parent)
+export function canonicalEquals(m: Mino, n: Mino): boolean {
+  return getCanonical(m) === getCanonical(n)
 }
 
-export function getChildren(mino: Mino) {
-  return meta[mino].children
+/**
+ * Get the canonical parents of the mino
+ */
+export function getCanonicalParents(mino: Mino): Set<Mino> {
+  return meta[getCanonical(mino)].parents
+}
+
+/**
+ * Get the canonical children of the *canonical* mino
+ */
+export function getCanonicalChildren(mino: Mino): Set<Mino> {
+  return meta[getCanonical(mino)].children
+}
+
+function getUniqSorted(minos: Iterable<Mino>): Mino[] {
+  const uniq = uniqBy([...minos], getCanonical)
+  return sortBy(uniq, getIndex)
+}
+
+/**
+ * Get the parents of the mino sorted by their indices in the graph
+ */
+export function getSortedParents(mino: Mino): Mino[] {
+  return getUniqSorted(getParents(mino))
+}
+
+/**
+ * Get the children of the mino sorted by their indices in the graph
+ */
+export function getSortedChildren(mino: Mino): Mino[] {
+  if (getSize(mino) === numGenerations) return []
+  return getUniqSorted(getChildren(mino))
+}
+
+/**
+ * Get the index of the mino within its generation
+ */
+export function getIndex(mino: Mino) {
+  return meta[getCanonical(mino)].index
 }
 
 /**
@@ -186,9 +231,10 @@ export function getChildren(mino: Mino) {
  * <MinoSvg {...getMinoColor(mino)} />
  */
 export function getMinoColor(mino: Mino) {
+  const { color, symmetry } = meta[getCanonical(mino)]
   return {
-    fill: meta[mino].color!.toString(),
-    stroke: borderColors[meta[mino].symmetry].toString(),
+    fill: color!.toString(),
+    stroke: borderColors[symmetry].toString(),
   }
 }
 
@@ -197,11 +243,7 @@ export function getMinoColor(mino: Mino) {
  */
 
 export function getLinkColor(src: Mino, tgt: Mino) {
-  const color = linkColors[src]?.[tgt]
+  const color = linkColors[getCanonical(src)]?.[getCanonical(tgt)]
   if (!color) throw new Error(`Invalid mino pair given`)
   return color
-}
-
-export function getCanonical(mino: Mino) {
-  return equivalences[mino]
 }
