@@ -131,6 +131,7 @@ export default function Compass({ mino, onSelect }: Props) {
               cx={x}
               cy={y}
               size={parentBlockSize}
+              onHover={setHovered}
               onSelect={onSelect}
               fill={fill}
               stroke={isHovered ? "white" : stroke}
@@ -167,6 +168,7 @@ export default function Compass({ mino, onSelect }: Props) {
               cx={x}
               cy={y}
               size={childBlockSize}
+              onHover={setHovered}
               onSelect={onSelect}
               fill={fill}
               stroke={isHovered ? "white" : stroke}
