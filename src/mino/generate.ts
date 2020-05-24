@@ -2,37 +2,11 @@
  * Functions dealing with generation of polyominoes.
  */
 
-import { MONOMINO, contains, getPoints } from "./mino"
+import { MONOMINO, getNeighbors } from "./mino"
 
 import { addSquare } from "./modify"
 
-import type { Point } from "math"
 import type { Mino } from "./mino"
-
-/**
- * Return the neighbors of the point [i,j]
- */
-function* nbrs([i, j]: Point): Generator<Point> {
-  // TODO it turns out this order greatly impacts the order of the minos
-  // either standardize it or sort the minos independently
-  yield [i + 1, j]
-  yield [i - 1, j]
-  yield [i, j + 1]
-  yield [i, j - 1]
-}
-
-/**
- * Get all neighboring points of the given mino
- */
-export function* getNeighbors(mino: Mino): Generator<Point> {
-  for (const point of getPoints(mino)) {
-    for (const nbr of nbrs(point)) {
-      if (!contains(mino, nbr)) {
-        yield nbr
-      }
-    }
-  }
-}
 
 // Get the children of the given mino
 export function* getChildren(mino: Mino) {

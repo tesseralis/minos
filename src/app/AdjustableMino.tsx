@@ -3,12 +3,10 @@ import React from "react"
 import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
-import { getSize, getPoints } from "mino/mino"
+import { isValid, getSize, getPoints, getNeighbors } from "mino/mino"
 import type { Mino } from "mino/mino"
-import { getNeighbors } from "mino/generate"
 import { addSquare, removeSquare } from "mino/modify"
 import { getOutline } from "mino/draw"
-import { isParent, getCanonical } from "./graph"
 import { getAnchor } from "./utils"
 
 interface Props {
@@ -99,9 +97,8 @@ export default function AdjustableMino({
       {minoPoints.map((point, i) => {
         const [x, y] = translate(scale(point))
         // Make all removable points in the mino selectable
-        // TODO I want to replace this with an `isValid` function
         const parent = removeSquare(mino, point)
-        const canRemove = isParent(getCanonical(parent), getCanonical(mino))
+        const canRemove = isValid(parent)
         return (
           <rect
             className={css`

@@ -147,6 +147,13 @@ export function generateGraph(n: number) {
 export const numGenerations = 8
 const { nodes, links, meta, equivalences } = generateGraph(numGenerations)
 
+export const MAX_NUM_PARENTS = Math.max(
+  ...Object.values(meta).map(({ parents }) => parents.size),
+)
+export const MAX_NUM_CHILDREN = Math.max(
+  ...Object.values(meta).map(({ children }) => children.size),
+)
+
 // Cached colors of each link
 const linkColors: Record<number, Record<number, string>> = {}
 for (const [src, tgt] of links) {

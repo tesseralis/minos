@@ -15,6 +15,8 @@ import {
   getChildren,
   getMinoColor,
   getLinkColor,
+  MAX_NUM_CHILDREN,
+  MAX_NUM_PARENTS,
 } from "./graph"
 import AdjustableMino from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
@@ -197,7 +199,7 @@ export default function Compass({ mino, onSelect }: Props) {
       <Background />
       <Strands
         minos={getParents(canonical)}
-        maxNumMinos={7}
+        maxNumMinos={MAX_NUM_PARENTS}
         scaleRange={[4, 2]}
         maxSpread={1 / 3}
         spreadStart={-1 / 4}
@@ -205,7 +207,7 @@ export default function Compass({ mino, onSelect }: Props) {
       />
       <Strands
         minos={getChildren(canonical)}
-        maxNumMinos={15}
+        maxNumMinos={MAX_NUM_CHILDREN}
         scaleRange={[3, 1]}
         maxSpread={15 / 32}
         spreadStart={1 / 4}

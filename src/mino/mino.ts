@@ -124,6 +124,59 @@ export function contains(mino: Mino, [i, j]: Point) {
 }
 
 /**
+ * Return the neighbors of the point [i,j]
+ */
+function* nbrs([i, j]: Point): Generator<Point> {
+  // TODO it turns out this order greatly impacts the order of the minos
+  // either standardize it or sort the minos independently
+  yield [i + 1, j]
+  yield [i - 1, j]
+  yield [i, j + 1]
+  yield [i, j - 1]
+}
+
+/**
+ * Get all neighboring points of the given mino
+ */
+export function* getNeighbors(mino: Mino): Generator<Point> {
+  for (const point of getPoints(mino)) {
+    for (const nbr of nbrs(point)) {
+      if (!contains(mino, nbr)) {
+        yield nbr
+      }
+    }
+  }
+}
+
+export function isValid(mino: Mino): boolean {
+  const p0 = [...getPoints(mino)][0]
+  // the null-omino is not a valid polyomino
+  if (!p0) return false
+  const queue = [p0]
+  const width = getWidth(mino)
+
+  // Initialize the visited bitmask
+  // Include the mino's width so that we can easily compare later
+  let visited = width
+
+  while (queue.length) {
+    const p = queue.pop()!
+    for (const nbr of nbrs(p)) {
+      if (!contains(mino, nbr)) continue
+      const [i, j] = nbr
+      const mask = getPointMask(i, j, width)
+      // If we haven't seen this point already, add it to the queue
+      if (!(visited & mask)) {
+        queue.push(nbr)
+      }
+      visited |= mask
+    }
+  }
+  // True if we have visited all the squares in the mino
+  return visited === mino
+}
+
+/**
  * Get the bitmask corresponding to the jth column of the mino
  */
 export function getColumnMask(mino: Mino, j: number): number {
