@@ -18,8 +18,10 @@ import {
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
 } from "./graph"
+
 import AdjustableMino from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
+import SymmetryRing from "./SymmetryRing"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -214,18 +216,10 @@ export default function Compass({ mino, onSelect }: Props) {
         reverse
         linkColor={(child: Mino) => getLinkColor(mino, child)}
       />
-      <circle
-        cx={0}
-        cy={0}
-        r={innerRadius}
-        fill="#222"
-        stroke="#888"
-        opacity={1 / 2}
-        className={css`
-          pointer-events: initial;
-        `}
-        onMouseOver={() => setInnerHovered?.(true)}
-        onMouseOut={() => setInnerHovered?.(false)}
+      <SymmetryRing
+        mino={mino}
+        radius={innerRadius}
+        onHover={setInnerHovered}
       />
       <AdjustableMino
         mino={mino}

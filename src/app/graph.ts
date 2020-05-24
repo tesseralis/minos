@@ -21,6 +21,10 @@ const baseColorMap: Record<Symmetry, string> = {
   all: "#ccc",
 }
 
+export function getSymmetryColor(symmetry: Symmetry): string {
+  return baseColorMap[symmetry]
+}
+
 const borderColors = mapValues(baseColorMap, (col) =>
   tinycolor(col).darken(40).desaturate(40).spin(-30),
 )
