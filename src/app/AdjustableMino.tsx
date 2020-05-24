@@ -64,7 +64,7 @@ export default function AdjustableMino({
   const nbrPoints = [...getNeighbors(mino)]
 
   return (
-    <>
+    <g>
       {/* Draw the neighboring points of the mino that can be clicked */}
       {getSize(mino) < 8 &&
         nbrPoints.map((nbrPoint, i) => {
@@ -126,6 +126,6 @@ export default function AdjustableMino({
           />
         )
       })}
-    </>
+    </g>
   )
 }
