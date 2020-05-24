@@ -11,8 +11,8 @@ import { getSize } from "mino/mino"
 import { getAngleScale, getArc } from "./utils"
 import {
   getCanonical,
-  getParents,
-  getChildren,
+  getSortedParents,
+  getSortedChildren,
   getMinoColor,
   getLinkColor,
   MAX_NUM_CHILDREN,
@@ -81,7 +81,6 @@ function Background() {
 export default function Compass({ mino, onSelect }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
   const [hovered, setHovered] = React.useState<Mino | undefined>()
-  const canonical = getCanonical(mino)
 
   interface StrandProps {
     // the relative mino represented by this strand
@@ -98,7 +97,7 @@ export default function Compass({ mino, onSelect }: Props) {
    * A link to a parent or child mino
    */
   function Strand({ mino, linkColor, coords, size }: StrandProps) {
-    const isHovered = !!hovered && getCanonical(hovered) === mino
+    const isHovered = !!hovered && getCanonical(hovered) === getCanonical(mino)
     const linkPath = getArc(coords, [0, 0], [0, -radius * 2])
     const { fill, stroke } = getMinoColor(mino)
     return (
@@ -126,7 +125,7 @@ export default function Compass({ mino, onSelect }: Props) {
 
   interface StrandsProps {
     // The set of minos to render as strands
-    minos: Set<Mino>
+    minos: Mino[]
     // The maximum number of minos that can be rendered
     maxNumMinos: number
     // The maximum and minimum amount to scale up each mino
@@ -153,18 +152,19 @@ export default function Compass({ mino, onSelect }: Props) {
     reverse,
     linkColor,
   }: StrandsProps) {
-    const gen = getSize([...minos][0])
+    const gen = getSize(minos[0])
+    const numMinos = minos.length
     // Scale up each mino based on how many minos there are.
     // The less minos compared to the max possible, the larger the scaling
     const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
-    const scaledSize = getBlockSize(gen) * sizeScale(minos.size)
+    const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
     // Scale up the radius so that the more minos there are,
     // the further away from the center
-    const scaledRadius = radius + minos.size * 1.25
+    const scaledRadius = radius + numMinos * 1.25
     const getAngle = getAngleScale({
-      spread: getSpread(maxSpread, minos.size),
+      spread: getSpread(maxSpread, numMinos),
       start: spreadStart,
-      count: minos.size,
+      count: numMinos,
       reverse,
     })
     return (
@@ -198,21 +198,21 @@ export default function Compass({ mino, onSelect }: Props) {
     >
       <Background />
       <Strands
-        minos={getParents(canonical)}
+        minos={getSortedParents(mino)}
         maxNumMinos={MAX_NUM_PARENTS}
         scaleRange={[4, 2]}
         maxSpread={1 / 3}
         spreadStart={-1 / 4}
-        linkColor={(parent: Mino) => getLinkColor(parent, canonical)}
+        linkColor={(parent: Mino) => getLinkColor(parent, mino)}
       />
       <Strands
-        minos={getChildren(canonical)}
+        minos={getSortedChildren(mino)}
         maxNumMinos={MAX_NUM_CHILDREN}
         scaleRange={[3, 1]}
         maxSpread={15 / 32}
         spreadStart={1 / 4}
         reverse
-        linkColor={(child: Mino) => getLinkColor(canonical, child)}
+        linkColor={(child: Mino) => getLinkColor(mino, child)}
       />
       <circle
         cx={0}
@@ -235,7 +235,7 @@ export default function Compass({ mino, onSelect }: Props) {
         onHover={setHovered}
         onSelect={onSelect}
         showEditable={innerHovered}
-        {...getMinoColor(canonical)}
+        {...getMinoColor(mino)}
       />
     </svg>
   )

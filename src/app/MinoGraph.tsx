@@ -20,8 +20,8 @@ import {
   numGenerations,
   nodes,
   links,
-  getParents,
-  getChildren,
+  getCanonicalParents,
+  getCanonicalChildren,
   getMinoColor,
   getLinkColor,
 } from "./graph"
@@ -202,8 +202,8 @@ interface Props {
 }
 
 export default function MinoGraph({ selected, onSelect }: Props) {
-  const parents = selected ? getParents(selected) : new Set<Mino>()
-  const children = selected ? getChildren(selected) : new Set<Mino>()
+  const parents = selected ? getCanonicalParents(selected) : new Set<Mino>()
+  const children = selected ? getCanonicalChildren(selected) : new Set<Mino>()
 
   // Get the links connecting the selected mino to its parents and children
   const selectedLinks = useMemo(() => {
