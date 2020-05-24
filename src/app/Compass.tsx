@@ -110,7 +110,7 @@ export default function Compass({ mino, onSelect }: Props) {
           opacity={0.5}
         />
         <SelectableMino
-          mino={mino}
+          mino={isHovered ? hovered! : mino}
           cx={coords[0]}
           cy={coords[1]}
           size={size}
