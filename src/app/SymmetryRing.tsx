@@ -68,7 +68,7 @@ function ReflectionAxes({
   ...lineProps
 }: ReflectionAxesProps) {
   return (
-    <g>
+    <g opacity={2 / 3}>
       {symmetries.map(
         (symmetry, i) =>
           symmetry && (
