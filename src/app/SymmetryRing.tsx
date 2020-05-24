@@ -2,9 +2,11 @@ import React from "react"
 import { css } from "emotion"
 import tinycolor from "tinycolor2"
 
+import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { transform, getSymmetry } from "mino/transform"
 import { getSymmetryColor } from "./graph"
+import { Line, Polygon } from "./utils"
 
 interface Props {
   mino: Mino
@@ -18,10 +20,13 @@ interface RotMarkerProps extends React.SVGProps<SVGPolygonElement> {
 
 function RotationMarker({ double, ...svgProps }: RotMarkerProps) {
   const size = 5
-  const points = double
-    ? `0 -${size} ${size} 0 0 ${size} -${size} 0`
-    : `0 -${size} ${size} 0 0 ${size}`
-  return <polygon {...svgProps} strokeWidth={2} points={points} />
+  const points: Point[] = [
+    [0, -size],
+    [size, 0],
+    [0, size],
+  ]
+  if (double) points.push([-size, 0])
+  return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 
 /**
@@ -54,30 +59,26 @@ export default function SymmetryRing({ mino, radius, onHover }: Props) {
         onMouseOut={() => onHover?.(false)}
       />
       {horiz && (
-        <line
-          x1={0}
-          y1={radius}
-          x2={0}
-          y2={-radius}
+        <Line
+          p1={[0, radius]}
+          p2={[0, -radius]}
           stroke={color}
           strokeWidth={2}
         />
       )}
       {vert && (
-        <line
-          x1={radius}
-          y1={0}
-          x2={-radius}
-          y2={0}
+        <Line
+          p1={[radius, 0]}
+          p2={[-radius, 0]}
           stroke={color}
           strokeWidth={2}
         />
       )}
       {mainDiag && (
-        <line x1={-h} y1={-h} x2={h} y2={h} stroke={color} strokeWidth={2} />
+        <Line p1={[-h, -h]} p2={[h, h]} stroke={color} strokeWidth={2} />
       )}
       {minorDiag && (
-        <line x1={h} y1={-h} x2={-h} y2={h} stroke={color} strokeWidth={2} />
+        <Line p1={[h, -h]} p2={[-h, h]} stroke={color} strokeWidth={2} />
       )}
       {mino === transform(mino, "rotateHalf") && (
         <g>

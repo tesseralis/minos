@@ -1,3 +1,4 @@
+import React from "react"
 import type { Point } from "math"
 import {
   TAU,
@@ -100,4 +101,25 @@ export function getAnchor(points: Point[], anchor: string) {
 
   const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
   return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
+}
+
+interface LineProps
+  extends Omit<React.SVGProps<SVGLineElement>, "x1" | "x2" | "y1" | "y2"> {
+  p1: Point
+  p2: Point
+}
+
+export function Line({ p1, p2, ...svgProps }: LineProps) {
+  return <line {...svgProps} x1={p1[0]} y1={p1[1]} x2={p2[0]} y2={p2[1]} />
+}
+
+interface PolygonProps
+  extends Omit<React.SVGProps<SVGPolygonElement>, "points"> {
+  points: readonly Point[]
+}
+
+export function Polygon({ points, ...svgProps }: PolygonProps) {
+  return (
+    <polygon {...svgProps} points={points.map((p) => p.join(",")).join(" ")} />
+  )
 }
