@@ -178,19 +178,24 @@ export function getCanonical(mino: Mino) {
 }
 
 /**
+ * Return whether the two minos are the same in the graph
+ */
+export function canonicalEquals(m: Mino, n: Mino): boolean {
+  return getCanonical(m) === getCanonical(n)
+}
+
+/**
  * Get the canonical parents of the mino
  */
 export function getCanonicalParents(mino: Mino): Set<Mino> {
-  mino = getCanonical(mino)
-  return meta[mino].parents
+  return meta[getCanonical(mino)].parents
 }
 
 /**
  * Get the canonical children of the *canonical* mino
  */
 export function getCanonicalChildren(mino: Mino): Set<Mino> {
-  mino = getCanonical(mino)
-  return meta[mino].children
+  return meta[getCanonical(mino)].children
 }
 
 function getUniqSorted(minos: Iterable<Mino>): Mino[] {
@@ -226,10 +231,10 @@ export function getIndex(mino: Mino) {
  * <MinoSvg {...getMinoColor(mino)} />
  */
 export function getMinoColor(mino: Mino) {
-  mino = getCanonical(mino)
+  const { color, symmetry } = meta[getCanonical(mino)]
   return {
-    fill: meta[mino].color!.toString(),
-    stroke: borderColors[meta[mino].symmetry].toString(),
+    fill: color!.toString(),
+    stroke: borderColors[symmetry].toString(),
   }
 }
 

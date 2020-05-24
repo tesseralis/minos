@@ -10,7 +10,7 @@ import { getSize } from "mino/mino"
 
 import { getAngleScale, getArc } from "./utils"
 import {
-  getCanonical,
+  canonicalEquals,
   getSortedParents,
   getSortedChildren,
   getMinoColor,
@@ -97,7 +97,7 @@ export default function Compass({ mino, onSelect }: Props) {
    * A link to a parent or child mino
    */
   function Strand({ mino, linkColor, coords, size }: StrandProps) {
-    const isHovered = !!hovered && getCanonical(hovered) === getCanonical(mino)
+    const isHovered = !!hovered && canonicalEquals(hovered, mino)
     const linkPath = getArc(coords, [0, 0], [0, -radius * 2])
     const { fill, stroke } = getMinoColor(mino)
     return (
