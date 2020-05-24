@@ -9,6 +9,7 @@ import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
 import { getAngleScale, getArc } from "./utils"
+import { Line } from "./svg"
 import {
   canonicalEquals,
   getSortedParents,
@@ -18,8 +19,10 @@ import {
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
 } from "./graph"
+
 import AdjustableMino from "./AdjustableMino"
 import SelectableMino from "./SelectableMino"
+import SymmetryRing from "./SymmetryRing"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -38,10 +41,11 @@ const innerRadius = 40
 const radius = 90
 const outerRadius = radius + 30
 const svgSize = outerRadius + 5
+const halfRadius = (innerRadius + outerRadius) / 2
 
 function Background() {
   return (
-    <g>
+    <g opacity={2 / 3}>
       <circle
         className={css`
           pointer-events: initial;
@@ -51,26 +55,21 @@ function Background() {
         r={outerRadius}
         fill="#222"
         stroke="#aaa"
-        opacity={2 / 3}
       />
-      <line
-        x1={-outerRadius}
-        y1={0}
-        x2={-innerRadius}
-        y2={0}
+      <Line
+        p1={[-outerRadius, 0]}
+        p2={[-halfRadius, 0]}
         stroke="#aaa"
         strokeWidth={1}
-        opacity={2 / 3}
       />
-      <line
-        x1={innerRadius}
-        y1={0}
-        x2={outerRadius}
-        y2={0}
+      <Line
+        p1={[halfRadius, 0]}
+        p2={[outerRadius, 0]}
         stroke="#aaa"
         strokeWidth={1}
-        opacity={2 / 3}
       />
+      <circle cx={-halfRadius} cy={0} r={3} fill="#aaa" />
+      <circle cx={halfRadius} cy={0} r={3} fill="#aaa" />
     </g>
   )
 }
@@ -214,18 +213,10 @@ export default function Compass({ mino, onSelect }: Props) {
         reverse
         linkColor={(child: Mino) => getLinkColor(mino, child)}
       />
-      <circle
-        cx={0}
-        cy={0}
-        r={innerRadius}
-        fill="#222"
-        stroke="#888"
-        opacity={1 / 2}
-        className={css`
-          pointer-events: initial;
-        `}
-        onMouseOver={() => setInnerHovered?.(true)}
-        onMouseOut={() => setInnerHovered?.(false)}
+      <SymmetryRing
+        mino={mino}
+        radius={innerRadius}
+        onHover={setInnerHovered}
       />
       <AdjustableMino
         mino={mino}

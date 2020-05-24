@@ -40,7 +40,7 @@ function transformPoint(
   return transforms[transform]
 }
 
-function transform(mino: Mino, transform: Transform) {
+export function transform(mino: Mino, transform: Transform) {
   return fromPoints(
     [...getPoints(mino)].map((p) =>
       transformPoint(p, getShape(mino), transform),
@@ -63,11 +63,18 @@ export type Symmetry =
   | "none"
 
 /**
+ * Return whether the mino is symmetric with respect to the given transform
+ */
+export function hasSymmetry(mino: Mino, t: Transform) {
+  return mino === transform(mino, t)
+}
+
+/**
  * Get the count of the given axes for which the mino equals the transformation
  * under that axis.
  */
 function getSymCount(mino: Mino, axes: Transform[]): number {
-  return axes.filter((axis) => mino === transform(mino, axis)).length
+  return axes.filter((axis) => hasSymmetry(mino, axis)).length
 }
 
 // TODO this function is kind of cumbersome...

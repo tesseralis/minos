@@ -12,13 +12,17 @@ type Color = tinycolor.Instance
 
 const baseColorMap: Record<Symmetry, string> = {
   none: "#888",
-  reflectOrtho: "crimson",
-  reflectDiag: "#44d",
+  reflectOrtho: "#e22",
+  reflectDiag: "#66f",
   rotate2: "limegreen",
   dihedralOrtho: "gold",
   dihedralDiag: "violet",
   rotate4: "turquoise",
   all: "#ccc",
+}
+
+export function getSymmetryColor(symmetry: Symmetry): string {
+  return baseColorMap[symmetry]
 }
 
 const borderColors = mapValues(baseColorMap, (col) =>

@@ -7,6 +7,7 @@ import type { Mino } from "mino/mino"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
+import { Polygon } from "./svg"
 
 const oOctomino = getMino(0b111_101_111, 3)
 
@@ -48,18 +49,17 @@ export default function MinoSvg({
   const scaledOutline = outline.map(scale)
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
-  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy]
+  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy] as Point
   const outlinePoints = scaledOutline.map(translate)
-  const outlineStr = outlinePoints.map((x) => x.join(",")).join(" ")
 
   const points = minoPoints.map(scale).map(translate)
 
   return (
     <>
-      <polygon
+      <Polygon
         className={style}
         style={{ stroke }}
-        points={outlineStr}
+        points={outlinePoints}
         fill={fill}
         strokeWidth={strokeWidth}
       />
