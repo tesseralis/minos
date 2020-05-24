@@ -218,10 +218,8 @@ interface DisplayOpts {
  * @param block the string used to represent a filled block
  * @param space the string used to represent an unfilled block
  */
-export function displayMino(
-  mino: Mino,
-  { block = "□", space = " ️" }: DisplayOpts,
-) {
+export function displayMino(mino: Mino, opts: DisplayOpts = {}) {
+  const { block = "□", space = " ️" } = opts
   const w = getWidth(mino)
   const result = []
   for (const row of rowBits(mino)) {

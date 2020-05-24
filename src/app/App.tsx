@@ -7,9 +7,15 @@ import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import MinoGraph from "./MinoGraph"
+import MinoList from "./MinoList"
+
+const views = ["graph", "list"] as const
+type View = "graph" | "list"
 
 export default function App() {
   const [selected, setSelected] = useState<Mino | undefined>()
+  // TODO replace this with a router
+  const [view, setView] = useState<View>("list")
   // const [hovered, setHovered] = useState<Mino | undefined>()
 
   return (
@@ -28,10 +34,27 @@ export default function App() {
           grid-area: 1 / 1;
         `}
       >
-        <MinoGraph
-          selected={selected && getCanonical(selected)}
-          onSelect={setSelected}
-        />
+        {view === "graph" && (
+          <MinoGraph
+            selected={selected && getCanonical(selected)}
+            onSelect={setSelected}
+          />
+        )}
+        {view === "list" && <MinoList />}
+      </div>
+      <div
+        className={css`
+          grid-area: 1/1;
+          align-self: start;
+          justify-self: start;
+          padding: 2rem;
+        `}
+      >
+        {views.map((view) => (
+          <button key={view} onClick={() => setView(view)}>
+            {view}
+          </button>
+        ))}
       </div>
       <div
         className={css`

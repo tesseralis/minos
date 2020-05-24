@@ -15,6 +15,7 @@ interface Props {
   size: number
   fill: string
   stroke: string
+  anchor?: string
   selected?: boolean
   onSelect?(mino: Mino): void
   onHover?(mino?: Mino): void
@@ -27,6 +28,7 @@ export default memo(function SelectableMino({
   size,
   fill,
   stroke,
+  anchor,
   selected = false,
   onSelect,
   onHover,
@@ -52,6 +54,7 @@ export default memo(function SelectableMino({
         cy={cy}
         size={size * (hovered ? 1.25 : 1)}
         fill={fill}
+        anchor={anchor}
         stroke={selected ? colors.fg : stroke}
       />
       <circle
