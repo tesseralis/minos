@@ -45,7 +45,7 @@ function RotationMarkers({
           {...svgProps}
           achiral={achiral}
           transform={svgTransform()
-            .translate(-1, radius)
+            .translate(1, radius)
             .rotate(90 * index + 180)}
         />
       ))}
