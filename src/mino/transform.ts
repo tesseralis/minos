@@ -40,7 +40,7 @@ function transformPoint(
   return transforms[transform]
 }
 
-function transform(mino: Mino, transform: Transform) {
+export function transform(mino: Mino, transform: Transform) {
   return fromPoints(
     [...getPoints(mino)].map((p) =>
       transformPoint(p, getShape(mino), transform),

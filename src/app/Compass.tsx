@@ -55,7 +55,7 @@ function Background() {
         stroke="#aaa"
         opacity={2 / 3}
       />
-      <line
+      {/* <line
         x1={-outerRadius}
         y1={0}
         x2={-innerRadius}
@@ -72,7 +72,7 @@ function Background() {
         stroke="#aaa"
         strokeWidth={1}
         opacity={2 / 3}
-      />
+      /> */}
     </g>
   )
 }
