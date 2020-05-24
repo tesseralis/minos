@@ -7,50 +7,49 @@ import type { Point } from "math"
 import { getShape, getPoints, fromPoints } from "./mino"
 import type { Mino, Dims } from "./mino"
 
-type Transform = (p: Point, dims: Dims) => Point
+const transforms = [
+  "identity",
+  "rotateLeft",
+  "rotateHalf",
+  "rotateRight",
+  "flipHoriz",
+  "flipVert",
+  "flipMainDiag",
+  "flipMinorDiag",
+] as const
 
-type Direction = "left" | "right" | "half"
-const rotations: Record<Direction, Transform> = {
-  left: ([i, j], [w, h]) => [w - 1 - j, i],
-  half: ([i, j], [w, h]) => [h - 1 - i, w - 1 - j],
-  right: ([i, j], [w, h]) => [j, h - 1 - i],
+type Transform = typeof transforms[number]
+
+function transformPoint(
+  [i, j]: Point,
+  [w, h]: Dims,
+  transform: Transform,
+): Point {
+  const i1 = h - 1 - i
+  const j1 = w - 1 - j
+  const transforms = {
+    identity: [i, j],
+    rotateLeft: [j1, i],
+    rotateHalf: [i1, j1],
+    rotateRight: [j, i1],
+    flipHoriz: [i, j1],
+    flipVert: [i1, j],
+    flipMainDiag: [j, i],
+    flipMinorDiag: [j1, i1],
+  } as const
+  return transforms[transform]
 }
 
-type Axis = "horiz" | "vert" | "mainDiag" | "minorDiag"
-const reflections: Record<Axis, Transform> = {
-  horiz: ([i, j], [w, h]) => [i, w - 1 - j],
-  vert: ([i, j], [w, h]) => [h - 1 - i, j],
-  mainDiag: ([i, j]) => [j, i],
-  minorDiag: ([i, j], [w, h]) => [w - 1 - j, h - 1 - i],
-}
-
-function transform(mino: Mino, fn: Transform) {
-  const shape = getShape(mino)
-  const newPoints = [...getPoints(mino)].map((p) => fn(p, shape))
-  return fromPoints(newPoints)
-}
-
-export function rotate(mino: Mino, direction: Direction) {
-  const fn = rotations[direction]
-  return transform(mino, fn)
-}
-
-export function reflect(mino: Mino, axis: Axis) {
-  const fn = reflections[axis]
-  return transform(mino, fn)
+function transform(mino: Mino, transform: Transform) {
+  return fromPoints(
+    [...getPoints(mino)].map((p) =>
+      transformPoint(p, getShape(mino), transform),
+    ),
+  )
 }
 
 export function getTransforms(mino: Mino) {
-  return new Set([
-    mino,
-    rotate(mino, "left"),
-    rotate(mino, "half"),
-    rotate(mino, "right"),
-    reflect(mino, "horiz"),
-    reflect(mino, "vert"),
-    reflect(mino, "mainDiag"),
-    reflect(mino, "minorDiag"),
-  ])
+  return new Set(transforms.map((t) => transform(mino, t)))
 }
 
 export type Symmetry =
@@ -63,41 +62,35 @@ export type Symmetry =
   | "rotate2"
   | "none"
 
+/**
+ * Get the count of the given axes for which the mino equals the transformation
+ * under that axis.
+ */
+function getSymCount(mino: Mino, axes: Transform[]): number {
+  return axes.filter((axis) => mino === transform(mino, axis)).length
+}
+
 // TODO this function is kind of cumbersome...
 /**
  * Get the symmetry of the polyomino
  * @param mino
  */
 export function getSymmetry(mino: Mino): Symmetry {
-  const transforms = getTransforms(mino)
-  switch (transforms.size) {
-    case 1:
-      return "all"
-    case 2:
-      if (mino === reflect(mino, "horiz")) {
-        return "dihedralOrtho"
-      } else if (mino === reflect(mino, "mainDiag")) {
-        return "dihedralDiag"
-      } else if (mino === rotate(mino, "half")) {
-        return "rotate4"
-      }
-      break
-    case 4:
-      if (mino === reflect(mino, "horiz") || mino === reflect(mino, "vert")) {
-        return "reflectOrtho"
-      } else if (
-        mino === reflect(mino, "mainDiag") ||
-        mino === reflect(mino, "minorDiag")
-      ) {
-        return "reflectDiag"
-      } else if (mino === rotate(mino, "half")) {
-        return "rotate2"
-      }
-      break
-    case 8:
-      return "none"
-  }
-  throw new Error("invalid symmetry")
+  const orthogonal = getSymCount(mino, ["flipHoriz", "flipVert"])
+  const diagonal = getSymCount(mino, ["flipMainDiag", "flipMinorDiag"])
+  const rotational = getSymCount(mino, ["rotateHalf", "rotateLeft"])
+
+  if (orthogonal === 2 && diagonal === 2 && rotational === 2) return "all"
+
+  if (orthogonal === 2) return "dihedralOrtho"
+  if (diagonal === 2) return "dihedralDiag"
+  if (rotational === 2) return "rotate4"
+
+  if (orthogonal === 1) return "reflectOrtho"
+  if (diagonal === 1) return "reflectDiag"
+  if (rotational === 1) return "rotate2"
+
+  return "none"
 }
 
 /**

@@ -1,4 +1,4 @@
-export type Point = [number, number]
+export type Point = readonly [number, number]
 
 // A polar coordinate
 export interface Polar {
