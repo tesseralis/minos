@@ -35,7 +35,7 @@ function RotationMarkers({
   order,
   ...svgProps
 }: RotMarkersProps) {
-  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : [0]
+  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : []
   return (
     <g>
       {indices.map((index) => (
