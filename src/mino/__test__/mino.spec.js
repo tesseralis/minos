@@ -1,4 +1,4 @@
-import { getMino, getSize, fromPoints, isValid } from "../mino"
+import { getMino, getSize, fromPoints, isValid, MONOMINO } from "../mino"
 
 describe("mino", () => {
   describe("getSize", () => {
@@ -39,6 +39,10 @@ describe("mino", () => {
       for (const testCase of testCases) {
         expect(isValid(testCase)).toBeTruthy()
       }
+    })
+
+    it("returns true for the monomino", () => {
+      expect(isValid(MONOMINO)).toBeTruthy()
     })
 
     it("returns false for the zero-mino", () => {

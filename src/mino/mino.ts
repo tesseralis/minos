@@ -161,15 +161,14 @@ export function isValid(mino: Mino): boolean {
 
   while (queue.length) {
     const p = queue.pop()!
+    const [i, j] = p
+    const mask = getPointMask(i, j, width)
+    if (visited & mask) continue
+    visited |= mask
+
     for (const nbr of nbrs(p)) {
       if (!contains(mino, nbr)) continue
-      const [i, j] = nbr
-      const mask = getPointMask(i, j, width)
-      // If we haven't seen this point already, add it to the queue
-      if (!(visited & mask)) {
-        queue.push(nbr)
-      }
-      visited |= mask
+      queue.push(nbr)
     }
   }
   // True if we have visited all the squares in the mino
