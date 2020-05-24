@@ -35,7 +35,8 @@ function RotationMarkers({
   order,
   ...svgProps
 }: RotMarkersProps) {
-  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : []
+  // TODO display properly for diagonally reflective minos
+  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : [0]
   return (
     <g>
       {indices.map((index) => (
