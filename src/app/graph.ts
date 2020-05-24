@@ -1,8 +1,8 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash-es"
 
-import { Mino, getSize } from "mino/mino"
-import { MONOMINO } from "mino/mino"
+import type { Mino } from "mino/mino"
+import { MONOMINO, getSize } from "mino/mino"
 
 import type { Symmetry } from "mino/transform"
 import { getTransforms, getSymmetry } from "mino/transform"
