@@ -8,7 +8,8 @@ import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
-import { getAngleScale, getArc, Line } from "./utils"
+import { getAngleScale, getArc } from "./utils"
+import { Line } from "./svg"
 import {
   canonicalEquals,
   getSortedParents,

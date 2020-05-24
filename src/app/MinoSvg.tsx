@@ -6,7 +6,8 @@ import { getMino, getPoints } from "mino/mino"
 import type { Mino } from "mino/mino"
 import { getOutline } from "mino/draw"
 import { colors } from "style/theme"
-import { Polygon, getAnchor } from "./utils"
+import { getAnchor } from "./utils"
+import { Polygon } from "./svg"
 
 const oOctomino = getMino(0b111_101_111, 3)
 

@@ -6,9 +6,9 @@ import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { getSymmetry, hasSymmetry } from "mino/transform"
 import { getSymmetryColor } from "./graph"
-import { Line, Polygon, svgTransform } from "./utils"
+import { Line, LineProps, Polygon, PolygonProps, svgTransform } from "./svg"
 
-interface RotMarkerProps extends React.SVGProps<SVGPolygonElement> {
+interface RotMarkerProps extends Omit<PolygonProps, "points"> {
   // if true, render symmetric symbol
   achiral?: boolean
 }
@@ -49,15 +49,14 @@ function RotationMarkers({
           achiral={achiral}
           transform={svgTransform()
             .translate(-1, radius)
-            .rotate(90 * index)
-            .toString()}
+            .rotate(90 * index)}
         />
       ))}
     </g>
   )
 }
 
-interface ReflectionAxesProps extends React.SVGProps<SVGLineElement> {
+interface ReflectionAxesProps extends Omit<LineProps, "p1" | "p2"> {
   // Radius of the axes
   radius: number
   // The list of symmetries
@@ -70,7 +69,7 @@ interface ReflectionAxesProps extends React.SVGProps<SVGLineElement> {
 function ReflectionAxes({
   radius,
   symmetries,
-  ...svgProps
+  ...lineProps
 }: ReflectionAxesProps) {
   return (
     <g>
@@ -79,12 +78,10 @@ function ReflectionAxes({
           symmetry && (
             <Line
               key={i}
-              {...svgProps}
+              {...lineProps}
               p1={[0, -radius]}
               p2={[0, radius]}
-              transform={svgTransform()
-                .rotate(45 * i)
-                .toString()}
+              transform={svgTransform().rotate(45 * i)}
             />
           ),
       )}

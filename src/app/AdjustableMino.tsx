@@ -3,11 +3,14 @@ import React from "react"
 import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
-import { isValid, getSize, getPoints, getNeighbors } from "mino/mino"
+import { getMino, isValid, getSize, getPoints, getNeighbors } from "mino/mino"
 import type { Mino } from "mino/mino"
 import { addSquare, removeSquare } from "mino/modify"
 import { getOutline } from "mino/draw"
 import { getAnchor } from "./utils"
+import { colors } from "style/theme"
+
+const oOctomino = getMino(0b111_101_111, 3)
 
 interface Props {
   mino: Mino
@@ -65,6 +68,16 @@ export default function AdjustableMino({
 
   return (
     <g>
+      {mino === oOctomino && (
+        <rect
+          fill={colors.bg}
+          x={cx - size / 2}
+          y={cy - size / 2}
+          width={size}
+          height={size}
+          stroke="none"
+        />
+      )}
       {/* Draw the neighboring points of the mino that can be clicked */}
       {getSize(mino) < 8 &&
         nbrPoints.map((nbrPoint, i) => {
