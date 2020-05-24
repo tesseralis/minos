@@ -29,11 +29,11 @@ function transformPoint(
   const j1 = w - 1 - j
   const transforms = {
     identity: [i, j],
-    rotateLeft: [j1, i],
+    rotateLeft: [j, i1],
     rotateHalf: [i1, j1],
-    rotateRight: [j, i1],
-    flipHoriz: [i, j1],
-    flipVert: [i1, j],
+    rotateRight: [j1, i],
+    flipHoriz: [i1, j],
+    flipVert: [i, j1],
     flipMainDiag: [j, i],
     flipMinorDiag: [j1, i1],
   } as const
