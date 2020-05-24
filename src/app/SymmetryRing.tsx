@@ -4,50 +4,49 @@ import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
 import type { Mino } from "mino/mino"
-import { transform, getSymmetry } from "mino/transform"
+import { getSymmetry, hasSymmetry } from "mino/transform"
 import { getSymmetryColor } from "./graph"
 import { Line, Polygon, svgTransform } from "./utils"
 
-interface Props {
-  mino: Mino
-  radius: number
-  onHover?(hovered: boolean): void
-}
-
 interface RotMarkerProps extends React.SVGProps<SVGPolygonElement> {
-  symmetric?: boolean
+  // if true, render symmetric symbol
+  achiral?: boolean
 }
 
-function RotationMarker({ symmetric, ...svgProps }: RotMarkerProps) {
+function RotationMarker({ achiral, ...svgProps }: RotMarkerProps) {
   const size = 5
   const points: Point[] = [
     [0, -size],
     [size, 0],
     [0, size],
   ]
-  if (symmetric) points.push([-size, 0])
+  if (achiral) points.push([-size, 0])
   return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 
 interface RotMarkersProps extends RotMarkerProps {
   radius: number
-  double?: boolean
+  // true if the mino has four-fold rotational symmetry
+  order: number
 }
 
+/**
+ * Displays arrows or lozenges representing the rotational symmetry of the mino.
+ */
 function RotationMarkers({
   radius,
-  symmetric,
-  double,
+  achiral,
+  order,
   ...svgProps
 }: RotMarkersProps) {
-  const indices = double ? [0, 1, 2, 3] : [0, 2]
+  const indices = order === 4 ? [0, 1, 2, 3] : order === 2 ? [0, 2] : []
   return (
     <g>
       {indices.map((index) => (
         <RotationMarker
           key={index}
           {...svgProps}
-          symmetric={symmetric}
+          achiral={achiral}
           transform={svgTransform()
             .translate(-1, radius)
             .rotate(90 * index)
@@ -59,10 +58,15 @@ function RotationMarkers({
 }
 
 interface ReflectionAxesProps extends React.SVGProps<SVGLineElement> {
+  // Radius of the axes
   radius: number
+  // The list of symmetries
   symmetries: boolean[]
 }
 
+/**
+ * Displays a line corresponding to the axes of the mino
+ */
 function ReflectionAxes({
   radius,
   symmetries,
@@ -88,24 +92,35 @@ function ReflectionAxes({
   )
 }
 
-const reflections = [
+const reflectionList = [
   "flipHoriz",
   "flipMinorDiag",
   "flipVert",
   "flipMainDiag",
 ] as const
 
+const rotationList = ["rotateHalf", "rotateLeft"] as const
+
+interface Props {
+  mino: Mino
+  radius: number
+  onHover?(hovered: boolean): void
+}
+
 /**
- * Displays the symmetry of the mino
+ * A ring that displays visual indicators for the symmetries of the mino
  */
 export default function SymmetryRing({ mino, radius, onHover }: Props) {
-  const symmetry = getSymmetry(mino)
-  const color = getSymmetryColor(symmetry)
+  const color = getSymmetryColor(getSymmetry(mino))
 
-  const reflectionMap = reflections.map((t) => mino === transform(mino, t))
-  const symmetric = reflectionMap.some((t) => t)
+  const reflections = reflectionList.map((t) => hasSymmetry(mino, t))
+  const symmetric = reflections.some((t) => t)
+  const rotationOrder =
+    rotationList.filter((t) => hasSymmetry(mino, t)).length * 2
+
   return (
     <g opacity={2 / 3}>
+      {/* Hide the strands behind us */}
       <circle r={radius} fill="#222" />
       <circle
         r={radius}
@@ -122,19 +137,17 @@ export default function SymmetryRing({ mino, radius, onHover }: Props) {
       />
       <ReflectionAxes
         radius={radius}
-        symmetries={reflectionMap}
+        symmetries={reflections}
         stroke={color}
         strokeWidth={2}
       />
-      {mino === transform(mino, "rotateHalf") && (
-        <RotationMarkers
-          radius={radius}
-          stroke={color}
-          fill={color}
-          symmetric={symmetric}
-          double={mino === transform(mino, "rotateLeft")}
-        />
-      )}
+      <RotationMarkers
+        radius={radius}
+        stroke={color}
+        fill={color}
+        achiral={symmetric}
+        order={rotationOrder}
+      />
     </g>
   )
 }
