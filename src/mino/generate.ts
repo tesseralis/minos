@@ -2,14 +2,28 @@
  * Functions dealing with generation of polyominoes.
  */
 
-import { MONOMINO, getNeighbors } from "./mino"
+import { MONOMINO, getNeighbors, getPoints, isValid } from "./mino"
 
-import { addSquare } from "./modify"
+import { addSquare, removeSquare } from "./modify"
 
 import type { Mino } from "./mino"
 
-// Get the children of the given mino
-export function* getChildren(mino: Mino) {
+/**
+ * Iterate over all the parents of the mino
+ */
+export function* getParents(mino: Mino): Generator<Mino> {
+  for (const square of getPoints(mino)) {
+    const parent = removeSquare(mino, square)
+    if (isValid(parent)) {
+      yield parent
+    }
+  }
+}
+
+/**
+ * Iterate over all the children of the mino
+ */
+export function* getChildren(mino: Mino): Generator<Mino> {
   // get all neighbors
   const nbrs = getNeighbors(mino)
   for (const nbr of nbrs) {
