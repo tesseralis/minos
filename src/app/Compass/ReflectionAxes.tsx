@@ -2,7 +2,7 @@ import React from "react"
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 
-interface ReflectionAxesProps {
+interface Props {
   // Radius of the axes
   radius: number
   // The list of symmetries
@@ -20,7 +20,7 @@ export default function ReflectionAxes({
   hovered,
   color,
   ...lineProps
-}: ReflectionAxesProps) {
+}: Props) {
   return (
     <g opacity={2 / 3}>
       {symmetries.map(

@@ -15,7 +15,7 @@ function RotationMarker({ achiral, ...svgProps }: RotMarkerProps) {
   return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 
-interface RotMarkersProps {
+interface Props {
   radius: number
   // true if the mino has four-fold rotational symmetry
   order: number
@@ -34,7 +34,7 @@ export default function RotationMarkers({
   order,
   hovered,
   color,
-}: RotMarkersProps) {
+}: Props) {
   // TODO display properly for diagonally reflective minos
   return (
     <g>
