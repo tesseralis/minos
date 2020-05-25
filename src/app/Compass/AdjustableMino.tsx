@@ -99,7 +99,7 @@ export default function AdjustableMino({
               y={y}
               width={size}
               height={size}
-              fill="white"
+              fill={colors.highlight}
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(child)}

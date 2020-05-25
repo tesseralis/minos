@@ -1,5 +1,6 @@
 import React from "react"
 import { Line, svgTransform } from "app/svg"
+import { colors } from "style/theme"
 
 interface ReflectionAxesProps {
   // Radius of the axes
@@ -30,7 +31,7 @@ export default function ReflectionAxes({
               {...lineProps}
               p1={[-radius, 0]}
               p2={[radius, 0]}
-              stroke={hovered === i ? "white" : color}
+              stroke={hovered === i ? colors.highlight : color}
               strokeWidth={hovered === i ? 4 : 2}
               transform={svgTransform().rotate(45 * i)}
             />

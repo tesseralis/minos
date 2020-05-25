@@ -6,6 +6,7 @@ import type { Mino } from "mino/mino"
 import { Transform, getSymmetry, hasSymmetry, transform } from "mino/transform"
 import { getSymmetryColor } from "app/graph"
 import { svgTransform } from "app/svg"
+import { colors } from "style/theme"
 
 import RotationMarkers from "./RotationMarkers"
 import ReflectionAxes from "./ReflectionAxes"
@@ -61,7 +62,7 @@ export default function SymmetryRing({
       {/* Hide the strands behind us */}
       <circle
         r={radius}
-        fill={tinycolor.mix(color, "#222", 90).toString()}
+        fill={tinycolor.mix(color, colors.bg, 90).toString()}
         className={css`
           pointer-events: initial;
         `}

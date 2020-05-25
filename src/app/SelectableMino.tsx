@@ -52,7 +52,7 @@ export default memo(function SelectableMino({
         cy={cy}
         size={size * (hovered ? 1.25 : 1)}
         fill={fill}
-        stroke={selected ? colors.fg : stroke}
+        stroke={selected ? colors.highlight : stroke}
       />
       <circle
         {...handleClick}

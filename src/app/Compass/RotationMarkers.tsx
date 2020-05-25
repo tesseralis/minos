@@ -2,6 +2,7 @@ import React from "react"
 
 import type { Point } from "math"
 import { Polygon, PolygonProps, svgTransform } from "app/svg"
+import { colors } from "style/theme"
 
 interface RotMarkerProps extends Omit<PolygonProps, "points"> {
   // if true, render symmetric symbol
@@ -47,7 +48,7 @@ export default function RotationMarkers({
           (shouldShow || isHover) && (
             <RotationMarker
               key={index}
-              fill={isHover ? "white" : color}
+              fill={isHover ? colors.highlight : color}
               achiral={achiral}
               transform={svgTransform()
                 .translate(0, -radius)
