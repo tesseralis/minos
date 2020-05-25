@@ -6,8 +6,7 @@ import { Transform, transform } from "mino/transform"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform } from "app/svg"
 
-// FIXME this is duplicated
-const reflectionList = [
+export const reflectionOrder = [
   "flipVert",
   "flipMainDiag",
   "flipHoriz",
@@ -15,7 +14,7 @@ const reflectionList = [
 ] as const
 
 // TODO replace these icons with actual SVG
-const rotationSymbols: any = {
+const rotationSymbols = {
   rotateRight: "⃕",
   rotateHalf: "↻",
   rotateLeft: "⃔",
@@ -76,7 +75,7 @@ export default function TransformButtons({
 
   return (
     <g>
-      {reflectionList.map((trans, i) => (
+      {reflectionOrder.map((trans, i) => (
         <Button
           key={trans}
           icon="↕︎"

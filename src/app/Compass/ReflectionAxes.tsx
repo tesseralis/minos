@@ -3,12 +3,15 @@ import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 
 interface Props {
+  // The list of symmetries; a mapping of indices to booleans
+  // with vertical symmetry being 0 and moving clockwise
+  symmetries: boolean[]
+  // The index of the reflection axis that should be highlighted
+  hovered: number
   // Radius of the axes
   radius: number
-  // The list of symmetries
-  symmetries: boolean[]
+  // Color of the axes
   color: string
-  hovered: number
 }
 
 /**

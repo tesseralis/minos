@@ -9,14 +9,7 @@ import { colors } from "style/theme"
 
 import RotationMarkers from "./RotationMarkers"
 import ReflectionAxes from "./ReflectionAxes"
-import TransformButtons from "./TransformButtons"
-
-const reflectionList = [
-  "flipVert",
-  "flipMainDiag",
-  "flipHoriz",
-  "flipMinorDiag",
-] as const
+import TransformButtons, { reflectionOrder } from "./TransformButtons"
 
 const rotationList = ["rotateHalf", "rotateLeft"] as const
 
@@ -45,7 +38,7 @@ export default function SymmetryRing({
   const [hovered, setHovered] = React.useState<Transform | undefined>()
   const color = getSymmetryColor(getSymmetry(mino))
 
-  const reflections = reflectionList.map((t) => hasSymmetry(mino, t))
+  const reflections = reflectionOrder.map((t) => hasSymmetry(mino, t))
   const symmetric = reflections.some((t) => t)
   const rotationOrder =
     rotationList.filter((t) => hasSymmetry(mino, t)).length * 2 || 1
@@ -66,7 +59,7 @@ export default function SymmetryRing({
         radius={radius}
         symmetries={reflections}
         color={color}
-        hovered={reflectionList.indexOf(hovered as any)}
+        hovered={reflectionOrder.indexOf(hovered as any)}
       />
       <RotationMarkers
         radius={radius}

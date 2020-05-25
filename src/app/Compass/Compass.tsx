@@ -19,10 +19,10 @@ import {
   getLinkColor,
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
-} from "../graph"
+} from "app/graph"
+import SelectableMino from "app/SelectableMino"
 
 import AdjustableMino from "./AdjustableMino"
-import SelectableMino from "../SelectableMino"
 import SymmetryRing from "./SymmetryRing"
 
 const borderColor = "#aaa"
