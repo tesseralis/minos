@@ -52,7 +52,7 @@ export default function SymmetryRing({
 
   return (
     <g opacity={2 / 3}>
-      {/* Hide the strands behind us */}
+      {/* Hide the strands behind the component */}
       <circle
         r={radius}
         fill={tinycolor.mix(color, colors.bg, 90).toString()}
