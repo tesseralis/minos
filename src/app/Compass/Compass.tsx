@@ -8,8 +8,9 @@ import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
-import { getAngleScale, getArc } from "./utils"
-import { Line } from "./svg"
+import { colors } from "style/theme"
+import { getAngleScale, getArc } from "app/utils"
+import { Line } from "app/svg"
 import {
   canonicalEquals,
   getSortedParents,
@@ -18,11 +19,13 @@ import {
   getLinkColor,
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
-} from "./graph"
+} from "app/graph"
+import SelectableMino from "app/SelectableMino"
 
 import AdjustableMino from "./AdjustableMino"
-import SelectableMino from "./SelectableMino"
 import SymmetryRing from "./SymmetryRing"
+
+const borderColor = "#aaa"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -53,23 +56,23 @@ function Background() {
         cx={0}
         cy={0}
         r={outerRadius}
-        fill="#222"
-        stroke="#aaa"
+        fill={colors.bg}
+        stroke={borderColor}
       />
       <Line
         p1={[-outerRadius, 0]}
         p2={[-halfRadius, 0]}
-        stroke="#aaa"
+        stroke={borderColor}
         strokeWidth={1}
       />
       <Line
         p1={[halfRadius, 0]}
         p2={[outerRadius, 0]}
-        stroke="#aaa"
+        stroke={borderColor}
         strokeWidth={1}
       />
-      <circle cx={-halfRadius} cy={0} r={3} fill="#aaa" />
-      <circle cx={halfRadius} cy={0} r={3} fill="#aaa" />
+      <circle cx={-halfRadius} cy={0} r={3} fill={borderColor} />
+      <circle cx={halfRadius} cy={0} r={3} fill={borderColor} />
     </g>
   )
 }
@@ -102,7 +105,7 @@ export default function Compass({ mino, onSelect }: Props) {
     return (
       <g>
         <path
-          stroke={isHovered ? "white" : linkColor}
+          stroke={isHovered ? colors.highlight : linkColor}
           strokeWidth={isHovered ? 2 : 1}
           d={linkPath}
           fill="none"
@@ -116,7 +119,7 @@ export default function Compass({ mino, onSelect }: Props) {
           onHover={setHovered}
           onSelect={onSelect}
           fill={fill}
-          stroke={isHovered ? "white" : stroke}
+          stroke={isHovered ? colors.highlight : stroke}
         />
       </g>
     )
@@ -217,6 +220,7 @@ export default function Compass({ mino, onSelect }: Props) {
         mino={mino}
         radius={innerRadius}
         onHover={setInnerHovered}
+        onSelect={onSelect}
       />
       <AdjustableMino
         mino={mino}

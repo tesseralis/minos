@@ -11,7 +11,7 @@ import { getParents, getChildren } from "mino/generate"
 type Color = tinycolor.Instance
 
 const baseColorMap: Record<Symmetry, string> = {
-  none: "#888",
+  none: "#aaa",
   reflectOrtho: "#e22",
   reflectDiag: "#66f",
   rotate2: "limegreen",
