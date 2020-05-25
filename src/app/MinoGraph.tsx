@@ -156,7 +156,7 @@ const MinoLink = memo(
           pointer-events: none;
         `}
         style={{
-          stroke: isSelected ? colors.fg : color,
+          stroke: isSelected ? colors.highlight : color,
           strokeWidth: strokeWidth * (isSelected ? 3 : 1),
         }}
         d={getLinkPath(link)}

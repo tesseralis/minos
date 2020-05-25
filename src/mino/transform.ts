@@ -7,18 +7,35 @@ import type { Point } from "math"
 import { getShape, getPoints, fromPoints } from "./mino"
 import type { Mino, Dims } from "./mino"
 
-const transforms = [
-  "identity",
-  "rotateLeft",
-  "rotateHalf",
-  "rotateRight",
+const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
+
+const reflections = [
   "flipHoriz",
   "flipVert",
   "flipMainDiag",
   "flipMinorDiag",
 ] as const
 
-type Transform = typeof transforms[number]
+const transforms = ["identity", ...rotations, ...reflections] as const
+
+export type Rotation = typeof rotations[number]
+export type Reflection = typeof reflections[number]
+export type Transform = typeof transforms[number]
+
+export function isRotation(trans: Transform): trans is Rotation {
+  return (rotations as readonly string[]).includes(trans)
+}
+
+export function isReflection(trans: Transform): trans is Reflection {
+  return (reflections as readonly string[]).includes(trans)
+}
+
+/**
+ * Return true if the mino is not equal to its mirror image
+ */
+export function isOneSided(mino: Mino): boolean {
+  return reflections.every((t) => transform(mino, t) !== mino)
+}
 
 function transformPoint(
   [i, j]: Point,

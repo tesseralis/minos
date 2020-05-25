@@ -1,5 +1,6 @@
 export const colors = {
-  fg: "#CCC",
+  highlight: "#eee",
+  fg: "#ccc",
   bg: "#202020",
   bg2: "#333",
 }
