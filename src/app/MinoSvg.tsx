@@ -2,14 +2,10 @@ import { css } from "emotion"
 import React from "react"
 
 import type { Point } from "math"
-import { getMino, getPoints } from "mino/mino"
-import type { Mino } from "mino/mino"
-import { getOutline } from "mino/draw"
+import { Mino, getPoints, getOutline, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
 import { Polygon } from "./svg"
-
-const oOctomino = getMino(0b111_101_111, 3)
 
 // TODO figure out why this particular styling is efficient
 const style = css`
@@ -63,7 +59,7 @@ export default function MinoSvg({
         fill={fill}
         strokeWidth={strokeWidth}
       />
-      {mino === oOctomino && (
+      {mino === O_OCTOMINO && (
         <rect
           fill={colors.bg}
           x={cx - size / 2}

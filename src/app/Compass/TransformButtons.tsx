@@ -1,8 +1,7 @@
 import React from "react"
 import { css } from "emotion"
 
-import type { Mino } from "mino/mino"
-import { Transform, transform } from "mino/transform"
+import { Mino, Transform, transform } from "mino"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform } from "app/svg"
 

@@ -76,6 +76,7 @@ export function getMino(data: number, width: number): Mino {
 }
 
 export const MONOMINO = getMino(1, 1)
+export const O_OCTOMINO = getMino(0b111_101_111, 3)
 
 /**
  * Return the mino as a set of coordinate points.

@@ -2,8 +2,7 @@ import React from "react"
 import { css } from "emotion"
 import tinycolor from "tinycolor2"
 
-import type { Mino } from "mino/mino"
-import { Transform, getSymmetry } from "mino/transform"
+import { Mino, Transform, getSymmetry } from "mino"
 import { getSymmetryColor } from "app/graph"
 import { colors } from "style/theme"
 

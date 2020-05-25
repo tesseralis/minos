@@ -4,8 +4,7 @@
  */
 
 import type { Point } from "math"
-import { getShape, getPoints, fromPoints } from "./mino"
-import type { Mino, Dims } from "./mino"
+import { Mino, Dims, getShape, getPoints, fromPoints } from "./mino"
 
 const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 

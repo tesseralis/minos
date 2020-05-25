@@ -1,7 +1,6 @@
 import React from "react"
 import { css } from "emotion"
-import type { Mino } from "mino/mino"
-import { getSize } from "mino/mino"
+import { Mino, getSize } from "mino"
 
 import { getMinoColor } from "app/graph"
 

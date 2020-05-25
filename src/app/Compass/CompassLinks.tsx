@@ -1,11 +1,8 @@
 import React from "react"
 import { scaleLinear } from "d3-scale"
 
-import { toCartesian } from "math"
-import type { Point } from "math"
-
-import type { Mino } from "mino/mino"
-import { getSize } from "mino/mino"
+import { Point, toCartesian } from "math"
+import { Mino, getSize } from "mino"
 
 import { colors } from "style/theme"
 import { getAngleScale, getArc } from "app/utils"

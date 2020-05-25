@@ -3,14 +3,19 @@ import React from "react"
 import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
-import { getMino, isValid, getSize, getPoints, getNeighbors } from "mino/mino"
-import type { Mino } from "mino/mino"
-import { addSquare, removeSquare } from "mino/modify"
-import { getOutline } from "mino/draw"
+import {
+  Mino,
+  isValid,
+  getSize,
+  getPoints,
+  getNeighbors,
+  addSquare,
+  removeSquare,
+  getOutline,
+  O_OCTOMINO,
+} from "mino"
 import { getAnchor } from "app/utils"
 import { colors } from "style/theme"
-
-const oOctomino = getMino(0b111_101_111, 3)
 
 interface Props {
   mino: Mino
@@ -68,7 +73,7 @@ export default function AdjustableMino({
 
   return (
     <g>
-      {mino === oOctomino && (
+      {mino === O_OCTOMINO && (
         <rect
           fill={colors.bg}
           x={cx - size / 2}

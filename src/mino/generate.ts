@@ -2,11 +2,9 @@
  * Functions dealing with generation of polyominoes.
  */
 
-import { MONOMINO, getNeighbors, getPoints, isValid } from "./mino"
+import { Mino, MONOMINO, getNeighbors, getPoints, isValid } from "./mino"
 
 import { addSquare, removeSquare } from "./modify"
-
-import type { Mino } from "./mino"
 
 /**
  * Iterate over all the parents of the mino

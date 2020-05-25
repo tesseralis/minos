@@ -1,8 +1,8 @@
 import React from "react"
 
 import type { Point } from "math"
-import { Mino } from "mino/mino"
-import { Transform, hasSymmetry, isOneSided } from "mino/transform"
+import { Mino, Transform, hasSymmetry, isOneSided } from "mino"
+
 import { Polygon, PolygonProps, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 

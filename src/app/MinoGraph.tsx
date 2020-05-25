@@ -3,11 +3,9 @@ import { css } from "emotion"
 import { memoize } from "lodash-es"
 import { scaleLinear } from "d3-scale"
 
-import type { Mino } from "mino/mino"
-import { getSize } from "mino/mino"
+import { Mino, getSize } from "mino"
 
-import type { Point } from "math"
-import { toCartesian } from "math"
+import { Point, toCartesian } from "math"
 import { getArc, getAngleScale } from "./utils"
 
 import Background from "./Background"

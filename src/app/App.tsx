@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { css } from "emotion"
 
-import type { Mino } from "mino/mino"
+import { Mino } from "mino"
 
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"

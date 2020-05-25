@@ -1,9 +1,8 @@
 import React, { memo, useState, useCallback } from "react"
 import { css } from "emotion"
 
+import { Mino, getSize } from "mino"
 import { colors } from "style/theme"
-import { getSize } from "mino/mino"
-import type { Mino } from "mino/mino"
 
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"

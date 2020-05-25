@@ -3,6 +3,7 @@
  */
 
 import {
+  Mino,
   MAX_WIDTH,
   getMino,
   getData,
@@ -13,7 +14,6 @@ import {
 } from "./mino"
 
 import type { Point } from "math"
-import type { Mino } from "./mino"
 
 /**
  * Return the mino with the width adjusted by delta (e.g. +1 or -1)
