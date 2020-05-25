@@ -143,14 +143,9 @@ export default function SymmetryRing({
   return (
     <g opacity={2 / 3}>
       {/* Hide the strands behind us */}
-      <circle r={radius} fill="#222" />
       <circle
         r={radius}
-        fill={tinycolor(color)
-          .setAlpha(1 / 8)
-          .toString()}
-        stroke={color}
-        strokeWidth={3}
+        fill={tinycolor.mix(color, "#222", 90).toString()}
         className={css`
           pointer-events: initial;
         `}
@@ -208,6 +203,7 @@ export default function SymmetryRing({
               .toString()}
           />
         ))}
+        <circle r={radius} fill="none" stroke={color} strokeWidth={3} />
       </g>
     </g>
   )
