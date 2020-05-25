@@ -10,7 +10,6 @@ import { getSize } from "mino/mino"
 
 import { colors } from "style/theme"
 import { getAngleScale, getArc } from "app/utils"
-import { Line } from "app/svg"
 import {
   canonicalEquals,
   getSortedParents,
@@ -20,12 +19,12 @@ import {
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
 } from "app/graph"
+
 import SelectableMino from "app/SelectableMino"
 
+import Background from "./CompassBackground"
 import AdjustableMino from "./AdjustableMino"
 import SymmetryRing from "./SymmetryRing"
-
-const borderColor = "#aaa"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -45,37 +44,6 @@ const radius = 90
 const outerRadius = radius + 30
 const svgSize = outerRadius + 5
 const halfRadius = (innerRadius + outerRadius) / 2
-
-function Background() {
-  return (
-    <g opacity={2 / 3}>
-      <circle
-        className={css`
-          pointer-events: initial;
-        `}
-        cx={0}
-        cy={0}
-        r={outerRadius}
-        fill={colors.bg}
-        stroke={borderColor}
-      />
-      <Line
-        p1={[-outerRadius, 0]}
-        p2={[-halfRadius, 0]}
-        stroke={borderColor}
-        strokeWidth={1}
-      />
-      <Line
-        p1={[halfRadius, 0]}
-        p2={[outerRadius, 0]}
-        stroke={borderColor}
-        strokeWidth={1}
-      />
-      <circle cx={-halfRadius} cy={0} r={3} fill={borderColor} />
-      <circle cx={halfRadius} cy={0} r={3} fill={borderColor} />
-    </g>
-  )
-}
 
 /**
  * Displays a mino and its direct children and parents.
@@ -198,7 +166,7 @@ export default function Compass({ mino, onSelect }: Props) {
         pointer-events: none;
       `}
     >
-      <Background />
+      <Background radius={outerRadius} innerRadius={halfRadius} />
       <Strands
         minos={getSortedParents(mino)}
         maxNumMinos={MAX_NUM_PARENTS}
