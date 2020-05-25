@@ -8,8 +8,8 @@ import type { Point } from "math"
 import type { Mino } from "mino/mino"
 import { getSize } from "mino/mino"
 
-import { getAngleScale, getArc } from "./utils"
-import { Line } from "./svg"
+import { getAngleScale, getArc } from "app/utils"
+import { Line } from "app/svg"
 import {
   canonicalEquals,
   getSortedParents,
@@ -18,10 +18,10 @@ import {
   getLinkColor,
   MAX_NUM_CHILDREN,
   MAX_NUM_PARENTS,
-} from "./graph"
+} from "../graph"
 
 import AdjustableMino from "./AdjustableMino"
-import SelectableMino from "./SelectableMino"
+import SelectableMino from "../SelectableMino"
 import SymmetryRing from "./SymmetryRing"
 
 function getSpread(maxSpread: number, count: number) {

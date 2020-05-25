@@ -7,7 +7,7 @@ import { getMino, isValid, getSize, getPoints, getNeighbors } from "mino/mino"
 import type { Mino } from "mino/mino"
 import { addSquare, removeSquare } from "mino/modify"
 import { getOutline } from "mino/draw"
-import { getAnchor } from "./utils"
+import { getAnchor } from "app/utils"
 import { colors } from "style/theme"
 
 const oOctomino = getMino(0b111_101_111, 3)
