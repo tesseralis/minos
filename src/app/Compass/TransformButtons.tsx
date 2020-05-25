@@ -6,12 +6,7 @@ import { Transform, transform } from "mino/transform"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform } from "app/svg"
 
-export const reflectionOrder = [
-  "flipVert",
-  "flipMainDiag",
-  "flipHoriz",
-  "flipMinorDiag",
-] as const
+import { reflectionOrder } from "./ReflectionAxes"
 
 // TODO replace these icons with actual SVG
 const rotationSymbols = {

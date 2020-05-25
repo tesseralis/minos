@@ -30,6 +30,13 @@ export function isReflection(trans: Transform): trans is Reflection {
   return (reflections as readonly string[]).includes(trans)
 }
 
+/**
+ * Return true if the mino is not equal to its mirror image
+ */
+export function isOneSided(mino: Mino): boolean {
+  return reflections.every((t) => transform(mino, t) !== mino)
+}
+
 function transformPoint(
   [i, j]: Point,
   [w, h]: Dims,
