@@ -14,8 +14,8 @@ interface RotMarkerProps extends Omit<PolygonProps, "points"> {
 }
 
 function RotationMarker({ achiral, ...svgProps }: RotMarkerProps) {
-  const size = 7.5
-  const points: Point[] = [[0, -size], [size, 0], achiral ? [-size, 0] : [0, 0]]
+  const size = 10
+  const points: Point[] = [[0, size], [size, 0], achiral ? [-size, 0] : [0, 0]]
   return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 
@@ -93,6 +93,7 @@ function ReflectionAxes({
               p1={[-radius, 0]}
               p2={[radius, 0]}
               stroke={hovered === i ? "white" : stroke}
+              strokeWidth={hovered === i ? 4 : 2}
               transform={svgTransform().rotate(45 * i)}
             />
           ),
@@ -156,7 +157,6 @@ export default function SymmetryRing({
         radius={radius}
         symmetries={reflections}
         stroke={color}
-        strokeWidth={2}
         hovered={reflectionList.indexOf(hovered as any)}
       />
       <RotationMarkers
@@ -171,11 +171,14 @@ export default function SymmetryRing({
           <circle
             className={css`
               cursor: pointer;
+              fill: ${color};
               pointer-events: initial;
+              :hover {
+                fill: white;
+              }
             `}
             key={t}
             r={5}
-            fill={color}
             onClick={() => onSelect?.(transform(mino, t))}
             onMouseOver={() => setHovered(t)}
             onMouseOut={() => setHovered(undefined)}
@@ -189,11 +192,14 @@ export default function SymmetryRing({
           <circle
             key={t}
             className={css`
+              fill: ${color};
               cursor: pointer;
               pointer-events: initial;
+              :hover {
+                fill: white;
+              }
             `}
             r={5}
-            fill={color}
             onClick={() => onSelect?.(transform(mino, t as any))}
             onMouseOver={() => setHovered(t)}
             onMouseOut={() => setHovered(undefined)}
