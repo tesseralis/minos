@@ -3,13 +3,13 @@ import { css } from "emotion"
 import tinycolor from "tinycolor2"
 
 import type { Mino } from "mino/mino"
-import { Transform, getSymmetry, hasSymmetry, transform } from "mino/transform"
+import { Transform, getSymmetry, hasSymmetry } from "mino/transform"
 import { getSymmetryColor } from "app/graph"
-import { svgTransform } from "app/svg"
 import { colors } from "style/theme"
 
 import RotationMarkers from "./RotationMarkers"
 import ReflectionAxes from "./ReflectionAxes"
+import TransformButtons from "./TransformButtons"
 
 const reflectionList = [
   "flipVert",
@@ -31,13 +31,6 @@ const rotationHover: any = {
   rotateRight: 1,
   rotateHalf: 2,
   rotateLeft: 3,
-}
-
-// TODO replace these icons with actual SVG
-const rotationSymbols: any = {
-  rotateRight: "⃕",
-  rotateHalf: "↻",
-  rotateLeft: "⃔",
 }
 
 /**
@@ -82,58 +75,14 @@ export default function SymmetryRing({
         order={rotationOrder}
         hovered={rotationHover[hovered as any] ?? 0}
       />
-      <g>
-        {reflectionList.map((t, i) => (
-          <text
-            className={css`
-              cursor: pointer;
-              fill: ${color};
-              pointer-events: initial;
-              dominant-baseline: middle;
-              :hover {
-                fill: white;
-              }
-            `}
-            key={t}
-            onClick={() => onSelect?.(transform(mino, t))}
-            onMouseOver={() => setHovered(t)}
-            onMouseOut={() => setHovered(undefined)}
-            transform={svgTransform()
-              .translate(radius + 5, 0)
-              .rotate(45 * i)
-              .toString()}
-          >
-            ↕︎
-          </text>
-        ))}
-        {(["rotateLeft", "rotateHalf", "rotateRight"] as const).map((t, i) => (
-          <text
-            key={t}
-            className={css`
-              fill: ${color};
-              cursor: pointer;
-              font-size: 20px;
-              pointer-events: initial;
-              text-anchor: middle;
-              /* TODO this is sketchy -- browser support is unknown */
-              dominant-baseline: ${t === "rotateHalf" ? "initial" : "middle"};
-              :hover {
-                fill: white;
-              }
-            `}
-            onClick={() => onSelect?.(transform(mino, t as any))}
-            onMouseOver={() => setHovered(t)}
-            onMouseOut={() => setHovered(undefined)}
-            transform={svgTransform()
-              .translate(0, -(radius + 5))
-              .rotate(30 * (i - 1))
-              .toString()}
-          >
-            {rotationSymbols[t]}
-          </text>
-        ))}
-        <circle r={radius} fill="none" stroke={color} strokeWidth={3} />
-      </g>
+      <TransformButtons
+        mino={mino}
+        radius={radius + 5}
+        color={color}
+        onHover={setHovered}
+        onSelect={onSelect}
+      />
+      <circle r={radius} fill="none" stroke={color} strokeWidth={3} />
     </g>
   )
 }
