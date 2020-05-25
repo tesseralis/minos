@@ -4,7 +4,7 @@ import tinycolor from "tinycolor2"
 
 import type { Point } from "math"
 import type { Mino } from "mino/mino"
-import { getSymmetry, hasSymmetry } from "mino/transform"
+import { getSymmetry, hasSymmetry, transform } from "mino/transform"
 import { getSymmetryColor } from "./graph"
 import { Line, LineProps, Polygon, PolygonProps, svgTransform } from "./svg"
 
@@ -99,12 +99,18 @@ interface Props {
   mino: Mino
   radius: number
   onHover?(hovered: boolean): void
+  onSelect?(mino: Mino): void
 }
 
 /**
  * A ring that displays visual indicators for the symmetries of the mino
  */
-export default function SymmetryRing({ mino, radius, onHover }: Props) {
+export default function SymmetryRing({
+  mino,
+  radius,
+  onHover,
+  onSelect,
+}: Props) {
   const color = getSymmetryColor(getSymmetry(mino))
 
   const reflections = reflectionList.map((t) => hasSymmetry(mino, t))
@@ -141,6 +147,64 @@ export default function SymmetryRing({ mino, radius, onHover }: Props) {
         achiral={symmetric}
         order={rotationOrder}
       />
+      <g>
+        {reflectionList.map((t, i) => (
+          <circle
+            className={css`
+              cursor: pointer;
+              pointer-events: initial;
+            `}
+            key={t}
+            r={5}
+            fill={color}
+            onClick={() => onSelect?.(transform(mino, t))}
+            transform={svgTransform()
+              .translate(0, radius + 15)
+              .rotate(45 * i)
+              .toString()}
+          />
+        ))}
+        <circle
+          className={css`
+            cursor: pointer;
+            pointer-events: initial;
+          `}
+          r={5}
+          fill={color}
+          onClick={() => onSelect?.(transform(mino, "rotateHalf"))}
+          transform={svgTransform()
+            .translate(0, radius + 15)
+            .rotate(180)
+            .toString()}
+        />
+        <circle
+          className={css`
+            cursor: pointer;
+            pointer-events: initial;
+          `}
+          r={5}
+          fill={color}
+          onClick={() => onSelect?.(transform(mino, "rotateLeft"))}
+          transform={svgTransform()
+            .translate(0, radius + 15)
+            .rotate(165)
+            .toString()}
+        />
+        <circle
+          className={css`
+            cursor: pointer;
+            pointer-events: initial;
+          `}
+          r={5}
+          fill={color}
+          onClick={() => onSelect?.(transform(mino, "rotateRight"))}
+          transform={svgTransform()
+            .translate(0, radius + 15)
+            .rotate(195)
+            .toString()}
+        />
+        ))}
+      </g>
     </g>
   )
 }

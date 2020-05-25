@@ -217,6 +217,7 @@ export default function Compass({ mino, onSelect }: Props) {
         mino={mino}
         radius={innerRadius}
         onHover={setInnerHovered}
+        onSelect={onSelect}
       />
       <AdjustableMino
         mino={mino}
