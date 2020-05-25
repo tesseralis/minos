@@ -18,7 +18,7 @@ const transforms = [
   "flipMinorDiag",
 ] as const
 
-type Transform = typeof transforms[number]
+export type Transform = typeof transforms[number]
 
 function transformPoint(
   [i, j]: Point,
