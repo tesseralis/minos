@@ -202,13 +202,6 @@ export function* rowBits(mino: Mino): Generator<number> {
   }
 }
 
-function padLeft(str: string, char: string, width: number) {
-  if (str.length >= width) {
-    return str
-  }
-  return char.repeat(width - str.length) + str
-}
-
 interface DisplayOpts {
   block?: string
   space?: string
@@ -228,7 +221,7 @@ export function displayMino(
   const w = getWidth(mino)
   const result = []
   for (const row of rowBits(mino)) {
-    const str = padLeft(row.toString(2), "0", w)
+    const str = row.toString(2).padStart(w, "0")
     result.push([...str].join(" "))
   }
   return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)
