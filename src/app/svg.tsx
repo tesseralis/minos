@@ -34,6 +34,7 @@ interface ExtendedSVGProps {
   transform?: SVGTransform
   fill?: Color | string
   stroke?: Color | string
+  onHover?(hovered: boolean): void
 }
 
 interface SVGProps<T>
@@ -44,6 +45,7 @@ function getBaseSVGProps<T>({
   transform,
   fill,
   stroke,
+  onHover,
   ...props
 }: SVGProps<T>): React.SVGProps<T> {
   return {
@@ -51,6 +53,8 @@ function getBaseSVGProps<T>({
     transform: transform?.toString(),
     fill: fill?.toString(),
     stroke: stroke?.toString(),
+    onMouseOver: onHover ? () => onHover(true) : undefined,
+    onMouseOut: onHover ? () => onHover(false) : undefined,
   }
 }
 
@@ -104,4 +108,12 @@ export interface RectProps extends Omit<SVGProps<SVGRectElement>, "x" | "y"> {
 
 export function Rect({ coord: [x, y] = [0, 0], ...svgProps }: RectProps) {
   return <rect {...getBaseSVGProps(svgProps)} x={x} y={y} />
+}
+
+export interface TextProps extends Omit<SVGProps<SVGTextElement>, "x" | "y"> {
+  coord?: Point
+}
+
+export function Text({ coord: [x, y] = [0, 0], ...svgProps }: TextProps) {
+  return <text {...getBaseSVGProps(svgProps)} x={x} y={y} />
 }

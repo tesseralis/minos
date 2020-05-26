@@ -35,13 +35,12 @@ export default function SymmetryRing({
     <g opacity={2 / 3}>
       {/* Hide the strands behind the component */}
       <Circle
-        r={radius}
-        fill={tinycolor.mix(color, colors.bg, 90)}
         className={css`
           pointer-events: initial;
         `}
-        onMouseOver={() => onHover?.(true)}
-        onMouseOut={() => onHover?.(false)}
+        r={radius}
+        fill={tinycolor.mix(color, colors.bg, 90)}
+        onHover={onHover}
       />
       <ReflectionAxes
         mino={mino}

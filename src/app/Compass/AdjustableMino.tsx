@@ -50,16 +50,12 @@ export default function AdjustableMino({
   const [hovered, setHovered] = React.useState(false)
   const showSquares = showEditable || hovered
 
-  const hoverEvents = (mino: Mino) => ({
-    onMouseOver: () => {
-      onHover?.(mino)
-      setHovered(true)
-    },
-    onMouseOut: () => {
-      onHover?.()
-      setHovered(false)
-    },
-  })
+  function hoverHandler(mino: Mino) {
+    return (hovered: boolean) => {
+      onHover?.(hovered ? mino : undefined)
+      setHovered(hovered)
+    }
+  }
 
   const strokeWidth = size / 8
   const minoPoints = [...getCoords(mino)]
@@ -105,7 +101,7 @@ export default function AdjustableMino({
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(child)}
-              {...hoverEvents(child)}
+              onHover={hoverHandler(child)}
             />
           )
         })}
@@ -135,7 +131,7 @@ export default function AdjustableMino({
             height={size}
             strokeWidth={strokeWidth * 0.75}
             onClick={() => canRemove && onSelect?.(parent)}
-            {...hoverEvents(parent)}
+            onHover={hoverHandler(parent)}
           />
         )
       })}

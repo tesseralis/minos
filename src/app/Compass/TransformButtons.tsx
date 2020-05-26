@@ -3,7 +3,7 @@ import { css } from "emotion"
 
 import { Mino, Transform, transform } from "mino"
 import { colors } from "style/theme"
-import { SVGTransform, svgTransform } from "app/svg"
+import { SVGTransform, svgTransform, Text } from "app/svg"
 
 import { reflectionOrder } from "./ReflectionAxes"
 
@@ -46,7 +46,7 @@ export default function TransformButtons({
 
   function Button({ icon, trans, svgTrans, className }: ButtonProps) {
     return (
-      <text
+      <Text
         className={css`
           cursor: pointer;
           fill: ${color};
@@ -58,12 +58,11 @@ export default function TransformButtons({
           ${className}
         `}
         onClick={() => onSelect?.(transform(mino, trans))}
-        onMouseOver={() => onHover?.(trans)}
-        onMouseOut={() => onHover?.(undefined)}
-        transform={svgTrans.toString()}
+        onHover={(hovered) => onHover?.(hovered ? trans : undefined)}
+        transform={svgTrans}
       >
         {icon}
-      </text>
+      </Text>
     )
   }
 

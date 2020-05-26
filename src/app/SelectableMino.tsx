@@ -61,8 +61,7 @@ export default memo(function SelectableMino({
         tabIndex={0}
         center={coord}
         r={(n * size) / 2}
-        onMouseOver={() => handleHover(true)}
-        onMouseOut={() => handleHover(false)}
+        onHover={handleHover}
       />
     </g>
   )
