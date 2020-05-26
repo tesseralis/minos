@@ -109,7 +109,7 @@ export default function CompassLinks({
     reverse,
     linkColor,
   }: StrandsProps) {
-    const gen = getSize(links[0].mino)
+    const gen = getSize(links[0]?.mino)
     const numMinos = links.length
     // Scale up each mino based on how many minos there are.
     // The less minos compared to the max possible, the larger the scaling
