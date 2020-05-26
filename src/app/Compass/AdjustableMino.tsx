@@ -2,12 +2,12 @@ import { css } from "emotion"
 import React from "react"
 import tinycolor from "tinycolor2"
 
-import type { Point } from "math"
+import { Point } from "math"
 import {
   Mino,
   isValid,
   getSize,
-  getPoints,
+  getCoords,
   getNeighbors,
   addSquare,
   removeSquare,
@@ -62,7 +62,7 @@ export default function AdjustableMino({
   })
 
   const strokeWidth = size / 8
-  const minoPoints = [...getPoints(mino)]
+  const minoPoints = [...getCoords(mino)]
   const outline = getOutline(minoPoints)
   const scale = ([x, y]: Point) => [x * size, y * size] as Point
   const scaledOutline = outline.map(scale)

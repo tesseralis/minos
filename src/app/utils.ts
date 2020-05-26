@@ -1,5 +1,5 @@
-import type { Point } from "math"
 import {
+  Point,
   TAU,
   equalsToPrecision,
   getPointAngle,

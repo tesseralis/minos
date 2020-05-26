@@ -1,8 +1,8 @@
 import { css } from "emotion"
 import React from "react"
 
-import type { Point } from "math"
-import { Mino, getPoints, getOutline, O_OCTOMINO } from "mino"
+import { Point } from "math"
+import { Mino, getCoords, getOutline, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
 import { Polygon } from "./svg"
@@ -39,7 +39,7 @@ export default function MinoSvg({
   anchor = "center center",
 }: Props) {
   const strokeWidth = size / 8
-  const minoPoints = [...getPoints(mino)]
+  const minoPoints = [...getCoords(mino)]
   const outline = getOutline(minoPoints)
   const scale = ([x, y]: Point) => [x * size, y * size] as Point
   const scaledOutline = outline.map(scale)

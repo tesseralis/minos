@@ -1,8 +1,8 @@
 export type { Mino } from "./mino"
 export {
   getSize,
-  getPoints,
-  fromPoints,
+  getCoords,
+  fromCoords,
   isValid,
   getNeighbors,
   MONOMINO,

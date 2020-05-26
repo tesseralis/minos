@@ -1,6 +1,6 @@
 import React from "react"
 
-import type { Point } from "math"
+import { Point } from "math"
 import { Mino, Transform, hasSymmetry, isOneSided } from "mino"
 
 import { Polygon, PolygonProps, svgTransform } from "app/svg"

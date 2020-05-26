@@ -1,42 +1,42 @@
 import { isEqual, minBy } from "lodash-es"
 
-import type { Point } from "math"
+import { Coord } from "./mino"
 
 type Direction = "left" | "right" | "up" | "down"
 
-function hasPoint(points: Point[], p: Point) {
-  return points.some((p2) => isEqual(p, p2))
+function hasCoord(coords: Coord[], p: Coord) {
+  return coords.some((p2) => isEqual(p, p2))
 }
-function canTurn(points: Point[], [x, y]: Point, dir: Direction) {
+function canTurn(points: Coord[], [x, y]: Coord, dir: Direction) {
   switch (dir) {
     case "left":
-      return !hasPoint(points, [x - 1, y])
+      return !hasCoord(points, [x - 1, y])
     case "down":
-      return !hasPoint(points, [x, y])
+      return !hasCoord(points, [x, y])
     case "right":
-      return !hasPoint(points, [x, y - 1])
+      return !hasCoord(points, [x, y - 1])
     case "up":
-      return !hasPoint(points, [x - 1, y - 1])
+      return !hasCoord(points, [x - 1, y - 1])
     default:
       throw new Error("invalid direction")
   }
 }
-function isBlocked(points: Point[], [x, y]: Point, dir: Direction) {
+function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
   switch (dir) {
     case "up":
-      return hasPoint(points, [x, y - 1])
+      return hasCoord(coords, [x, y - 1])
     case "right":
-      return hasPoint(points, [x, y])
+      return hasCoord(coords, [x, y])
     case "down":
-      return hasPoint(points, [x - 1, y])
+      return hasCoord(coords, [x - 1, y])
     case "left":
-      return hasPoint(points, [x - 1, y - 1])
+      return hasCoord(coords, [x - 1, y - 1])
     default:
       throw new Error("invalid direction")
   }
 }
 
-function move([x, y]: Point, dir: Direction): Point {
+function move([x, y]: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
       return [x - 1, y]
@@ -80,16 +80,19 @@ function turnRight(dir: Direction) {
   }
 }
 
-export function getOutline(minoPoints: Point[]) {
-  const origin = minBy(minoPoints)!
+/**
+ * Return the coordinates for the outline of a mino
+ */
+export function getOutline(minoCoords: Coord[]) {
+  const origin = minBy(minoCoords)!
   let pos = origin
   let dir: Direction = "down"
   const result = [origin]
   do {
-    if (canTurn(minoPoints, pos, dir)) {
+    if (canTurn(minoCoords, pos, dir)) {
       result.push(pos)
       dir = turnLeft(dir)
-    } else if (isBlocked(minoPoints, pos, dir)) {
+    } else if (isBlocked(minoCoords, pos, dir)) {
       result.push(pos)
       dir = turnRight(dir)
     } else {

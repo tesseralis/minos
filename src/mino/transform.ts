@@ -3,8 +3,7 @@
  * rotation and reflection.
  */
 
-import type { Point } from "math"
-import { Mino, Dims, getShape, getPoints, fromPoints } from "./mino"
+import { Coord, Mino, Dims, getShape, getCoords, fromCoords } from "./mino"
 
 const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -36,11 +35,11 @@ export function isOneSided(mino: Mino): boolean {
   return reflections.every((t) => transform(mino, t) !== mino)
 }
 
-function transformPoint(
-  [i, j]: Point,
+function transformCoord(
+  [i, j]: Coord,
   [w, h]: Dims,
   transform: Transform,
-): Point {
+): Coord {
   const i1 = h - 1 - i
   const j1 = w - 1 - j
   const transforms = {
@@ -57,9 +56,9 @@ function transformPoint(
 }
 
 export function transform(mino: Mino, transform: Transform) {
-  return fromPoints(
-    [...getPoints(mino)].map((p) =>
-      transformPoint(p, getShape(mino), transform),
+  return fromCoords(
+    [...getCoords(mino)].map((p) =>
+      transformCoord(p, getShape(mino), transform),
     ),
   )
 }

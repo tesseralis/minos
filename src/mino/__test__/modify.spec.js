@@ -4,7 +4,7 @@ describe("modify", () => {
   describe("addSquare", () => {
     // L tetromino
     const mino = getMino(0b100_111, 3)
-    it("works correctly on an inner point", () => {
+    it("works correctly on an inner coordinate", () => {
       expect(addSquare(mino, [1, 1])).toEqual(getMino(0b110_111, 3))
     })
 

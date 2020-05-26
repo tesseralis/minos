@@ -1,5 +1,5 @@
 import React from "react"
-import type { Point } from "math"
+import { Point } from "math"
 
 export class SVGTransform {
   #result = ""

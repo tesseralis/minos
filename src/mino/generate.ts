@@ -2,7 +2,7 @@
  * Functions dealing with generation of polyominoes.
  */
 
-import { Mino, MONOMINO, getNeighbors, getPoints, isValid } from "./mino"
+import { Mino, MONOMINO, getNeighbors, getCoords, isValid } from "./mino"
 
 import { addSquare, removeSquare } from "./modify"
 
@@ -10,7 +10,7 @@ import { addSquare, removeSquare } from "./modify"
  * Iterate over all the parents of the mino
  */
 export function* getParents(mino: Mino): Generator<Mino> {
-  for (const square of getPoints(mino)) {
+  for (const square of getCoords(mino)) {
     const parent = removeSquare(mino, square)
     if (isValid(parent)) {
       yield parent
