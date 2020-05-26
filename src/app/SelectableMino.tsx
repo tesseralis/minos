@@ -3,14 +3,14 @@ import { css } from "emotion"
 
 import { Mino, getSize } from "mino"
 import { colors } from "style/theme"
+import { Point, Circle } from "app/svg"
 
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"
 
 interface Props {
   mino: Mino
-  cx: number
-  cy: number
+  coord: Point
   size: number
   fill: string
   stroke: string
@@ -21,8 +21,7 @@ interface Props {
 
 export default memo(function SelectableMino({
   mino,
-  cx,
-  cy,
+  coord,
   size,
   fill,
   stroke,
@@ -47,13 +46,12 @@ export default memo(function SelectableMino({
     <g>
       <MinoSvg
         mino={mino}
-        cx={cx}
-        cy={cy}
+        coord={coord}
         size={size * (hovered ? 1.25 : 1)}
         fill={fill}
         stroke={selected ? colors.highlight : stroke}
       />
-      <circle
+      <Circle
         {...handleClick}
         className={css`
           opacity: 0;
@@ -61,8 +59,7 @@ export default memo(function SelectableMino({
           pointer-events: initial;
         `}
         tabIndex={0}
-        cx={cx}
-        cy={cy}
+        center={coord}
         r={(n * size) / 2}
         onMouseOver={() => handleHover(true)}
         onMouseOut={() => handleHover(false)}

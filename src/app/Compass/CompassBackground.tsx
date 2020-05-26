@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "emotion"
 import { colors } from "style/theme"
-import { Line } from "app/svg"
+import { Circle, Line } from "app/svg"
 
 const borderColor = "#aaa"
 
@@ -13,12 +13,10 @@ interface Props {
 export default function Background({ radius, innerRadius }: Props) {
   return (
     <g opacity={2 / 3}>
-      <circle
+      <Circle
         className={css`
           pointer-events: initial;
         `}
-        cx={0}
-        cy={0}
         r={radius}
         fill={colors.bg}
         stroke={borderColor}
@@ -35,8 +33,8 @@ export default function Background({ radius, innerRadius }: Props) {
         stroke={borderColor}
         strokeWidth={1}
       />
-      <circle cx={-innerRadius} cy={0} r={3} fill={borderColor} />
-      <circle cx={innerRadius} cy={0} r={3} fill={borderColor} />
+      <Circle center={[-innerRadius, 0]} r={3} fill={borderColor} />
+      <Circle center={[innerRadius, 0]} r={3} fill={borderColor} />
     </g>
   )
 }

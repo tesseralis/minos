@@ -4,6 +4,7 @@ import tinycolor from "tinycolor2"
 
 import { Mino, Transform, getSymmetry } from "mino"
 import { getSymmetryColor } from "app/graph"
+import { Circle } from "app/svg"
 import { colors } from "style/theme"
 
 import RotationMarkers from "./RotationMarkers"
@@ -33,9 +34,9 @@ export default function SymmetryRing({
   return (
     <g opacity={2 / 3}>
       {/* Hide the strands behind the component */}
-      <circle
+      <Circle
         r={radius}
-        fill={tinycolor.mix(color, colors.bg, 90).toString()}
+        fill={tinycolor.mix(color, colors.bg, 90)}
         className={css`
           pointer-events: initial;
         `}
@@ -61,7 +62,7 @@ export default function SymmetryRing({
         onHover={setHovered}
         onSelect={onSelect}
       />
-      <circle r={radius} fill="none" stroke={color} strokeWidth={3} />
+      <Circle r={radius} fill="none" stroke={color} strokeWidth={3} />
     </g>
   )
 }
