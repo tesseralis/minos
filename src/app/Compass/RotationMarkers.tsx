@@ -1,9 +1,8 @@
 import React from "react"
 
-import { Point } from "math"
 import { Mino, Transform, hasSymmetry, isOneSided } from "mino"
 
-import { Polygon, PolygonProps, svgTransform } from "app/svg"
+import { Point, Polygon, PolygonProps, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 
 interface RotMarkerProps extends Omit<PolygonProps, "points"> {

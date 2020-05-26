@@ -5,7 +5,7 @@ import { scaleLinear } from "d3-scale"
 
 import { Mino, getSize } from "mino"
 
-import { Point, toCartesian } from "math"
+import { toCartesian } from "math"
 import { getArc, getAngleScale } from "./utils"
 
 import Background from "./Background"
@@ -130,7 +130,7 @@ const Orbital = memo(
  */
 const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
-  const origin: Point = [0, -ringRadius(gen) * 0.75]
+  const origin = [0, -ringRadius(gen) * 0.75] as const
   const src = getCoords(getIndex(srcMino))
   const tgt = getCoords(getIndex(tgtMino))
 

@@ -1,11 +1,10 @@
 import { css } from "emotion"
 import React from "react"
 
-import { Point } from "math"
 import { Mino, getCoords, getOutline, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
-import { Polygon } from "./svg"
+import { Point, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
 const style = css`
