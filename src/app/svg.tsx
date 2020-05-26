@@ -1,7 +1,12 @@
+/**
+ * Provides wrappers for SVG elements with Props updated for convenience.
+ */
+
 import React from "react"
 import { Point } from "math"
 import type { Instance as Color } from "tinycolor2"
 
+// Re-export Point for convenience
 export type { Point } from "math"
 export type { Instance as Color } from "tinycolor2"
 
