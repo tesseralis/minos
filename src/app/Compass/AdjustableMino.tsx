@@ -2,7 +2,6 @@ import { css } from "emotion"
 import React from "react"
 import tinycolor from "tinycolor2"
 
-import { Point } from "math"
 import {
   Mino,
   isValid,
@@ -14,6 +13,7 @@ import {
   getOutline,
   O_OCTOMINO,
 } from "mino"
+import { Point, Rect } from "app/svg"
 import { getAnchor } from "app/utils"
 import { colors } from "style/theme"
 
@@ -50,16 +50,12 @@ export default function AdjustableMino({
   const [hovered, setHovered] = React.useState(false)
   const showSquares = showEditable || hovered
 
-  const hoverEvents = (mino: Mino) => ({
-    onMouseOver: () => {
-      onHover?.(mino)
-      setHovered(true)
-    },
-    onMouseOut: () => {
-      onHover?.()
-      setHovered(false)
-    },
-  })
+  function hoverHandler(mino: Mino) {
+    return (hovered: boolean) => {
+      onHover?.(hovered ? mino : undefined)
+      setHovered(hovered)
+    }
+  }
 
   const strokeWidth = size / 8
   const minoPoints = [...getCoords(mino)]
@@ -68,16 +64,15 @@ export default function AdjustableMino({
   const scaledOutline = outline.map(scale)
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
-  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy]
+  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy] as Point
   const nbrPoints = [...getNeighbors(mino)]
 
   return (
     <g>
       {mino === O_OCTOMINO && (
-        <rect
+        <Rect
           fill={colors.bg}
-          x={cx - size / 2}
-          y={cy - size / 2}
+          coord={translate(scale([1, 1]))}
           width={size}
           height={size}
           stroke="none"
@@ -86,10 +81,9 @@ export default function AdjustableMino({
       {/* Draw the neighboring points of the mino that can be clicked */}
       {getSize(mino) < 8 &&
         nbrPoints.map((nbrPoint, i) => {
-          const [x, y] = translate(scale(nbrPoint))
           const child = addSquare(mino, nbrPoint)
           return (
-            <rect
+            <Rect
               className={css`
                 cursor: pointer;
                 pointer-events: initial;
@@ -100,25 +94,23 @@ export default function AdjustableMino({
                 }
               `}
               key={i}
-              x={x}
-              y={y}
+              coord={translate(scale(nbrPoint))}
               width={size}
               height={size}
               fill={colors.highlight}
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(child)}
-              {...hoverEvents(child)}
+              onHover={hoverHandler(child)}
             />
           )
         })}
       {minoPoints.map((point, i) => {
-        const [x, y] = translate(scale(point))
         // Make all removable points in the mino selectable
         const parent = removeSquare(mino, point)
         const canRemove = isValid(parent)
         return (
-          <rect
+          <Rect
             className={css`
               fill: ${fill};
               ${canRemove &&
@@ -134,13 +126,12 @@ export default function AdjustableMino({
             `}
             style={{ stroke }}
             key={i}
-            x={x}
-            y={y}
+            coord={translate(scale(point))}
             width={size}
             height={size}
             strokeWidth={strokeWidth * 0.75}
             onClick={() => canRemove && onSelect?.(parent)}
-            {...hoverEvents(parent)}
+            onHover={hoverHandler(parent)}
           />
         )
       })}

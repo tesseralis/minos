@@ -48,15 +48,15 @@ export default function CompassLinks({
     // block size of the relative mino
     size: number
     // x and y coordinates of the relative mino
-    coords: Point
+    coord: Point
   }
 
   /**
    * A link to a parent or child mino
    */
-  function Strand({ mino, linkColor, coords, size }: StrandProps) {
+  function Strand({ mino, linkColor, coord, size }: StrandProps) {
     const isHovered = !!hovered && canonicalEquals(hovered, mino)
-    const linkPath = getArc(coords, [0, 0], [0, -radius * 2])
+    const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
     const { fill, stroke } = getMinoColor(mino)
     return (
       <g>
@@ -69,8 +69,7 @@ export default function CompassLinks({
         />
         <SelectableMino
           mino={isHovered ? hovered! : mino}
-          cx={coords[0]}
-          cy={coords[1]}
+          coord={coord}
           size={size}
           onHover={onHover}
           onSelect={onSelect}
@@ -134,7 +133,7 @@ export default function CompassLinks({
               mino={m}
               linkColor={linkColor(m)}
               size={scaledSize}
-              coords={toCartesian({
+              coord={toCartesian({
                 radius: scaledRadius,
                 angle: getAngle(i),
               })}

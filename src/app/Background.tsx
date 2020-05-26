@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect } from "react"
+import { Rect } from "app/svg"
 
 import useClickHandler from "./useClickHandler"
 
@@ -30,14 +31,5 @@ export default function Background({ onClick }: Props) {
 
   useWindowEvent("keydown", handleEscape)
 
-  return (
-    <rect
-      x={0}
-      y={0}
-      width="100%"
-      height="100%"
-      opacity={0}
-      {...clickHandler}
-    />
-  )
+  return <Rect width="100%" height="100%" opacity={0} {...clickHandler} />
 }

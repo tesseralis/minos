@@ -4,7 +4,7 @@ import React from "react"
 import { Mino, getCoords, getOutline, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
-import { Point, Polygon } from "./svg"
+import { Point, Rect, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
 const style = css`
@@ -13,8 +13,7 @@ const style = css`
 
 interface Props {
   mino: Mino
-  cx: number
-  cy: number
+  coord: Point
   size: number
   fill: string
   stroke: string
@@ -30,13 +29,13 @@ interface Props {
  */
 export default function MinoSvg({
   mino,
-  cx,
-  cy,
+  coord,
   size,
   fill,
   stroke,
   anchor = "center center",
 }: Props) {
+  const [cx, cy] = coord
   const strokeWidth = size / 8
   const minoPoints = [...getCoords(mino)]
   const outline = getOutline(minoPoints)
@@ -59,22 +58,20 @@ export default function MinoSvg({
         strokeWidth={strokeWidth}
       />
       {mino === O_OCTOMINO && (
-        <rect
+        <Rect
           fill={colors.bg}
-          x={cx - size / 2}
-          y={cy - size / 2}
+          coord={translate(scale([1, 1]))}
           width={size}
           height={size}
           stroke="none"
         />
       )}
       {points.map((point, i) => (
-        <rect
+        <Rect
           className={style}
           style={{ stroke }}
           key={i}
-          x={point[0]}
-          y={point[1]}
+          coord={point}
           width={size}
           height={size}
           fill="none"
