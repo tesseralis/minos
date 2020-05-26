@@ -52,13 +52,13 @@ export default function AdjustableMino({
   onHover,
   onSelect,
 }: Props) {
-  // const [hovered, setHovered] = React.useState(false)
-  const showSquares = showEditable
+  const [innerHovered, setInnerHovered] = React.useState(false)
+  const showSquares = showEditable || innerHovered
 
   function hoverHandler(mino: Mino, coord: Coord) {
     return (hovered: boolean) => {
       onHover?.(hovered ? { mino, coord } : undefined)
-      // setHovered(hovered)
+      setInnerHovered(hovered)
     }
   }
 
@@ -121,9 +121,9 @@ export default function AdjustableMino({
               ${canRemove &&
               css`
                 fill: ${isHovered(point)
-                  ? "white"
+                  ? tinycolor.mix(fill, "white", 80).toString()
                   : showSquares
-                  ? tinycolor(fill).lighten(20).saturate(10).toString()
+                  ? tinycolor.mix(fill, "white", 50).toString()
                   : fill};
                 cursor: pointer;
                 pointer-events: initial;
