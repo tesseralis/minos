@@ -7,6 +7,7 @@ type Direction = "left" | "right" | "up" | "down"
 function hasCoord(coords: Coord[], p: Coord) {
   return coords.some((p2) => isEqual(p, p2))
 }
+
 function canTurn(points: Coord[], [x, y]: Coord, dir: Direction) {
   switch (dir) {
     case "left":
@@ -17,8 +18,6 @@ function canTurn(points: Coord[], [x, y]: Coord, dir: Direction) {
       return !hasCoord(points, [x, y - 1])
     case "up":
       return !hasCoord(points, [x - 1, y - 1])
-    default:
-      throw new Error("invalid direction")
   }
 }
 function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
@@ -31,8 +30,6 @@ function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
       return hasCoord(coords, [x - 1, y])
     case "left":
       return hasCoord(coords, [x - 1, y - 1])
-    default:
-      throw new Error("invalid direction")
   }
 }
 
@@ -46,8 +43,6 @@ function move([x, y]: Coord, dir: Direction): Coord {
       return [x, y + 1]
     case "up":
       return [x, y - 1]
-    default:
-      throw new Error("invalid direction")
   }
 }
 function turnLeft(dir: Direction) {
@@ -60,8 +55,6 @@ function turnLeft(dir: Direction) {
       return "up"
     case "up":
       return "left"
-    default:
-      throw new Error("invalid direction")
   }
 }
 
@@ -75,8 +68,6 @@ function turnRight(dir: Direction) {
       return "down"
     case "down":
       return "left"
-    default:
-      throw new Error("invalid direction")
   }
 }
 
