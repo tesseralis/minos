@@ -29,7 +29,7 @@ function getBlockSize(gen: number) {
 // Pass comon properties down without having to redefine them all the time
 interface CommonProps {
   radius: number
-  hovered?: Mino
+  hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
   onSelect?(mino?: Mino): void
 }
@@ -58,7 +58,7 @@ function Strand({
   onHover,
   onSelect,
 }: StrandProps) {
-  const isHovered = !!hovered && canonicalEquals(hovered, link.mino)
+  const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
   return (
@@ -71,7 +71,7 @@ function Strand({
         opacity={0.5}
       />
       <SelectableMino
-        mino={isHovered ? hovered! : link.mino}
+        mino={isHovered ? hovered!.mino : link.mino}
         onHover={(mino) => onHover?.(mino ? link : undefined)}
         stroke={isHovered ? colors.highlight : stroke}
         onSelect={onSelect}

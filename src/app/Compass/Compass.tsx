@@ -45,7 +45,7 @@ export default function Compass({ mino, onSelect }: Props) {
       <Background radius={ringRadius} innerRadius={halfRadius} />
       <CompassLinks
         mino={mino}
-        hovered={hovered?.mino}
+        hovered={hovered}
         radius={linkRadius}
         onHover={setHovered}
         onSelect={onSelect}
