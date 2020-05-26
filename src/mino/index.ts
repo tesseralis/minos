@@ -1,4 +1,4 @@
-export type { Mino } from "./mino"
+export type { Mino, Coord } from "./mino"
 export {
   getSize,
   getCoords,
@@ -10,6 +10,7 @@ export {
 } from "./mino"
 
 export { addSquare, removeSquare } from "./modify"
+export type { RelativeLink } from "./generate"
 export { getParents, getChildren } from "./generate"
 export { getOutline } from "./draw"
 

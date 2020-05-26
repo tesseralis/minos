@@ -2,7 +2,7 @@ import React from "react"
 import { scaleLinear } from "d3-scale"
 
 import { Point, toCartesian } from "math"
-import { Mino, getSize } from "mino"
+import { Mino, RelativeLink, getSize } from "mino"
 
 import { colors } from "style/theme"
 import { getAngleScale, getArc } from "app/utils"
@@ -30,7 +30,7 @@ interface Props {
   radius: number
   mino: Mino
   hovered?: Mino
-  onHover?(mino?: Mino): void
+  onHover?(link?: RelativeLink): void
   onSelect?(mino?: Mino): void
 }
 export default function CompassLinks({
@@ -42,7 +42,7 @@ export default function CompassLinks({
 }: Props) {
   interface StrandProps {
     // the relative mino represented by this strand
-    mino: number
+    link: RelativeLink
     // color of the link
     linkColor: string
     // block size of the relative mino
@@ -54,10 +54,10 @@ export default function CompassLinks({
   /**
    * A link to a parent or child mino
    */
-  function Strand({ mino, linkColor, coord, size }: StrandProps) {
-    const isHovered = !!hovered && canonicalEquals(hovered, mino)
+  function Strand({ link, linkColor, coord, size }: StrandProps) {
+    const isHovered = !!hovered && canonicalEquals(hovered, link.mino)
     const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
-    const { fill, stroke } = getMinoColor(mino)
+    const { fill, stroke } = getMinoColor(link.mino)
     return (
       <g>
         <path
@@ -68,10 +68,10 @@ export default function CompassLinks({
           opacity={0.5}
         />
         <SelectableMino
-          mino={isHovered ? hovered! : mino}
+          mino={isHovered ? hovered! : link.mino}
           coord={coord}
           size={size}
-          onHover={onHover}
+          onHover={(mino) => onHover?.(mino ? link : undefined)}
           onSelect={onSelect}
           fill={fill}
           stroke={isHovered ? colors.highlight : stroke}
@@ -82,7 +82,7 @@ export default function CompassLinks({
 
   interface StrandsProps {
     // The set of minos to render as strands
-    minos: Mino[]
+    links: RelativeLink[]
     // The maximum number of minos that can be rendered
     maxNumMinos: number
     // The maximum and minimum amount to scale up each mino
@@ -101,7 +101,7 @@ export default function CompassLinks({
    * Links to a set of minos (e.g. the parents or children)
    */
   function Strands({
-    minos,
+    links,
     maxNumMinos,
     scaleRange,
     maxSpread,
@@ -109,8 +109,8 @@ export default function CompassLinks({
     reverse,
     linkColor,
   }: StrandsProps) {
-    const gen = getSize(minos[0])
-    const numMinos = minos.length
+    const gen = getSize(links[0].mino)
+    const numMinos = links.length
     // Scale up each mino based on how many minos there are.
     // The less minos compared to the max possible, the larger the scaling
     const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
@@ -126,12 +126,12 @@ export default function CompassLinks({
     })
     return (
       <g>
-        {[...minos].map((m, i) => {
+        {[...links].map((link, i) => {
           return (
             <Strand
-              key={m}
-              mino={m}
-              linkColor={linkColor(m)}
+              key={link.mino}
+              link={link}
+              linkColor={linkColor(link.mino)}
               size={scaledSize}
               coord={toCartesian({
                 radius: scaledRadius,
@@ -147,7 +147,7 @@ export default function CompassLinks({
   return (
     <g>
       <Strands
-        minos={getSortedParents(mino)}
+        links={getSortedParents(mino)}
         maxNumMinos={MAX_NUM_PARENTS}
         scaleRange={[4, 2]}
         maxSpread={1 / 3}
@@ -155,7 +155,7 @@ export default function CompassLinks({
         linkColor={(parent: Mino) => getLinkColor(parent, mino)}
       />
       <Strands
-        minos={getSortedChildren(mino)}
+        links={getSortedChildren(mino)}
         maxNumMinos={MAX_NUM_CHILDREN}
         scaleRange={[3, 1]}
         maxSpread={15 / 32}
