@@ -142,9 +142,13 @@ function* nbrs([i, j]: Coord): Generator<Coord> {
  * Get all neighboring coords of the given mino
  */
 export function* getNeighbors(mino: Mino): Generator<Coord> {
+  const visited = new Set<string>()
   for (const coord of getCoords(mino)) {
     for (const nbr of nbrs(coord)) {
-      if (!contains(mino, nbr)) {
+      // TODO hash instead of string
+      const nbrString = nbr.toString()
+      if (!contains(mino, nbr) && !visited.has(nbrString)) {
+        visited.add(nbrString)
         yield nbr
       }
     }
