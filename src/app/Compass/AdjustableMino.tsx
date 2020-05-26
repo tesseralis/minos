@@ -1,9 +1,12 @@
+import { isEqual } from "lodash-es"
 import { css } from "emotion"
 import React from "react"
 import tinycolor from "tinycolor2"
 
 import {
   Mino,
+  Coord,
+  RelativeLink,
   isValid,
   getSize,
   getCoords,
@@ -26,7 +29,8 @@ interface Props {
   stroke: string
   anchor?: string
   showEditable?: boolean
-  onHover?(mino?: Mino): void
+  hovered?: RelativeLink
+  onHover?(link?: RelativeLink): void
   onSelect?(mino: Mino): void
 }
 
@@ -44,17 +48,22 @@ export default function AdjustableMino({
   stroke,
   showEditable,
   anchor = "center center",
+  hovered,
   onHover,
   onSelect,
 }: Props) {
-  const [hovered, setHovered] = React.useState(false)
-  const showSquares = showEditable || hovered
+  const [innerHovered, setInnerHovered] = React.useState(false)
+  const showSquares = showEditable || innerHovered
 
-  function hoverHandler(mino: Mino) {
+  function hoverHandler(mino: Mino, coord: Coord) {
     return (hovered: boolean) => {
-      onHover?.(hovered ? mino : undefined)
-      setHovered(hovered)
+      onHover?.(hovered ? { mino, coord } : undefined)
+      setInnerHovered(hovered)
     }
+  }
+
+  function isHovered(coord: Coord) {
+    return isEqual(hovered?.coord, coord)
   }
 
   const strokeWidth = size / 8
@@ -87,11 +96,7 @@ export default function AdjustableMino({
               className={css`
                 cursor: pointer;
                 pointer-events: initial;
-                opacity: 0;
-
-                :hover {
-                  opacity: 0.5;
-                }
+                opacity: ${isHovered(nbrPoint) ? 0.5 : 0};
               `}
               key={i}
               coord={translate(scale(nbrPoint))}
@@ -101,7 +106,7 @@ export default function AdjustableMino({
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(child)}
-              onHover={hoverHandler(child)}
+              onHover={hoverHandler(child, nbrPoint)}
             />
           )
         })}
@@ -115,13 +120,13 @@ export default function AdjustableMino({
               fill: ${fill};
               ${canRemove &&
               css`
-                fill: ${showSquares &&
-                tinycolor(fill).lighten(20).saturate(10).toString()};
+                fill: ${isHovered(point)
+                  ? tinycolor.mix(fill, "white", 80).toString()
+                  : showSquares
+                  ? tinycolor.mix(fill, "white", 50).toString()
+                  : fill};
                 cursor: pointer;
                 pointer-events: initial;
-                :hover {
-                  fill: white;
-                }
               `}
             `}
             style={{ stroke }}
@@ -131,7 +136,7 @@ export default function AdjustableMino({
             height={size}
             strokeWidth={strokeWidth * 0.75}
             onClick={() => canRemove && onSelect?.(parent)}
-            onHover={hoverHandler(parent)}
+            onHover={hoverHandler(parent, point)}
           />
         )
       })}

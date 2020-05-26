@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "emotion"
-import { Mino, getSize } from "mino"
+import { Mino, RelativeLink, getSize } from "mino"
 
 import { getMinoColor } from "app/graph"
 
@@ -31,7 +31,7 @@ export default function Compass({ mino, onSelect }: Props) {
   // true if the inner symmetry ring has hover focus
   const [innerHovered, setInnerHovered] = React.useState(false)
   // the currently selected relative mino
-  const [hovered, setHovered] = React.useState<Mino | undefined>()
+  const [hovered, setHovered] = React.useState<RelativeLink | undefined>()
 
   return (
     <svg
@@ -62,6 +62,7 @@ export default function Compass({ mino, onSelect }: Props) {
         cy={0}
         size={getBlockSize(getSize(mino)) * 5}
         onHover={setHovered}
+        hovered={hovered}
         onSelect={onSelect}
         showEditable={innerHovered}
         {...getMinoColor(mino)}
