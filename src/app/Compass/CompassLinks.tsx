@@ -25,6 +25,134 @@ function getSpread(maxSpread: number, count: number) {
 function getBlockSize(gen: number) {
   return 25 / (gen + 4)
 }
+interface StrandProps {
+  // the relative mino represented by this strand
+  link: RelativeLink
+  // color of the link
+  linkColor: string
+  // block size of the relative mino
+  size: number
+  // x and y coordinates of the relative mino
+  coord: Point
+  radius: number
+  hovered?: Mino
+  onHover?(link?: RelativeLink): void
+  onSelect?(mino?: Mino): void
+}
+
+/**
+ * A link to a parent or child mino
+ */
+function Strand({
+  link,
+  linkColor,
+  coord,
+  size,
+  hovered,
+  radius,
+  onHover,
+  onSelect,
+}: StrandProps) {
+  const isHovered = !!hovered && canonicalEquals(hovered, link.mino)
+  const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
+  const { fill, stroke } = getMinoColor(link.mino)
+  return (
+    <g>
+      <path
+        stroke={isHovered ? colors.highlight : linkColor}
+        strokeWidth={isHovered ? 2 : 1}
+        d={linkPath}
+        fill="none"
+        opacity={0.5}
+      />
+      <SelectableMino
+        mino={isHovered ? hovered! : link.mino}
+        coord={coord}
+        size={size}
+        onHover={(mino) => onHover?.(mino ? link : undefined)}
+        onSelect={onSelect}
+        fill={fill}
+        stroke={isHovered ? colors.highlight : stroke}
+      />
+    </g>
+  )
+}
+
+interface StrandsProps {
+  // The set of minos to render as strands
+  links: RelativeLink[]
+  // The maximum number of minos that can be rendered
+  maxNumMinos: number
+  // The maximum and minimum amount to scale up each mino
+  scaleRange: [number, number]
+  // The maximum angle (in turns) that the minos can be fanned out
+  maxSpread: number
+  // The angle (in turns) to start the spread
+  spreadStart: number
+  // Whether to reverse the order of minos
+  reverse?: boolean
+  // Function to determine the color of the link
+  linkColor(mino: Mino): string
+  radius: number
+  hovered?: Mino
+  onHover?(link?: RelativeLink): void
+  onSelect?(mino?: Mino): void
+}
+
+/**
+ * Links to a set of minos (e.g. the parents or children)
+ */
+function Strands({
+  links,
+  maxNumMinos,
+  scaleRange,
+  maxSpread,
+  spreadStart,
+  reverse,
+  linkColor,
+  radius,
+  hovered,
+  onHover,
+  onSelect,
+}: StrandsProps) {
+  const gen = getSize(links[0]?.mino)
+  const numMinos = links.length
+  // Scale up each mino based on how many minos there are.
+  // The less minos compared to the max possible, the larger the scaling
+  const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
+  const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
+  // Scale up the radius so that the more minos there are,
+  // the further away from the center
+  const scaledRadius = radius + numMinos * 1.25
+  const getAngle = getAngleScale({
+    spread: getSpread(maxSpread, numMinos),
+    start: spreadStart,
+    count: numMinos,
+    reverse,
+  })
+  return (
+    <g>
+      {[...links].map((link, i) => {
+        return (
+          <Strand
+            hovered={hovered}
+            radius={radius}
+            onHover={onHover}
+            onSelect={onSelect}
+            key={link.mino}
+            link={link}
+            linkColor={linkColor(link.mino)}
+            size={scaledSize}
+            coord={toCartesian({
+              radius: scaledRadius,
+              angle: getAngle(i),
+            })}
+          />
+        )
+      })}
+    </g>
+  )
+}
 
 interface Props {
   radius: number
@@ -40,110 +168,6 @@ export default function CompassLinks({
   onHover,
   onSelect,
 }: Props) {
-  interface StrandProps {
-    // the relative mino represented by this strand
-    link: RelativeLink
-    // color of the link
-    linkColor: string
-    // block size of the relative mino
-    size: number
-    // x and y coordinates of the relative mino
-    coord: Point
-  }
-
-  /**
-   * A link to a parent or child mino
-   */
-  function Strand({ link, linkColor, coord, size }: StrandProps) {
-    const isHovered = !!hovered && canonicalEquals(hovered, link.mino)
-    const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
-    const { fill, stroke } = getMinoColor(link.mino)
-    return (
-      <g>
-        <path
-          stroke={isHovered ? colors.highlight : linkColor}
-          strokeWidth={isHovered ? 2 : 1}
-          d={linkPath}
-          fill="none"
-          opacity={0.5}
-        />
-        <SelectableMino
-          mino={isHovered ? hovered! : link.mino}
-          coord={coord}
-          size={size}
-          onHover={(mino) => onHover?.(mino ? link : undefined)}
-          onSelect={onSelect}
-          fill={fill}
-          stroke={isHovered ? colors.highlight : stroke}
-        />
-      </g>
-    )
-  }
-
-  interface StrandsProps {
-    // The set of minos to render as strands
-    links: RelativeLink[]
-    // The maximum number of minos that can be rendered
-    maxNumMinos: number
-    // The maximum and minimum amount to scale up each mino
-    scaleRange: [number, number]
-    // The maximum angle (in turns) that the minos can be fanned out
-    maxSpread: number
-    // The angle (in turns) to start the spread
-    spreadStart: number
-    // Whether to reverse the order of minos
-    reverse?: boolean
-    // Function to determine the color of the link
-    linkColor(mino: Mino): string
-  }
-
-  /**
-   * Links to a set of minos (e.g. the parents or children)
-   */
-  function Strands({
-    links,
-    maxNumMinos,
-    scaleRange,
-    maxSpread,
-    spreadStart,
-    reverse,
-    linkColor,
-  }: StrandsProps) {
-    const gen = getSize(links[0]?.mino)
-    const numMinos = links.length
-    // Scale up each mino based on how many minos there are.
-    // The less minos compared to the max possible, the larger the scaling
-    const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
-    const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
-    // Scale up the radius so that the more minos there are,
-    // the further away from the center
-    const scaledRadius = radius + numMinos * 1.25
-    const getAngle = getAngleScale({
-      spread: getSpread(maxSpread, numMinos),
-      start: spreadStart,
-      count: numMinos,
-      reverse,
-    })
-    return (
-      <g>
-        {[...links].map((link, i) => {
-          return (
-            <Strand
-              key={link.mino}
-              link={link}
-              linkColor={linkColor(link.mino)}
-              size={scaledSize}
-              coord={toCartesian({
-                radius: scaledRadius,
-                angle: getAngle(i),
-              })}
-            />
-          )
-        })}
-      </g>
-    )
-  }
-
   return (
     <g>
       <Strands
@@ -153,6 +177,10 @@ export default function CompassLinks({
         maxSpread={1 / 3}
         spreadStart={-1 / 4}
         linkColor={(parent: Mino) => getLinkColor(parent, mino)}
+        radius={radius}
+        hovered={hovered}
+        onHover={onHover}
+        onSelect={onSelect}
       />
       <Strands
         links={getSortedChildren(mino)}
@@ -162,6 +190,10 @@ export default function CompassLinks({
         spreadStart={1 / 4}
         reverse
         linkColor={(child: Mino) => getLinkColor(mino, child)}
+        radius={radius}
+        hovered={hovered}
+        onHover={onHover}
+        onSelect={onSelect}
       />
     </g>
   )
