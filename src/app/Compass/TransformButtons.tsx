@@ -51,6 +51,7 @@ export default function TransformButtons({
           cursor: pointer;
           fill: ${color};
           pointer-events: initial;
+          user-select: none;
           dominant-baseline: middle;
           :hover {
             fill: ${colors.highlight};
