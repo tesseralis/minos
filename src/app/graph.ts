@@ -158,8 +158,8 @@ export function generateGraph(n: number) {
   return { nodes, links, meta, equivalences }
 }
 
-export const numGenerations = 8
-const { nodes, links, meta, equivalences } = generateGraph(numGenerations)
+export const NUM_GENERATIONS = 8
+const { nodes, links, meta, equivalences } = generateGraph(NUM_GENERATIONS)
 
 export const MAX_NUM_PARENTS = Math.max(
   ...Object.values(meta).map(({ parents }) => parents.size),
@@ -223,7 +223,7 @@ export function getSortedParents(mino: Mino): RelativeLink[] {
  * Get the children of the mino sorted by their indices in the graph
  */
 export function getSortedChildren(mino: Mino): RelativeLink[] {
-  if (getSize(mino) === numGenerations) return []
+  if (getSize(mino) === NUM_GENERATIONS) return []
   return getUniqSorted(getChildren(mino))
 }
 

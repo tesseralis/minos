@@ -2,7 +2,7 @@ import React from "react"
 import { css } from "emotion"
 import { Mino, RelativeLink, getSize } from "mino"
 
-import { getMinoColor } from "app/graph"
+import { getMinoColor, NUM_GENERATIONS } from "app/graph"
 
 import CompassLinks from "./CompassLinks"
 import Background from "./CompassBackground"
@@ -65,6 +65,7 @@ export default function Compass({ mino, onSelect }: Props) {
         hovered={hovered}
         onSelect={onSelect}
         showEditable={innerHovered}
+        showChildren={getSize(mino) === NUM_GENERATIONS}
         {...getMinoColor(mino)}
       />
     </svg>

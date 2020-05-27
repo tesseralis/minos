@@ -8,7 +8,6 @@ import {
   Coord,
   RelativeLink,
   isValid,
-  getSize,
   getCoords,
   getNeighbors,
   addSquare,
@@ -28,6 +27,7 @@ interface Props {
   fill: string
   stroke: string
   anchor?: string
+  showChildren?: boolean
   showEditable?: boolean
   hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
@@ -47,6 +47,7 @@ export default function AdjustableMino({
   fill,
   stroke,
   showEditable,
+  showChildren,
   anchor = "center center",
   hovered,
   onHover,
@@ -88,7 +89,7 @@ export default function AdjustableMino({
         />
       )}
       {/* Draw the neighboring points of the mino that can be clicked */}
-      {getSize(mino) < 8 &&
+      {showChildren &&
         nbrPoints.map((nbrPoint, i) => {
           const child = addSquare(mino, nbrPoint)
           return (
