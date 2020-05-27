@@ -21,11 +21,16 @@ export default function App() {
         left: 0;
         bottom: 0;
         right: 0;
+        /* Needed to make the graph full-height in Safari */
+        width: 100%;
+        height: 100%;
       `}
     >
       <div
         className={css`
           grid-area: 1 / 1;
+          /* Needed to make the graph full-height in Safari */
+          display: flex;
         `}
       >
         <MinoGraph
