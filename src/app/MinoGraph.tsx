@@ -15,7 +15,7 @@ import SelectableMino from "./SelectableMino"
 import { colors } from "style/theme"
 
 import {
-  numGenerations,
+  NUM_GENERATIONS,
   nodes,
   links,
   getCanonicalParents,
@@ -28,11 +28,11 @@ const ringRadiusBase = 400
 const width = 1400
 
 function ringRadius(gen: number) {
-  return ringRadiusBase * Math.tan(((gen / numGenerations) * Math.PI) / 2)
+  return ringRadiusBase * Math.tan(((gen / NUM_GENERATIONS) * Math.PI) / 2)
 }
 
 function getBlockSize(gen: number) {
-  return 2 + (8 - gen) ** 2 / 2
+  return 2 + (NUM_GENERATIONS - gen) ** 2 / 2
 }
 
 const indices: Record<number, [number, number]> = {}
@@ -49,7 +49,7 @@ function getIndex(mino: Mino) {
 }
 
 const getSpread = scaleLinear()
-  .domain([0, numGenerations - 1])
+  .domain([0, NUM_GENERATIONS - 1])
   .range([1 / 9, 1 / 2])
 
 function getMinoAngleScale(gen: number) {
