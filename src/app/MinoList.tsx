@@ -33,9 +33,8 @@ export default function MinoList() {
             >
               <svg width={50} height={50}>
                 <SelectableMino
+                  coord={[0, 0]}
                   mino={mino}
-                  cx={0}
-                  cy={0}
                   size={10}
                   anchor="top left"
                   {...getMinoColor(mino)}
