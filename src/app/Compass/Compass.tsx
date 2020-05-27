@@ -58,8 +58,6 @@ export default function Compass({ mino, onSelect }: Props) {
       />
       <AdjustableMino
         mino={mino}
-        cx={0}
-        cy={0}
         size={getBlockSize(getSize(mino)) * 5}
         onHover={setHovered}
         hovered={hovered}

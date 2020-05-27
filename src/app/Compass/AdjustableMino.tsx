@@ -21,8 +21,7 @@ import { colors } from "style/theme"
 
 interface Props {
   mino: Mino
-  cx: number
-  cy: number
+  coord?: Point
   size: number
   fill: string
   stroke: string
@@ -41,8 +40,7 @@ interface Props {
  */
 export default function AdjustableMino({
   mino,
-  cx,
-  cy,
+  coord: [cx, cy] = [0, 0],
   size,
   fill,
   stroke,
