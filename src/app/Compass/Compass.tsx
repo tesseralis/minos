@@ -65,7 +65,7 @@ export default function Compass({ mino, onSelect }: Props) {
         hovered={hovered}
         onSelect={onSelect}
         showEditable={innerHovered}
-        showChildren={getSize(mino) === NUM_GENERATIONS}
+        showChildren={getSize(mino) < NUM_GENERATIONS}
         {...getMinoColor(mino)}
       />
     </svg>
