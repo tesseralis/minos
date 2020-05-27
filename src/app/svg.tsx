@@ -1,5 +1,14 @@
+/**
+ * Provides wrappers for SVG elements with Props updated for convenience.
+ */
+
 import React from "react"
-import type { Point } from "math"
+import { Point } from "math"
+import type { Instance as Color } from "tinycolor2"
+
+// Re-export Point for convenience
+export type { Point } from "math"
+export type { Instance as Color } from "tinycolor2"
 
 export class SVGTransform {
   #result = ""
@@ -19,45 +28,97 @@ export class SVGTransform {
   }
 }
 
+/**
+ * an SVG transform with a fluid API
+ */
 export function svgTransform() {
   return new SVGTransform()
 }
 
-export interface LineProps
-  extends Omit<
-    React.SVGProps<SVGLineElement>,
-    "x1" | "x2" | "y1" | "y2" | "transform"
-  > {
-  p1: Point
-  p2: Point
+interface ExtendedSVGProps {
   transform?: SVGTransform
+  fill?: Color | string
+  stroke?: Color | string
+  onHover?(hovered: boolean): void
 }
 
-export function Line({ p1, p2, transform, ...svgProps }: LineProps) {
+interface SVGProps<T>
+  extends Omit<React.SVGProps<T>, keyof ExtendedSVGProps>,
+    ExtendedSVGProps {}
+
+function getBaseSVGProps<T>({
+  transform,
+  fill,
+  stroke,
+  onHover,
+  ...props
+}: SVGProps<T>): React.SVGProps<T> {
+  return {
+    ...props,
+    transform: transform?.toString(),
+    fill: fill?.toString(),
+    stroke: stroke?.toString(),
+    onMouseOver: onHover ? () => onHover(true) : undefined,
+    onMouseOut: onHover ? () => onHover(false) : undefined,
+  }
+}
+
+export interface LineProps
+  extends Omit<SVGProps<SVGLineElement>, "x1" | "x2" | "y1" | "y2"> {
+  p1: Point
+  p2: Point
+}
+
+export function Line({ p1, p2, ...svgProps }: LineProps) {
   return (
     <line
-      {...svgProps}
+      {...getBaseSVGProps(svgProps)}
       x1={p1[0]}
       y1={p1[1]}
       x2={p2[0]}
       y2={p2[1]}
-      transform={transform?.toString()}
     />
   )
 }
 
 export interface PolygonProps
-  extends Omit<React.SVGProps<SVGPolygonElement>, "points" | "transform"> {
+  extends Omit<SVGProps<SVGPolygonElement>, "points"> {
   points: readonly Point[]
-  transform?: SVGTransform
 }
 
-export function Polygon({ points, transform, ...svgProps }: PolygonProps) {
+export function Polygon({ points, ...svgProps }: PolygonProps) {
   return (
     <polygon
-      {...svgProps}
+      {...getBaseSVGProps(svgProps)}
       points={points.map((p) => p.join(",")).join(" ")}
-      transform={transform?.toString()}
     />
   )
+}
+
+export interface CircleProps
+  extends Omit<SVGProps<SVGCircleElement>, "cx" | "cy"> {
+  center?: Point
+}
+
+export function Circle({
+  center: [cx, cy] = [0, 0],
+  ...svgProps
+}: CircleProps) {
+  return <circle {...getBaseSVGProps(svgProps)} cx={cx} cy={cy} />
+}
+
+export interface RectProps extends Omit<SVGProps<SVGRectElement>, "x" | "y"> {
+  coord?: Point
+}
+
+export function Rect({ coord: [x, y] = [0, 0], ...svgProps }: RectProps) {
+  return <rect {...getBaseSVGProps(svgProps)} x={x} y={y} />
+}
+
+export interface TextProps extends Omit<SVGProps<SVGTextElement>, "x" | "y"> {
+  coord?: Point
+}
+
+export function Text({ coord: [x, y] = [0, 0], ...svgProps }: TextProps) {
+  return <text {...getBaseSVGProps(svgProps)} x={x} y={y} />
 }

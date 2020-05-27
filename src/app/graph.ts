@@ -1,12 +1,17 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash-es"
 
-import type { Mino } from "mino/mino"
-import { MONOMINO, getSize } from "mino/mino"
-
-import type { Symmetry } from "mino/transform"
-import { getTransforms, getSymmetry } from "mino/transform"
-import { getParents, getChildren } from "mino/generate"
+import {
+  Mino,
+  RelativeLink,
+  Symmetry,
+  MONOMINO,
+  getSize,
+  getTransforms,
+  getSymmetry,
+  getParents,
+  getChildren,
+} from "mino"
 
 type Color = tinycolor.Instance
 
@@ -100,7 +105,7 @@ export function generateGraph(n: number) {
     const nextGen = []
     let i = 0
     for (const mino of currentGen) {
-      for (const child of getChildren(mino)) {
+      for (const { mino: child } of getChildren(mino)) {
         if (equivalences[child]) {
           // If we have a rotation/translation of this child,
           // add the link but DON'T add the mino to the current gen
@@ -202,22 +207,22 @@ export function getCanonicalChildren(mino: Mino): Set<Mino> {
   return meta[getCanonical(mino)].children
 }
 
-function getUniqSorted(minos: Iterable<Mino>): Mino[] {
-  const uniq = uniqBy([...minos], getCanonical)
-  return sortBy(uniq, getIndex)
+function getUniqSorted(minos: Iterable<RelativeLink>): RelativeLink[] {
+  const uniq = uniqBy([...minos], ({ mino }) => getCanonical(mino))
+  return sortBy(uniq, ({ mino }) => getIndex(mino))
 }
 
 /**
  * Get the parents of the mino sorted by their indices in the graph
  */
-export function getSortedParents(mino: Mino): Mino[] {
+export function getSortedParents(mino: Mino): RelativeLink[] {
   return getUniqSorted(getParents(mino))
 }
 
 /**
  * Get the children of the mino sorted by their indices in the graph
  */
-export function getSortedChildren(mino: Mino): Mino[] {
+export function getSortedChildren(mino: Mino): RelativeLink[] {
   if (getSize(mino) === numGenerations) return []
   return getUniqSorted(getChildren(mino))
 }

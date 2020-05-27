@@ -1,7 +1,6 @@
 import React from "react"
 
-import { Mino } from "mino/mino"
-import { Transform, hasSymmetry } from "mino/transform"
+import { Mino, Transform, hasSymmetry } from "mino"
 
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"

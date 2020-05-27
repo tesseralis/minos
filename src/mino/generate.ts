@@ -2,20 +2,26 @@
  * Functions dealing with generation of polyominoes.
  */
 
-import { MONOMINO, getNeighbors, getPoints, isValid } from "./mino"
+import { Mino, Coord, MONOMINO, getNeighbors, getCoords, isValid } from "./mino"
 
 import { addSquare, removeSquare } from "./modify"
 
-import type { Mino } from "./mino"
+/**
+ * A parent/child mino and the point that is added/removed to create it
+ */
+export interface RelativeLink {
+  mino: Mino
+  coord: Coord
+}
 
 /**
  * Iterate over all the parents of the mino
  */
-export function* getParents(mino: Mino): Generator<Mino> {
-  for (const square of getPoints(mino)) {
-    const parent = removeSquare(mino, square)
+export function* getParents(mino: Mino): Generator<RelativeLink> {
+  for (const coord of getCoords(mino)) {
+    const parent = removeSquare(mino, coord)
     if (isValid(parent)) {
-      yield parent
+      yield { mino: parent, coord }
     }
   }
 }
@@ -23,11 +29,10 @@ export function* getParents(mino: Mino): Generator<Mino> {
 /**
  * Iterate over all the children of the mino
  */
-export function* getChildren(mino: Mino): Generator<Mino> {
+export function* getChildren(mino: Mino): Generator<RelativeLink> {
   // get all neighbors
-  const nbrs = getNeighbors(mino)
-  for (const nbr of nbrs) {
-    yield addSquare(mino, nbr)
+  for (const coord of getNeighbors(mino)) {
+    yield { mino: addSquare(mino, coord), coord }
   }
 }
 
@@ -35,7 +40,7 @@ export function* getChildren(mino: Mino): Generator<Mino> {
 function getAllChildren(minos: Iterable<Mino>): Set<Mino> {
   const result = new Set<Mino>()
   for (const parent of minos) {
-    for (const child of getChildren(parent)) {
+    for (const { mino: child } of getChildren(parent)) {
       result.add(child)
     }
   }

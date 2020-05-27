@@ -25,9 +25,11 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
-import type { Point } from "math"
-
+// type for the encoded representation of a mino
 export type Mino = number
+// type for the coordinates of a mino square
+export type Coord = readonly [number, number]
+// type for the dimensions of a mino
 export type Dims = [number, number]
 
 // The number of bits reserved for the width
@@ -76,11 +78,12 @@ export function getMino(data: number, width: number): Mino {
 }
 
 export const MONOMINO = getMino(1, 1)
+export const O_OCTOMINO = getMino(0b111_101_111, 3)
 
 /**
- * Return the mino as a set of coordinate points.
+ * Iterate over the coordinates of the squares of the mino.
  */
-export function* getPoints(mino: Mino): Generator<Point> {
+export function* getCoords(mino: Mino): Generator<Coord> {
   let data = getData(mino)
   const w = getWidth(mino)
   let k = 0
@@ -94,39 +97,39 @@ export function* getPoints(mino: Mino): Generator<Point> {
 }
 
 /**
- * Create a mino given a list of coordinate points.
+ * Create a mino given a list of coordinates.
  */
-export function fromPoints(points: Point[]) {
-  const w = Math.max(...points.map((p) => p[1])) + 1
+export function fromCoords(coords: Coord[]) {
+  const w = Math.max(...coords.map((p) => p[1])) + 1
   let result = 0
-  for (const [i, j] of points) {
+  for (const [i, j] of coords) {
     result = result | (1 << (w * i + j))
   }
   return getMino(result, w)
 }
 
 /**
- * Get the point `[i, j]` in the mino with width `w`.
+ * Get the coord `[i, j]` in the mino with width `w`.
  */
-export function getPointMask(i: number, j: number, w: number) {
+export function getCoordMask(i: number, j: number, w: number) {
   return 1 << (i * w + j + WIDTH_BITS)
 }
 
 /**
- * Returns true if the mino contains the given point
+ * Returns true if the mino contains the given coordinate
  */
-export function contains(mino: Mino, [i, j]: Point) {
+export function contains(mino: Mino, [i, j]: Coord) {
   const w = getWidth(mino)
   if (i < 0 || j < 0 || j >= w) {
     return false
   }
-  return !!(mino & getPointMask(i, j, w))
+  return !!(mino & getCoordMask(i, j, w))
 }
 
 /**
- * Return the neighbors of the point [i,j]
+ * Return the neighbors of the coord [i,j]
  */
-function* nbrs([i, j]: Point): Generator<Point> {
+function* nbrs([i, j]: Coord): Generator<Coord> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
   yield [i + 1, j]
@@ -136,12 +139,16 @@ function* nbrs([i, j]: Point): Generator<Point> {
 }
 
 /**
- * Get all neighboring points of the given mino
+ * Get all neighboring coords of the given mino
  */
-export function* getNeighbors(mino: Mino): Generator<Point> {
-  for (const point of getPoints(mino)) {
-    for (const nbr of nbrs(point)) {
-      if (!contains(mino, nbr)) {
+export function* getNeighbors(mino: Mino): Generator<Coord> {
+  const visited = new Set<string>()
+  for (const coord of getCoords(mino)) {
+    for (const nbr of nbrs(coord)) {
+      // TODO hash instead of string
+      const nbrString = nbr.toString()
+      if (!contains(mino, nbr) && !visited.has(nbrString)) {
+        visited.add(nbrString)
         yield nbr
       }
     }
@@ -149,7 +156,7 @@ export function* getNeighbors(mino: Mino): Generator<Point> {
 }
 
 export function isValid(mino: Mino): boolean {
-  const p0 = [...getPoints(mino)][0]
+  const p0 = [...getCoords(mino)][0]
   // the null-omino is not a valid polyomino
   if (!p0) return false
   const queue = [p0]
@@ -162,7 +169,7 @@ export function isValid(mino: Mino): boolean {
   while (queue.length) {
     const p = queue.pop()!
     const [i, j] = p
-    const mask = getPointMask(i, j, width)
+    const mask = getCoordMask(i, j, width)
     if (visited & mask) continue
     visited |= mask
 
@@ -182,7 +189,7 @@ export function getColumnMask(mino: Mino, j: number): number {
   const [width, height] = getShape(mino)
   let mask = 0
   for (let i = 0; i < height; i++) {
-    mask |= getPointMask(i, j, width)
+    mask |= getCoordMask(i, j, width)
   }
   return mino & mask
 }
@@ -197,13 +204,6 @@ export function* rowBits(mino: Mino): Generator<number> {
     yield data % (1 << w)
     data >>= w
   }
-}
-
-function padLeft(str: string, char: string, width: number) {
-  if (str.length >= width) {
-    return str
-  }
-  return char.repeat(width - str.length) + str
 }
 
 interface DisplayOpts {
@@ -223,7 +223,7 @@ export function displayMino(mino: Mino, opts: DisplayOpts = {}) {
   const w = getWidth(mino)
   const result = []
   for (const row of rowBits(mino)) {
-    const str = padLeft(row.toString(2), "0", w)
+    const str = row.toString(2).padStart(w, "0")
     result.push([...str].join(" "))
   }
   return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)

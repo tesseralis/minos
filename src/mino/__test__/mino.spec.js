@@ -1,4 +1,4 @@
-import { getMino, getSize, fromPoints, isValid, MONOMINO } from "../mino"
+import { getMino, getSize, fromCoords, isValid, MONOMINO } from "../mino"
 
 describe("mino", () => {
   describe("getSize", () => {
@@ -16,16 +16,16 @@ describe("mino", () => {
       })
     })
   })
-  describe("fromPoints", () => {
+  describe("fromCoords", () => {
     it("correctly creates an L tetromino", () => {
-      const points = [
+      const coords = [
         [0, 0],
         [0, 1],
         [1, 1],
         [2, 1],
       ]
       const expected = getMino(0b10_10_11, 2)
-      expect(fromPoints(points)).toEqual(expected)
+      expect(fromCoords(coords)).toEqual(expected)
     })
   })
 

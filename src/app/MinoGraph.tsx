@@ -3,10 +3,8 @@ import { css } from "emotion"
 import { memoize } from "lodash-es"
 import { scaleLinear } from "d3-scale"
 
-import type { Mino } from "mino/mino"
-import { getSize } from "mino/mino"
+import { Mino, getSize } from "mino"
 
-import type { Point } from "math"
 import { toCartesian } from "math"
 import { getArc, getAngleScale } from "./utils"
 
@@ -92,6 +90,40 @@ function FullScreenSvg({ width, children }: { width: number; children: any }) {
   )
 }
 
+interface OrbitalMinoProps {
+  mino: Mino
+  gen: number
+  i: number
+  selected?: Set<Mino>
+  onSelect?(mino: Mino): void
+  onHover?(mino: Mino): void
+}
+
+/**
+ * Memoized wrapper around the mino to efficiently calculate it
+ */
+const OrbitalMino = memo(function ({
+  mino,
+  gen,
+  i,
+  selected,
+  onSelect,
+  onHover,
+}: OrbitalMinoProps) {
+  const coord = useMemo(() => getCoords([gen, i]), [gen, i])
+  return (
+    <SelectableMino
+      mino={mino}
+      coord={coord}
+      size={getBlockSize(gen + 1)}
+      selected={!!selected?.has(mino)}
+      onSelect={onSelect}
+      onHover={onHover}
+      {...getMinoColor(mino)}
+    />
+  )
+})
+
 interface OrbitalProps {
   minos: Mino[]
   gen: number
@@ -100,30 +132,15 @@ interface OrbitalProps {
   onHover?(mino: Mino): void
 }
 
-const Orbital = memo(
-  ({ minos, gen, selected, onSelect, onHover }: OrbitalProps) => {
-    return (
-      <>
-        {minos.map((mino, i) => {
-          const [x, y] = getCoords([gen, i])
-          return (
-            <SelectableMino
-              mino={mino}
-              key={i}
-              cx={x}
-              cy={y}
-              size={getBlockSize(gen + 1)}
-              selected={!!selected?.has(mino)}
-              onSelect={onSelect}
-              onHover={onHover}
-              {...getMinoColor(mino)}
-            />
-          )
-        })}
-      </>
-    )
-  },
-)
+const Orbital = memo(({ minos, ...minoProps }: OrbitalProps) => {
+  return (
+    <>
+      {minos.map((mino, i) => {
+        return <OrbitalMino key={mino} mino={mino} i={i} {...minoProps} />
+      })}
+    </>
+  )
+})
 
 /**
  * Return the path for the link that goes from the source to target mino.
@@ -132,7 +149,7 @@ const Orbital = memo(
  */
 const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
-  const origin: Point = [0, -ringRadius(gen) * 0.75]
+  const origin = [0, -ringRadius(gen) * 0.75] as const
   const src = getCoords(getIndex(srcMino))
   const tgt = getCoords(getIndex(tgtMino))
 

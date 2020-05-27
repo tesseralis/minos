@@ -3,17 +3,16 @@
  */
 
 import {
+  Mino,
+  Coord,
   MAX_WIDTH,
   getMino,
   getData,
   getWidth,
   rowBits,
-  getPointMask,
+  getCoordMask,
   getColumnMask,
 } from "./mino"
-
-import type { Point } from "math"
-import type { Mino } from "./mino"
 
 /**
  * Return the mino with the width adjusted by delta (e.g. +1 or -1)
@@ -65,13 +64,13 @@ function shiftUp(mino: Mino): Mino {
 }
 
 function doAdd(mino: Mino, i: number, j: number): Mino {
-  return mino | getPointMask(i, j, getWidth(mino))
+  return mino | getCoordMask(i, j, getWidth(mino))
 }
 
 /**
- * Append the point [i,j] to the mino
+ * Append the square at [i,j] to the mino
  */
-export function addSquare(mino: Mino, [i, j]: Point): Mino {
+export function addSquare(mino: Mino, [i, j]: Coord): Mino {
   if (i < 0) {
     return doAdd(shiftUp(mino), 0, j)
   }
@@ -81,7 +80,6 @@ export function addSquare(mino: Mino, [i, j]: Point): Mino {
   if (j === getWidth(mino)) {
     return doAdd(incWidth(mino), i, j)
   }
-  // otherwise add the point value to the mino
   return doAdd(mino, i, j)
 }
 
@@ -99,13 +97,13 @@ function leftColumnEmpty(mino: Mino): boolean {
 }
 
 function doRemove(mino: Mino, i: number, j: number): Mino {
-  return mino & ~getPointMask(i, j, getWidth(mino))
+  return mino & ~getCoordMask(i, j, getWidth(mino))
 }
 
 /**
- * Remove the square at point [i, j] from the Mino
+ * Remove the square at coordinate [i, j] from the Mino
  */
-export function removeSquare(mino: Mino, [i, j]: Point): Mino {
+export function removeSquare(mino: Mino, [i, j]: Coord): Mino {
   const removed = doRemove(mino, i, j)
   if (bottomRowEmpty(removed)) {
     return shiftDown(removed)

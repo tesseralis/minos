@@ -1,7 +1,7 @@
 import React, { useState } from "react"
 import { css } from "emotion"
 
-import type { Mino } from "mino/mino"
+import { Mino } from "mino"
 
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
@@ -27,11 +27,16 @@ export default function App() {
         left: 0;
         bottom: 0;
         right: 0;
+        /* Needed to make the graph full-height in Safari */
+        width: 100%;
+        height: 100%;
       `}
     >
       <div
         className={css`
           grid-area: 1 / 1;
+          /* Needed to make the graph full-height in Safari */
+          display: flex;
         `}
       >
         {view === "graph" && (
