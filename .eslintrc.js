@@ -2,6 +2,7 @@ module.exports = {
   extends: [
     "eslint:recommended",
     "plugin:react/recommended",
+    "plugin:jsx-a11y/recommended",
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
@@ -10,7 +11,7 @@ module.exports = {
     "react-app",
   ],
   parser: "@typescript-eslint/parser",
-  plugins: ["prettier", "react", "@typescript-eslint"],
+  plugins: ["prettier", "react", "jsx-a11y", "@typescript-eslint"],
   rules: {
     // we have a lot of anonymous renderers passed as props
     "react/display-name": "off",

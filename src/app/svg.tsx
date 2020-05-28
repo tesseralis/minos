@@ -60,6 +60,10 @@ function getBaseSVGProps<T>({
     stroke: stroke?.toString(),
     onMouseOver: onHover ? () => onHover(true) : undefined,
     onMouseOut: onHover ? () => onHover(false) : undefined,
+    // Key events to accompany mouse events
+    // TODO just switch to pointer events?
+    onFocus: onHover ? () => onHover(true) : undefined,
+    onBlur: onHover ? () => onHover(false) : undefined,
   }
 }
 
