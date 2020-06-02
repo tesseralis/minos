@@ -1,6 +1,5 @@
 import React, { memo, useMemo, useCallback } from "react"
 import { css } from "emotion"
-import { memoize } from "lodash-es"
 import { scaleLinear } from "d3-scale"
 
 import { Mino, getSize } from "mino"
@@ -116,14 +115,14 @@ const Orbital = memo(({ minos, ...minoProps }: OrbitalProps) => {
  * The link is a circular that intersects both points as well as a third point
  * scaled according to the radius of the generation.
  */
-const getLinkPath = memoize(function ([srcMino, tgtMino]) {
+function getLinkPath([srcMino, tgtMino]: [Mino, Mino]) {
   const gen = getSize(srcMino)
   const origin = [0, -1 - ringRadius(gen) * 0.75] as const
   const src = getCoords(gen, getIndex(srcMino))
   const tgt = getCoords(gen + 1, getIndex(tgtMino))
 
   return getArc(src, tgt, origin)
-})
+}
 
 interface MinoLinkProps {
   link: [Mino, Mino]
