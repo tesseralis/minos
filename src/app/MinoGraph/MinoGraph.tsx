@@ -6,11 +6,12 @@ import { scaleLinear } from "d3-scale"
 import { Mino, getSize } from "mino"
 
 import { toCartesian } from "math"
-import { getArc, getAngleScale } from "./utils"
+import { getArc, getAngleScale } from "app/utils"
 
+import SelectableMino from "app/SelectableMino"
 import Background from "./Background"
 import PanZoom from "./PanZoom"
-import SelectableMino from "./SelectableMino"
+import FullScreenSvg from "./FullScreenSvg"
 
 import { colors } from "style/theme"
 
@@ -22,7 +23,7 @@ import {
   getCanonicalChildren,
   getMinoColor,
   getLinkColor,
-} from "./graph"
+} from "../graph"
 
 const ringRadiusBase = 400
 const width = 1400
@@ -66,28 +67,6 @@ function getMinoAngleScale(gen: number) {
 function getCoords([gen, i]: [number, number]) {
   const getAngle = getMinoAngleScale(gen)
   return toCartesian({ radius: ringRadius(gen), angle: getAngle(i) })
-}
-
-// A full screen SVG
-function FullScreenSvg({ width, children }: { width: number; children: any }) {
-  // Only change the viewbox if the prop width changes, not the window ratio
-  const viewBox = useMemo(() => {
-    const height = (width / window.innerWidth) * window.innerHeight
-    return `-${width / 2} ${-height / 10} ${width} ${height}`
-  }, [width])
-
-  return (
-    <svg
-      className={css`
-        width: 100%;
-        height: 100%;
-        background-color: ${colors.bg};
-      `}
-      viewBox={viewBox}
-    >
-      {children}
-    </svg>
-  )
 }
 
 interface OrbitalMinoProps {
