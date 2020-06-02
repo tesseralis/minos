@@ -160,10 +160,13 @@ interface MinoLinksProps {
 const MinoLinks = memo(({ links, selected }: MinoLinksProps) => {
   return (
     <g>
-      {links.map((link, i) => {
-        const isSelected = selected.has(link.toString())
-        return <MinoLink key={i} link={link} isSelected={isSelected} />
-      })}
+      {links.map((link, i) => (
+        <MinoLink
+          key={i}
+          link={link}
+          isSelected={selected.has(link.toString())}
+        />
+      ))}
     </g>
   )
 })
