@@ -6,22 +6,32 @@ import { Mino, Coord, MONOMINO, getNeighbors, getCoords, isValid } from "./mino"
 
 import { addSquare, removeSquare } from "./modify"
 
+export interface PossibleRelativeLink {
+  mino?: Mino
+  coord: Coord
+}
+
+export function* getPossibleParents(
+  mino: Mino,
+): Generator<PossibleRelativeLink> {
+  for (const coord of getCoords(mino)) {
+    const parent = removeSquare(mino, coord)
+    yield { mino: isValid(parent) ? parent : undefined, coord }
+  }
+}
+
 /**
  * A parent/child mino and the point that is added/removed to create it
  */
-export interface RelativeLink {
-  mino: Mino
-  coord: Coord
-}
+export type RelativeLink = Required<PossibleRelativeLink>
 
 /**
  * Iterate over all the parents of the mino
  */
 export function* getParents(mino: Mino): Generator<RelativeLink> {
-  for (const coord of getCoords(mino)) {
-    const parent = removeSquare(mino, coord)
-    if (isValid(parent)) {
-      yield { mino: parent, coord }
+  for (const link of getPossibleParents(mino)) {
+    if (link.mino) {
+      yield link as RelativeLink
     }
   }
 }

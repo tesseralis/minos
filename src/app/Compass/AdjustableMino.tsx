@@ -7,11 +7,9 @@ import {
   Mino,
   Coord,
   RelativeLink,
-  isValid,
   getCoords,
-  getNeighbors,
-  addSquare,
-  removeSquare,
+  getChildren,
+  getPossibleParents,
   getOutline,
   O_OCTOMINO,
 } from "mino"
@@ -54,8 +52,9 @@ export default function AdjustableMino({
   const [innerHovered, setInnerHovered] = React.useState(false)
   const showSquares = showEditable || innerHovered
 
-  function hoverHandler(mino: Mino, coord: Coord) {
+  function hoverHandler(mino: Mino | undefined, coord: Coord) {
     return (hovered: boolean) => {
+      if (!mino) return
       onHover?.(hovered ? { mino, coord } : undefined)
       setInnerHovered(hovered)
     }
@@ -73,7 +72,6 @@ export default function AdjustableMino({
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
   const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy] as Point
-  const nbrPoints = [...getNeighbors(mino)]
 
   return (
     <g>
@@ -88,38 +86,36 @@ export default function AdjustableMino({
       )}
       {/* Draw the neighboring points of the mino that can be clicked */}
       {showChildren &&
-        nbrPoints.map((nbrPoint, i) => {
-          const child = addSquare(mino, nbrPoint)
+        [...getChildren(mino)].map(({ mino: child, coord }, i) => {
           return (
             <Rect
               className={css`
                 cursor: pointer;
                 pointer-events: initial;
-                opacity: ${isHovered(nbrPoint) ? 0.5 : 0};
+                opacity: ${isHovered(coord) ? 0.5 : 0};
               `}
               key={i}
-              coord={translate(scale(nbrPoint))}
+              coord={translate(scale(coord))}
               width={size}
               height={size}
               fill={colors.highlight}
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
               onClick={() => onSelect?.(child)}
-              onHover={hoverHandler(child, nbrPoint)}
+              onHover={hoverHandler(child, coord)}
             />
           )
         })}
-      {minoPoints.map((point, i) => {
+      {[...getPossibleParents(mino)].map(({ mino: parent, coord }, i) => {
         // Make all removable points in the mino selectable
-        const parent = removeSquare(mino, point)
-        const canRemove = isValid(parent)
+        // const parent = removeSquare(mino, point)
         return (
           <Rect
             className={css`
               fill: ${fill};
-              ${canRemove &&
+              ${!!parent &&
               css`
-                fill: ${isHovered(point)
+                fill: ${isHovered(coord)
                   ? tinycolor.mix(fill, "white", 80).toString()
                   : showSquares
                   ? tinycolor.mix(fill, "white", 50).toString()
@@ -130,12 +126,12 @@ export default function AdjustableMino({
             `}
             style={{ stroke }}
             key={i}
-            coord={translate(scale(point))}
+            coord={translate(scale(coord))}
             width={size}
             height={size}
             strokeWidth={strokeWidth * 0.75}
-            onClick={() => canRemove && onSelect?.(parent)}
-            onHover={hoverHandler(parent, point)}
+            onClick={() => !!parent && onSelect?.(parent)}
+            onHover={hoverHandler(parent, coord)}
           />
         )
       })}
