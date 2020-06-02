@@ -154,18 +154,15 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
 
 interface MinoLinksProps {
   links: any[]
-  selected: Set<string>
+  // selected: Set<string>
+  selected?: Mino
 }
 
 const MinoLinks = memo(({ links, selected }: MinoLinksProps) => {
   return (
     <g>
       {links.map((link, i) => (
-        <MinoLink
-          key={i}
-          link={link}
-          isSelected={selected.has(link.toString())}
-        />
+        <MinoLink key={i} link={link} isSelected={link.includes(selected)} />
       ))}
     </g>
   )
@@ -179,16 +176,6 @@ interface Props {
 export default function MinoGraph({ selected, onSelect }: Props) {
   const parents = selected ? getCanonicalParents(selected) : new Set<Mino>()
   const children = selected ? getCanonicalChildren(selected) : new Set<Mino>()
-
-  // Get the links connecting the selected mino to its parents and children
-  const selectedLinks = useMemo(() => {
-    const selectedLinks = selected
-      ? [...parents]
-          .map((p) => [p, selected])
-          .concat([...children].map((c) => [selected, c]))
-      : []
-    return new Set(selectedLinks.map((link) => link.toString()))
-  }, [selected, parents, children])
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
@@ -210,7 +197,7 @@ export default function MinoGraph({ selected, onSelect }: Props) {
     <FullScreenSvg width={width}>
       <Background onClick={() => onSelect?.(undefined)} />
       <PanZoom minZoom={0.125} maxZoom={2} zoomSpeed={0.075}>
-        <MinoLinks links={links} selected={selectedLinks} />
+        <MinoLinks links={links} selected={selected} />
         {nodes.map((minoGen, i) => {
           return (
             <GenerationRing
