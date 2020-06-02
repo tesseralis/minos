@@ -70,7 +70,7 @@ interface OrbitalMinoProps {
 /**
  * Memoized wrapper around the mino to efficiently calculate it
  */
-const OrbitalMino = memo(function ({
+const RingMino = memo(function ({
   mino,
   gen,
   i,
@@ -100,11 +100,14 @@ interface OrbitalProps {
   onHover?(mino: Mino): void
 }
 
-const Orbital = memo(({ minos, ...minoProps }: OrbitalProps) => {
+/**
+ * A semicircle containing all the minos in a generation.
+ */
+const GenerationRing = memo(({ minos, ...minoProps }: OrbitalProps) => {
   return (
     <>
       {minos.map((mino, i) => {
-        return <OrbitalMino key={mino} mino={mino} i={i} {...minoProps} />
+        return <RingMino key={mino} mino={mino} i={i} {...minoProps} />
       })}
     </>
   )
@@ -126,29 +129,28 @@ function getLinkPath([srcMino, tgtMino]: [Mino, Mino]) {
 
 interface MinoLinkProps {
   link: [Mino, Mino]
-  color: string
   isSelected: boolean
-  strokeWidth: number
 }
 
-const MinoLink = memo(
-  ({ link, color, isSelected, strokeWidth }: MinoLinkProps) => {
-    return (
-      <path
-        className={css`
-          transition: all 250ms ${isSelected ? "ease-out" : "ease-in"};
-          pointer-events: none;
-        `}
-        style={{
-          stroke: isSelected ? colors.highlight : color,
-          strokeWidth: strokeWidth * (isSelected ? 3 : 1),
-        }}
-        d={getLinkPath(link)}
-        fill="none"
-      />
-    )
-  },
-)
+const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
+  const [srcMino, tgtMino] = link
+  const gen = getSize(srcMino)
+  const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2
+  return (
+    <path
+      className={css`
+        transition: all 250ms ${isSelected ? "ease-out" : "ease-in"};
+        pointer-events: none;
+      `}
+      style={{
+        stroke: isSelected ? colors.highlight : getLinkColor(srcMino, tgtMino),
+        strokeWidth: strokeWidth * (isSelected ? 3 : 1),
+      }}
+      d={getLinkPath(link)}
+      fill="none"
+    />
+  )
+})
 
 interface MinoLinksProps {
   links: any[]
@@ -159,19 +161,8 @@ const MinoLinks = memo(({ links, selected }: MinoLinksProps) => {
   return (
     <g>
       {links.map((link, i) => {
-        const [srcMino, tgtMino] = link
-        const gen = getSize(srcMino)
         const isSelected = selected.has(link.toString())
-        const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2
-        return (
-          <MinoLink
-            key={i}
-            link={link}
-            color={getLinkColor(srcMino, tgtMino)}
-            isSelected={isSelected}
-            strokeWidth={strokeWidth}
-          />
-        )
+        return <MinoLink key={i} link={link} isSelected={isSelected} />
       })}
     </g>
   )
@@ -219,7 +210,7 @@ export default function MinoGraph({ selected, onSelect }: Props) {
         <MinoLinks links={links} selected={selectedLinks} />
         {nodes.map((minoGen, i) => {
           return (
-            <Orbital
+            <GenerationRing
               minos={minoGen}
               gen={i + 1}
               key={i}

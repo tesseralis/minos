@@ -6,7 +6,7 @@ import { Mino } from "mino"
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
-import MinoGraph from "./MinoGraph"
+import MinoGraph from "./FamilyTree"
 
 export default function App() {
   const [selected, setSelected] = useState<Mino | undefined>()
