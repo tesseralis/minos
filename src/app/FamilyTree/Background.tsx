@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect } from "react"
 import { Rect } from "app/svg"
 
-import useClickHandler from "./useClickHandler"
+import useClickHandler from "app/useClickHandler"
 
 function useWindowEvent(eventType: any, fn: any) {
   useEffect(() => {

@@ -2,7 +2,7 @@ import React, { useRef, useEffect } from "react"
 import panzoom from "panzoom"
 
 interface Props {
-  children: any
+  children: React.ReactNode
   zoomSpeed: number
   minZoom: number
   maxZoom: number
