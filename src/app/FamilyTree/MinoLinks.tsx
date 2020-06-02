@@ -61,7 +61,7 @@ export default memo(function MinoLinks({ selected }: Props) {
         <MinoLink
           key={i}
           link={link}
-          isSelected={(link as any[]).includes(selected)}
+          isSelected={!!selected && link.includes(selected)}
         />
       ))}
     </g>
