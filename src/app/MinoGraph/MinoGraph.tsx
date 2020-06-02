@@ -23,34 +23,24 @@ import {
   getCanonicalChildren,
   getMinoColor,
   getLinkColor,
+  getIndex,
 } from "../graph"
 
 const ringRadiusBase = 400
 const width = 1400
 
 function ringRadius(gen: number) {
-  return ringRadiusBase * Math.tan(((gen / NUM_GENERATIONS) * Math.PI) / 2)
+  return (
+    ringRadiusBase * Math.tan((((gen - 1) / NUM_GENERATIONS) * Math.PI) / 2)
+  )
 }
 
 function getBlockSize(gen: number) {
   return 2 + (NUM_GENERATIONS - gen) ** 2 / 2
 }
 
-const indices: Record<number, [number, number]> = {}
-function getIndex(mino: Mino) {
-  if (!indices[mino]) {
-    const gen = getSize(mino) - 1
-    if (!nodes[gen]) {
-      throw new Error("gen not found")
-    }
-    const pos = nodes[gen].indexOf(mino)
-    indices[mino] = [gen, pos]
-  }
-  return indices[mino]
-}
-
 const getSpread = scaleLinear()
-  .domain([0, NUM_GENERATIONS - 1])
+  .domain([1, NUM_GENERATIONS])
   .range([1 / 9, 1 / 2])
 
 function getMinoAngleScale(gen: number) {
@@ -58,13 +48,13 @@ function getMinoAngleScale(gen: number) {
   return getAngleScale({
     spread,
     start: 1 / 4,
-    count: nodes[gen].length,
+    count: nodes[gen - 1].length,
     reverse: true,
   })
 }
 
 // Get the coordinates of the mino with the given generation and index
-function getCoords([gen, i]: [number, number]) {
+function getCoords(gen: number, i: number) {
   const getAngle = getMinoAngleScale(gen)
   return toCartesian({ radius: ringRadius(gen), angle: getAngle(i) })
 }
@@ -89,12 +79,12 @@ const OrbitalMino = memo(function ({
   onSelect,
   onHover,
 }: OrbitalMinoProps) {
-  const coord = useMemo(() => getCoords([gen, i]), [gen, i])
+  const coord = useMemo(() => getCoords(gen, i), [gen, i])
   return (
     <SelectableMino
       mino={mino}
       coord={coord}
-      size={getBlockSize(gen + 1)}
+      size={getBlockSize(gen)}
       selected={!!selected?.has(mino)}
       onSelect={onSelect}
       onHover={onHover}
@@ -128,9 +118,9 @@ const Orbital = memo(({ minos, ...minoProps }: OrbitalProps) => {
  */
 const getLinkPath = memoize(function ([srcMino, tgtMino]) {
   const gen = getSize(srcMino)
-  const origin = [0, -ringRadius(gen) * 0.75] as const
-  const src = getCoords(getIndex(srcMino))
-  const tgt = getCoords(getIndex(tgtMino))
+  const origin = [0, -1 - ringRadius(gen) * 0.75] as const
+  const src = getCoords(gen, getIndex(srcMino))
+  const tgt = getCoords(gen + 1, getIndex(tgtMino))
 
   return getArc(src, tgt, origin)
 })
@@ -139,12 +129,11 @@ interface MinoLinkProps {
   link: [Mino, Mino]
   color: string
   isSelected: boolean
-  opacity: number
   strokeWidth: number
 }
 
 const MinoLink = memo(
-  ({ link, color, isSelected, opacity, strokeWidth }: MinoLinkProps) => {
+  ({ link, color, isSelected, strokeWidth }: MinoLinkProps) => {
     return (
       <path
         className={css`
@@ -157,7 +146,6 @@ const MinoLink = memo(
         }}
         d={getLinkPath(link)}
         fill="none"
-        opacity={opacity}
       />
     )
   },
@@ -166,24 +154,22 @@ const MinoLink = memo(
 interface MinoLinksProps {
   links: any[]
   selected: Set<string>
-  opacity?: number
 }
 
-const MinoLinks = memo(({ links, selected, opacity = 1 }: MinoLinksProps) => {
+const MinoLinks = memo(({ links, selected }: MinoLinksProps) => {
   return (
     <g>
       {links.map((link, i) => {
         const [srcMino, tgtMino] = link
-        const gen = getIndex(srcMino)[0]
+        const gen = getSize(srcMino)
         const isSelected = selected.has(link.toString())
-        const strokeWidth = 4 / (gen / 2 + 1) ** 2
+        const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2
         return (
           <MinoLink
             key={i}
             link={link}
             color={getLinkColor(srcMino, tgtMino)}
             isSelected={isSelected}
-            opacity={opacity}
             strokeWidth={strokeWidth}
           />
         )
@@ -236,7 +222,7 @@ export default function MinoGraph({ selected, onSelect }: Props) {
           return (
             <Orbital
               minos={minoGen}
-              gen={i}
+              gen={i + 1}
               key={i}
               selected={getSelected(i)}
               onSelect={onSelect}
