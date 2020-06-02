@@ -4,7 +4,7 @@ import { colors } from "style/theme"
 
 interface Props {
   width: number
-  children: any
+  children: React.ReactNode
 }
 
 // A full screen SVG

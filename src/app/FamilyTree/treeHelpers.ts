@@ -2,8 +2,7 @@ import { scaleLinear } from "d3-scale"
 
 import { toCartesian } from "math"
 import { getAngleScale } from "app/utils"
-
-import { NUM_GENERATIONS, nodes } from "../graph"
+import { NUM_GENERATIONS, nodes } from "app/graph"
 
 const ringRadiusBase = 400
 
