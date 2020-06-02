@@ -15,7 +15,11 @@ interface Props {
   onSelect?(mino?: Mino): void
 }
 
-export default function MinoGraph({ selected, onSelect }: Props) {
+/**
+ * A graph showing the "family tree" of minos,
+ * with edges connecting parent and child minos.
+ */
+export default function FamilyTree({ selected, onSelect }: Props) {
   return (
     <FullScreenSvg width={1400}>
       <Background onClick={() => onSelect?.(undefined)} />
