@@ -6,11 +6,10 @@ import { Mino } from "mino"
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
-import MinoGraph from "./FamilyTree"
+import FamilyTree from "./FamilyTree"
 
 export default function App() {
   const [selected, setSelected] = useState<Mino | undefined>()
-  // const [hovered, setHovered] = useState<Mino | undefined>()
 
   return (
     <div
@@ -33,7 +32,7 @@ export default function App() {
           display: flex;
         `}
       >
-        <MinoGraph
+        <FamilyTree
           selected={selected && getCanonical(selected)}
           onSelect={setSelected}
         />
