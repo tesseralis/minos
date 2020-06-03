@@ -5,6 +5,7 @@ import { Mino, getSize, getShape, transform } from "mino"
 import { colors } from "style/theme"
 import { canonicalEquals, nodes, sortMinos, getMinoColor } from "./graph"
 import transition from "app/transition"
+import useWindowEventListener from "app/useWindowEventListener"
 
 import SelectableMino from "./SelectableMino"
 const START_GENS = 5
@@ -115,8 +116,16 @@ interface Props {
   onSelect(mino?: Mino): void
 }
 
-// FIXME make sure ESC and clicking outside deselects
 export default function MinoList({ selected, onSelect }: Props) {
+  useWindowEventListener("click", (e) => {
+    // Deselect the current mino if the click target isn't a mino
+    // or the compass
+    // TODO this is kind of a hack
+    if (!(e.target instanceof SVGElement)) {
+      onSelect()
+    }
+  })
+
   return (
     <main
       className={css`
