@@ -2,6 +2,7 @@ import React from "react"
 import { css } from "emotion"
 
 import { Mino, getSize, getShape, transform } from "mino"
+import { colors } from "style/theme"
 import { canonicalEquals, nodes, sortMinos, getMinoColor } from "./graph"
 // FIXME make this a utility
 import transition from "app/FamilyTree/transition"
@@ -47,7 +48,7 @@ const ListMino = React.memo(function ({
           mino={mino}
           size={blockSize}
           onSelect={onSelect}
-          stroke={isSelected ? "white" : stroke}
+          stroke={isSelected ? colors.highlight : stroke}
           fill={fill}
         />
       </svg>
@@ -90,7 +91,7 @@ const GenerationList = React.memo(function ({
         justify-content: center;
         padding: 2rem;
         :not(:first-child) {
-          border-top: 1px white solid;
+          border-top: 1px ${colors.fg} solid;
         }
       `}
     >

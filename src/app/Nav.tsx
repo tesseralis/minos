@@ -2,6 +2,8 @@ import React from "react"
 import { NavLink } from "react-router-dom"
 import { css } from "emotion"
 
+import { colors } from "style/theme"
+
 export default function Nav() {
   return (
     <nav
@@ -14,7 +16,7 @@ export default function Nav() {
           display: flex;
           flex-direction: column;
           margin-bottom: 1rem;
-          color: white;
+          color: ${colors.highlight};
           font-size: 2.25rem;
         `}
       >
@@ -37,7 +39,7 @@ export default function Nav() {
                 font-size: 1.5rem;
                 line-height: 1.25;
 
-                color: #aaa;
+                color: ${colors.fg};
                 text-decoration: none;
                 :hover {
                   text-decoration: underline;
@@ -45,7 +47,7 @@ export default function Nav() {
               `}
               end
               activeClassName={css`
-                color: white;
+                color: ${colors.highlight};
               `}
             >
               {view}
