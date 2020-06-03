@@ -1,6 +1,9 @@
 export type { Mino, Coord } from "./mino"
 export {
   getSize,
+  getWidth,
+  getHeight,
+  getShape,
   getCoords,
   fromCoords,
   isValid,
