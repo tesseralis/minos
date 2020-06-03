@@ -94,9 +94,10 @@ function sortByParents(minos: Mino[], meta: Record<Mino, MinoMeta>) {
 /**
  * Sort the given minos based on dimensions and point placement
  */
-function sortMinos(minos: Mino[]) {
+export function sortMinos(minos: Mino[]) {
   return sortBy(minos, [
-    (mino) => getWidth(mino) / getHeight(mino),
+    (mino) => -getHeight(mino),
+    (mino) => -getWidth(mino),
     (mino) => mino,
   ])
 }

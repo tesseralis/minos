@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "emotion"
 
-import { nodes, getMinoColor } from "./graph"
+import { nodes, sortMinos, getMinoColor } from "./graph"
 
 import SelectableMino from "./SelectableMino"
 
@@ -23,7 +23,7 @@ export default function MinoList() {
             margin: 2rem;
           `}
         >
-          {minos.map((mino) => (
+          {sortMinos(minos).map((mino) => (
             <span
               key={mino}
               className={css`
