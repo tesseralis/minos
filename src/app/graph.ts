@@ -7,6 +7,8 @@ import {
   Symmetry,
   MONOMINO,
   getSize,
+  getWidth,
+  getHeight,
   getTransforms,
   getSymmetry,
   getParents,
@@ -89,6 +91,23 @@ function sortByParents(minos: Mino[], meta: Record<Mino, MinoMeta>) {
   return sortBy(minos, (mino) => getParentKey(mino, meta))
 }
 
+/**
+ * Sort the given minos based on dimensions and point placement
+ */
+function sortMinos(minos: Mino[]) {
+  return sortBy(minos, [
+    (mino) => getWidth(mino) / getHeight(mino),
+    (mino) => mino,
+  ])
+}
+
+/**
+ * Calculate which among a set of mino transforms is the "canonical" version
+ */
+function calculateCanonical(transforms: Set<Mino>) {
+  return sortMinos([...transforms])[0]
+}
+
 export function generateGraph(n: number) {
   const nodes: Mino[][] = []
   const links: [Mino, Mino][] = []
@@ -127,16 +146,18 @@ export function generateGraph(n: number) {
         } else {
           // If it's a completely new mino, log its transforms
           // and add it to the next gen
+          const transforms = getTransforms(child)
+          const canonChild = calculateCanonical(transforms)
           for (const transform of getTransforms(child)) {
-            equivalences[transform] = child
+            equivalences[transform] = canonChild
           }
-          nextGen.push(child)
-          links.push([mino, child])
-          meta[mino].children.add(child)
-          meta[child] = {
+          nextGen.push(canonChild)
+          links.push([mino, canonChild])
+          meta[mino].children.add(canonChild)
+          meta[canonChild] = {
             children: new Set(),
             parents: new Set([mino]),
-            symmetry: getSymmetry(child),
+            symmetry: getSymmetry(canonChild),
             index: -1,
           }
         }
@@ -157,7 +178,6 @@ export function generateGraph(n: number) {
   // TODO can we seperate out this logic?
   for (const generation of nodes) {
     for (const mino of generation) {
-      // const sym = meta[mino].symmetry
       const sym = meta[mino].symmetry
       if (mino === MONOMINO) {
         meta[mino].color = colorMap[sym]
