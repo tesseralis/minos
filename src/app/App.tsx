@@ -45,7 +45,9 @@ export default function App() {
             onSelect={setSelected}
           />
         )}
-        {view === "list" && <MinoList />}
+        {view === "list" && (
+          <MinoList selected={selected} onSelect={setSelected} />
+        )}
       </div>
       <div
         className={css`
