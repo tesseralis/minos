@@ -92,7 +92,6 @@ function getSymCount(mino: Mino, axes: Transform[]): number {
   return axes.filter((axis) => hasSymmetry(mino, axis)).length
 }
 
-// TODO this function is kind of cumbersome...
 /**
  * Get the symmetry of the polyomino
  * @param mino
