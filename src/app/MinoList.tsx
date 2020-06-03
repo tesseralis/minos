@@ -20,7 +20,7 @@ const ListMino = React.memo(function ({
   isSelected,
   onSelect,
 }: ListMinoProps) {
-  mino = transform(mino, "rotateRight")
+  mino = transform(mino, "flipMainDiag")
   const [height, width] = getShape(mino)
 
   const blockSize = 18 - getSize(mino)
