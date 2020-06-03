@@ -77,6 +77,18 @@ interface MinoMeta {
   index: number
 }
 
+function getParentKey(mino: Mino, meta: Record<Mino, MinoMeta>) {
+  const parents = meta[mino].parents
+  return avg([...parents].map((p) => meta[p].index))
+}
+
+/**
+ * Sort the list of minos by the average of their parents' indices
+ */
+function sortByParents(minos: Mino[], meta: Record<Mino, MinoMeta>) {
+  return sortBy(minos, (mino) => getParentKey(mino, meta))
+}
+
 export function generateGraph(n: number) {
   const nodes: Mino[][] = []
   const links: [Mino, Mino][] = []
@@ -103,7 +115,6 @@ export function generateGraph(n: number) {
   // TODO don't need to iterate over children of last generation!
   while (nodes.length < n - 1) {
     const nextGen = []
-    let i = 0
     for (const mino of currentGen) {
       for (const { mino: child } of getChildren(mino)) {
         if (equivalences[child]) {
@@ -126,14 +137,19 @@ export function generateGraph(n: number) {
             children: new Set(),
             parents: new Set([mino]),
             symmetry: getSymmetry(child),
-            index: i,
+            index: -1,
           }
-          i++
         }
       }
     }
     nodes.push(currentGen)
-    currentGen = nextGen
+
+    const sortedNextGen = sortByParents(nextGen, meta)
+    // Generate the indices of the generation
+    sortedNextGen.forEach((mino, i) => {
+      meta[mino].index = i
+    })
+    currentGen = sortedNextGen
   }
   nodes.push(currentGen)
 

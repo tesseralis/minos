@@ -6,7 +6,7 @@ import { Mino } from "mino"
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
-import MinoGraph from "./MinoGraph"
+import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
 
 const views = ["graph", "list"] as const
@@ -40,7 +40,7 @@ export default function App() {
         `}
       >
         {view === "graph" && (
-          <MinoGraph
+          <FamilyTree
             selected={selected && getCanonical(selected)}
             onSelect={setSelected}
           />

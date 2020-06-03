@@ -18,7 +18,7 @@ interface Props {
   onSelect?(mino: Mino): void
 }
 
-const innerRadius = 40
+const innerRadius = 50
 const linkRadius = 90
 const ringRadius = linkRadius + 30
 const svgSize = ringRadius + 5
@@ -58,14 +58,12 @@ export default function Compass({ mino, onSelect }: Props) {
       />
       <AdjustableMino
         mino={mino}
-        cx={0}
-        cy={0}
         size={getBlockSize(getSize(mino)) * 5}
         onHover={setHovered}
         hovered={hovered}
         onSelect={onSelect}
         showEditable={innerHovered}
-        showChildren={getSize(mino) === NUM_GENERATIONS}
+        showChildren={getSize(mino) < NUM_GENERATIONS}
         {...getMinoColor(mino)}
       />
     </svg>
