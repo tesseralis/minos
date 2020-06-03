@@ -4,8 +4,7 @@ import { css } from "emotion"
 import { Mino, getSize, getShape, transform } from "mino"
 import { colors } from "style/theme"
 import { canonicalEquals, nodes, sortMinos, getMinoColor } from "./graph"
-// FIXME make this a utility
-import transition from "app/FamilyTree/transition"
+import transition from "app/transition"
 
 import SelectableMino from "./SelectableMino"
 const START_GENS = 5
