@@ -3,11 +3,11 @@ import { css, cx, keyframes } from "emotion"
 
 import { Mino, getSize } from "mino"
 import { colors } from "style/theme"
+
 import { getArc } from "app/utils"
 import { links, getLinkColor, getIndex } from "app/graph"
-
+import transition from "app/transition"
 import { START_GENS, ringRadius, getCoords } from "./treeHelpers"
-import transition from "./transition"
 
 /**
  * Return the path for the link that goes from the source to target mino.

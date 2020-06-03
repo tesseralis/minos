@@ -2,7 +2,7 @@ import React, { memo, useMemo, useCallback } from "react"
 import { Mino, getSize } from "mino"
 
 import SelectableMino from "app/SelectableMino"
-import transition from "./transition"
+import transition from "app/transition"
 
 import {
   NUM_GENERATIONS,

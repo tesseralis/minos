@@ -25,7 +25,7 @@ const baseColorMap: Record<Symmetry, string> = {
   dihedralOrtho: "gold",
   dihedralDiag: "violet",
   rotate4: "turquoise",
-  all: "#ccc",
+  all: "#dee",
 }
 
 export function getSymmetryColor(symmetry: Symmetry): string {
@@ -50,7 +50,7 @@ const mixMap = {
   dihedralOrtho: 20,
   dihedralDiag: 20,
   rotate4: 20,
-  all: 10,
+  all: 0,
 }
 
 function sum(nums: number[]) {
@@ -94,9 +94,10 @@ function sortByParents(minos: Mino[], meta: Record<Mino, MinoMeta>) {
 /**
  * Sort the given minos based on dimensions and point placement
  */
-function sortMinos(minos: Mino[]) {
+export function sortMinos(minos: Mino[]) {
   return sortBy(minos, [
-    (mino) => getWidth(mino) / getHeight(mino),
+    (mino) => -getHeight(mino),
+    (mino) => -getWidth(mino),
     (mino) => mino,
   ])
 }

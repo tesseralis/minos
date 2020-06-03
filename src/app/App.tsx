@@ -1,66 +1,54 @@
-import React, { useState } from "react"
-import { css } from "emotion"
+import React from "react"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import { Mino } from "mino"
 
+import useWindowEventListener from "./useWindowEventListener"
+import Nav from "./Nav"
+import Layout from "./Layout"
 import { getCanonical } from "./graph"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
+import MinoList from "./MinoList"
 
 export default function App() {
-  const [selected, setSelected] = useState<Mino | undefined>()
+  const [selected, setSelected] = React.useState<Mino | undefined>()
+
+  // Deselect when pressing 'escape'
+  useWindowEventListener("keydown", (e) => {
+    if (e.which === 27) {
+      setSelected(undefined)
+    }
+  })
 
   return (
-    <div
-      className={css`
-        display: grid;
-        position: fixed;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
-        /* Needed to make the graph full-height in Safari */
-        width: 100%;
-        height: 100%;
-      `}
-    >
-      <div
-        className={css`
-          grid-area: 1 / 1;
-          /* Needed to make the graph full-height in Safari */
-          display: flex;
-        `}
+    <BrowserRouter>
+      <Layout
+        topLeft={<Nav />}
+        topRight={
+          selected ? (
+            <Compass mino={selected} onSelect={setSelected} />
+          ) : undefined
+        }
+        bottomLeft={<InfoButton />}
       >
-        <FamilyTree
-          selected={selected && getCanonical(selected)}
-          onSelect={setSelected}
-        />
-      </div>
-      <div
-        className={css`
-          grid-area: 1 / 1;
-          align-self: end;
-          justify-self: start;
-          padding: 2rem;
-        `}
-      >
-        <InfoButton />
-      </div>
-      {selected && (
-        <div
-          key={selected}
-          className={css`
-            grid-area: 1 / 1;
-            align-self: start;
-            justify-self: end;
-            padding: 2rem;
-            pointer-events: none;
-          `}
-        >
-          <Compass mino={selected} onSelect={setSelected} />
-        </div>
-      )}
-    </div>
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <FamilyTree
+                selected={selected && getCanonical(selected)}
+                onSelect={setSelected}
+              />
+            }
+          />
+          <Route
+            path="/list"
+            element={<MinoList selected={selected} onSelect={setSelected} />}
+          />
+        </Routes>
+      </Layout>
+    </BrowserRouter>
   )
 }
