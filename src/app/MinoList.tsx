@@ -121,8 +121,8 @@ export default function MinoList({ selected, onSelect }: Props) {
     <main
       className={css`
         width: 100%;
-        max-width: 50rem;
-        margin-left: 8rem;
+        max-width: 48rem;
+        margin-left: 10rem;
         height: 100vh;
         overflow-y: scroll;
       `}
