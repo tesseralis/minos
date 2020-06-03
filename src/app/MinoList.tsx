@@ -3,8 +3,11 @@ import { css } from "emotion"
 
 import { Mino, getSize, getShape, transform } from "mino"
 import { canonicalEquals, nodes, sortMinos, getMinoColor } from "./graph"
+// FIXME make this a utility
+import transition from "app/FamilyTree/transition"
 
 import SelectableMino from "./SelectableMino"
+const START_GENS = 5
 
 interface ListMinoProps {
   mino: Mino
@@ -56,14 +59,29 @@ const ListMino = React.memo(function ({
 interface GenerationProps {
   minos: Mino[]
   selected?: Mino
+  skipAnimation: boolean
   onSelect(mino?: Mino): void
 }
 
 const GenerationList = React.memo(function ({
   minos,
+  skipAnimation,
   selected,
   onSelect,
 }: GenerationProps) {
+  const [visIndex, setVisIndex] = React.useState(0)
+  React.useEffect(() => {
+    if (skipAnimation) {
+      return
+    }
+    transition({
+      duration: minos.length * 10,
+      onUpdate(val) {
+        setVisIndex(val * minos.length)
+      },
+    })
+  }, [minos, skipAnimation])
+
   return (
     <section
       className={css`
@@ -72,7 +90,8 @@ const GenerationList = React.memo(function ({
         margin: 2rem;
       `}
     >
-      {sortMinos(minos).map((mino) => {
+      {sortMinos(minos).map((mino, i) => {
+        if (!skipAnimation && i > visIndex) return null
         const isSelected = !!selected && canonicalEquals(mino, selected)
         return (
           <ListMino
@@ -104,12 +123,14 @@ export default function MinoList({ selected, onSelect }: Props) {
       `}
     >
       {nodes.map((minos, i) => {
-        const hasSelected = !!selected && getSize(selected) === i + 1
+        const gen = i + 1
+        const hasSelected = !!selected && getSize(selected) === gen
         return (
           <GenerationList
             minos={minos}
-            key={i}
+            key={gen}
             onSelect={onSelect}
+            skipAnimation={gen <= START_GENS}
             selected={hasSelected ? selected : undefined}
           />
         )
