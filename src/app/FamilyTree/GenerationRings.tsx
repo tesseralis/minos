@@ -2,6 +2,7 @@ import React, { memo, useMemo, useCallback } from "react"
 import { Mino, getSize } from "mino"
 
 import SelectableMino from "app/SelectableMino"
+import transition from "./transition"
 
 import {
   NUM_GENERATIONS,
@@ -70,10 +71,13 @@ const GenerationRing = memo(
       if (skipAnimation) {
         return
       }
-      setInterval(() => {
-        setVisIndex((visIndex) => visIndex + 10)
-      }, 1 / 60)
-    }, [skipAnimation])
+      transition({
+        duration: minos.length * 10,
+        onUpdate(val) {
+          setVisIndex(val * minos.length)
+        },
+      })
+    }, [minos, skipAnimation])
 
     return (
       <>

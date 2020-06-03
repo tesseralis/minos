@@ -7,6 +7,7 @@ import { getArc } from "app/utils"
 import { links, getLinkColor, getIndex } from "app/graph"
 
 import { START_GENS, ringRadius, getCoords } from "./treeHelpers"
+import transition from "./transition"
 
 /**
  * Return the path for the link that goes from the source to target mino.
@@ -73,12 +74,15 @@ interface Props {
 export default memo(function MinoLinks({ selected }: Props) {
   const startIndex = links.findIndex(([src]) => getSize(src) >= START_GENS)
   const [visIndex, setVisIndex] = React.useState(startIndex)
-  // FIXME do requestAnimationFrame instead
+  // TODO make this more sophisticated and sync up with the other animation
   React.useEffect(() => {
-    setInterval(() => {
-      setVisIndex((visIndex) => visIndex + 50)
-    }, 1 / 60)
-  }, [])
+    transition({
+      duration: 4000,
+      onUpdate(val) {
+        setVisIndex(startIndex + val * (links.length - startIndex))
+      },
+    })
+  }, [startIndex])
 
   return (
     <g>
