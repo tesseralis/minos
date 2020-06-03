@@ -16,6 +16,9 @@ const overlayInfo = [
   { name: "bottomRight", align: "end", justify: "end" },
 ] as const
 
+/**
+ * A Layout that supports central content and one overlay at each corner.
+ */
 export default function Layout({ children, ...overlays }: Props) {
   return (
     <div
@@ -26,7 +29,7 @@ export default function Layout({ children, ...overlays }: Props) {
         left: 0;
         bottom: 0;
         right: 0;
-        /* Needed to make the graph full-height in Safari */
+        /* Needed to make the content full-height in Safari */
         width: 100%;
         height: 100%;
       `}
@@ -55,7 +58,7 @@ export default function Layout({ children, ...overlays }: Props) {
       <div
         className={css`
           grid-area: 1 / 1;
-          /* Needed to make the graph full-height in Safari */
+          /* Needed to make the content full-height in Safari */
           display: flex;
         `}
       >

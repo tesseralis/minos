@@ -4,6 +4,28 @@ import { css } from "emotion"
 
 import { colors } from "style/theme"
 
+function Title() {
+  return (
+    <h1
+      className={css`
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 1rem;
+        color: ${colors.highlight};
+        font-size: 2.25rem;
+
+        span {
+          margin-left: 0.0625rem;
+          font-size: 1rem;
+        }
+      `}
+    >
+      <span>labyrinth of</span>
+      minos
+    </h1>
+  )
+}
+
 export default function Nav() {
   return (
     <nav
@@ -11,25 +33,7 @@ export default function Nav() {
         font-family: serif;
       `}
     >
-      <h1
-        className={css`
-          display: flex;
-          flex-direction: column;
-          margin-bottom: 1rem;
-          color: ${colors.highlight};
-          font-size: 2.25rem;
-        `}
-      >
-        <span
-          className={css`
-            margin-left: 0.0625rem;
-            font-size: 1rem;
-          `}
-        >
-          labyrinth of
-        </span>
-        <span>minos</span>
-      </h1>
+      <Title />
       <ul>
         {["graph", "list"].map((view) => (
           <li key={view}>

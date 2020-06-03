@@ -10,6 +10,18 @@ import useWindowEventListener from "app/useWindowEventListener"
 import SelectableMino from "./SelectableMino"
 const START_GENS = 5
 
+const minoPrefixes = [
+  "",
+  "mono",
+  "do",
+  "tro",
+  "tetro",
+  "pento",
+  "hexo",
+  "hepto",
+  "octo",
+]
+
 interface ListMinoProps {
   mino: Mino
   isSelected: boolean
@@ -35,7 +47,7 @@ const ListMino = React.memo(function ({
     <div
       key={mino}
       className={css`
-        margin-right: 1rem;
+        margin: 0 0.5rem;
       `}
     >
       <svg
@@ -58,6 +70,7 @@ const ListMino = React.memo(function ({
 
 interface GenerationProps {
   minos: Mino[]
+  gen: number
   selected?: Mino
   skipAnimation: boolean
   onSelect(mino?: Mino): void
@@ -65,6 +78,7 @@ interface GenerationProps {
 
 const GenerationList = React.memo(function ({
   minos,
+  gen,
   skipAnimation,
   selected,
   onSelect,
@@ -85,28 +99,49 @@ const GenerationList = React.memo(function ({
   return (
     <section
       className={css`
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        justify-content: center;
         padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
         :not(:first-child) {
           border-top: 1px ${colors.fg} solid;
         }
       `}
     >
-      {sortMinos(minos).map((mino, i) => {
-        if (!skipAnimation && i > visIndex) return null
-        const isSelected = !!selected && canonicalEquals(mino, selected)
-        return (
-          <ListMino
-            key={mino}
-            mino={mino}
-            onSelect={onSelect}
-            isSelected={isSelected}
-          />
-        )
-      })}
+      <h2
+        className={css`
+          color: ${colors.fg};
+          font-size: 1.25rem;
+          margin-bottom: 0.75rem;
+
+          span {
+            font-size: 0.875rem;
+          }
+        `}
+      >
+        {minoPrefixes[gen]}mino <span>(𝑛 = {gen})</span>
+      </h2>
+      <div
+        className={css`
+          display: flex;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: center;
+        `}
+      >
+        {sortMinos(minos).map((mino, i) => {
+          if (!skipAnimation && i > visIndex) return null
+          const isSelected = !!selected && canonicalEquals(mino, selected)
+          return (
+            <ListMino
+              key={mino}
+              mino={mino}
+              onSelect={onSelect}
+              isSelected={isSelected}
+            />
+          )
+        })}
+      </div>
     </section>
   )
 })
@@ -116,6 +151,9 @@ interface Props {
   onSelect(mino?: Mino): void
 }
 
+/**
+ * Displays the list of all minos for each generation
+ */
 export default function MinoList({ selected, onSelect }: Props) {
   useWindowEventListener("click", (e) => {
     // Deselect the current mino if the click target isn't a mino
@@ -142,6 +180,7 @@ export default function MinoList({ selected, onSelect }: Props) {
         return (
           <GenerationList
             minos={minos}
+            gen={gen}
             key={gen}
             onSelect={onSelect}
             skipAnimation={gen <= START_GENS}
