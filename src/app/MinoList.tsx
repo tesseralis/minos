@@ -1,14 +1,23 @@
 import React from "react"
 import { css } from "emotion"
+import { scaleLinear } from "d3-scale"
 
 import { Mino, getSize, getShape, transform } from "mino"
 import { colors } from "style/theme"
-import { canonicalEquals, nodes, sortMinos, getMinoColor } from "./graph"
+import {
+  NUM_GENERATIONS,
+  canonicalEquals,
+  nodes,
+  sortMinos,
+  getMinoColor,
+} from "./graph"
 import transition from "app/transition"
 import useWindowEventListener from "app/useWindowEventListener"
 
 import SelectableMino from "./SelectableMino"
 const START_GENS = 5
+
+const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
 const minoPrefixes = [
   "",
@@ -36,7 +45,7 @@ const ListMino = React.memo(function ({
   mino = transform(mino, "flipMainDiag")
   const [height, width] = getShape(mino)
 
-  const blockSize = 18 - getSize(mino)
+  const blockSize = getBlockSize(getSize(mino))
 
   const svgWidth = width * blockSize * 1.25
   const svgHeight = height * blockSize * 1.25
