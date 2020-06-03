@@ -10,7 +10,7 @@ import {
   nodes,
   sortMinos,
   getMinoColor,
-} from "./graph"
+} from "app/graph"
 import transition from "app/transition"
 import useWindowEventListener from "app/useWindowEventListener"
 
