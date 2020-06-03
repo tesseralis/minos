@@ -16,7 +16,6 @@ export default function App() {
   const [selected, setSelected] = useState<Mino | undefined>()
   // TODO replace this with a router
   const [view, setView] = useState<View>("list")
-  // const [hovered, setHovered] = useState<Mino | undefined>()
 
   return (
     <div
@@ -49,7 +48,7 @@ export default function App() {
           <MinoList selected={selected} onSelect={setSelected} />
         )}
       </div>
-      <div
+      <ul
         className={css`
           grid-area: 1/1;
           align-self: start;
@@ -58,11 +57,28 @@ export default function App() {
         `}
       >
         {views.map((view) => (
-          <button key={view} onClick={() => setView(view)}>
-            {view}
-          </button>
+          <li key={view}>
+            {/* TODO make this a link with a router */}
+            <button
+              className={css`
+                font-family: serif;
+                cursor: pointer;
+                background: none;
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                :hover {
+                  color: gray;
+                  text-decoration: underline;
+                }
+              `}
+              onClick={() => setView(view)}
+            >
+              {view}
+            </button>
+          </li>
         ))}
-      </div>
+      </ul>
       <div
         className={css`
           grid-area: 1 / 1;

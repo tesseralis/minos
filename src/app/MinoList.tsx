@@ -25,8 +25,8 @@ const ListMino = React.memo(function ({
 
   const blockSize = 18 - getSize(mino)
 
-  const svgWidth = width * blockSize * 1.125
-  const svgHeight = height * blockSize * 1.125
+  const svgWidth = width * blockSize * 1.25
+  const svgHeight = height * blockSize * 1.25
 
   const { stroke, fill } = getMinoColor(mino)
 
@@ -35,7 +35,6 @@ const ListMino = React.memo(function ({
       key={mino}
       className={css`
         margin-right: 1rem;
-        margin-bottom: 1rem;
       `}
     >
       <svg
@@ -75,7 +74,7 @@ const GenerationList = React.memo(function ({
       return
     }
     transition({
-      duration: minos.length * 10,
+      duration: minos.length * 5,
       onUpdate(val) {
         setVisIndex(val * minos.length)
       },
@@ -87,7 +86,12 @@ const GenerationList = React.memo(function ({
       className={css`
         display: flex;
         flex-wrap: wrap;
-        margin: 2rem;
+        align-items: center;
+        justify-content: center;
+        padding: 2rem;
+        :not(:first-child) {
+          border-top: 1px white solid;
+        }
       `}
     >
       {sortMinos(minos).map((mino, i) => {
@@ -111,6 +115,7 @@ interface Props {
   onSelect(mino?: Mino): void
 }
 
+// FIXME make sure ESC and clicking outside deselects
 export default function MinoList({ selected, onSelect }: Props) {
   return (
     <main
