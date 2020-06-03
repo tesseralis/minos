@@ -1,8 +1,9 @@
-import React, { useState } from "react"
+import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import { Mino } from "mino"
 
+import useWindowEventListener from "./useWindowEventListener"
 import Nav from "./Nav"
 import Layout from "./Layout"
 import { getCanonical } from "./graph"
@@ -12,7 +13,14 @@ import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
 
 export default function App() {
-  const [selected, setSelected] = useState<Mino | undefined>()
+  const [selected, setSelected] = React.useState<Mino | undefined>()
+
+  // Deselect when pressing 'escape'
+  useWindowEventListener("keydown", (e) => {
+    if (e.which === 27) {
+      setSelected(undefined)
+    }
+  })
 
   return (
     <BrowserRouter>
