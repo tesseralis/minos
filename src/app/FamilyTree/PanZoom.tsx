@@ -1,31 +1,20 @@
 import React, { useRef, useEffect } from "react"
-import panzoom from "panzoom"
+import panzoom, { PanZoomOptions } from "panzoom"
 
-interface Props {
+interface Props extends PanZoomOptions {
   children: React.ReactNode
-  zoomSpeed: number
-  minZoom: number
-  maxZoom: number
 }
 // TODO styles on panning
-export default function PanZoom({
-  children,
-  zoomSpeed,
-  minZoom,
-  maxZoom,
-}: Props) {
+export default function PanZoom({ children, ...panzoomOptions }: Props) {
   const group = useRef<any>(null)
 
   useEffect(() => {
     const instance = panzoom(group.current, {
-      smoothScroll: false,
-      zoomSpeed,
-      maxZoom,
-      minZoom,
+      ...panzoomOptions,
     })
 
     return () => instance.dispose()
-  }, [maxZoom, minZoom, zoomSpeed])
+  }, [panzoomOptions])
 
   return <g ref={group}>{children}</g>
 }
