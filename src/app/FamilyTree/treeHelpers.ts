@@ -6,6 +6,9 @@ import { NUM_GENERATIONS, nodes } from "app/graph"
 
 const ringRadiusBase = 400
 
+// The number of generations to generate eagerly
+export const START_GENS = 5
+
 /**
  * Get the radius of the ring at the given generation
  */
