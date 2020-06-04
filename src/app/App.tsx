@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 
-// import useWindowEventListener from "./useWindowEventListener"
+import KeyBindings from "./KeyBindings"
 import Nav from "./Nav"
 import Layout from "./Layout"
 import SelectedContext from "./SelectedContext"
@@ -11,17 +11,9 @@ import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
 
 export default function App() {
-  // const [selected, setSelected] = React.useState<Mino | undefined>()
-  // FIXME re-enable this
-  // Deselect when pressing 'escape'
-  // useWindowEventListener("keydown", (e) => {
-  //   if (e.which === 27) {
-  //     setSelected(undefined)
-  //   }
-  // })
-
   return (
     <SelectedContext.Provider>
+      <KeyBindings />
       <BrowserRouter>
         <Layout
           topLeft={<Nav />}
