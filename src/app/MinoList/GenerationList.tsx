@@ -11,9 +11,8 @@ import MinoDiv from "./MinoDiv"
 interface Props {
   minos: Mino[]
   gen: number
-  selected?: Mino
+  selected: Mino | null
   skipAnimation: boolean
-  onSelect(mino?: Mino): void
 }
 
 /**
@@ -24,7 +23,6 @@ export default React.memo(function GenerationList({
   gen,
   skipAnimation,
   selected,
-  onSelect,
 }: Props) {
   const [visIndex, setVisIndex] = React.useState(0)
   React.useEffect(() => {
@@ -52,14 +50,7 @@ export default React.memo(function GenerationList({
         {sortMinos(minos).map((mino, i) => {
           if (!skipAnimation && i > visIndex) return null
           const isSelected = !!selected && canonicalEquals(mino, selected)
-          return (
-            <MinoDiv
-              key={mino}
-              mino={mino}
-              onSelect={onSelect}
-              isSelected={isSelected}
-            />
-          )
+          return <MinoDiv key={mino} mino={mino} isSelected={isSelected} />
         })}
       </div>
     </GenSection>

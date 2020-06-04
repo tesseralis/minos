@@ -5,6 +5,7 @@ import tinycolor from "tinycolor2"
 
 import {
   Mino,
+  getSize,
   Coord,
   RelativeLink,
   getCoords,
@@ -13,22 +14,22 @@ import {
   getOutline,
   O_OCTOMINO,
 } from "mino"
+import { NUM_GENERATIONS, getMinoColor } from "app/graph"
 import { Point, Rect } from "app/svg"
 import { getAnchor } from "app/utils"
+import { useSelected, useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
 
+function getBlockSize(gen: number) {
+  return 125 / (gen + 4)
+}
+
 interface Props {
-  mino: Mino
   coord?: Point
-  size: number
-  fill: string
-  stroke: string
   anchor?: string
-  showChildren?: boolean
   showEditable?: boolean
   hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
-  onSelect?(mino: Mino): void
 }
 
 // TODO There's some logic duplicated here from `MinoSvg`.
@@ -37,19 +38,21 @@ interface Props {
  * Renders a mino that can have squares added or removed from it.
  */
 export default function AdjustableMino({
-  mino,
   coord: [cx, cy] = [0, 0],
-  size,
-  fill,
-  stroke,
   showEditable,
-  showChildren,
   anchor = "center center",
   hovered,
   onHover,
-  onSelect,
 }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
+  const mino = useSelected()
+  const setSelected = useSetSelected()
+  if (!mino) return null
+
+  const { fill, stroke } = getMinoColor(mino)
+  const gen = getSize(mino)
+  const showChildren = gen < NUM_GENERATIONS
+  const blockSize = getBlockSize(gen)
   const showSquares = showEditable || innerHovered
 
   function hoverHandler(mino: Mino | undefined, coord: Coord) {
@@ -64,10 +67,10 @@ export default function AdjustableMino({
     return isEqual(hovered?.coord, coord)
   }
 
-  const strokeWidth = size / 8
+  const strokeWidth = blockSize / 8
   const minoPoints = [...getCoords(mino)]
   const outline = getOutline(minoPoints)
-  const scale = ([x, y]: Point) => [x * size, y * size] as Point
+  const scale = ([x, y]: Point) => [x * blockSize, y * blockSize] as Point
   const scaledOutline = outline.map(scale)
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
 
@@ -79,8 +82,8 @@ export default function AdjustableMino({
         <Rect
           fill={colors.bg}
           coord={translate(scale([1, 1]))}
-          width={size}
-          height={size}
+          width={blockSize}
+          height={blockSize}
           stroke="none"
         />
       )}
@@ -96,12 +99,12 @@ export default function AdjustableMino({
               `}
               key={i}
               coord={translate(scale(coord))}
-              width={size}
-              height={size}
+              width={blockSize}
+              height={blockSize}
               fill={colors.highlight}
               stroke="gray"
               strokeWidth={strokeWidth * 0.75}
-              onClick={() => onSelect?.(child)}
+              onClick={() => setSelected(child)}
               onHover={hoverHandler(child, coord)}
             />
           )
@@ -127,10 +130,10 @@ export default function AdjustableMino({
             style={{ stroke }}
             key={i}
             coord={translate(scale(coord))}
-            width={size}
-            height={size}
+            width={blockSize}
+            height={blockSize}
             strokeWidth={strokeWidth * 0.75}
-            onClick={() => !!parent && onSelect?.(parent)}
+            onClick={() => !!parent && setSelected(parent)}
             onHover={hoverHandler(parent, coord)}
           />
         )

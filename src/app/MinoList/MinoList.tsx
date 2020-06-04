@@ -1,29 +1,27 @@
 import React from "react"
 import { css } from "emotion"
 
-import { Mino, getSize } from "mino"
+import { getSize } from "mino"
 import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
+import { useSelected, useSetSelected } from "app/SelectedContext"
 
 import GenerationList from "./GenerationList"
 
 const START_GENS = 5
 
-interface Props {
-  selected?: Mino
-  onSelect(mino?: Mino): void
-}
-
 /**
  * Displays the list of all minos for each generation
  */
-export default function MinoList({ selected, onSelect }: Props) {
+export default function MinoList() {
+  const selected = useSelected()
+  const setSelected = useSetSelected()
   useWindowEventListener("click", (e) => {
     // Deselect the current mino if the click target isn't a mino
     // or the compass
     // TODO this is kind of a hack
     if (!(e.target instanceof SVGElement)) {
-      onSelect()
+      setSelected(null)
     }
   })
 
@@ -45,9 +43,8 @@ export default function MinoList({ selected, onSelect }: Props) {
             minos={minos}
             gen={gen}
             key={gen}
-            onSelect={onSelect}
             skipAnimation={gen <= START_GENS}
-            selected={hasSelected ? selected : undefined}
+            selected={hasSelected ? selected : null}
           />
         )
       })}

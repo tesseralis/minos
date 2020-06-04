@@ -17,6 +17,7 @@ import {
 } from "app/graph"
 
 import SelectableMino from "app/SelectableMino"
+import { useSelected } from "app/SelectedContext"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -31,7 +32,6 @@ interface CommonProps {
   radius: number
   hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
-  onSelect?(mino?: Mino): void
 }
 
 interface StrandProps extends CommonProps {
@@ -56,7 +56,6 @@ function Strand({
   hovered,
   radius,
   onHover,
-  onSelect,
 }: StrandProps) {
   const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
@@ -74,7 +73,6 @@ function Strand({
         mino={isHovered ? hovered!.mino : link.mino}
         onHover={(mino) => onHover?.(mino ? link : undefined)}
         stroke={isHovered ? colors.highlight : stroke}
-        onSelect={onSelect}
         coord={coord}
         size={size}
         fill={fill}
@@ -149,11 +147,9 @@ function Strands({
   )
 }
 
-interface Props extends CommonProps {
-  mino: Mino
-}
-
-export default function CompassLinks({ mino, ...props }: Props) {
+export default function CompassLinks({ ...props }: CommonProps) {
+  const mino = useSelected()
+  if (!mino) return null
   return (
     <g>
       <Strands

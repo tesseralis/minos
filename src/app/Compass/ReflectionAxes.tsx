@@ -1,9 +1,10 @@
 import React from "react"
 
-import { Mino, Transform, hasSymmetry } from "mino"
+import { Transform, hasSymmetry } from "mino"
 
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
+import { useSelected } from "app/SelectedContext"
 
 export const reflectionOrder = [
   "flipVert",
@@ -13,9 +14,6 @@ export const reflectionOrder = [
 ] as const
 
 interface Props {
-  // The list of symmetries; a mapping of indices to booleans
-  // with vertical symmetry being 0 and moving clockwise
-  mino: Mino
   // The index of the reflection axis that should be highlighted
   hovered?: Transform
   // Radius of the axes
@@ -30,10 +28,11 @@ interface Props {
 export default function ReflectionAxes({
   radius,
   color,
-  mino,
   hovered,
   ...lineProps
 }: Props) {
+  const mino = useSelected()
+  if (!mino) return null
   return (
     <g opacity={2 / 3}>
       {reflectionOrder.map((reflection, i) => {

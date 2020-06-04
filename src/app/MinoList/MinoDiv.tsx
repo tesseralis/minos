@@ -12,17 +12,12 @@ const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 interface Props {
   mino: Mino
   isSelected: boolean
-  onSelect(mino?: Mino): void
 }
 
 /**
  * A single mino wrapped in a div aligning with its dimensions.
  */
-export default React.memo(function MinoDiv({
-  mino,
-  isSelected,
-  onSelect,
-}: Props) {
+export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
   mino = transform(mino, "flipMainDiag")
   const [height, width] = getShape(mino)
 
@@ -49,7 +44,6 @@ export default React.memo(function MinoDiv({
           coord={[0, 0]}
           mino={mino}
           size={blockSize}
-          onSelect={onSelect}
           stroke={isSelected ? colors.highlight : stroke}
           fill={fill}
         />
