@@ -32,7 +32,7 @@ interface ButtonProps {
 function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
   const mino = useSelected()
   const color = useSelectedColor()
-  const onSelect = useSetSelected()
+  const setSelected = useSetSelected()
 
   return (
     <Text
@@ -47,7 +47,7 @@ function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
         }
         ${className}
       `}
-      onClick={() => onSelect(transform(mino, trans))}
+      onClick={() => setSelected(transform(mino, trans))}
       onHover={(hovered) => onHover?.(hovered ? trans : null)}
       transform={svgTrans}
     >

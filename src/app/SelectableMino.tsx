@@ -31,10 +31,10 @@ export default memo(function SelectableMino({
   onHover,
 }: Props) {
   const [hovered, setHovered] = useState(false)
-  const onSelect = useSetSelected()
+  const setSelected = useSetSelected()
 
   const n = getSize(mino)
-  const onClick = useCallback(() => onSelect(mino), [mino, onSelect])
+  const onClick = useCallback(() => setSelected(mino), [mino, setSelected])
   const handleHover = useCallback(
     (value) => {
       setHovered(value)

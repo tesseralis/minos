@@ -42,24 +42,25 @@ interface StrandProps {
  * A link to a parent or child mino
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
-  const hovered = RelativeCtx.useValue()
-  const onHover = RelativeCtx.useSetValue()
-  const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
+  const selectedLink = RelativeCtx.useValue()
+  const setSelectedLink = RelativeCtx.useSetValue()
+  const isSelected =
+    !!selectedLink && canonicalEquals(selectedLink.mino, link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
   return (
     <g>
       <path
-        stroke={isHovered ? colors.highlight : linkColor}
-        strokeWidth={isHovered ? 2 : 1}
+        stroke={isSelected ? colors.highlight : linkColor}
+        strokeWidth={isSelected ? 2 : 1}
         d={linkPath}
         fill="none"
         opacity={0.5}
       />
       <SelectableMino
-        mino={isHovered ? hovered!.mino : link.mino}
-        onHover={(mino) => onHover(mino ? link : null)}
-        stroke={isHovered ? colors.highlight : stroke}
+        mino={isSelected ? selectedLink!.mino : link.mino}
+        onHover={(mino) => setSelectedLink(mino ? link : null)}
+        stroke={isSelected ? colors.highlight : stroke}
         coord={coord}
         size={size}
         fill={fill}
