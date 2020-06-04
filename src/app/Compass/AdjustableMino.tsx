@@ -37,8 +37,7 @@ export default function AdjustableMino({ showEditable }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
   const mino = useSelected()
   const setSelected = useSetSelected()
-  const selectedRelative = RelativeCtx.useValue()
-  const setSelectedRelative = RelativeCtx.useSetValue()
+  const [relative, setRelative] = RelativeCtx.useState()
 
   const { fill, stroke } = getMinoColor(mino)
   const gen = getSize(mino)
@@ -49,13 +48,13 @@ export default function AdjustableMino({ showEditable }: Props) {
   function hoverHandler(mino: Mino | undefined, coord: Coord) {
     return (hovered: boolean) => {
       if (!mino) return
-      setSelectedRelative(hovered ? { mino, coord } : null)
+      setRelative(hovered ? { mino, coord } : null)
       setInnerHovered(hovered)
     }
   }
 
   function isHovered(coord: Coord) {
-    return isEqual(selectedRelative?.coord, coord)
+    return isEqual(relative?.coord, coord)
   }
 
   const strokeWidth = blockSize / 8

@@ -10,6 +10,10 @@ export const outerRingRadius = linkRadius + 30
 export const svgSize = outerRingRadius + 5
 export const halfRadius = (innerRingRadius + outerRingRadius) / 2
 
+/**
+ * A version of `useSelected` that throws an error if no mino is selected.
+ * Useful since the compass should only render if a selected mino is available.
+ */
 export function useSelected() {
   const selected = useSelectedNullable()
   if (!selected) {

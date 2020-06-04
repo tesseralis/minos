@@ -28,13 +28,22 @@ export default function createStateContext<T>(defaultValue: T) {
     )
   }
 
+  function useValue() {
+    return React.useContext(ValueContext)
+  }
+
+  function useSetValue() {
+    return React.useContext(SetValueContext)
+  }
+
+  function useState(): [T, (_: T) => void] {
+    return [useValue(), useSetValue()]
+  }
+
   return {
     Provider,
-    useValue() {
-      return React.useContext(ValueContext)
-    },
-    useSetValue() {
-      return React.useContext(SetValueContext)
-    },
+    useValue,
+    useSetValue,
+    useState,
   }
 }
