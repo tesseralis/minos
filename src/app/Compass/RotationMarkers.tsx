@@ -4,7 +4,11 @@ import { Transform, hasSymmetry, isOneSided } from "mino"
 
 import { Point, Polygon, PolygonProps, svgTransform } from "app/svg"
 import { colors } from "style/theme"
-import { useSelected } from "app/SelectedContext"
+import {
+  innerRingRadius as radius,
+  useSelected,
+  useSelectedColor,
+} from "./compassHelpers"
 
 interface RotMarkerProps extends Omit<PolygonProps, "points"> {
   // if true, render asymmetric symbol
@@ -31,16 +35,14 @@ const rotationHover = new Map<string, number>(
 interface Props {
   // current hovered transformation
   hovered?: Transform
-  radius: number
-  color: string
 }
 
 /**
  * Displays arrows/markers representing the rotational symmetry of the mino.
  */
-export default function RotationMarkers({ hovered, radius, color }: Props) {
+export default function RotationMarkers({ hovered }: Props) {
   const mino = useSelected()
-  if (!mino) return null
+  const color = useSelectedColor()
   const order = rotationList.filter((t) => hasSymmetry(mino, t)).length
   // TODO display properly for diagonally reflective minos
   const hoverIndex = hovered ? rotationHover.get(hovered)! : 0

@@ -17,7 +17,7 @@ import {
 } from "app/graph"
 
 import SelectableMino from "app/SelectableMino"
-import { useSelected } from "app/SelectedContext"
+import { linkRadius, useSelected } from "./compassHelpers"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -29,7 +29,6 @@ function getBlockSize(gen: number) {
 
 // Pass comon properties down without having to redefine them all the time
 interface CommonProps {
-  radius: number
   hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
 }
@@ -54,11 +53,10 @@ function Strand({
   coord,
   size,
   hovered,
-  radius,
   onHover,
 }: StrandProps) {
   const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
-  const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
+  const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
   return (
     <g>
@@ -119,7 +117,7 @@ function Strands({
   const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
   // Scale up the radius so that the more minos there are,
   // the further away from the center
-  const scaledRadius = props.radius + numMinos * 1.25
+  const scaledRadius = linkRadius + numMinos * 1.25
   const getAngle = getAngleScale({
     spread: getSpread(maxSpread, numMinos),
     start: spreadStart,
@@ -147,9 +145,8 @@ function Strands({
   )
 }
 
-export default function CompassLinks({ ...props }: CommonProps) {
+export default function CompassLinks(props: CommonProps) {
   const mino = useSelected()
-  if (!mino) return null
   return (
     <g>
       <Strands

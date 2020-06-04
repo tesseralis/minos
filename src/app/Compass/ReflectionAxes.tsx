@@ -4,7 +4,11 @@ import { Transform, hasSymmetry } from "mino"
 
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
-import { useSelected } from "app/SelectedContext"
+import {
+  innerRingRadius as radius,
+  useSelected,
+  useSelectedColor,
+} from "./compassHelpers"
 
 export const reflectionOrder = [
   "flipVert",
@@ -16,23 +20,14 @@ export const reflectionOrder = [
 interface Props {
   // The index of the reflection axis that should be highlighted
   hovered?: Transform
-  // Radius of the axes
-  radius: number
-  // Color of the axes
-  color: string
 }
 
 /**
  * Displays a line corresponding to the axes of the mino
  */
-export default function ReflectionAxes({
-  radius,
-  color,
-  hovered,
-  ...lineProps
-}: Props) {
+export default function ReflectionAxes({ hovered, ...lineProps }: Props) {
   const mino = useSelected()
-  if (!mino) return null
+  const color = useSelectedColor()
   return (
     <g opacity={2 / 3}>
       {reflectionOrder.map((reflection, i) => {

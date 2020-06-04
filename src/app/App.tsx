@@ -12,7 +12,6 @@ import MinoList from "./MinoList"
 
 export default function App() {
   // const [selected, setSelected] = React.useState<Mino | undefined>()
-
   // FIXME re-enable this
   // Deselect when pressing 'escape'
   // useWindowEventListener("keydown", (e) => {

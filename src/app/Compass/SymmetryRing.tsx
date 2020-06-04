@@ -2,18 +2,16 @@ import React from "react"
 import { css } from "emotion"
 import tinycolor from "tinycolor2"
 
-import { Transform, getSymmetry } from "mino"
-import { getSymmetryColor } from "app/graph"
+import { Transform } from "mino"
 import { Circle } from "app/svg"
 import { colors } from "style/theme"
 
 import RotationMarkers from "./RotationMarkers"
 import ReflectionAxes from "./ReflectionAxes"
 import TransformButtons from "./TransformButtons"
-import { useSelected } from "app/SelectedContext"
+import { innerRingRadius as radius, useSelectedColor } from "./compassHelpers"
 
 interface Props {
-  radius: number
   onHover?(hovered: boolean): void
 }
 
@@ -21,12 +19,9 @@ interface Props {
  * A ring that displays visual indicators for the symmetries of the mino
  * and buttons to be able to transform the mino into one of those symmetries.
  */
-export default function SymmetryRing({ radius, onHover }: Props) {
-  // FIXME useSymmetryColor set separately
-  const mino = useSelected()
+export default function SymmetryRing({ onHover }: Props) {
+  const color = useSelectedColor()
   const [hovered, setHovered] = React.useState<Transform | undefined>()
-  if (!mino) return null
-  const color = getSymmetryColor(getSymmetry(mino))
 
   return (
     <g opacity={2 / 3}>
@@ -39,13 +34,9 @@ export default function SymmetryRing({ radius, onHover }: Props) {
         fill={tinycolor.mix(color, colors.bg, 90)}
         onHover={onHover}
       />
-      <ReflectionAxes hovered={hovered} radius={radius} color={color} />
-      <RotationMarkers hovered={hovered} radius={radius} color={color} />
-      <TransformButtons
-        radius={radius + 5}
-        color={color}
-        onHover={setHovered}
-      />
+      <ReflectionAxes hovered={hovered} />
+      <RotationMarkers hovered={hovered} />
+      <TransformButtons onHover={setHovered} />
       <Circle r={radius} fill="none" stroke={color} strokeWidth={3} />
     </g>
   )
