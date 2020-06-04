@@ -25,7 +25,7 @@ interface ButtonProps {
   icon: string
   trans: Transform
   svgTrans: SVGTransform
-  onHover?(trans?: Transform): void
+  onHover?(trans: Transform | null): void
   className?: string
 }
 
@@ -48,7 +48,7 @@ function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
         ${className}
       `}
       onClick={() => onSelect(transform(mino, trans))}
-      onHover={(hovered) => onHover?.(hovered ? trans : undefined)}
+      onHover={(hovered) => onHover?.(hovered ? trans : null)}
       transform={svgTrans}
     >
       {icon}
@@ -58,7 +58,7 @@ function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
 
 interface Props {
   // Function to call when a transform is selected
-  onHover?(trans?: Transform): void
+  onHover?(trans: Transform | null): void
 }
 
 /**

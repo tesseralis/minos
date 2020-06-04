@@ -34,7 +34,7 @@ const rotationHover = new Map<string, number>(
 
 interface Props {
   // current hovered transformation
-  hovered?: Transform
+  hovered: Transform | null
 }
 
 /**

@@ -19,7 +19,7 @@ export const reflectionOrder = [
 
 interface Props {
   // The index of the reflection axis that should be highlighted
-  hovered?: Transform
+  hovered: Transform | null
 }
 
 /**

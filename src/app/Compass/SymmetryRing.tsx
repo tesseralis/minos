@@ -21,7 +21,7 @@ interface Props {
  */
 export default function SymmetryRing({ onHover }: Props) {
   const color = useSelectedColor()
-  const [hovered, setHovered] = React.useState<Transform | undefined>()
+  const [transform, setTransform] = React.useState<Transform | null>(null)
 
   return (
     <g opacity={2 / 3}>
@@ -34,9 +34,9 @@ export default function SymmetryRing({ onHover }: Props) {
         fill={tinycolor.mix(color, colors.bg, 90)}
         onHover={onHover}
       />
-      <ReflectionAxes hovered={hovered} />
-      <RotationMarkers hovered={hovered} />
-      <TransformButtons onHover={setHovered} />
+      <ReflectionAxes hovered={transform} />
+      <RotationMarkers hovered={transform} />
+      <TransformButtons onHover={setTransform} />
       <Circle r={radius} fill="none" stroke={color} strokeWidth={3} />
     </g>
   )
