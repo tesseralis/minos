@@ -7,7 +7,6 @@ import {
   Mino,
   getSize,
   Coord,
-  RelativeLink,
   getCoords,
   getChildren,
   getPossibleParents,
@@ -17,8 +16,9 @@ import {
 import { NUM_GENERATIONS, getMinoColor } from "app/graph"
 import { Point, Rect } from "app/svg"
 import { getAnchor } from "app/utils"
-import { useSelected, useSetSelected } from "app/SelectedContext"
+import { useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
+import { HoveredContext, useSelected } from "./compassHelpers"
 
 function getBlockSize(gen: number) {
   return 125 / (gen + 4)
@@ -26,8 +26,6 @@ function getBlockSize(gen: number) {
 
 interface Props {
   showEditable?: boolean
-  hovered?: RelativeLink
-  onHover?(link?: RelativeLink): void
 }
 
 // TODO There's some logic duplicated here from `MinoSvg`.
@@ -35,15 +33,12 @@ interface Props {
 /**
  * Renders a mino that can have squares added or removed from it.
  */
-export default function AdjustableMino({
-  showEditable,
-  hovered,
-  onHover,
-}: Props) {
+export default function AdjustableMino({ showEditable }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
   const mino = useSelected()
   const setSelected = useSetSelected()
-  if (!mino) return null
+  const hovered = HoveredContext.useValue()
+  const onHover = HoveredContext.useSetValue()
 
   const { fill, stroke } = getMinoColor(mino)
   const gen = getSize(mino)
@@ -54,7 +49,7 @@ export default function AdjustableMino({
   function hoverHandler(mino: Mino | undefined, coord: Coord) {
     return (hovered: boolean) => {
       if (!mino) return
-      onHover?.(hovered ? { mino, coord } : undefined)
+      onHover?.(hovered ? { mino, coord } : null)
       setInnerHovered(hovered)
     }
   }

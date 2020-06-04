@@ -1,5 +1,6 @@
-import { getSymmetry } from "mino"
+import { RelativeLink, getSymmetry } from "mino"
 import { getSymmetryColor } from "app/graph"
+import createStateContext from "app/createStateContext"
 import { useSelected as useSelectedNullable } from "app/SelectedContext"
 
 // Radii for various components of the compass
@@ -24,3 +25,6 @@ export function useSelectedColor() {
   const selected = useSelected()
   return getSymmetryColor(getSymmetry(selected))
 }
+
+type HoveredState = RelativeLink | null
+export const HoveredContext = createStateContext<HoveredState>(null)

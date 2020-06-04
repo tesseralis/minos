@@ -1,33 +1,18 @@
-import React from "react"
-
+import createStateContext from "./createStateContext"
 import { Mino } from "mino"
 
 type SelectedState = Mino | null
 
-const SelectedContext = React.createContext<SelectedState>(null)
-const SetSelectedContext = React.createContext((_: SelectedState) => {
-  void 0
-})
+const SelectedContext = createStateContext<SelectedState>(null)
 
-interface ProviderProps {
-  children: React.ReactElement
-}
-
-export function SelectedProvider({ children }: ProviderProps) {
-  const [selected, setSelected] = React.useState<SelectedState>(null)
-  return (
-    <SetSelectedContext.Provider value={setSelected}>
-      <SelectedContext.Provider value={selected}>
-        {children}
-      </SelectedContext.Provider>
-    </SetSelectedContext.Provider>
-  )
-}
+export default SelectedContext
 
 export function useSelected() {
-  return React.useContext(SelectedContext)
+  return SelectedContext.useValue()
 }
 
 export function useSetSelected() {
-  return React.useContext(SetSelectedContext)
+  return SelectedContext.useSetValue()
 }
+
+// TODO define more selectors

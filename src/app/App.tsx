@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"
 // import useWindowEventListener from "./useWindowEventListener"
 import Nav from "./Nav"
 import Layout from "./Layout"
-import { SelectedProvider } from "./SelectedContext"
+import SelectedContext from "./SelectedContext"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
@@ -21,7 +21,7 @@ export default function App() {
   // })
 
   return (
-    <SelectedProvider>
+    <SelectedContext.Provider>
       <BrowserRouter>
         <Layout
           topLeft={<Nav />}
@@ -34,6 +34,6 @@ export default function App() {
           </Routes>
         </Layout>
       </BrowserRouter>
-    </SelectedProvider>
+    </SelectedContext.Provider>
   )
 }
