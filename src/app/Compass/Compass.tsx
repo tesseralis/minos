@@ -6,7 +6,7 @@ import CompassLinks from "./CompassLinks"
 import Background from "./CompassBackground"
 import AdjustableMino from "./AdjustableMino"
 import SymmetryRing from "./SymmetryRing"
-import { HoveredContext, svgSize } from "./compassHelpers"
+import { RelativeCtx, svgSize } from "./compassHelpers"
 
 /**
  * Displays a mino and its direct children and parents.
@@ -20,7 +20,7 @@ export default function Compass() {
   if (!selected) return null
 
   return (
-    <HoveredContext.Provider>
+    <RelativeCtx.Provider>
       <svg
         viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
         className={css`
@@ -34,6 +34,6 @@ export default function Compass() {
         <SymmetryRing onHover={setShowEditable} />
         <AdjustableMino showEditable={showEditable} />
       </svg>
-    </HoveredContext.Provider>
+    </RelativeCtx.Provider>
   )
 }

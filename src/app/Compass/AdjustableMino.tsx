@@ -18,7 +18,7 @@ import { Point, Rect } from "app/svg"
 import { getAnchor } from "app/utils"
 import { useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
-import { HoveredContext, useSelected } from "./compassHelpers"
+import { RelativeCtx, useSelected } from "./compassHelpers"
 
 function getBlockSize(gen: number) {
   return 125 / (gen + 4)
@@ -37,8 +37,8 @@ export default function AdjustableMino({ showEditable }: Props) {
   const [innerHovered, setInnerHovered] = React.useState(false)
   const mino = useSelected()
   const setSelected = useSetSelected()
-  const hovered = HoveredContext.useValue()
-  const onHover = HoveredContext.useSetValue()
+  const hovered = RelativeCtx.useValue()
+  const onHover = RelativeCtx.useSetValue()
 
   const { fill, stroke } = getMinoColor(mino)
   const gen = getSize(mino)

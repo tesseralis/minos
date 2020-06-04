@@ -17,7 +17,7 @@ import {
 } from "app/graph"
 
 import SelectableMino from "app/SelectableMino"
-import { HoveredContext, linkRadius, useSelected } from "./compassHelpers"
+import { RelativeCtx, linkRadius, useSelected } from "./compassHelpers"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -42,8 +42,8 @@ interface StrandProps {
  * A link to a parent or child mino
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
-  const hovered = HoveredContext.useValue()
-  const onHover = HoveredContext.useSetValue()
+  const hovered = RelativeCtx.useValue()
+  const onHover = RelativeCtx.useSetValue()
   const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)

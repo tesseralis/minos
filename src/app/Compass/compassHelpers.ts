@@ -26,5 +26,7 @@ export function useSelectedColor() {
   return getSymmetryColor(getSymmetry(selected))
 }
 
-type HoveredState = RelativeLink | null
-export const HoveredContext = createStateContext<HoveredState>(null)
+/**
+ * Context for the currently selected relative link
+ */
+export const RelativeCtx = createStateContext<RelativeLink | null>(null)
