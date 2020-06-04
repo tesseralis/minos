@@ -1,10 +1,11 @@
 import React from "react"
 
-import { Transform, hasSymmetry } from "mino"
+import { hasSymmetry } from "mino"
 
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 import {
+  TransformCtx,
   innerRingRadius as radius,
   useSelected,
   useSelectedColor,
@@ -17,26 +18,21 @@ export const reflectionOrder = [
   "flipMinorDiag",
 ] as const
 
-interface Props {
-  // The index of the reflection axis that should be highlighted
-  hovered: Transform | null
-}
-
 /**
  * Displays a line corresponding to the axes of the mino
  */
-export default function ReflectionAxes({ hovered, ...lineProps }: Props) {
+export default function ReflectionAxes() {
   const mino = useSelected()
   const color = useSelectedColor()
+  const selectedTrans = TransformCtx.useValue()
   return (
     <g opacity={2 / 3}>
       {reflectionOrder.map((reflection, i) => {
-        const isHovered = reflection === hovered
+        const isHovered = reflection === selectedTrans
         return (
           (hasSymmetry(mino, reflection) || isHovered) && (
             <Line
               key={i}
-              {...lineProps}
               p1={[-radius, 0]}
               p2={[radius, 0]}
               stroke={isHovered ? colors.highlight : color}

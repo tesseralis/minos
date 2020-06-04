@@ -6,6 +6,7 @@ import { colors } from "style/theme"
 import { SVGTransform, svgTransform, Text } from "app/svg"
 import { useSetSelected } from "app/SelectedContext"
 import {
+  TransformCtx,
   innerRingRadius,
   useSelected,
   useSelectedColor,
@@ -25,14 +26,14 @@ interface ButtonProps {
   icon: string
   trans: Transform
   svgTrans: SVGTransform
-  onHover?(trans: Transform | null): void
   className?: string
 }
 
-function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
+function Button({ icon, trans, svgTrans, className }: ButtonProps) {
   const mino = useSelected()
   const color = useSelectedColor()
   const setSelected = useSetSelected()
+  const setTransform = TransformCtx.useSetValue()
 
   return (
     <Text
@@ -48,7 +49,7 @@ function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
         ${className}
       `}
       onClick={() => setSelected(transform(mino, trans))}
-      onHover={(hovered) => onHover?.(hovered ? trans : null)}
+      onHover={(hovered) => setTransform(hovered ? trans : null)}
       transform={svgTrans}
     >
       {icon}
@@ -56,15 +57,10 @@ function Button({ icon, trans, svgTrans, className, onHover }: ButtonProps) {
   )
 }
 
-interface Props {
-  // Function to call when a transform is selected
-  onHover?(trans: Transform | null): void
-}
-
 /**
  * Buttons that can be used to transform the mino into one of its reflections/rotations
  */
-export default function TransformButtons({ onHover }: Props) {
+export default function TransformButtons() {
   return (
     <g>
       {reflectionOrder.map((trans, i) => (
@@ -72,7 +68,6 @@ export default function TransformButtons({ onHover }: Props) {
           key={trans}
           icon="↕︎"
           trans={trans}
-          onHover={onHover}
           svgTrans={svgTransform()
             .translate(radius, 0)
             .rotate(45 * i)}
@@ -84,7 +79,6 @@ export default function TransformButtons({ onHover }: Props) {
             key={trans}
             icon={rotationSymbols[trans]}
             trans={trans}
-            onHover={onHover}
             className={css`
               font-size: 20px;
               text-anchor: middle;

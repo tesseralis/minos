@@ -1,10 +1,11 @@
 import React from "react"
 
-import { Transform, hasSymmetry, isOneSided } from "mino"
+import { hasSymmetry, isOneSided } from "mino"
 
 import { Point, Polygon, PolygonProps, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 import {
+  TransformCtx,
   innerRingRadius as radius,
   useSelected,
   useSelectedColor,
@@ -32,20 +33,16 @@ const rotationHover = new Map<string, number>(
   rotationList.map((t, i) => [t, i]),
 )
 
-interface Props {
-  // current hovered transformation
-  hovered: Transform | null
-}
-
 /**
  * Displays arrows/markers representing the rotational symmetry of the mino.
  */
-export default function RotationMarkers({ hovered }: Props) {
+export default function RotationMarkers() {
   const mino = useSelected()
   const color = useSelectedColor()
+  const transform = TransformCtx.useValue()
   const order = rotationList.filter((t) => hasSymmetry(mino, t)).length
   // TODO display properly for diagonally reflective minos
-  const hoverIndex = hovered ? rotationHover.get(hovered)! : 0
+  const hoverIndex = transform ? rotationHover.get(transform)! : 0
   return (
     <g>
       {[0, 1, 2, 3].map((index) => {
@@ -53,7 +50,7 @@ export default function RotationMarkers({ hovered }: Props) {
         const shouldShow = index % (4 / order) === 0
         // Whether the index is hovered or not
         const isHover =
-          !!hovered && (index - hoverIndex + 4) % (4 / order) === 0
+          !!transform && (index - hoverIndex + 4) % (4 / order) === 0
 
         return (
           (shouldShow || isHover) && (
