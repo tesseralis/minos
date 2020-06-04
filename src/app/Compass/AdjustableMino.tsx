@@ -25,8 +25,6 @@ function getBlockSize(gen: number) {
 }
 
 interface Props {
-  coord?: Point
-  anchor?: string
   showEditable?: boolean
   hovered?: RelativeLink
   onHover?(link?: RelativeLink): void
@@ -38,9 +36,7 @@ interface Props {
  * Renders a mino that can have squares added or removed from it.
  */
 export default function AdjustableMino({
-  coord: [cx, cy] = [0, 0],
   showEditable,
-  anchor = "center center",
   hovered,
   onHover,
 }: Props) {
@@ -72,9 +68,9 @@ export default function AdjustableMino({
   const outline = getOutline(minoPoints)
   const scale = ([x, y]: Point) => [x * blockSize, y * blockSize] as Point
   const scaledOutline = outline.map(scale)
-  const [avgX, avgY] = getAnchor(scaledOutline, anchor)
+  const [avgX, avgY] = getAnchor(scaledOutline, "center center")
 
-  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy] as Point
+  const translate = ([x, y]: Point) => [x - avgX, y - avgY] as Point
 
   return (
     <g>

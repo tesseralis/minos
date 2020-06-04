@@ -13,12 +13,13 @@ import { svgSize } from "./compassHelpers"
  * Displays a mino and its direct children and parents.
  */
 export default function Compass() {
-  const selected = useSelected()
   // true if the inner symmetry ring has hover focus
-  const [innerHovered, setInnerHovered] = React.useState(false)
+  const [showEditable, setShowEditable] = React.useState(false)
   // the currently selected relative mino
   const [hovered, setHovered] = React.useState<RelativeLink | undefined>()
 
+  // Don't render the compass if there is no mino selected
+  const selected = useSelected()
   if (!selected) return null
 
   return (
@@ -32,11 +33,11 @@ export default function Compass() {
     >
       <Background />
       <CompassLinks hovered={hovered} onHover={setHovered} />
-      <SymmetryRing onHover={setInnerHovered} />
+      <SymmetryRing onHover={setShowEditable} />
       <AdjustableMino
         onHover={setHovered}
         hovered={hovered}
-        showEditable={innerHovered}
+        showEditable={showEditable}
       />
     </svg>
   )
