@@ -13,8 +13,9 @@ export default function Content() {
       font-size: 1.875rem;
       font-family: serif;
       font-style: italic;
-      margin-top: 0.5rem;
-      margin-bottom: 1.5rem;
+      font-weight: normal;
+      margin-block-start: 0.5rem;
+      margin-block-end: 1.5rem;
       letter-spacing: 1px;
       text-align: center;
     }
@@ -22,10 +23,10 @@ export default function Content() {
     p {
       font-size: 1rem;
       line-height: 1.5;
-      margin-bottom: 1.25rem;
+      margin-block-start: 0;
+      margin-block-end: 1.25rem;
     }
     em {
-      font-style: italic;
       font-weight: 400;
     }
   `

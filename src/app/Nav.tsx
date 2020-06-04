@@ -10,8 +10,11 @@ function Title() {
       className={css`
         display: flex;
         flex-direction: column;
+        font-weight: normal;
+        margin-top: 0;
         margin-bottom: 1rem;
         color: ${colors.highlight};
+        line-height: 1;
         font-size: 2.25rem;
 
         span {

@@ -16,7 +16,6 @@ const Button = styled.button`
 
   border: 2px solid ${colors.fg};
   background-color: ${colors.bg};
-  color: ${colors.fg};
   cursor: pointer;
 
   &:hover {

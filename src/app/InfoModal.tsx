@@ -42,7 +42,6 @@ export default function InfoModal({ isOpen, onClose }: any) {
   const style = css`
     background-color: ${colors.bg};
     padding: 1rem 2rem;
-    color: ${colors.fg};
     line-height: 1.5;
     font-family: sans-serif;
     overflow: visible;

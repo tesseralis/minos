@@ -1,5 +1,7 @@
 body {
+  /* TODO get these values from the theme */
   background-color: #202020;
+  color: #ccc;
   /* Don't adjust text size on iOS */
   -webkit-text-size-adjust: none;
 }

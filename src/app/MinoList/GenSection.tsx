@@ -37,9 +37,10 @@ export default function GenSection({ gen, children }: Props) {
     >
       <h2
         className={css`
-          color: ${colors.fg};
+          font-weight: normal;
           font-size: 1.25rem;
-          margin-bottom: 0.75rem;
+          margin-block-start: 0;
+          margin-block-end: 0.75rem;
 
           span {
             font-size: 0.875rem;

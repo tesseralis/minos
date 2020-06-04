@@ -1,6 +1,5 @@
-import 'focus-visible'
+import "focus-visible"
+import "sanitize.css"
 
-import './a11y.css'
-import './box-sizing.css'
-import './reset.css'
-import './theme.css'
+import "./a11y.css"
+import "./theme.css"
