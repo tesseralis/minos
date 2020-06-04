@@ -30,7 +30,7 @@
     "emotion": "^10.0.27",
     "focus-visible": "^5.1.0",
     "lodash-es": "^4.17.15",
-    "panzoom": "^9.2.4",
+    "panzoom": "^9.2.5",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-modal": "^3.11.2",
