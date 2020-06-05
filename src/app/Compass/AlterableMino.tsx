@@ -18,7 +18,7 @@ function InnerSquares({ highlight }: Props) {
   const { fill, stroke } = getMinoColor(mino)
 
   return (
-    <g>
+    <g key={mino.data}>
       {mino.equals(O_OCTOMINO) && <Hole />}
       {mino.possibleParents().map((link, i) => (
         <MinoSquare
@@ -45,7 +45,7 @@ function OuterSquares() {
   // Don't render if on the last generation
   if (mino.order >= NUM_GENERATIONS) return null
   return (
-    <g>
+    <g key={mino.data}>
       {mino.enumerateChildren().map((link, i) => (
         <MinoSquare
           key={i}
