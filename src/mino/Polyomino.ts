@@ -12,6 +12,7 @@ import {
   fromCoords,
   isValid,
   displayMino,
+  fromString,
 } from "./data"
 import { getOutline } from "./draw"
 import { addSquare, removeSquare } from "./modify"
@@ -74,6 +75,10 @@ export default class Polyomino {
    */
   static fromCoords(coords: Coord[]) {
     return this.fromData(fromCoords(coords))
+  }
+
+  static fromString(str: string) {
+    return this.fromData(fromString(str))
   }
 
   // Static methods

@@ -6,7 +6,7 @@ import {
   MinoData,
   Coord,
   MAX_WIDTH,
-  getMino,
+  fromBits,
   getData,
   getWidth,
   rowBits,
@@ -28,7 +28,7 @@ function adjustWidth(mino: MinoData, delta: number): MinoData {
     result |= row << (i * w)
     i++
   }
-  return getMino(result, w)
+  return fromBits(result, w)
 }
 
 function incWidth(mino: MinoData): MinoData {
@@ -43,24 +43,24 @@ function shiftLeft(mino: MinoData): MinoData {
   const expanded = incWidth(mino)
   const data = getData(expanded)
 
-  return getMino(data << 1, getWidth(expanded))
+  return fromBits(data << 1, getWidth(expanded))
 }
 
 function shiftRight(mino: MinoData): MinoData {
   const decremented = decWidth(mino)
   const data = getData(decremented)
 
-  return getMino(data >> 1, getWidth(decremented))
+  return fromBits(data >> 1, getWidth(decremented))
 }
 
 function shiftDown(mino: MinoData): MinoData {
   const w = getWidth(mino)
-  return getMino(getData(mino) >> w, w)
+  return fromBits(getData(mino) >> w, w)
 }
 
 function shiftUp(mino: MinoData): MinoData {
   const w = getWidth(mino)
-  return getMino(getData(mino) << w, w)
+  return fromBits(getData(mino) << w, w)
 }
 
 function doAdd(mino: MinoData, i: number, j: number): MinoData {

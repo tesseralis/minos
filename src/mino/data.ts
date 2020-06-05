@@ -66,12 +66,12 @@ export function getHeight(mino: MinoData) {
 /**
  * Return the mino given the data bits and the specified width
  */
-export function getMino(data: number, width: number): MinoData {
+export function fromBits(data: number, width: number): MinoData {
   return (data << WIDTH_BITS) | (width === MAX_WIDTH ? 0 : width)
 }
 
-export const MONOMINO = getMino(1, 1)
-export const O_OCTOMINO = getMino(0b111_101_111, 3)
+export const MONOMINO = fromBits(1, 1)
+export const O_OCTOMINO = fromBits(0b111_101_111, 3)
 
 /**
  * Iterate over the coordinates of the squares of the mino.
@@ -98,7 +98,7 @@ export function fromCoords(coords: Coord[]) {
   for (const [i, j] of coords) {
     result = result | (1 << (w * i + j))
   }
-  return getMino(result, w)
+  return fromBits(result, w)
 }
 
 /**
@@ -186,6 +186,19 @@ export function* rowBits(mino: MinoData): Generator<number> {
 interface DisplayOpts {
   block?: string
   space?: string
+}
+
+/**
+ * Return the mino represented by the given delimited string:
+ * e.g.
+ * 100_111 =>
+ * []
+ * [][][]
+ */
+export function fromString(str: string) {
+  const width = str.split("_")[0].length
+  const bits = parseInt(str.replace(/_/g, ""), 2)
+  return fromBits(bits, width)
 }
 
 /**
