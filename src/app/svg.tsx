@@ -126,3 +126,7 @@ export interface TextProps extends Omit<SVGProps<SVGTextElement>, "x" | "y"> {
 export function Text({ coord: [x, y] = [0, 0], ...svgProps }: TextProps) {
   return <text {...getBaseSVGProps(svgProps)} x={x} y={y} />
 }
+
+export function G(props: SVGProps<SVGGElement>) {
+  return <g {...getBaseSVGProps(props)} />
+}

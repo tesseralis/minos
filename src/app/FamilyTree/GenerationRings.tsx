@@ -3,10 +3,12 @@ import { Mino, getSize } from "mino"
 
 import SelectableMino from "app/SelectableMino"
 import transition from "app/transition"
+import { useSelected } from "app/SelectedContext"
 
 import {
   NUM_GENERATIONS,
   nodes,
+  getCanonical,
   getCanonicalParents,
   getCanonicalChildren,
   getMinoColor,
@@ -23,7 +25,6 @@ interface MinoProps {
   gen: number
   i: number
   selected?: Set<Mino>
-  onSelect?(mino: Mino): void
   onHover?(mino: Mino): void
 }
 
@@ -35,7 +36,6 @@ const RingMino = memo(function ({
   gen,
   i,
   selected,
-  onSelect,
   onHover,
 }: MinoProps) {
   const coord = useMemo(() => getCoords(gen, i), [gen, i])
@@ -45,7 +45,6 @@ const RingMino = memo(function ({
       coord={coord}
       size={getBlockSize(gen)}
       selected={!!selected?.has(mino)}
-      onSelect={onSelect}
       onHover={onHover}
       {...getMinoColor(mino)}
     />
@@ -57,7 +56,6 @@ interface RingProps {
   gen: number
   skipAnimation: boolean
   selected?: Set<Mino>
-  onSelect?(mino: Mino): void
   onHover?(mino: Mino): void
 }
 
@@ -93,12 +91,8 @@ const GenerationRing = memo(
   },
 )
 
-interface RingsProps {
-  selected?: Mino
-  onSelect?(mino: Mino): void
-}
-
-export default function GenerationRings({ selected, onSelect }: RingsProps) {
+export default function GenerationRings() {
+  const selected = useSelected()
   const parents = selected ? getCanonicalParents(selected) : new Set<Mino>()
   const children = selected ? getCanonicalChildren(selected) : new Set<Mino>()
 
@@ -108,7 +102,7 @@ export default function GenerationRings({ selected, onSelect }: RingsProps) {
       if (!selected) return
       const selectedGen = getSize(selected)
       if (gen === selectedGen) {
-        return new Set([selected])
+        return new Set([getCanonical(selected)])
       } else if (gen === selectedGen - 1) {
         return parents
       } else if (gen === selectedGen + 1) {
@@ -129,7 +123,6 @@ export default function GenerationRings({ selected, onSelect }: RingsProps) {
             key={gen}
             skipAnimation={gen <= START_GENS}
             selected={getSelected(gen)}
-            onSelect={onSelect}
           />
         )
       })}

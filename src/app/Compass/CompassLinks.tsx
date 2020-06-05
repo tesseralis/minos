@@ -17,6 +17,7 @@ import {
 } from "app/graph"
 
 import SelectableMino from "app/SelectableMino"
+import { RelativeCtx, linkRadius, useSelected } from "./compassHelpers"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -26,15 +27,7 @@ function getBlockSize(gen: number) {
   return 25 / (gen + 4)
 }
 
-// Pass comon properties down without having to redefine them all the time
-interface CommonProps {
-  radius: number
-  hovered?: RelativeLink
-  onHover?(link?: RelativeLink): void
-  onSelect?(mino?: Mino): void
-}
-
-interface StrandProps extends CommonProps {
+interface StrandProps {
   // the relative mino represented by this strand
   link: RelativeLink
   // color of the link
@@ -48,33 +41,24 @@ interface StrandProps extends CommonProps {
 /**
  * A link to a parent or child mino
  */
-function Strand({
-  link,
-  linkColor,
-  coord,
-  size,
-  hovered,
-  radius,
-  onHover,
-  onSelect,
-}: StrandProps) {
-  const isHovered = !!hovered && canonicalEquals(hovered.mino, link.mino)
-  const linkPath = getArc(coord, [0, 0], [0, -radius * 2])
+function Strand({ link, linkColor, coord, size }: StrandProps) {
+  const [selected, setSelected] = RelativeCtx.useState()
+  const isSelected = !!selected && canonicalEquals(selected.mino, link.mino)
+  const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
   return (
     <g>
       <path
-        stroke={isHovered ? colors.highlight : linkColor}
-        strokeWidth={isHovered ? 2 : 1}
+        stroke={isSelected ? colors.highlight : linkColor}
+        strokeWidth={isSelected ? 2 : 1}
         d={linkPath}
         fill="none"
         opacity={0.5}
       />
       <SelectableMino
-        mino={isHovered ? hovered!.mino : link.mino}
-        onHover={(mino) => onHover?.(mino ? link : undefined)}
-        stroke={isHovered ? colors.highlight : stroke}
-        onSelect={onSelect}
+        mino={isSelected ? selected!.mino : link.mino}
+        onHover={(mino) => setSelected(mino ? link : null)}
+        stroke={isSelected ? colors.highlight : stroke}
         coord={coord}
         size={size}
         fill={fill}
@@ -83,7 +67,7 @@ function Strand({
   )
 }
 
-interface StrandsProps extends CommonProps {
+interface StrandsProps {
   // The set of minos to render as strands
   links: RelativeLink[]
   // The maximum number of minos that can be rendered
@@ -121,7 +105,7 @@ function Strands({
   const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
   // Scale up the radius so that the more minos there are,
   // the further away from the center
-  const scaledRadius = props.radius + numMinos * 1.25
+  const scaledRadius = linkRadius + numMinos * 1.25
   const getAngle = getAngleScale({
     spread: getSpread(maxSpread, numMinos),
     start: spreadStart,
@@ -149,11 +133,8 @@ function Strands({
   )
 }
 
-interface Props extends CommonProps {
-  mino: Mino
-}
-
-export default function CompassLinks({ mino, ...props }: Props) {
+export default function CompassLinks() {
+  const mino = useSelected()
   return (
     <g>
       <Strands
@@ -163,7 +144,6 @@ export default function CompassLinks({ mino, ...props }: Props) {
         maxSpread={1 / 3}
         spreadStart={-1 / 4}
         linkColor={(parent: Mino) => getLinkColor(parent, mino)}
-        {...props}
       />
       <Strands
         links={getSortedChildren(mino)}
@@ -173,7 +153,6 @@ export default function CompassLinks({ mino, ...props }: Props) {
         spreadStart={1 / 4}
         reverse
         linkColor={(child: Mino) => getLinkColor(mino, child)}
-        {...props}
       />
     </g>
   )

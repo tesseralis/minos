@@ -1,11 +1,19 @@
 import React from "react"
 import { css } from "emotion"
 
-import { Mino, Transform, transform } from "mino"
+import { Transform, transform } from "mino"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform, Text } from "app/svg"
+import { useSetSelected } from "app/SelectedContext"
+import {
+  TransformCtx,
+  innerRingRadius,
+  useSelected,
+  useSelectedColor,
+} from "./compassHelpers"
 
 import { reflectionOrder } from "./ReflectionAxes"
+const radius = innerRingRadius + 5
 
 // TODO replace these icons with actual SVG
 const rotationSymbols = {
@@ -14,61 +22,56 @@ const rotationSymbols = {
   rotateLeft: "⃔",
 }
 
+interface ButtonProps {
+  icon: string
+  trans: Transform
+  svgTrans: SVGTransform
+  className?: string
+}
+
+function Button({ icon, trans, svgTrans, className }: ButtonProps) {
+  const mino = useSelected()
+  const color = useSelectedColor()
+  const setSelected = useSetSelected()
+  const setTransform = TransformCtx.useSetValue()
+
+  return (
+    <Text
+      className={css`
+        cursor: pointer;
+        fill: ${color};
+        pointer-events: initial;
+        user-select: none;
+        dominant-baseline: middle;
+        :hover {
+          fill: ${colors.highlight};
+        }
+        ${className}
+      `}
+      onClick={() => setSelected(transform(mino, trans))}
+      onHover={(hovered) => setTransform(hovered ? trans : null)}
+      transform={svgTrans}
+    >
+      {icon}
+    </Text>
+  )
+}
+
 interface Props {
-  // The mino to transform
-  mino: Mino
-  // The color of the transform buttons
-  color: string
-  // The radius of the buttons
-  radius: number
-  // Function to call when a mino is selected
-  onSelect?(mino: Mino): void
-  // Function to call when a transform is selected
-  onHover?(trans?: Transform): void
+  visible?: boolean
 }
 
 /**
  * Buttons that can be used to transform the mino into one of its reflections/rotations
  */
-export default function TransformButtons({
-  mino,
-  color,
-  radius,
-  onSelect,
-  onHover,
-}: Props) {
-  interface ButtonProps {
-    icon: string
-    trans: Transform
-    svgTrans: SVGTransform
-    className?: string
-  }
-
-  function Button({ icon, trans, svgTrans, className }: ButtonProps) {
-    return (
-      <Text
-        className={css`
-          cursor: pointer;
-          fill: ${color};
-          pointer-events: initial;
-          user-select: none;
-          dominant-baseline: middle;
-          :hover {
-            fill: ${colors.highlight};
-          }
-          ${className}
-        `}
-        onClick={() => onSelect?.(transform(mino, trans))}
-        onHover={(hovered) => onHover?.(hovered ? trans : undefined)}
-        transform={svgTrans}
-      >
-        {icon}
-      </Text>
-    )
-  }
-
+export default function TransformButtons({ visible }: Props) {
   return (
-    <g>
+    <g
+      className={css`
+        transition: opacity 100ms ease-in-out;
+        opacity: ${visible ? 1 : 0};
+      `}
+    >
       {reflectionOrder.map((trans, i) => (
         <Button
           key={trans}

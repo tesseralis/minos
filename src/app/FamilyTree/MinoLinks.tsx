@@ -5,9 +5,10 @@ import { Mino, getSize } from "mino"
 import { colors } from "style/theme"
 
 import { getArc } from "app/utils"
-import { links, getLinkColor, getIndex } from "app/graph"
+import { links, getCanonical, getLinkColor, getIndex } from "app/graph"
 import transition from "app/transition"
 import { START_GENS, ringRadius, getCoords } from "./treeHelpers"
+import { useSelected } from "app/SelectedContext"
 
 /**
  * Return the path for the link that goes from the source to target mino.
@@ -64,14 +65,11 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
   )
 })
 
-interface Props {
-  selected?: Mino
-}
-
 /**
  * The strands connecting related minos.
  */
-export default memo(function MinoLinks({ selected }: Props) {
+export default memo(function MinoLinks() {
+  const selected = useSelected()
   const startIndex = links.findIndex(([src]) => getSize(src) >= START_GENS)
   const [visIndex, setVisIndex] = React.useState(startIndex)
   // TODO make this more sophisticated and sync up with the other animation
@@ -92,7 +90,7 @@ export default memo(function MinoLinks({ selected }: Props) {
             <MinoLink
               key={i}
               link={link}
-              isSelected={!!selected && link.includes(selected)}
+              isSelected={!!selected && link.includes(getCanonical(selected))}
             />
           ),
       )}

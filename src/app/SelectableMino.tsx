@@ -7,6 +7,7 @@ import { Point, Circle } from "app/svg"
 
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"
+import { useSetSelected } from "./SelectedContext"
 
 interface Props {
   mino: Mino
@@ -16,7 +17,6 @@ interface Props {
   stroke: string
   anchor?: string
   selected?: boolean
-  onSelect?(mino: Mino): void
   onHover?(mino?: Mino): void
 }
 
@@ -28,13 +28,13 @@ export default memo(function SelectableMino({
   stroke,
   anchor,
   selected = false,
-  onSelect,
   onHover,
 }: Props) {
   const [hovered, setHovered] = useState(false)
+  const setSelected = useSetSelected()
 
   const n = getSize(mino)
-  const onClick = useCallback(() => onSelect?.(mino), [mino, onSelect])
+  const onClick = useCallback(() => setSelected(mino), [mino, setSelected])
   const handleHover = useCallback(
     (value) => {
       setHovered(value)

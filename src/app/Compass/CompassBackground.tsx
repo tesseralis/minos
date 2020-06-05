@@ -3,38 +3,35 @@ import { css } from "emotion"
 import { colors } from "style/theme"
 import { Circle, Line } from "app/svg"
 
+import { outerRingRadius, halfRadius } from "./compassHelpers"
+
 const borderColor = "#aaa"
 
-interface Props {
-  radius: number
-  innerRadius: number
-}
-
-export default function Background({ radius, innerRadius }: Props) {
+export default function Background() {
   return (
     <g opacity={2 / 3}>
       <Circle
         className={css`
           pointer-events: initial;
         `}
-        r={radius}
+        r={outerRingRadius}
         fill={colors.bg}
         stroke={borderColor}
       />
       <Line
-        p1={[-radius, 0]}
-        p2={[-innerRadius, 0]}
+        p1={[-outerRingRadius, 0]}
+        p2={[-halfRadius, 0]}
         stroke={borderColor}
         strokeWidth={1}
       />
       <Line
-        p1={[innerRadius, 0]}
-        p2={[radius, 0]}
+        p1={[halfRadius, 0]}
+        p2={[outerRingRadius, 0]}
         stroke={borderColor}
         strokeWidth={1}
       />
-      <Circle center={[-innerRadius, 0]} r={3} fill={borderColor} />
-      <Circle center={[innerRadius, 0]} r={3} fill={borderColor} />
+      <Circle center={[-halfRadius, 0]} r={3} fill={borderColor} />
+      <Circle center={[halfRadius, 0]} r={3} fill={borderColor} />
     </g>
   )
 }
