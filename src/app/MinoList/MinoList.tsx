@@ -8,7 +8,7 @@ import { useSelected, useSetSelected } from "app/SelectedContext"
 
 import GenerationList from "./GenerationList"
 
-const START_GENS = 5
+const START_GENS = 6
 
 /**
  * Displays the list of all minos for each generation
