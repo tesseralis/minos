@@ -30,6 +30,7 @@ export interface PossibleRelativeLink {
 }
 export type RelativeLink = Required<PossibleRelativeLink>
 
+// lazily evaluate the property
 function lazy<T>(fn: () => T) {
   let cachedVal: T | null = null
   return () => {
@@ -63,7 +64,7 @@ export default class Polyomino {
     this.dims = [this.width, this.height]
   }
 
-  static fromData(data: MinoData) {
+  private static fromData(data: MinoData) {
     if (!cache[data]) {
       cache[data] = new Polyomino(data)
     }
