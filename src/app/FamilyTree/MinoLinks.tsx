@@ -5,7 +5,7 @@ import { Polyomino } from "mino"
 import { colors } from "style/theme"
 
 import { getArc } from "app/utils"
-import { links, getLinkColor, getIndex } from "app/graph"
+import { links, getLinkColor } from "app/graph"
 import transition from "app/transition"
 import { START_GENS, ringRadius, getCoords } from "./treeHelpers"
 import { useSelected } from "app/SelectedContext"
@@ -16,12 +16,8 @@ import { useSelected } from "app/SelectedContext"
  * scaled according to the radius of the generation.
  */
 function getLinkPath([srcMino, tgtMino]: [Polyomino, Polyomino]) {
-  const gen = srcMino.order
-  const origin = [0, -1 - ringRadius(gen) * 0.75] as const
-  const src = getCoords(gen, getIndex(srcMino))
-  const tgt = getCoords(gen + 1, getIndex(tgtMino))
-
-  return getArc(src, tgt, origin)
+  const origin = [0, -1 - ringRadius(srcMino.order) * 0.75] as const
+  return getArc(getCoords(srcMino), getCoords(tgtMino), origin)
 }
 
 interface MinoLinkProps {

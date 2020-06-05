@@ -124,6 +124,9 @@ export default class Polyomino {
 
   parents = lazy(() => this.enumerateParents().map((link) => link.mino))
 
+  /** Return the set of all free parents of this mino */
+  freeParents = lazy(() => new Set(this.parents().map((p) => p.free())))
+
   private *neighbors(mino: MinoData): Generator<Coord> {
     const visited = new Set<string>()
     for (const coord of this.coords()) {
@@ -146,6 +149,9 @@ export default class Polyomino {
   )
 
   children = lazy(() => this.enumerateChildren().map((link) => link.mino))
+
+  /** Return the set of all free parents of this mino */
+  freeChildren = lazy(() => new Set(this.children().map((c) => c.free())))
 
   // Transforms and symmetry
 

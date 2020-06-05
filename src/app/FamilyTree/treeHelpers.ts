@@ -2,7 +2,8 @@ import { scaleLinear } from "d3-scale"
 
 import { toCartesian } from "math"
 import { getAngleScale } from "app/utils"
-import { NUM_GENERATIONS, nodes } from "app/graph"
+import { NUM_GENERATIONS, nodes, getIndex } from "app/graph"
+import { Polyomino } from "mino"
 
 const ringRadiusBase = 400
 
@@ -34,7 +35,11 @@ function getMinoAngleScale(gen: number) {
 /**
  * Get the coordinates of the given mino given its generation and index
  */
-export function getCoords(gen: number, i: number) {
+export function getCoords(mino: Polyomino) {
+  const gen = mino.order
   const getAngle = getMinoAngleScale(gen)
-  return toCartesian({ radius: ringRadius(gen), angle: getAngle(i) })
+  return toCartesian({
+    radius: ringRadius(gen),
+    angle: getAngle(getIndex(mino)),
+  })
 }

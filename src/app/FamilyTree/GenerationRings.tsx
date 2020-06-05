@@ -1,17 +1,10 @@
 import React, { memo, useMemo, useCallback } from "react"
 import { Polyomino } from "mino"
 
-import SelectableMino from "app/SelectableMino"
 import transition from "app/transition"
+import { NUM_GENERATIONS, nodes, getMinoColor } from "app/graph"
 import { useSelected } from "app/SelectedContext"
-
-import {
-  NUM_GENERATIONS,
-  nodes,
-  getFreeParents,
-  getFreeChildren,
-  getMinoColor,
-} from "app/graph"
+import SelectableMino from "app/SelectableMino"
 
 import { START_GENS, getCoords } from "./treeHelpers"
 
@@ -22,7 +15,6 @@ function getBlockSize(gen: number) {
 interface MinoProps {
   mino: Polyomino
   gen: number
-  i: number
   selected?: Set<Polyomino>
   onHover?(mino: Polyomino): void
 }
@@ -30,14 +22,8 @@ interface MinoProps {
 /**
  * Memoized wrapper around the mino to efficiently calculate it
  */
-const RingMino = memo(function ({
-  mino,
-  gen,
-  i,
-  selected,
-  onHover,
-}: MinoProps) {
-  const coord = useMemo(() => getCoords(gen, i), [gen, i])
+const RingMino = memo(function ({ mino, gen, selected, onHover }: MinoProps) {
+  const coord = useMemo(() => getCoords(mino), [mino])
   return (
     <SelectableMino
       mino={mino}
@@ -81,7 +67,7 @@ const GenerationRing = memo(
         {minos.map((mino, i) => {
           return (
             (skipAnimation || i < visIndex) && (
-              <RingMino key={mino.data} mino={mino} i={i} {...minoProps} />
+              <RingMino key={mino.data} mino={mino} {...minoProps} />
             )
           )
         })}
@@ -92,8 +78,8 @@ const GenerationRing = memo(
 
 export default function GenerationRings() {
   const selected = useSelected()
-  const parents = selected ? getFreeParents(selected) : new Set<Polyomino>()
-  const children = selected ? getFreeChildren(selected) : new Set<Polyomino>()
+  const parents = selected ? selected.freeParents() : new Set<Polyomino>()
+  const children = selected ? selected.freeChildren() : new Set<Polyomino>()
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(

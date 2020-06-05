@@ -69,7 +69,7 @@ interface MinoMeta {
 }
 
 function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
-  return avg(mino.parents().map((p) => indices[p.data]))
+  return avg([...mino.freeParents()].map((p) => indices[p.data]))
 }
 
 /**
@@ -84,7 +84,9 @@ export function generateGraph(n: number) {
   const links: [Polyomino, Polyomino][] = []
 
   // mapping from each mino to its index in the generation
-  const indices: Record<MinoData, number> = {}
+  const indices: Record<MinoData, number> = {
+    [MONOMINO.data]: 0,
+  }
   const visited = new Set<MinoData>([MONOMINO.data])
   let currentGen = [MONOMINO]
 
@@ -138,10 +140,10 @@ const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
 const allMinos = nodes.flat()
 
 export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => getFreeParents(mino).size),
+  ...allMinos.map((mino) => mino.freeParents().size),
 )
 export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => getFreeChildren(mino).size),
+  ...allMinos.map((mino) => mino.freeChildren().size),
 )
 
 // Cached colors of each link
@@ -154,31 +156,6 @@ for (const [src, tgt] of links) {
 }
 
 export { nodes, links }
-
-/**
- * Get the canonical parents of the mino
- */
-export function getFreeParents(mino: Polyomino): Set<Polyomino> {
-  return new Set(
-    mino
-      .free()
-      .parents()
-      .map((p) => p.free()),
-  )
-  // return meta[getCanonical(mino)].parents
-}
-
-/**
- * Get the canonical children of the *canonical* mino
- */
-export function getFreeChildren(mino: Polyomino): Set<Polyomino> {
-  return new Set(
-    mino
-      .free()
-      .children()
-      .map((p) => p.free()),
-  )
-}
 
 function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
   const uniq = uniqBy([...minos], ({ mino }) => mino.free())
