@@ -1,18 +1,10 @@
 import React, { memo, useMemo, useCallback } from "react"
-import { Mino, getSize } from "mino"
+import { Polyomino } from "mino"
 
-import SelectableMino from "app/SelectableMino"
 import transition from "app/transition"
+import { NUM_GENERATIONS, nodes, getMinoColor } from "app/graph"
 import { useSelected } from "app/SelectedContext"
-
-import {
-  NUM_GENERATIONS,
-  nodes,
-  getCanonical,
-  getCanonicalParents,
-  getCanonicalChildren,
-  getMinoColor,
-} from "app/graph"
+import SelectableMino from "app/SelectableMino"
 
 import { START_GENS, getCoords } from "./treeHelpers"
 
@@ -21,24 +13,17 @@ function getBlockSize(gen: number) {
 }
 
 interface MinoProps {
-  mino: Mino
+  mino: Polyomino
   gen: number
-  i: number
-  selected?: Set<Mino>
-  onHover?(mino: Mino): void
+  selected?: Set<Polyomino>
+  onHover?(mino: Polyomino): void
 }
 
 /**
  * Memoized wrapper around the mino to efficiently calculate it
  */
-const RingMino = memo(function ({
-  mino,
-  gen,
-  i,
-  selected,
-  onHover,
-}: MinoProps) {
-  const coord = useMemo(() => getCoords(gen, i), [gen, i])
+const RingMino = memo(function ({ mino, gen, selected, onHover }: MinoProps) {
+  const coord = useMemo(() => getCoords(mino), [mino])
   return (
     <SelectableMino
       mino={mino}
@@ -52,11 +37,11 @@ const RingMino = memo(function ({
 })
 
 interface RingProps {
-  minos: Mino[]
+  minos: Polyomino[]
   gen: number
   skipAnimation: boolean
-  selected?: Set<Mino>
-  onHover?(mino: Mino): void
+  selected?: Set<Polyomino>
+  onHover?(mino: Polyomino): void
 }
 
 /**
@@ -82,7 +67,7 @@ const GenerationRing = memo(
         {minos.map((mino, i) => {
           return (
             (skipAnimation || i < visIndex) && (
-              <RingMino key={mino} mino={mino} i={i} {...minoProps} />
+              <RingMino key={mino.data} mino={mino} {...minoProps} />
             )
           )
         })}
@@ -93,16 +78,16 @@ const GenerationRing = memo(
 
 export default function GenerationRings() {
   const selected = useSelected()
-  const parents = selected ? getCanonicalParents(selected) : new Set<Mino>()
-  const children = selected ? getCanonicalChildren(selected) : new Set<Mino>()
+  const parents = selected ? selected.freeParents() : new Set<Polyomino>()
+  const children = selected ? selected.freeChildren() : new Set<Polyomino>()
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
     (gen) => {
       if (!selected) return
-      const selectedGen = getSize(selected)
+      const selectedGen = selected.order
       if (gen === selectedGen) {
-        return new Set([getCanonical(selected)])
+        return new Set([selected.free()])
       } else if (gen === selectedGen - 1) {
         return parents
       } else if (gen === selectedGen + 1) {

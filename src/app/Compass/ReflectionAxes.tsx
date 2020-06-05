@@ -1,7 +1,5 @@
 import React from "react"
 
-import { hasSymmetry } from "mino"
-
 import { Line, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 import {
@@ -30,7 +28,7 @@ export default function ReflectionAxes() {
       {reflectionOrder.map((reflection, i) => {
         const isHovered = reflection === selectedTrans
         return (
-          (hasSymmetry(mino, reflection) || isHovered) && (
+          (mino.hasSymmetry(reflection) || isHovered) && (
             <Line
               key={i}
               p1={[-radius, 0]}

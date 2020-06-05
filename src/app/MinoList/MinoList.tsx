@@ -1,7 +1,6 @@
 import React from "react"
 import { css } from "emotion"
 
-import { getSize } from "mino"
 import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 import { useSelected, useSetSelected } from "app/SelectedContext"
@@ -40,7 +39,7 @@ export default function MinoList() {
     >
       {nodes.map((minos, i) => {
         const gen = i + 1
-        const hasSelected = !!selected && getSize(selected) === gen
+        const hasSelected = !!selected && selected.order === gen
         return (
           <GenerationList
             minos={minos}

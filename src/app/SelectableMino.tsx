@@ -1,7 +1,7 @@
 import React, { memo, useState, useCallback } from "react"
 import { css } from "emotion"
 
-import { Mino, getSize } from "mino"
+import { Polyomino } from "mino"
 import { colors } from "style/theme"
 import { Point, Circle } from "app/svg"
 
@@ -10,14 +10,14 @@ import MinoSvg from "./MinoSvg"
 import { useSetSelected } from "./SelectedContext"
 
 interface Props {
-  mino: Mino
+  mino: Polyomino
   coord: Point
   size: number
   fill: string
   stroke: string
   anchor?: string
   selected?: boolean
-  onHover?(mino?: Mino): void
+  onHover?(mino?: Polyomino): void
 }
 
 export default memo(function SelectableMino({
@@ -33,7 +33,7 @@ export default memo(function SelectableMino({
   const [hovered, setHovered] = useState(false)
   const setSelected = useSetSelected()
 
-  const n = getSize(mino)
+  const n = mino.order
   const onClick = useCallback(() => setSelected(mino), [mino, setSelected])
   const handleHover = useCallback(
     (value) => {
