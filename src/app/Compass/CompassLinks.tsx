@@ -102,6 +102,7 @@ function Strands({
   // The less minos compared to the max possible, the larger the scaling
   const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
   const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
+
   // Scale up the radius so that the more minos there are,
   // the further away from the center
   const scaledRadius = linkRadius + numMinos * 1.25

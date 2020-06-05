@@ -8,8 +8,8 @@ import { useSelected } from "app/SelectedContext"
 import {
   NUM_GENERATIONS,
   nodes,
-  getCanonicalParents,
-  getCanonicalChildren,
+  getFreeParents,
+  getFreeChildren,
   getMinoColor,
 } from "app/graph"
 
@@ -92,12 +92,8 @@ const GenerationRing = memo(
 
 export default function GenerationRings() {
   const selected = useSelected()
-  const parents = selected
-    ? getCanonicalParents(selected)
-    : new Set<Polyomino>()
-  const children = selected
-    ? getCanonicalChildren(selected)
-    : new Set<Polyomino>()
+  const parents = selected ? getFreeParents(selected) : new Set<Polyomino>()
+  const children = selected ? getFreeChildren(selected) : new Set<Polyomino>()
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(

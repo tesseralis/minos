@@ -138,10 +138,10 @@ const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
 const allMinos = nodes.flat()
 
 export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.parents().length),
+  ...allMinos.map((mino) => getFreeParents(mino).size),
 )
 export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.parents().length),
+  ...allMinos.map((mino) => getFreeChildren(mino).size),
 )
 
 // Cached colors of each link
@@ -158,7 +158,7 @@ export { nodes, links }
 /**
  * Get the canonical parents of the mino
  */
-export function getCanonicalParents(mino: Polyomino): Set<Polyomino> {
+export function getFreeParents(mino: Polyomino): Set<Polyomino> {
   return new Set(
     mino
       .free()
@@ -171,7 +171,7 @@ export function getCanonicalParents(mino: Polyomino): Set<Polyomino> {
 /**
  * Get the canonical children of the *canonical* mino
  */
-export function getCanonicalChildren(mino: Polyomino): Set<Polyomino> {
+export function getFreeChildren(mino: Polyomino): Set<Polyomino> {
   return new Set(
     mino
       .free()
