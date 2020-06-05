@@ -1,7 +1,5 @@
 import React from "react"
 
-import { hasSymmetry, isOneSided } from "mino"
-
 import { Point, Polygon, PolygonProps, svgTransform } from "app/svg"
 import { colors } from "style/theme"
 import {
@@ -40,7 +38,7 @@ export default function RotationMarkers() {
   const mino = useSelected()
   const color = useSelectedColor()
   const transform = TransformCtx.useValue()
-  const order = rotationList.filter((t) => hasSymmetry(mino, t)).length
+  const order = rotationList.filter((t) => mino.hasSymmetry(t)).length
   // TODO display properly for diagonally reflective minos
   const hoverIndex = transform ? rotationHover.get(transform)! : 0
   return (
@@ -57,7 +55,7 @@ export default function RotationMarkers() {
             <RotationMarker
               key={index}
               fill={isHover ? colors.highlight : color}
-              chiral={isOneSided(mino)}
+              chiral={mino.isOneSided()}
               transform={svgTransform()
                 .translate(0, -radius)
                 .rotate(90 * index)}

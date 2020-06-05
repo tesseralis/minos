@@ -1,5 +1,5 @@
 import React, { memo, useMemo, useCallback } from "react"
-import { Mino, getSize } from "mino"
+import { Polyomino } from "mino"
 
 import SelectableMino from "app/SelectableMino"
 import transition from "app/transition"
@@ -8,7 +8,6 @@ import { useSelected } from "app/SelectedContext"
 import {
   NUM_GENERATIONS,
   nodes,
-  getCanonical,
   getCanonicalParents,
   getCanonicalChildren,
   getMinoColor,
@@ -21,11 +20,11 @@ function getBlockSize(gen: number) {
 }
 
 interface MinoProps {
-  mino: Mino
+  mino: Polyomino
   gen: number
   i: number
-  selected?: Set<Mino>
-  onHover?(mino: Mino): void
+  selected?: Set<Polyomino>
+  onHover?(mino: Polyomino): void
 }
 
 /**
@@ -52,11 +51,11 @@ const RingMino = memo(function ({
 })
 
 interface RingProps {
-  minos: Mino[]
+  minos: Polyomino[]
   gen: number
   skipAnimation: boolean
-  selected?: Set<Mino>
-  onHover?(mino: Mino): void
+  selected?: Set<Polyomino>
+  onHover?(mino: Polyomino): void
 }
 
 /**
@@ -82,7 +81,7 @@ const GenerationRing = memo(
         {minos.map((mino, i) => {
           return (
             (skipAnimation || i < visIndex) && (
-              <RingMino key={mino} mino={mino} i={i} {...minoProps} />
+              <RingMino key={mino.data} mino={mino} i={i} {...minoProps} />
             )
           )
         })}
@@ -93,16 +92,20 @@ const GenerationRing = memo(
 
 export default function GenerationRings() {
   const selected = useSelected()
-  const parents = selected ? getCanonicalParents(selected) : new Set<Mino>()
-  const children = selected ? getCanonicalChildren(selected) : new Set<Mino>()
+  const parents = selected
+    ? getCanonicalParents(selected)
+    : new Set<Polyomino>()
+  const children = selected
+    ? getCanonicalChildren(selected)
+    : new Set<Polyomino>()
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
     (gen) => {
       if (!selected) return
-      const selectedGen = getSize(selected)
+      const selectedGen = selected.order
       if (gen === selectedGen) {
-        return new Set([getCanonical(selected)])
+        return new Set([selected.free()])
       } else if (gen === selectedGen - 1) {
         return parents
       } else if (gen === selectedGen + 1) {

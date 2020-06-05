@@ -1,21 +1,10 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash-es"
 
-import {
-  Mino,
-  RelativeLink,
-  Symmetry,
-  MONOMINO,
-  getSize,
-  getWidth,
-  getHeight,
-  getTransforms,
-  getSymmetry,
-  getParents,
-  getChildren,
-} from "mino"
+import { Polyomino, RelativeLink, Symmetry, MONOMINO } from "mino"
 
 type Color = tinycolor.Instance
+type MinoData = number
 
 const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
@@ -72,203 +61,150 @@ function mixColors(colors: Color[]) {
 }
 
 interface MinoMeta {
-  parents: Set<Mino>
-  children: Set<Mino>
+  parents: Set<MinoData>
+  children: Set<MinoData>
   symmetry: Symmetry
   color?: Color
   index: number
 }
 
-function getParentKey(mino: Mino, meta: Record<Mino, MinoMeta>) {
-  const parents = meta[mino].parents
-  return avg([...parents].map((p) => meta[p].index))
+function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
+  return avg(mino.parents().map((p) => indices[p.data]))
 }
 
 /**
  * Sort the list of minos by the average of their parents' indices
  */
-function sortByParents(minos: Mino[], meta: Record<Mino, MinoMeta>) {
-  return sortBy(minos, (mino) => getParentKey(mino, meta))
-}
-
-/**
- * Sort the given minos based on dimensions and point placement
- */
-export function sortMinos(minos: Mino[]) {
-  return sortBy(minos, [
-    (mino) => -getHeight(mino),
-    (mino) => -getWidth(mino),
-    (mino) => mino,
-  ])
-}
-
-/**
- * Calculate which among a set of mino transforms is the "canonical" version
- */
-function calculateCanonical(transforms: Set<Mino>) {
-  return sortMinos([...transforms])[0]
+function sortByParents(minos: Polyomino[], indices: Record<MinoData, number>) {
+  return sortBy(minos, (mino) => getParentKey(mino, indices))
 }
 
 export function generateGraph(n: number) {
-  const nodes: Mino[][] = []
-  const links: [Mino, Mino][] = []
-  if (n === 0) {
-    return { nodes, links, meta: {}, equivalences: {} }
-  }
-  // An object containing metadata for each mino including:
-  // * index
-  // * parents
-  // * children
-  // * symmetry info
-  const meta: Record<Mino, MinoMeta> = {
-    [MONOMINO]: {
-      parents: new Set(),
-      children: new Set(),
-      symmetry: getSymmetry(MONOMINO),
-      index: 0,
-    },
-  }
-  const equivalences: Record<Mino, Mino> = {
-    [MONOMINO]: MONOMINO,
-  }
-  let currentGen = [MONOMINO]
-  // TODO don't need to iterate over children of last generation!
+  const nodes: Polyomino[][] = []
+  const links: [Polyomino, Polyomino][] = []
+
+  // mapping from each mino to its index in the generation
+  const indices: Record<MinoData, number> = {}
+  const visited = new Set<MinoData>([MONOMINO])
+  let currentGen = [Polyomino.fromData(MONOMINO)]
+
+  // TODO don't need to iterate over children of last generation
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
-      for (const { mino: child } of getChildren(mino)) {
-        if (equivalences[child]) {
-          // If we have a rotation/translation of this child,
-          // add the link but DON'T add the mino to the current gen
-          const canonChild = equivalences[child]
-          meta[mino].children.add(canonChild)
-          meta[canonChild].parents.add(mino)
-          links.push([mino, canonChild])
-        } else {
-          // If it's a completely new mino, log its transforms
-          // and add it to the next gen
-          const transforms = getTransforms(child)
-          const canonChild = calculateCanonical(transforms)
-          for (const transform of getTransforms(child)) {
-            equivalences[transform] = canonChild
-          }
-          nextGen.push(canonChild)
-          links.push([mino, canonChild])
-          meta[mino].children.add(canonChild)
-          meta[canonChild] = {
-            children: new Set(),
-            parents: new Set([mino]),
-            symmetry: getSymmetry(canonChild),
-            index: -1,
-          }
+      for (const child of mino.children()) {
+        if (!visited.has(child.free().data)) {
+          nextGen.push(child.free())
+          visited.add(child.free().data)
         }
+        links.push([mino, child.free()])
       }
     }
-    nodes.push(currentGen)
 
-    const sortedNextGen = sortByParents(nextGen, meta)
-    // Generate the indices of the generation
-    sortedNextGen.forEach((mino, i) => {
-      meta[mino].index = i
+    nodes.push(currentGen)
+    currentGen = sortByParents(nextGen, indices)
+    currentGen.forEach((mino, i) => {
+      indices[mino.data] = i
     })
-    currentGen = sortedNextGen
   }
   nodes.push(currentGen)
 
   // Generate mino colors
-  // TODO can we seperate out this logic?
+  const colors: Record<MinoData, Color> = {}
   for (const generation of nodes) {
     for (const mino of generation) {
-      const sym = meta[mino].symmetry
-      if (mino === MONOMINO) {
-        meta[mino].color = colorMap[sym]
+      const symmetry = mino.symmetry()
+      if (mino.data === MONOMINO) {
+        colors[MONOMINO] = colorMap[symmetry]
         continue
       }
       const color = mixColors(
-        [...meta[mino].parents].map((parent) => meta[parent].color!),
+        mino.parents().map((parent) => colors[parent.free().data]),
       )
-      meta[mino].color = tinycolor.mix(colorMap[sym], color, mixMap[sym])
+      colors[mino.data] = tinycolor.mix(
+        colorMap[symmetry],
+        color,
+        mixMap[symmetry],
+      )
     }
   }
 
-  // TODO these links are duplicated; uniqWith adds 500ms
-  return { nodes, links, meta, equivalences }
+  return { nodes, links, colors, indices }
 }
 
 export const NUM_GENERATIONS = 8
-const { nodes, links, meta, equivalences } = generateGraph(NUM_GENERATIONS)
+const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
+
+const allMinos = nodes.flat()
 
 export const MAX_NUM_PARENTS = Math.max(
-  ...Object.values(meta).map(({ parents }) => parents.size),
+  ...allMinos.map((mino) => mino.parents().length),
 )
 export const MAX_NUM_CHILDREN = Math.max(
-  ...Object.values(meta).map(({ children }) => children.size),
+  ...allMinos.map((mino) => mino.parents().length),
 )
 
 // Cached colors of each link
 const linkColors: Record<number, Record<number, string>> = {}
 for (const [src, tgt] of links) {
-  linkColors[src] = linkColors[src] ?? {}
-  linkColors[src][tgt] = tinycolor
-    .mix(meta[src].color!, meta[tgt].color!)
+  linkColors[src.data] = linkColors[src.data] ?? {}
+  linkColors[src.data][tgt.data] = tinycolor
+    .mix(colors[src.data], colors[tgt.data])
     .toHexString()
 }
 
 export { nodes, links }
 
 /**
- * Get the "canonical" version of the mino in the graph
- */
-export function getCanonical(mino: Mino) {
-  return equivalences[mino]
-}
-
-/**
- * Return whether the two minos are the same in the graph
- */
-export function canonicalEquals(m: Mino, n: Mino): boolean {
-  return getCanonical(m) === getCanonical(n)
-}
-
-/**
  * Get the canonical parents of the mino
  */
-export function getCanonicalParents(mino: Mino): Set<Mino> {
-  return meta[getCanonical(mino)].parents
+export function getCanonicalParents(mino: Polyomino): Set<Polyomino> {
+  return new Set(
+    mino
+      .free()
+      .parents()
+      .map((p) => p.free()),
+  )
+  // return meta[getCanonical(mino)].parents
 }
 
 /**
  * Get the canonical children of the *canonical* mino
  */
-export function getCanonicalChildren(mino: Mino): Set<Mino> {
-  return meta[getCanonical(mino)].children
+export function getCanonicalChildren(mino: Polyomino): Set<Polyomino> {
+  return new Set(
+    mino
+      .free()
+      .children()
+      .map((p) => p.free()),
+  )
 }
 
-function getUniqSorted(minos: Iterable<RelativeLink>): RelativeLink[] {
-  const uniq = uniqBy([...minos], ({ mino }) => getCanonical(mino))
+function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
+  const uniq = uniqBy([...minos], ({ mino }) => mino.free())
   return sortBy(uniq, ({ mino }) => getIndex(mino))
 }
 
 /**
  * Get the parents of the mino sorted by their indices in the graph
  */
-export function getSortedParents(mino: Mino): RelativeLink[] {
-  return getUniqSorted(getParents(mino))
+export function getSortedParents(mino: Polyomino): RelativeLink[] {
+  return getUniqSorted(mino.enumerateParents())
 }
 
 /**
  * Get the children of the mino sorted by their indices in the graph
  */
-export function getSortedChildren(mino: Mino): RelativeLink[] {
-  if (getSize(mino) === NUM_GENERATIONS) return []
-  return getUniqSorted(getChildren(mino))
+export function getSortedChildren(mino: Polyomino): RelativeLink[] {
+  if (mino.order === NUM_GENERATIONS) return []
+  return getUniqSorted(mino.enumerateChildren())
 }
 
 /**
  * Get the index of the mino within its generation
  */
-export function getIndex(mino: Mino) {
-  return meta[getCanonical(mino)].index
+export function getIndex(mino: Polyomino) {
+  return indices[mino.free().data]
 }
 
 /**
@@ -276,8 +212,9 @@ export function getIndex(mino: Mino) {
  *
  * <MinoSvg {...getMinoColor(mino)} />
  */
-export function getMinoColor(mino: Mino) {
-  const { color, symmetry } = meta[getCanonical(mino)]
+export function getMinoColor(mino: Polyomino) {
+  const color = colors[mino.free().data]
+  const symmetry = mino.symmetry()
   return {
     fill: color!.toString(),
     stroke: borderColors[symmetry].toString(),
@@ -288,8 +225,8 @@ export function getMinoColor(mino: Mino) {
  * Return the stroke color of the link between the given pair of minos
  */
 
-export function getLinkColor(src: Mino, tgt: Mino) {
-  const color = linkColors[getCanonical(src)]?.[getCanonical(tgt)]
+export function getLinkColor(src: Polyomino, tgt: Polyomino) {
+  const color = linkColors[src.free().data]?.[tgt.free().data]
   if (!color) throw new Error(`Invalid mino pair given`)
   return color
 }

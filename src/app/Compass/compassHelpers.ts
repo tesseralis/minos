@@ -1,4 +1,4 @@
-import { Transform, RelativeLink, getSymmetry } from "mino"
+import { Transform, RelativeLink } from "mino"
 import { getSymmetryColor } from "app/graph"
 import createStateContext from "app/createStateContext"
 import { useSelected as useSelectedNullable } from "app/SelectedContext"
@@ -27,7 +27,7 @@ export function useSelected() {
  */
 export function useSelectedColor() {
   const selected = useSelected()
-  return getSymmetryColor(getSymmetry(selected))
+  return getSymmetryColor(selected.symmetry())
 }
 
 /**

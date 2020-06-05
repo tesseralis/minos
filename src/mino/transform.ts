@@ -5,16 +5,16 @@
 
 import { Coord, Mino, Dims, getShape, getCoords, fromCoords } from "./mino"
 
-const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
+export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
-const reflections = [
+export const reflections = [
   "flipHoriz",
   "flipVert",
   "flipMainDiag",
   "flipMinorDiag",
 ] as const
 
-const transforms = ["identity", ...rotations, ...reflections] as const
+export const transforms = ["identity", ...rotations, ...reflections] as const
 
 export type Rotation = typeof rotations[number]
 export type Reflection = typeof reflections[number]
@@ -35,7 +35,7 @@ export function isOneSided(mino: Mino): boolean {
   return reflections.every((t) => transform(mino, t) !== mino)
 }
 
-function transformCoord(
+export function transformCoord(
   [i, j]: Coord,
   [w, h]: Dims,
   transform: Transform,

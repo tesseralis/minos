@@ -1,7 +1,7 @@
 import { css } from "emotion"
 import React from "react"
 
-import { Mino, getCoords, getOutline, O_OCTOMINO } from "mino"
+import { Polyomino, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
 import { Point, Rect, Polygon } from "./svg"
@@ -12,7 +12,7 @@ const style = css`
 `
 
 interface Props {
-  mino: Mino
+  mino: Polyomino
   coord: Point
   size: number
   fill: string
@@ -37,8 +37,8 @@ export default function MinoSvg({
 }: Props) {
   const [cx, cy] = coord
   const strokeWidth = size / 8
-  const minoPoints = [...getCoords(mino)]
-  const outline = getOutline(minoPoints)
+  const minoPoints = mino.coords()
+  const outline = mino.outline()
   const scale = ([x, y]: Point) => [x * size, y * size] as Point
   const scaledOutline = outline.map(scale)
   const [avgX, avgY] = getAnchor(scaledOutline, anchor)
@@ -57,7 +57,7 @@ export default function MinoSvg({
         fill={fill}
         strokeWidth={strokeWidth}
       />
-      {mino === O_OCTOMINO && (
+      {mino.data === O_OCTOMINO && (
         <Rect
           fill={colors.bg}
           coord={translate(scale([1, 1]))}

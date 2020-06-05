@@ -2,7 +2,7 @@ import React from "react"
 import { css } from "emotion"
 import { scaleLinear } from "d3-scale"
 
-import { Mino, getShape, getSize, transform } from "mino"
+import { Polyomino } from "mino"
 import { colors } from "style/theme"
 import { NUM_GENERATIONS, getMinoColor } from "app/graph"
 import SelectableMino from "app/SelectableMino"
@@ -10,7 +10,7 @@ import SelectableMino from "app/SelectableMino"
 const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
 interface Props {
-  mino: Mino
+  mino: Polyomino
   isSelected: boolean
 }
 
@@ -18,10 +18,11 @@ interface Props {
  * A single mino wrapped in a div aligning with its dimensions.
  */
 export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
-  mino = transform(mino, "flipMainDiag")
-  const [height, width] = getShape(mino)
+  mino = mino.transform("flipMainDiag")
+  const width = mino.width()
+  const height = mino.height()
 
-  const blockSize = getBlockSize(getSize(mino))
+  const blockSize = getBlockSize(mino.order)
 
   const svgWidth = width * blockSize * 1.25
   const svgHeight = height * blockSize * 1.25
@@ -30,7 +31,7 @@ export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
 
   return (
     <div
-      key={mino}
+      key={mino.data}
       className={css`
         margin: 0 0.5rem;
       `}

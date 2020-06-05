@@ -1,27 +1,6 @@
-export type { Mino, Coord } from "./mino"
-export {
-  getSize,
-  getWidth,
-  getHeight,
-  getShape,
-  getCoords,
-  fromCoords,
-  isValid,
-  getNeighbors,
-  MONOMINO,
-  O_OCTOMINO,
-} from "./mino"
-
-export { addSquare, removeSquare } from "./modify"
-export type { PossibleRelativeLink, RelativeLink } from "./generate"
-export { getPossibleParents, getParents, getChildren } from "./generate"
-export { getOutline } from "./draw"
+export type { Coord } from "./mino"
+export { MONOMINO, O_OCTOMINO } from "./mino"
 
 export type { Symmetry, Transform } from "./transform"
-export {
-  isOneSided,
-  getTransforms,
-  hasSymmetry,
-  getSymmetry,
-  transform,
-} from "./transform"
+export { default as Polyomino } from "./Polyomino"
+export type { PossibleRelativeLink, RelativeLink } from "./Polyomino"

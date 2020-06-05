@@ -2,12 +2,11 @@ import React from "react"
 import { scaleLinear } from "d3-scale"
 
 import { Point, toCartesian } from "math"
-import { Mino, RelativeLink, getSize } from "mino"
+import { Polyomino, RelativeLink } from "mino"
 
 import { colors } from "style/theme"
 import { getAngleScale, getArc } from "app/utils"
 import {
-  canonicalEquals,
   getSortedParents,
   getSortedChildren,
   getMinoColor,
@@ -43,7 +42,7 @@ interface StrandProps {
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
   const [selected, setSelected] = RelativeCtx.useState()
-  const isSelected = !!selected && canonicalEquals(selected.mino, link.mino)
+  const isSelected = !!selected && selected.mino.equivalent(link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
   return (
@@ -81,7 +80,7 @@ interface StrandsProps {
   // Whether to reverse the order of minos
   reverse?: boolean
   // Function to determine the color of the link
-  linkColor(mino: Mino): string
+  linkColor(mino: Polyomino): string
 }
 
 /**
@@ -97,7 +96,7 @@ function Strands({
   linkColor,
   ...props
 }: StrandsProps) {
-  const gen = getSize(links[0]?.mino)
+  const gen = links[0]?.mino.order
   const numMinos = links.length
   // Scale up each mino based on how many minos there are.
   // The less minos compared to the max possible, the larger the scaling
@@ -118,7 +117,7 @@ function Strands({
         return (
           <Strand
             {...props}
-            key={link.mino}
+            key={link.mino.data}
             link={link}
             linkColor={linkColor(link.mino)}
             size={scaledSize}
@@ -143,7 +142,7 @@ export default function CompassLinks() {
         scaleRange={[4, 2]}
         maxSpread={1 / 3}
         spreadStart={-1 / 4}
-        linkColor={(parent: Mino) => getLinkColor(parent, mino)}
+        linkColor={(parent: Polyomino) => getLinkColor(parent, mino)}
       />
       <Strands
         links={getSortedChildren(mino)}
@@ -152,7 +151,7 @@ export default function CompassLinks() {
         maxSpread={15 / 32}
         spreadStart={1 / 4}
         reverse
-        linkColor={(child: Mino) => getLinkColor(mino, child)}
+        linkColor={(child: Polyomino) => getLinkColor(mino, child)}
       />
     </g>
   )
