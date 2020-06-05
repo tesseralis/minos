@@ -31,6 +31,7 @@ export interface PossibleRelativeLink {
 export type RelativeLink = Required<PossibleRelativeLink>
 
 // lazily evaluate the property
+// TODO cached lazy iterators
 function lazy<T>(fn: () => T) {
   let cachedVal: T | null = null
   return () => {
@@ -41,7 +42,7 @@ function lazy<T>(fn: () => T) {
   }
 }
 
-// cache of all created minos so far
+// cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
 
 export default class Polyomino {
@@ -109,7 +110,7 @@ export default class Polyomino {
     return contains(this.data, coord)
   }
 
-  /** Iterate over all the parents of this mino along with */
+  /** Iterate over all points of this mino along with the possible parent associated with it. */
   possibleParents = lazy(() =>
     this.coords().map((coord) => {
       const parent = removeSquare(this.data, coord)
