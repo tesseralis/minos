@@ -165,7 +165,7 @@ export default class Polyomino {
   }
 
   /** Return the list of all transforms of this mino */
-  // FIXME make this unique
+  // TODO make this unique
   transforms = lazy(() => transforms.map((t) => this.transform(t)))
 
   /** true if this mino is symmetric wrt the given transform */
