@@ -142,7 +142,7 @@ export default class Polyomino {
   isOneSided = lazy(() => !reflections.some((t) => this.hasSymmetry(t)))
 
   /** Get the symmetry of this mino */
-  symmetry = lazy(() => getSymmetry(this.data))
+  symmetry = lazy(() => getSymmetry((axis) => this.hasSymmetry(axis)))
 
   /** Get the free polyomino corresponding to this mino */
   free = lazy(() => Polyomino.sort(this.transforms())[0])

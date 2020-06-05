@@ -23,7 +23,7 @@ describe("mino", () => {
         [0, 1],
         [1, 1],
         [2, 1],
-      ]
+      ] as any
       const expected = getMino(0b10_10_11, 2)
       expect(fromCoords(coords)).toEqual(expected)
     })

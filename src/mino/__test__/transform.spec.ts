@@ -1,12 +1,17 @@
-import { getMino } from "../mino"
-import { getTransforms } from "../transform"
+import { getMino as getMinoData } from "../mino"
+// import { getTransforms } from "../transform"
+import Polyomino from "../Polyomino"
+
+function getMino(data: number, width: number) {
+  return Polyomino.fromData(getMinoData(data, width))
+}
 
 describe("transforms", () => {
   it("generates the right transforms for the L mino", () => {
     // 111
     // 100
-    const mino = getMino(0b111100, 3)
-    const transforms = getTransforms(mino)
+    const mino = getMino(0b111_100, 3)
+    const transforms = mino.transforms()
     expect([...transforms]).toEqual(
       expect.arrayContaining([
         mino,
@@ -24,6 +29,6 @@ describe("transforms", () => {
   it("does not repeat transformations", () => {
     // The X pentomino
     const mino = getMino(0b010_111_010, 3)
-    expect([...getTransforms(mino)]).toHaveLength(1)
+    expect(new Set(mino.transforms()).size).toEqual(1)
   })
 })
