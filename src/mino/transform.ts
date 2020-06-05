@@ -1,9 +1,8 @@
 /**
- * This modules describes functions to apply transformations to polyominoes:
- * rotation and reflection.
+ * This modules describes utility functions to apply transformations to polyominoes.
  */
 
-import { Coord, Dims } from "./mino"
+import { Coord, Dims } from "./data"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -25,8 +24,8 @@ export function transformCoord(
   [w, h]: Dims,
   transform: Transform,
 ): Coord {
-  const i1 = h - 1 - i
-  const j1 = w - 1 - j
+  const i1 = w - 1 - i
+  const j1 = h - 1 - j
   const transforms = {
     identity: [i, j],
     rotateLeft: [j, i1],

@@ -19,9 +19,7 @@ interface Props {
  */
 export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
   mino = mino.transform("flipMainDiag")
-  const width = mino.width()
-  const height = mino.height()
-
+  const [width, height] = mino.dims
   const blockSize = getBlockSize(mino.order)
 
   const svgWidth = width * blockSize * 1.25

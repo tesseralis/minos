@@ -1,17 +1,18 @@
 import { sortBy } from "lodash-es"
 import {
-  Mino,
+  MinoData,
+  Dims,
   Coord,
-  getSize,
+  getOrder,
   getWidth,
   getHeight,
-  getShape,
+  contains,
   getNeighbors,
   getCoords,
   fromCoords,
   isValid,
   displayMino,
-} from "./mino"
+} from "./data"
 import { getOutline } from "./draw"
 import { addSquare, removeSquare } from "./modify"
 import {
@@ -39,22 +40,29 @@ function lazy<T>(fn: () => T) {
 }
 
 // cache of all created minos so far
-const cache: Record<Mino, Polyomino> = {}
+const cache: Record<MinoData, Polyomino> = {}
 
 export default class Polyomino {
-  data: Mino
+  data: MinoData
   /** The number of squares in this polyomino */
   order: number
+
+  width: number
+  height: number
+  dims: Dims
 
   // Construtors
 
   // Private constructor -- we want to make sure any mino we create is cached
-  private constructor(data: Mino) {
+  private constructor(data: MinoData) {
     this.data = data
-    this.order = getSize(data)
+    this.order = getOrder(data)
+    this.width = getHeight(data)
+    this.height = getWidth(data)
+    this.dims = [this.width, this.height]
   }
 
-  static fromData(data: Mino) {
+  static fromData(data: MinoData) {
     if (!cache[data]) {
       cache[data] = new Polyomino(data)
     }
@@ -81,11 +89,6 @@ export default class Polyomino {
 
   // Properties
 
-  // FIXME rename these functions
-  width = lazy(() => getHeight(this.data))
-  // width = getHeight(this.data)
-  height = lazy(() => getWidth(this.data))
-
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
     return this.data === other.data
@@ -95,6 +98,10 @@ export default class Polyomino {
   coords = lazy(() => [...getCoords(this.data)])
 
   // Relationships
+
+  contains(coord: Coord) {
+    return contains(this.data, coord)
+  }
 
   possibleParents = lazy(() =>
     this.coords().map((coord) => {
@@ -112,8 +119,22 @@ export default class Polyomino {
 
   parents = lazy(() => this.enumerateParents().map((link) => link.mino))
 
+  private *neighbors(mino: MinoData): Generator<Coord> {
+    const visited = new Set<string>()
+    for (const coord of this.coords()) {
+      for (const nbr of getNeighbors(coord)) {
+        // TODO hash instead of string
+        const nbrString = nbr.toString()
+        if (!contains(mino, nbr) && !visited.has(nbrString)) {
+          visited.add(nbrString)
+          yield nbr
+        }
+      }
+    }
+  }
+
   enumerateChildren = lazy(() =>
-    [...getNeighbors(this.data)].map((coord) => ({
+    [...this.neighbors(this.data)].map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
     })),
@@ -126,7 +147,7 @@ export default class Polyomino {
   /** Transform this mino with the given transformation */
   transform(trans: Transform) {
     return Polyomino.fromCoords(
-      this.coords().map((p) => transformCoord(p, getShape(this.data), trans)),
+      this.coords().map((p) => transformCoord(p, this.dims, trans)),
     )
   }
 

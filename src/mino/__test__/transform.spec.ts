@@ -1,4 +1,4 @@
-import { getMino as getMinoData } from "../mino"
+import { getMino as getMinoData } from "../data"
 // import { getTransforms } from "../transform"
 import Polyomino from "../Polyomino"
 

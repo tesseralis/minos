@@ -1,5 +1,5 @@
-export type { Coord } from "./mino"
-export { MONOMINO, O_OCTOMINO } from "./mino"
+export type { Coord } from "./data"
+export { MONOMINO, O_OCTOMINO } from "./data"
 
 export type { Symmetry, Transform } from "./transform"
 export { default as Polyomino } from "./Polyomino"

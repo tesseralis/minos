@@ -1,4 +1,4 @@
-import { getMino, getSize, fromCoords, isValid, MONOMINO } from "../mino"
+import { getMino, getOrder, fromCoords, isValid, MONOMINO } from "../data"
 
 describe("mino", () => {
   describe("getSize", () => {
@@ -12,7 +12,7 @@ describe("mino", () => {
         getMino(0b010_111_010, 3),
       ]
       minos.forEach((mino, i) => {
-        expect(getSize(mino)).toEqual(i)
+        expect(getOrder(mino)).toEqual(i)
       })
     })
   })

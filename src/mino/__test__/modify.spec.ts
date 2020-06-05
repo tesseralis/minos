@@ -1,4 +1,4 @@
-import { getMino } from "../mino"
+import { getMino } from "../data"
 import { addSquare, removeSquare } from "../modify"
 describe("modify", () => {
   describe("addSquare", () => {

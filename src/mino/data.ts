@@ -1,5 +1,5 @@
 /**
- * Functions related to the generation and manipulation of polyominoes.
+ * Functions related to the direct manipulation of the underlying polyomino data.
  *
  * Minos are encoded as a combination of a value and a width flag:
  *
@@ -26,7 +26,7 @@
  */
 
 // type for the encoded representation of a mino
-export type Mino = number
+export type MinoData = number
 // type for the coordinates of a mino square
 export type Coord = readonly [number, number]
 // type for the dimensions of a mino
@@ -39,11 +39,11 @@ export const MAX_WIDTH = 1 << WIDTH_BITS
 /**
  * Return the raw data portion of the mino.
  */
-export function getData(mino: Mino) {
+export function getData(mino: MinoData) {
   return mino >> WIDTH_BITS
 }
 
-export function getSize(mino: Mino) {
+export function getOrder(mino: MinoData) {
   let data = getData(mino)
   let size = 0
   while (data) {
@@ -53,27 +53,20 @@ export function getSize(mino: Mino) {
   return size
 }
 
-export function getWidth(mino: Mino) {
+export function getWidth(mino: MinoData) {
   return mino % MAX_WIDTH || MAX_WIDTH
 }
 
-export function getHeight(mino: Mino) {
+export function getHeight(mino: MinoData) {
   const w = getWidth(mino)
   const data = getData(mino)
   return Math.floor(Math.log2(data) / w) + 1
 }
 
 /**
- * Get the width and height of the mino
- */
-export function getShape(mino: Mino): Dims {
-  return [getWidth(mino), getHeight(mino)]
-}
-
-/**
  * Return the mino given the data bits and the specified width
  */
-export function getMino(data: number, width: number): Mino {
+export function getMino(data: number, width: number): MinoData {
   return (data << WIDTH_BITS) | (width === MAX_WIDTH ? 0 : width)
 }
 
@@ -83,7 +76,7 @@ export const O_OCTOMINO = getMino(0b111_101_111, 3)
 /**
  * Iterate over the coordinates of the squares of the mino.
  */
-export function* getCoords(mino: Mino): Generator<Coord> {
+export function* getCoords(mino: MinoData): Generator<Coord> {
   let data = getData(mino)
   const w = getWidth(mino)
   let k = 0
@@ -118,7 +111,7 @@ export function getCoordMask(i: number, j: number, w: number) {
 /**
  * Returns true if the mino contains the given coordinate
  */
-export function contains(mino: Mino, [i, j]: Coord) {
+export function contains(mino: MinoData, [i, j]: Coord) {
   const w = getWidth(mino)
   if (i < 0 || j < 0 || j >= w) {
     return false
@@ -129,7 +122,7 @@ export function contains(mino: Mino, [i, j]: Coord) {
 /**
  * Return the neighbors of the coord [i,j]
  */
-function* nbrs([i, j]: Coord): Generator<Coord> {
+export function* getNeighbors([i, j]: Coord): Generator<Coord> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
   yield [i + 1, j]
@@ -138,24 +131,7 @@ function* nbrs([i, j]: Coord): Generator<Coord> {
   yield [i, j - 1]
 }
 
-/**
- * Get all neighboring coords of the given mino
- */
-export function* getNeighbors(mino: Mino): Generator<Coord> {
-  const visited = new Set<string>()
-  for (const coord of getCoords(mino)) {
-    for (const nbr of nbrs(coord)) {
-      // TODO hash instead of string
-      const nbrString = nbr.toString()
-      if (!contains(mino, nbr) && !visited.has(nbrString)) {
-        visited.add(nbrString)
-        yield nbr
-      }
-    }
-  }
-}
-
-export function isValid(mino: Mino): boolean {
+export function isValid(mino: MinoData): boolean {
   const p0 = [...getCoords(mino)][0]
   // the null-omino is not a valid polyomino
   if (!p0) return false
@@ -173,7 +149,7 @@ export function isValid(mino: Mino): boolean {
     if (visited & mask) continue
     visited |= mask
 
-    for (const nbr of nbrs(p)) {
+    for (const nbr of getNeighbors(p)) {
       if (!contains(mino, nbr)) continue
       queue.push(nbr)
     }
@@ -185,8 +161,9 @@ export function isValid(mino: Mino): boolean {
 /**
  * Get the bitmask corresponding to the jth column of the mino
  */
-export function getColumnMask(mino: Mino, j: number): number {
-  const [width, height] = getShape(mino)
+export function getColumnMask(mino: MinoData, j: number): number {
+  const width = getWidth(mino)
+  const height = getHeight(mino)
   let mask = 0
   for (let i = 0; i < height; i++) {
     mask |= getCoordMask(i, j, width)
@@ -197,7 +174,7 @@ export function getColumnMask(mino: Mino, j: number): number {
 /**
  * Get the rows of the mino from bottom-up
  */
-export function* rowBits(mino: Mino): Generator<number> {
+export function* rowBits(mino: MinoData): Generator<number> {
   const w = getWidth(mino)
   let data = getData(mino)
   while (data) {
@@ -218,7 +195,7 @@ interface DisplayOpts {
  * @param block the string used to represent a filled block
  * @param space the string used to represent an unfilled block
  */
-export function displayMino(mino: Mino, opts: DisplayOpts = {}) {
+export function displayMino(mino: MinoData, opts: DisplayOpts = {}) {
   const { block = "□", space = " ️" } = opts
   const w = getWidth(mino)
   const result = []

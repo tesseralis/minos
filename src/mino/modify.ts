@@ -1,9 +1,9 @@
 /**
- * Utilities for adding and removing squares to and from minos.
+ * Utilities for adding and removing squares to and from mino data.
  */
 
 import {
-  Mino,
+  MinoData,
   Coord,
   MAX_WIDTH,
   getMino,
@@ -12,14 +12,14 @@ import {
   rowBits,
   getCoordMask,
   getColumnMask,
-} from "./mino"
+} from "./data"
 
 /**
  * Return the mino with the width adjusted by delta (e.g. +1 or -1)
  */
-function adjustWidth(mino: Mino, delta: number): Mino {
+function adjustWidth(mino: MinoData, delta: number): MinoData {
   const w = getWidth(mino) + delta
-  if (w > MAX_WIDTH) throw new Error("Already at maximum width")
+  if (w >= MAX_WIDTH) throw new Error("Already at maximum width")
   if (w < 1) throw new Error("Already at minimum width")
   let result = 0
   let i = 0
@@ -31,46 +31,46 @@ function adjustWidth(mino: Mino, delta: number): Mino {
   return getMino(result, w)
 }
 
-function incWidth(mino: Mino): Mino {
+function incWidth(mino: MinoData): MinoData {
   return adjustWidth(mino, +1)
 }
 
-function decWidth(mino: Mino): Mino {
+function decWidth(mino: MinoData): MinoData {
   return adjustWidth(mino, -1)
 }
 
-function shiftLeft(mino: Mino): Mino {
+function shiftLeft(mino: MinoData): MinoData {
   const expanded = incWidth(mino)
   const data = getData(expanded)
 
   return getMino(data << 1, getWidth(expanded))
 }
 
-function shiftRight(mino: Mino): Mino {
+function shiftRight(mino: MinoData): MinoData {
   const decremented = decWidth(mino)
   const data = getData(decremented)
 
   return getMino(data >> 1, getWidth(decremented))
 }
 
-function shiftDown(mino: Mino): Mino {
+function shiftDown(mino: MinoData): MinoData {
   const w = getWidth(mino)
   return getMino(getData(mino) >> w, w)
 }
 
-function shiftUp(mino: Mino): Mino {
+function shiftUp(mino: MinoData): MinoData {
   const w = getWidth(mino)
   return getMino(getData(mino) << w, w)
 }
 
-function doAdd(mino: Mino, i: number, j: number): Mino {
+function doAdd(mino: MinoData, i: number, j: number): MinoData {
   return mino | getCoordMask(i, j, getWidth(mino))
 }
 
 /**
  * Append the square at [i,j] to the mino
  */
-export function addSquare(mino: Mino, [i, j]: Coord): Mino {
+export function addSquare(mino: MinoData, [i, j]: Coord): MinoData {
   if (i < 0) {
     return doAdd(shiftUp(mino), 0, j)
   }
@@ -83,27 +83,27 @@ export function addSquare(mino: Mino, [i, j]: Coord): Mino {
   return doAdd(mino, i, j)
 }
 
-function bottomRowEmpty(mino: Mino): boolean {
+function bottomRowEmpty(mino: MinoData): boolean {
   const row = [...rowBits(mino)][0]
   return !row
 }
 
-function rightColumnEmpty(mino: Mino): boolean {
+function rightColumnEmpty(mino: MinoData): boolean {
   return !getColumnMask(mino, 0)
 }
 
-function leftColumnEmpty(mino: Mino): boolean {
+function leftColumnEmpty(mino: MinoData): boolean {
   return !getColumnMask(mino, getWidth(mino) - 1)
 }
 
-function doRemove(mino: Mino, i: number, j: number): Mino {
+function doRemove(mino: MinoData, i: number, j: number): MinoData {
   return mino & ~getCoordMask(i, j, getWidth(mino))
 }
 
 /**
  * Remove the square at coordinate [i, j] from the Mino
  */
-export function removeSquare(mino: Mino, [i, j]: Coord): Mino {
+export function removeSquare(mino: MinoData, [i, j]: Coord): MinoData {
   const removed = doRemove(mino, i, j)
   if (bottomRowEmpty(removed)) {
     return shiftDown(removed)
