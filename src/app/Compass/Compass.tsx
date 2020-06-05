@@ -5,7 +5,7 @@ import { G } from "app/svg"
 import { useSelected } from "app/SelectedContext"
 import CompassLinks from "./CompassLinks"
 import Background from "./CompassBackground"
-import AdjustableMino from "./AdjustableMino"
+import AlterableMino from "./AlterableMino"
 import SymmetryRing from "./SymmetryRing"
 import { RelativeCtx, svgSize } from "./compassHelpers"
 
@@ -36,7 +36,7 @@ export default function Compass() {
           <CompassLinks />
           <G onHover={setShowEditable}>
             <SymmetryRing showTransforms={showTransforms} />
-            <AdjustableMino showEditable={showEditable} />
+            <AlterableMino highlight={showEditable} />
           </G>
         </G>
       </svg>
