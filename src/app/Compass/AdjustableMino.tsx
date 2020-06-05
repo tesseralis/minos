@@ -4,7 +4,6 @@ import React from "react"
 import tinycolor from "tinycolor2"
 
 import {
-  RelativeLink,
   PossibleRelativeLink,
   getSize,
   Coord,
@@ -58,11 +57,6 @@ function MinoSquare({ className, link }: SquareProps) {
   const setRelative = RelativeCtx.useSetValue()
   const { size, transform } = useMinoTransform()
 
-  function hoverHandler(hovered: boolean) {
-    if (!mino) return
-    setRelative(hovered ? (link as RelativeLink) : null)
-  }
-
   return (
     <Rect
       className={className}
@@ -71,7 +65,7 @@ function MinoSquare({ className, link }: SquareProps) {
       height={size}
       strokeWidth={(size / 8) * 0.75}
       onClick={() => mino && setSelected(mino)}
-      onHover={hoverHandler}
+      onHover={(hovered) => mino && setRelative(hovered ? (link as any) : null)}
     />
   )
 }
@@ -121,7 +115,7 @@ export default function AdjustableMino({ showEditable }: Props) {
               key={i}
               link={link}
               className={css`
-                transition: opacity 100ms ease-in-out;
+                transition: all 100ms ease-in-out;
                 fill: ${colors.highlight};
                 stroke: gray;
                 cursor: pointer;
@@ -132,20 +126,17 @@ export default function AdjustableMino({ showEditable }: Props) {
           )
         })}
       {[...getPossibleParents(mino)].map((link, i) => {
-        const { mino: parent, coord } = link
-        // Make all removable points in the mino selectable
-        // const parent = removeSquare(mino, point)
         return (
           <MinoSquare
             key={i}
             link={link}
             className={css`
-              transition: fill 100ms ease-in-out;
+              transition: all 100ms ease-in-out;
               fill: ${fill};
               stroke: ${stroke};
-              ${!!parent &&
+              ${!!link.mino &&
               css`
-                fill: ${isHovered(coord)
+                fill: ${isHovered(link.coord)
                   ? tinycolor.mix(fill, "white", 80).toString()
                   : showSquares
                   ? tinycolor.mix(fill, "white", 50).toString()
