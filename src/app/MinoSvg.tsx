@@ -57,7 +57,7 @@ export default function MinoSvg({
         fill={fill}
         strokeWidth={strokeWidth}
       />
-      {mino.data === O_OCTOMINO && (
+      {mino.equals(O_OCTOMINO) && (
         <Rect
           fill={colors.bg}
           coord={translate(scale([1, 1]))}

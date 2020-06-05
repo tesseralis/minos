@@ -19,7 +19,7 @@ function InnerSquares({ highlight }: Props) {
 
   return (
     <g>
-      {mino.data === O_OCTOMINO && <Hole />}
+      {mino.equals(O_OCTOMINO) && <Hole />}
       {mino.possibleParents().map((link, i) => (
         <MinoSquare
           key={i}

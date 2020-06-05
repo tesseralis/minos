@@ -70,9 +70,6 @@ export function fromBits(data: number, width: number): MinoData {
   return (data << WIDTH_BITS) | (width === MAX_WIDTH ? 0 : width)
 }
 
-export const MONOMINO = fromBits(1, 1)
-export const O_OCTOMINO = fromBits(0b111_101_111, 3)
-
 /**
  * Iterate over the coordinates of the squares of the mino.
  */

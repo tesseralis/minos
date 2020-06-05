@@ -85,8 +85,8 @@ export function generateGraph(n: number) {
 
   // mapping from each mino to its index in the generation
   const indices: Record<MinoData, number> = {}
-  const visited = new Set<MinoData>([MONOMINO])
-  let currentGen = [Polyomino.fromData(MONOMINO)]
+  const visited = new Set<MinoData>([MONOMINO.data])
+  let currentGen = [MONOMINO]
 
   // TODO don't need to iterate over children of last generation
   while (nodes.length < n - 1) {
@@ -114,8 +114,8 @@ export function generateGraph(n: number) {
   for (const generation of nodes) {
     for (const mino of generation) {
       const symmetry = mino.symmetry()
-      if (mino.data === MONOMINO) {
-        colors[MONOMINO] = colorMap[symmetry]
+      if (mino.equals(MONOMINO)) {
+        colors[mino.data] = colorMap[symmetry]
         continue
       }
       const color = mixColors(

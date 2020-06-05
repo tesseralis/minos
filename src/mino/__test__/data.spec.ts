@@ -13,7 +13,7 @@ describe("isValid", () => {
   })
 
   it("returns true for the monomino", () => {
-    expect(isValid(MONOMINO)).toBeTruthy()
+    expect(isValid(fromString("1"))).toBeTruthy()
   })
 
   it("returns false for the zero-mino", () => {
