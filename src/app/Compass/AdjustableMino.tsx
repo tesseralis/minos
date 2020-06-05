@@ -1,12 +1,11 @@
 import { isEqual } from "lodash-es"
-import { css } from "emotion"
+import { cx, css } from "emotion"
 import React from "react"
 import tinycolor from "tinycolor2"
 
 import {
   PossibleRelativeLink,
   getSize,
-  Coord,
   getCoords,
   getChildren,
   getPossibleParents,
@@ -41,21 +40,35 @@ function useMinoTransform() {
 
 interface SquareProps {
   className: string
+  selectedClassName: string
   link: PossibleRelativeLink
 }
 
 /**
  * A single possibly selectable mino square
  */
-function MinoSquare({ className, link }: SquareProps) {
+function MinoSquare({ className, selectedClassName, link }: SquareProps) {
   const { mino, coord } = link
   const setSelected = useSetSelected()
   const setRelative = RelativeCtx.useSetValue()
   const { size, transform } = useMinoTransform()
+  const selected = RelativeCtx.useValue()
+  const isSelected = isEqual(selected?.coord, coord)
+
+  const selectableStyle = css`
+    transition: all 150ms ease-in-out;
+    transition-property: fill, opacity;
+    cursor: pointer;
+    pointer-events: initial;
+  `
 
   return (
     <Rect
-      className={className}
+      className={cx(
+        !!mino && selectableStyle,
+        className,
+        isSelected && selectedClassName,
+      )}
       coord={transform(coord)}
       width={size}
       height={size}
@@ -68,7 +81,9 @@ function MinoSquare({ className, link }: SquareProps) {
 
 // Hole for the octomino
 function Hole() {
+  const mino = useSelected()
   const { size, transform } = useMinoTransform()
+  if (mino !== O_OCTOMINO) return null
   return (
     <Rect
       fill={colors.bg}
@@ -84,66 +99,66 @@ interface Props {
   showEditable?: boolean
 }
 
+/** The squares of the mino, highlighting parent squares */
+function InnerSquares({ showEditable }: Props) {
+  const mino = useSelected()
+  const { fill, stroke } = getMinoColor(mino)
+
+  return (
+    <g>
+      {[...getPossibleParents(mino)].map((link, i) => (
+        <MinoSquare
+          key={i}
+          link={link}
+          className={css`
+            fill: ${!!link.mino && showEditable
+              ? tinycolor.mix(fill, "white", 25).toString()
+              : fill};
+            stroke: ${stroke};
+          `}
+          selectedClassName={css`
+            fill: ${tinycolor.mix(fill, "white", 80).toString()};
+          `}
+        />
+      ))}
+    </g>
+  )
+}
+
+/** All neighbors that can be turned into children */
+function OuterSquares() {
+  const mino = useSelected()
+  // Don't render if on the last generation
+  if (getSize(mino) >= NUM_GENERATIONS) return null
+  return (
+    <g>
+      {[...getChildren(mino)].map((link, i) => (
+        <MinoSquare
+          key={i}
+          link={link}
+          className={css`
+            fill: ${colors.highlight};
+            stroke: gray;
+            opacity: 0;
+          `}
+          selectedClassName={css`
+            opacity: 0.5;
+          `}
+        />
+      ))}
+    </g>
+  )
+}
+
 /**
  * A mino that can have squares added or removed from it.
  */
 export default function AdjustableMino({ showEditable }: Props) {
-  const mino = useSelected()
-  const relative = RelativeCtx.useValue()
-
-  const { fill, stroke } = getMinoColor(mino)
-  const gen = getSize(mino)
-  const showChildren = gen < NUM_GENERATIONS
-  const showSquares = showEditable
-
-  function isHovered(coord: Coord) {
-    return isEqual(relative?.coord, coord)
-  }
-
   return (
     <g>
-      {mino === O_OCTOMINO && <Hole />}
-      {/* Draw the neighboring points of the mino that can be clicked */}
-      {showChildren &&
-        [...getChildren(mino)].map((link, i) => {
-          return (
-            <MinoSquare
-              key={i}
-              link={link}
-              className={css`
-                transition: all 100ms ease-in-out;
-                fill: ${colors.highlight};
-                stroke: gray;
-                cursor: pointer;
-                pointer-events: initial;
-                opacity: ${isHovered(link.coord) ? 0.5 : 0};
-              `}
-            />
-          )
-        })}
-      {[...getPossibleParents(mino)].map((link, i) => {
-        return (
-          <MinoSquare
-            key={i}
-            link={link}
-            className={css`
-              transition: all 100ms ease-in-out;
-              fill: ${fill};
-              stroke: ${stroke};
-              ${!!link.mino &&
-              css`
-                fill: ${isHovered(link.coord)
-                  ? tinycolor.mix(fill, "white", 80).toString()
-                  : showSquares
-                  ? tinycolor.mix(fill, "white", 50).toString()
-                  : fill};
-                cursor: pointer;
-                pointer-events: initial;
-              `}
-            `}
-          />
-        )
-      })}
+      <Hole />
+      <InnerSquares showEditable={showEditable} />
+      <OuterSquares />
     </g>
   )
 }
