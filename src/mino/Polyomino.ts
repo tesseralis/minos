@@ -7,15 +7,13 @@ import {
   getWidth,
   getHeight,
   contains,
-  getNeighbors,
   getCoords,
   fromCoords,
-  isValid,
   displayMino,
   fromString,
 } from "./data"
 import { getOutline } from "./draw"
-import { addSquare, removeSquare } from "./modify"
+import { getNeighbors, isValid, addSquare, removeSquare } from "./modify"
 import {
   Transform,
   transforms,
@@ -88,8 +86,8 @@ export default class Polyomino {
   /** Sort the minos in a canonical order */
   static sort(minos: Polyomino[]): Polyomino[] {
     return sortBy(minos, [
-      (mino) => -getHeight(mino.data),
-      (mino) => -getWidth(mino.data),
+      (mino) => -mino.width,
+      (mino) => -mino.height,
       (mino) => mino.data,
     ])
   }

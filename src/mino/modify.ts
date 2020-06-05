@@ -7,6 +7,8 @@ import {
   Coord,
   MAX_WIDTH,
   fromBits,
+  contains,
+  getCoords,
   getData,
   getWidth,
   rowBits,
@@ -113,4 +115,43 @@ export function removeSquare(mino: MinoData, [i, j]: Coord): MinoData {
     return decWidth(removed)
   }
   return removed
+}
+
+/**
+ * Return the neighbors of the coord [i,j]
+ */
+export function* getNeighbors([i, j]: Coord): Generator<Coord> {
+  // TODO it turns out this order greatly impacts the order of the minos
+  // either standardize it or sort the minos independently
+  yield [i + 1, j]
+  yield [i - 1, j]
+  yield [i, j + 1]
+  yield [i, j - 1]
+}
+
+export function isValid(mino: MinoData): boolean {
+  const p0 = [...getCoords(mino)][0]
+  // the null-omino is not a valid polyomino
+  if (!p0) return false
+  const queue = [p0]
+  const width = getWidth(mino)
+
+  // Initialize the visited bitmask
+  // Include the mino's width so that we can easily compare later
+  let visited = width
+
+  while (queue.length) {
+    const p = queue.pop()!
+    const [i, j] = p
+    const mask = getCoordMask(i, j, width)
+    if (visited & mask) continue
+    visited |= mask
+
+    for (const nbr of getNeighbors(p)) {
+      if (!contains(mino, nbr)) continue
+      queue.push(nbr)
+    }
+  }
+  // True if we have visited all the squares in the mino
+  return visited === mino
 }
