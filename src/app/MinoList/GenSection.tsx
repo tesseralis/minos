@@ -30,8 +30,9 @@ export default function GenSection({ gen, children }: Props) {
         display: flex;
         flex-direction: column;
         align-items: center;
-        :not(:first-child) {
-          border-top: 1px ${colors.fg} solid;
+        width: ${gen <= 4 ? 50 : 100}%;
+        :not(:last-child) {
+          border-bottom: 1px ${colors.fg} solid;
         }
       `}
     >

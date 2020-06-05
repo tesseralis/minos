@@ -30,9 +30,12 @@ export default function MinoList() {
       className={css`
         width: 100%;
         max-width: 48rem;
-        margin-left: 10rem;
         height: 100vh;
+        margin-left: 10rem;
         overflow-y: scroll;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
       `}
     >
       {nodes.map((minos, i) => {
