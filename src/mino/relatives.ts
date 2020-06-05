@@ -1,5 +1,5 @@
 /**
- * Utilities for adding and removing squares to and from mino data.
+ * Utilities for calculating relatives of polyominoes
  */
 
 import {

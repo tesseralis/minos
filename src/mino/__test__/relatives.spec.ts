@@ -1,5 +1,5 @@
 import { fromString } from "../data"
-import { isValid, addSquare, removeSquare } from "../modify"
+import { isValid, addSquare, removeSquare } from "../relatives"
 
 describe("modify", () => {
   describe("addSquare", () => {

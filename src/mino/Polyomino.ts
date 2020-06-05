@@ -13,7 +13,7 @@ import {
   fromString,
 } from "./data"
 import { getOutline } from "./draw"
-import { getNeighbors, isValid, addSquare, removeSquare } from "./modify"
+import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
 import {
   Transform,
   transforms,
