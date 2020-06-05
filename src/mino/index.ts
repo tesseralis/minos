@@ -13,7 +13,7 @@ export {
 } from "./mino"
 
 export { addSquare, removeSquare } from "./modify"
-export type { RelativeLink } from "./generate"
+export type { PossibleRelativeLink, RelativeLink } from "./generate"
 export { getPossibleParents, getParents, getChildren } from "./generate"
 export { getOutline } from "./draw"
 

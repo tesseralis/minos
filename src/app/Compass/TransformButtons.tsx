@@ -57,12 +57,21 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
   )
 }
 
+interface Props {
+  visible?: boolean
+}
+
 /**
  * Buttons that can be used to transform the mino into one of its reflections/rotations
  */
-export default function TransformButtons() {
+export default function TransformButtons({ visible }: Props) {
   return (
-    <g>
+    <g
+      className={css`
+        transition: opacity 100ms ease-in-out;
+        opacity: ${visible ? 1 : 0};
+      `}
+    >
       {reflectionOrder.map((trans, i) => (
         <Button
           key={trans}

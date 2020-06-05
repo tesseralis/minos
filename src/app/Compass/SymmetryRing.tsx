@@ -15,14 +15,14 @@ import {
 } from "./compassHelpers"
 
 interface Props {
-  onHover?(hovered: boolean): void
+  showTransforms: boolean
 }
 
 /**
  * A ring that displays visual indicators for the symmetries of the mino
  * and buttons to be able to transform the mino into one of those symmetries.
  */
-export default function SymmetryRing({ onHover }: Props) {
+export default function SymmetryRing({ showTransforms }: Props) {
   const color = useSelectedColor()
 
   return (
@@ -35,11 +35,10 @@ export default function SymmetryRing({ onHover }: Props) {
           `}
           r={radius}
           fill={tinycolor.mix(color, colors.bg, 90)}
-          onHover={onHover}
         />
         <ReflectionAxes />
         <RotationMarkers />
-        <TransformButtons />
+        <TransformButtons visible={showTransforms} />
         <Circle r={radius} fill="none" stroke={color} strokeWidth={3} />
       </g>
     </TransformCtx.Provider>
