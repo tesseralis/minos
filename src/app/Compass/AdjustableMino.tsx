@@ -29,16 +29,12 @@ function getBlockSize(gen: number) {
  */
 function useMinoTransform() {
   const mino = useSelected()
-  const gen = getSize(mino)
-  const size = getBlockSize(gen)
-  const minoPoints = [...getCoords(mino)]
-  const outline = getOutline(minoPoints)
+  const size = getBlockSize(getSize(mino))
+  const outline = getOutline([...getCoords(mino)])
   const scale = ([x, y]: Point) => [x * size, y * size] as Point
-  const scaledOutline = outline.map(scale)
-  const [avgX, avgY] = getAnchor(scaledOutline, "center center")
+  const [avgX, avgY] = getAnchor(outline.map(scale), "center center")
 
   const translate = ([x, y]: Point) => [x - avgX, y - avgY] as Point
-
   const transform = (p: Point) => translate(scale(p))
   return { size, transform }
 }
