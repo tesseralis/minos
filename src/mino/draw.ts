@@ -1,6 +1,6 @@
 import { isEqual, minBy } from "lodash-es"
 
-import { Coord } from "./mino"
+import { Coord } from "./data"
 
 type Direction = "left" | "right" | "up" | "down"
 

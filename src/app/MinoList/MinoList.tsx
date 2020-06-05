@@ -1,14 +1,13 @@
 import React from "react"
 import { css } from "emotion"
 
-import { getSize } from "mino"
 import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 
 import GenerationList from "./GenerationList"
 
-const START_GENS = 5
+const START_GENS = 6
 
 /**
  * Displays the list of all minos for each generation
@@ -40,7 +39,7 @@ export default function MinoList() {
     >
       {nodes.map((minos, i) => {
         const gen = i + 1
-        const hasSelected = !!selected && getSize(selected) === gen
+        const hasSelected = !!selected && selected.order === gen
         return (
           <GenerationList
             minos={minos}
