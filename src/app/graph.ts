@@ -94,12 +94,12 @@ export function generateGraph(n: number) {
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
-      for (const child of mino.children()) {
-        if (!visited.has(child.free().data)) {
-          nextGen.push(child.free())
-          visited.add(child.free().data)
+      for (const child of mino.freeChildren()) {
+        if (!visited.has(child.data)) {
+          nextGen.push(child)
+          visited.add(child.data)
         }
-        links.push([mino, child.free()])
+        links.push([mino, child])
       }
     }
 
@@ -121,7 +121,7 @@ export function generateGraph(n: number) {
         continue
       }
       const color = mixColors(
-        mino.parents().map((parent) => colors[parent.free().data]),
+        [...mino.freeParents()].map((parent) => colors[parent.data]),
       )
       colors[mino.data] = tinycolor.mix(
         colorMap[symmetry],

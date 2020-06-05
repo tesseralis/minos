@@ -108,6 +108,7 @@ export default class Polyomino {
     return contains(this.data, coord)
   }
 
+  /** Iterate over all the parents of this mino along with */
   possibleParents = lazy(() =>
     this.coords().map((coord) => {
       const parent = removeSquare(this.data, coord)
@@ -127,13 +128,13 @@ export default class Polyomino {
   /** Return the set of all free parents of this mino */
   freeParents = lazy(() => new Set(this.parents().map((p) => p.free())))
 
-  private *neighbors(mino: MinoData): Generator<Coord> {
+  private *neighbors(): Generator<Coord> {
     const visited = new Set<string>()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
         // TODO hash instead of string
         const nbrString = nbr.toString()
-        if (!contains(mino, nbr) && !visited.has(nbrString)) {
+        if (!contains(this.data, nbr) && !visited.has(nbrString)) {
           visited.add(nbrString)
           yield nbr
         }
@@ -142,12 +143,13 @@ export default class Polyomino {
   }
 
   enumerateChildren = lazy(() =>
-    [...this.neighbors(this.data)].map((coord) => ({
+    [...this.neighbors()].map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
     })),
   )
 
+  /** Return the list of all children of this mino */
   children = lazy(() => this.enumerateChildren().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
@@ -163,6 +165,7 @@ export default class Polyomino {
   }
 
   /** Return the list of all transforms of this mino */
+  // FIXME make this unique
   transforms = lazy(() => transforms.map((t) => this.transform(t)))
 
   /** true if this mino is symmetric wrt the given transform */
@@ -189,6 +192,7 @@ export default class Polyomino {
   /** Return the outline of this mino */
   outline = lazy(() => getOutline(this.coords()))
 
+  /** Pretty-printed representation of the mino */
   display() {
     return displayMino(this.data)
   }
