@@ -14,12 +14,4 @@ describe("generateGraph", () => {
     const sizes = [0, ...nodes.map((gen) => gen.length)]
     expect(sizes).toEqual(freeCounts)
   })
-
-  it("does not generate children for the last generation", () => {
-    const { nodes, meta } = graph
-    const lastGen = nodes[nodes.length - 1]
-    for (const mino of lastGen) {
-      expect([...meta[mino].children]).toHaveLength(0)
-    }
-  })
 })

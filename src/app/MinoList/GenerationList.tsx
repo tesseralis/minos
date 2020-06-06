@@ -1,17 +1,16 @@
 import React from "react"
 import { css } from "emotion"
 
-import { Mino } from "mino"
-import { canonicalEquals, sortMinos } from "app/graph"
+import { Polyomino } from "mino"
 import transition from "app/transition"
 
 import GenSection from "./GenSection"
 import MinoDiv from "./MinoDiv"
 
 interface Props {
-  minos: Mino[]
+  minos: Polyomino[]
   gen: number
-  selected: Mino | null
+  selected: Polyomino | null
   skipAnimation: boolean
 }
 
@@ -29,12 +28,13 @@ export default React.memo(function GenerationList({
     if (skipAnimation) {
       return
     }
-    transition({
+    const trans = transition({
       duration: minos.length * 5,
       onUpdate(val) {
         setVisIndex(val * minos.length)
       },
     })
+    return () => trans.cancel()
   }, [minos, skipAnimation])
 
   return (
@@ -47,10 +47,10 @@ export default React.memo(function GenerationList({
           justify-content: center;
         `}
       >
-        {sortMinos(minos).map((mino, i) => {
+        {Polyomino.sort(minos).map((mino, i) => {
           if (!skipAnimation && i > visIndex) return null
-          const isSelected = !!selected && canonicalEquals(mino, selected)
-          return <MinoDiv key={mino} mino={mino} isSelected={isSelected} />
+          const isSelected = !!selected && mino.equivalent(selected)
+          return <MinoDiv key={mino.data} mino={mino} isSelected={isSelected} />
         })}
       </div>
     </GenSection>

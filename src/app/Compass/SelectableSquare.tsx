@@ -2,7 +2,7 @@ import { isEqual } from "lodash-es"
 import { cx, css } from "emotion"
 import React from "react"
 
-import { PossibleRelativeLink, getSize, getCoords, getOutline } from "mino"
+import { PossibleRelativeLink } from "mino"
 import { Point, Rect } from "app/svg"
 import { getAnchor } from "app/utils"
 import { useSetSelected } from "app/SelectedContext"
@@ -16,8 +16,8 @@ function getBlockSize(gen: number) {
 /** The transform and size of the current selected mino. */
 function useMinoTransform() {
   const mino = useSelected()
-  const size = getBlockSize(getSize(mino))
-  const outline = getOutline([...getCoords(mino)])
+  const size = getBlockSize(mino.order)
+  const outline = mino.outline()
   const scale = ([x, y]: Point) => [x * size, y * size] as Point
   const [avgX, avgY] = getAnchor(outline.map(scale), "center center")
 

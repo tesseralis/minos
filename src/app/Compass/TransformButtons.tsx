@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "emotion"
 
-import { Transform, transform } from "mino"
+import { Transform } from "mino"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform, Text } from "app/svg"
 import { useSetSelected } from "app/SelectedContext"
@@ -48,7 +48,7 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
         }
         ${className}
       `}
-      onClick={() => setSelected(transform(mino, trans))}
+      onClick={() => setSelected(mino.transform(trans))}
       onHover={(hovered) => setTransform(hovered ? trans : null)}
       transform={svgTrans}
     >

@@ -2,7 +2,7 @@ import { css } from "emotion"
 import React from "react"
 import tinycolor from "tinycolor2"
 
-import { getSize, getChildren, getPossibleParents, O_OCTOMINO } from "mino"
+import { O_OCTOMINO } from "mino"
 import { NUM_GENERATIONS, getMinoColor } from "app/graph"
 import { colors } from "style/theme"
 import { useSelected } from "./compassHelpers"
@@ -18,12 +18,12 @@ function InnerSquares({ highlight }: Props) {
   const { fill, stroke } = getMinoColor(mino)
 
   return (
-    <g>
-      {mino === O_OCTOMINO && <Hole />}
-      {[...getPossibleParents(mino)].map((link, i) => (
+    <g key={mino.data}>
+      {mino.equals(O_OCTOMINO) && <Hole />}
+      {mino.possibleParents().map((link, i) => (
         <MinoSquare
           key={i}
-          link={link}
+          link={link as any}
           className={css`
             fill: ${!!link.mino && highlight
               ? tinycolor.mix(fill, "white", 25).toString()
@@ -43,10 +43,10 @@ function InnerSquares({ highlight }: Props) {
 function OuterSquares() {
   const mino = useSelected()
   // Don't render if on the last generation
-  if (getSize(mino) >= NUM_GENERATIONS) return null
+  if (mino.order >= NUM_GENERATIONS) return null
   return (
-    <g>
-      {[...getChildren(mino)].map((link, i) => (
+    <g key={mino.data}>
+      {mino.enumerateChildren().map((link, i) => (
         <MinoSquare
           key={i}
           link={link}

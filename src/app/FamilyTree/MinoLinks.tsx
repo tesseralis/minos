@@ -1,11 +1,11 @@
 import React, { memo } from "react"
 import { css, cx, keyframes } from "emotion"
 
-import { Mino, getSize } from "mino"
+import { Polyomino } from "mino"
 import { colors } from "style/theme"
 
 import { getArc } from "app/utils"
-import { links, getCanonical, getLinkColor, getIndex } from "app/graph"
+import { links, getLinkColor } from "app/graph"
 import transition from "app/transition"
 import { START_GENS, ringRadius, getCoords } from "./treeHelpers"
 import { useSelected } from "app/SelectedContext"
@@ -15,23 +15,19 @@ import { useSelected } from "app/SelectedContext"
  * The link is a circular that intersects both points as well as a third point
  * scaled according to the radius of the generation.
  */
-function getLinkPath([srcMino, tgtMino]: [Mino, Mino]) {
-  const gen = getSize(srcMino)
-  const origin = [0, -1 - ringRadius(gen) * 0.75] as const
-  const src = getCoords(gen, getIndex(srcMino))
-  const tgt = getCoords(gen + 1, getIndex(tgtMino))
-
-  return getArc(src, tgt, origin)
+function getLinkPath([srcMino, tgtMino]: [Polyomino, Polyomino]) {
+  const origin = [0, -1 - ringRadius(srcMino.order) * 0.75] as const
+  return getArc(getCoords(srcMino), getCoords(tgtMino), origin)
 }
 
 interface MinoLinkProps {
-  link: [Mino, Mino]
+  link: [Polyomino, Polyomino]
   isSelected: boolean
 }
 
 const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
   const [srcMino, tgtMino] = link
-  const gen = getSize(srcMino)
+  const gen = srcMino.order
   const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2
 
   const base = css`
@@ -70,16 +66,17 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
  */
 export default memo(function MinoLinks() {
   const selected = useSelected()
-  const startIndex = links.findIndex(([src]) => getSize(src) >= START_GENS)
+  const startIndex = links.findIndex(([src]) => src.order >= START_GENS)
   const [visIndex, setVisIndex] = React.useState(startIndex)
   // TODO make this more sophisticated and sync up with the other animation
   React.useEffect(() => {
-    transition({
+    const trans = transition({
       duration: 4000,
       onUpdate(val) {
         setVisIndex(startIndex + val * (links.length - startIndex))
       },
     })
+    return () => trans.cancel()
   }, [startIndex])
 
   return (
@@ -90,7 +87,7 @@ export default memo(function MinoLinks() {
             <MinoLink
               key={i}
               link={link}
-              isSelected={!!selected && link.includes(getCanonical(selected))}
+              isSelected={!!selected && link.includes(selected.free())}
             />
           ),
       )}

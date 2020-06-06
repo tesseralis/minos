@@ -1,7 +1,7 @@
 import createStateContext from "./createStateContext"
-import { Mino } from "mino"
+import { Polyomino } from "mino"
 
-type SelectedState = Mino | null
+type SelectedState = Polyomino | null
 
 const SelectedContext = createStateContext<SelectedState>(null)
 
