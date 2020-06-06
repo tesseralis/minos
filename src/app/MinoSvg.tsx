@@ -4,7 +4,7 @@ import React from "react"
 import { Polyomino, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
-import { Point, Rect, Polygon } from "./svg"
+import { G, Point, Rect, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
 const style = css`
@@ -18,6 +18,9 @@ interface Props {
   fill: string
   stroke: string
   anchor?: string
+  hideInner?: boolean
+  onClick?(): void
+  onHover?(hovered: boolean): void
 }
 
 /**
@@ -34,6 +37,9 @@ export default function MinoSvg({
   fill,
   stroke,
   anchor = "center center",
+  hideInner = false,
+  onClick,
+  onHover,
 }: Props) {
   const [cx, cy] = coord
   const strokeWidth = size / 8
@@ -49,7 +55,17 @@ export default function MinoSvg({
   const points = minoPoints.map(scale).map(translate)
 
   return (
-    <>
+    <G
+      className={
+        onClick
+          ? css`
+              cursor: pointer;
+            `
+          : undefined
+      }
+      onClick={onClick}
+      onHover={onHover}
+    >
       <Polygon
         className={style}
         style={{ stroke }}
@@ -75,9 +91,10 @@ export default function MinoSvg({
           width={size}
           height={size}
           fill="none"
+          opacity={hideInner ? 0.125 : 1}
           strokeWidth={strokeWidth * 0.75}
         />
       ))}
-    </>
+    </G>
   )
 }

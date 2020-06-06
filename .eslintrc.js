@@ -13,6 +13,7 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["prettier", "react", "jsx-a11y", "@typescript-eslint"],
   rules: {
+    "import/no-webpack-loader-syntax": "off",
     // we have a lot of anonymous renderers passed as props
     "react/display-name": "off",
     // I care more about readibility than possible errors
