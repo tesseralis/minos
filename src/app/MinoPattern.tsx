@@ -7,10 +7,22 @@ import MinoSvg from "app/MinoSvg"
 import { getMinoColor } from "app/graph"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
-const patternStr = require("!!raw-loader!data/7-rect.txt")
 
 const blockSize = 20
-const pattern = parsePattern(patternStr.default)
+
+function getPatternStr(patName: string): string {
+  return require(`!!raw-loader!data/${patName}.txt`).default
+}
+
+const patterns = [
+  "1_4-rect",
+  "1_4-square",
+  "5-rect",
+  "5-square",
+  "6-rect",
+  "6-square",
+  "7-rect",
+]
 
 function PatternMino({ mino, coord: [x, y] }: any) {
   const selected = useSelected()
@@ -40,9 +52,11 @@ function PatternMino({ mino, coord: [x, y] }: any) {
   )
 }
 
-export default function MinoPattern() {
+function MinoPattern({ patName }: any) {
+  const patternStr = getPatternStr(patName)
+  const pattern = parsePattern(patternStr)
   // FIXME add this to the grid metadata
-  const grid = (patternStr.default as string)
+  const grid = patternStr
     .trim()
     .split("\n")
     .map((row) => [...row])
@@ -51,6 +65,18 @@ export default function MinoPattern() {
 
   const blockWidth = width * blockSize
   const blockHeight = height * blockSize
+  return (
+    <svg width={blockWidth} height={blockHeight}>
+      {pattern.map(({ mino, coord }) => (
+        <PatternMino key={mino.data} mino={mino} coord={coord} />
+      ))}
+    </svg>
+  )
+}
+
+export default function PatternPage() {
+  // FIXME make this navigation
+  const [patName, setPatName] = React.useState(patterns[0])
 
   return (
     <div
@@ -60,21 +86,25 @@ export default function MinoPattern() {
         height: 100vh;
         margin-left: 10rem;
         overflow-y: scroll;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
       `}
     >
+      <nav
+        className={css`
+          margin-top: 2rem;
+        `}
+      >
+        {patterns.map((patName) => (
+          <button key={patName} onClick={() => setPatName(patName)}>
+            {patName}
+          </button>
+        ))}
+      </nav>
       <div
         className={css`
           margin: 2rem 0;
         `}
       >
-        <svg width={blockWidth} height={blockHeight}>
-          {pattern.map(({ mino, coord }) => (
-            <PatternMino key={mino.data} mino={mino} coord={coord} />
-          ))}
-        </svg>
+        <MinoPattern patName={patName} />
       </div>
     </div>
   )
