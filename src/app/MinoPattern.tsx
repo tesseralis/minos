@@ -8,8 +8,6 @@ import { getMinoColor } from "app/graph"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
 
-const blockSize = 20
-
 function getPatternStr(patName: string): string {
   return require(`!!raw-loader!data/${patName}.txt`).default
 }
@@ -24,7 +22,7 @@ const patterns = [
   "7-rect",
 ]
 
-function PatternMino({ mino, coord: [x, y] }: any) {
+function PatternMino({ blockSize, mino, coord: [x, y] }: any) {
   const selected = useSelected()
   const setSelected = useSetSelected()
   const [hovered, setHovered] = React.useState(false)
@@ -52,6 +50,8 @@ function PatternMino({ mino, coord: [x, y] }: any) {
   )
 }
 
+const maxWidth = 600
+
 function MinoPattern({ patName }: any) {
   const patternStr = getPatternStr(patName)
   const pattern = parsePattern(patternStr)
@@ -60,15 +60,22 @@ function MinoPattern({ patName }: any) {
     .trim()
     .split("\n")
     .map((row) => [...row])
+
   const width = grid[0].length
   const height = grid.length
+  const blockSize = Math.min(maxWidth / width, 40)
 
   const blockWidth = width * blockSize
   const blockHeight = height * blockSize
   return (
     <svg width={blockWidth} height={blockHeight}>
       {pattern.map(({ mino, coord }) => (
-        <PatternMino key={mino.data} mino={mino} coord={coord} />
+        <PatternMino
+          key={mino.data}
+          mino={mino}
+          coord={coord}
+          blockSize={blockSize}
+        />
       ))}
     </svg>
   )
@@ -86,6 +93,9 @@ export default function PatternPage() {
         height: 100vh;
         margin-left: 10rem;
         overflow-y: scroll;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
       `}
     >
       <nav
