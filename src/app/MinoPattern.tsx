@@ -8,8 +8,10 @@ import { getMinoColor } from "app/graph"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
 
-function getPatternStr(patName: string): string {
-  return require(`!!raw-loader!data/${patName}.txt`).default
+// FIXME maybe it's better if we just use public for this
+async function getPatternStr(patName: string): Promise<string> {
+  const module = await import(`!!raw-loader!data/${patName}.txt`)
+  return module.default
 }
 
 const patterns = [
@@ -54,7 +56,13 @@ function PatternMino({ blockSize, mino, coord: [x, y] }: any) {
 const maxWidth = 600
 
 function MinoPattern({ patName }: any) {
-  const patternStr = getPatternStr(patName)
+  const [patternStr, setPatternStr] = React.useState<string | null>(null)
+
+  React.useEffect(() => {
+    getPatternStr(patName).then((str) => setPatternStr(str))
+  }, [patName])
+  if (!patternStr) return <div>Loading...</div>
+  // const patternStr = getPatternStr(patName)
   const pattern = parsePattern(patternStr)
   // FIXME add this to the grid metadata
   const grid = patternStr

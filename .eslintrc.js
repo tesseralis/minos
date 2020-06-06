@@ -26,8 +26,6 @@ module.exports = {
     "@typescript-eslint/explicit-function-return-type": "off",
     // Lots of places where we use ! for simplicity
     "@typescript-eslint/no-non-null-assertion": "off",
-    // FIXME
-    "@typescript-eslint/no-var-requires": "off",
     // Enabled only for parameters with defaults for clarity
     "@typescript-eslint/no-inferrable-types": [
       "error",
