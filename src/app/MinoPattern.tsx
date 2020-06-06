@@ -20,6 +20,7 @@ const patterns = [
   "6-rect",
   "6-square",
   "7-rect",
+  "7-square",
 ]
 
 function PatternMino({ blockSize, mino, coord: [x, y] }: any) {

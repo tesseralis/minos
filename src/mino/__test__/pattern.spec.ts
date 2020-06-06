@@ -1,7 +1,7 @@
 import { parsePattern } from "../pattern"
 import fs from "fs"
 
-const files = ["5-rect", "5-square", "6-rect", "6-square", "7-rect"]
+const files = ["5-rect", "5-square", "6-rect", "6-square", "7-rect", "7-square"]
 
 const freeCounts = [0, 1, 1, 2, 5, 12, 35, 108, 369]
 
