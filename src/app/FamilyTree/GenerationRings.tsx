@@ -54,12 +54,13 @@ const GenerationRing = memo(
       if (skipAnimation) {
         return
       }
-      transition({
+      const trans = transition({
         duration: minos.length * 10,
         onUpdate(val) {
           setVisIndex(val * minos.length)
         },
       })
+      return () => trans.cancel()
     }, [minos, skipAnimation])
 
     return (

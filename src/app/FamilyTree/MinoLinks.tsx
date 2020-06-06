@@ -70,12 +70,13 @@ export default memo(function MinoLinks() {
   const [visIndex, setVisIndex] = React.useState(startIndex)
   // TODO make this more sophisticated and sync up with the other animation
   React.useEffect(() => {
-    transition({
+    const trans = transition({
       duration: 4000,
       onUpdate(val) {
         setVisIndex(startIndex + val * (links.length - startIndex))
       },
     })
+    return () => trans.cancel()
   }, [startIndex])
 
   return (
