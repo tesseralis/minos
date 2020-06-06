@@ -1,16 +1,25 @@
 import { parsePattern } from "../pattern"
-// import rect5 from '../../data/5mino-rect.txt'
-const rect5 = require("data/5mino-rect.txt")
-console.log(rect5)
+import fs from "fs"
 
 describe("parsePattern", () => {
   it("returns the correct polyominoes", () => {
-    const pattern = parsePattern(rect5)
-    // for (const { mino, coord } of pattern) {
-    //   console.log("coord:", coord)
-    //   console.log(mino.display())
-    // }
+    const patStr = fs.readFileSync("src/data/5mino-rect.txt", "utf-8")
+    const pattern = parsePattern(patStr)
     expect(pattern).toHaveLength(12)
     expect(pattern.every(({ mino }) => mino.order === 5)).toBe(true)
+  })
+
+  it("works with holes", () => {
+    const patStr = fs.readFileSync("src/data/5mino-square.txt", "utf-8")
+    const pattern = parsePattern(patStr)
+    expect(pattern).toHaveLength(12)
+    expect(pattern.every(({ mino }) => mino.order === 5)).toBe(true)
+  })
+
+  it("works with big files", () => {
+    const patStr = fs.readFileSync("src/data/7mino-rect.txt", "utf-8")
+    const pattern = parsePattern(patStr)
+    expect(pattern).toHaveLength(108)
+    expect(pattern.every(({ mino }) => mino.order === 7)).toBe(true)
   })
 })
