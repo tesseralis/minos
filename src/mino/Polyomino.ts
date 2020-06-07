@@ -198,7 +198,7 @@ export default class Polyomino {
 
   /** Returns true if the two minos are equivalent under transformations */
   equivalent(other: Polyomino) {
-    return this.free() === other.free()
+    return this.free().equals(other.free())
   }
 
   // Miscellaneous
