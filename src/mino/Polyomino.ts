@@ -48,9 +48,12 @@ export default class Polyomino {
   /** The number of squares in this polyomino */
   order: number
 
+  /** Polyomino dimensions */
   width: number
   height: number
   dims: Dims
+
+  private _free?: Polyomino
 
   // Construtors
 
@@ -180,7 +183,18 @@ export default class Polyomino {
   symmetry = lazy(() => getSymmetry((axis) => this.hasSymmetry(axis)))
 
   /** Get the free polyomino corresponding to this mino */
-  free = lazy(() => Polyomino.sort(this.transforms())[0])
+  free() {
+    if (!this._free) {
+      const transforms = this.transforms()
+      const free = Polyomino.sort(transforms)[0]
+      // populate the free polyomino for all the transforms
+      for (const trans of transforms) {
+        trans._free = free
+      }
+    }
+    // this._free should now be defined
+    return this._free!
+  }
 
   /** Returns true if the two minos are equivalent under transformations */
   equivalent(other: Polyomino) {
