@@ -1,6 +1,11 @@
 {
   "extends": [
-    "config:base",
-    ":combinePatchMinorReleases"
+    "config:base"
+  ],
+  "packageRules": [
+    {
+      "groupName": "package.json",
+      "paths": "package.json"
+    }
   ]
 }
