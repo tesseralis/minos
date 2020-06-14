@@ -5,7 +5,7 @@
   "packageRules": [
     {
       "groupName": "package.json",
-      "paths": "package.json"
+      "paths": ["package.json"]
     }
   ]
 }
