@@ -28,7 +28,7 @@ const patterns = [
 ]
 
 const PatternMino = React.memo(
-  ({ blockSize, mino, coord: [x, y], isSelected, skipAnimation }: any) => {
+  ({ blockSize, mino, coord: [x, y], isSelected }: any) => {
     const setSelected = useSetSelected()
     const [hovered, setHovered] = React.useState(false)
     let { fill } = getMinoColor(mino)
@@ -109,7 +109,6 @@ function MinoPattern({ patName }: any) {
             mino={mino}
             coord={coord}
             blockSize={blockSize}
-            skipAnimation={skipAnimation}
             isSelected={selected && mino.equivalent(selected)}
           />
         ),
