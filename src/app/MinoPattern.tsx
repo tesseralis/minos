@@ -26,45 +26,50 @@ const patterns = [
   "8-square",
 ]
 
-function PatternMino({ blockSize, mino, coord: [x, y] }: any) {
-  const selected = useSelected()
-  const setSelected = useSetSelected()
-  const [hovered, setHovered] = React.useState(false)
-  let { fill } = getMinoColor(mino)
-  fill = tinycolor(fill).saturate(20).toString()
-  const isSelected = !!selected && mino.equivalent(selected)
-  return (
-    <MinoSvg
-      mino={mino}
-      coord={[x * blockSize, y * blockSize]}
-      anchor="top left"
-      size={blockSize}
-      fill={
-        isSelected
-          ? tinycolor.mix(fill, colors.highlight).toString()
-          : hovered
-          ? tinycolor.mix(fill, colors.highlight, 30).toString()
-          : fill
-      }
-      stroke="black"
-      hideInner
-      onClick={() => setSelected(mino)}
-      onHover={setHovered}
-    />
-  )
-}
+const PatternMino = React.memo(
+  ({ blockSize, mino, coord: [x, y], isSelected }: any) => {
+    const setSelected = useSetSelected()
+    const [hovered, setHovered] = React.useState(false)
+    let { fill } = getMinoColor(mino)
+    fill = tinycolor(fill).saturate(20).toString()
+    return (
+      <MinoSvg
+        mino={mino}
+        coord={[x * blockSize, y * blockSize]}
+        anchor="top left"
+        size={blockSize}
+        fill={
+          isSelected
+            ? tinycolor.mix(fill, colors.highlight).toString()
+            : hovered
+            ? tinycolor.mix(fill, colors.highlight, 30).toString()
+            : fill
+        }
+        stroke="black"
+        hideInner
+        onClick={() => setSelected(mino)}
+        onHover={setHovered}
+      />
+    )
+  },
+)
 
 const maxWidth = 600
 
 function MinoPattern({ patName }: any) {
   const [patternStr, setPatternStr] = React.useState<string | null>(null)
+  const selected = useSelected()
 
   React.useEffect(() => {
     getPatternStr(patName).then((str) => setPatternStr(str))
   }, [patName])
+  const pattern = React.useMemo(
+    () => (patternStr ? parsePattern(patternStr) : []),
+    [patternStr],
+  )
+
   if (!patternStr) return <div>Loading...</div>
   // const patternStr = getPatternStr(patName)
-  const pattern = parsePattern(patternStr)
   // FIXME add this to the grid metadata
   const grid = patternStr
     .trim()
@@ -85,6 +90,7 @@ function MinoPattern({ patName }: any) {
           mino={mino}
           coord={coord}
           blockSize={blockSize}
+          isSelected={selected && mino.equivalent(selected)}
         />
       ))}
     </svg>
