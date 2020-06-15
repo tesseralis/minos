@@ -3,6 +3,7 @@ import { css } from "emotion"
 import tinycolor from "tinycolor2"
 
 import { parsePattern } from "mino/pattern"
+import transition from "app/transition"
 import MinoSvg from "app/MinoSvg"
 import { getMinoColor } from "app/graph"
 import { useSelected, useSetSelected } from "app/SelectedContext"
@@ -27,7 +28,7 @@ const patterns = [
 ]
 
 const PatternMino = React.memo(
-  ({ blockSize, mino, coord: [x, y], isSelected }: any) => {
+  ({ blockSize, mino, coord: [x, y], isSelected, skipAnimation }: any) => {
     const setSelected = useSetSelected()
     const [hovered, setHovered] = React.useState(false)
     let { fill } = getMinoColor(mino)
@@ -58,6 +59,7 @@ const maxWidth = 600
 
 function MinoPattern({ patName }: any) {
   const [patternStr, setPatternStr] = React.useState<string | null>(null)
+  const [visIndex, setVisIndex] = React.useState(-1)
   const selected = useSelected()
 
   React.useEffect(() => {
@@ -68,7 +70,23 @@ function MinoPattern({ patName }: any) {
     [patternStr],
   )
 
+  // FIXME de-duplicate with the other two animations
+  const skipAnimation = pattern.length < 100
+  React.useEffect(() => {
+    if (skipAnimation) {
+      return
+    }
+    const trans = transition({
+      duration: pattern.length * 2,
+      onUpdate(val) {
+        setVisIndex(val * pattern.length)
+      },
+    })
+    return () => trans.cancel()
+  }, [pattern, skipAnimation])
+
   if (!patternStr) return <div>Loading...</div>
+
   // const patternStr = getPatternStr(patName)
   // FIXME add this to the grid metadata
   const grid = patternStr
@@ -84,15 +102,18 @@ function MinoPattern({ patName }: any) {
   const blockHeight = height * blockSize
   return (
     <svg width={blockWidth} height={blockHeight}>
-      {pattern.map(({ mino, coord }) => (
-        <PatternMino
-          key={mino.data}
-          mino={mino}
-          coord={coord}
-          blockSize={blockSize}
-          isSelected={selected && mino.equivalent(selected)}
-        />
-      ))}
+      {pattern.map(({ mino, coord }, i) =>
+        !skipAnimation && i > visIndex ? null : (
+          <PatternMino
+            key={mino.data}
+            mino={mino}
+            coord={coord}
+            blockSize={blockSize}
+            skipAnimation={skipAnimation}
+            isSelected={selected && mino.equivalent(selected)}
+          />
+        ),
+      )}
     </svg>
   )
 }
