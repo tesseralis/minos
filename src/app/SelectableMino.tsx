@@ -44,6 +44,14 @@ export default memo(function SelectableMino({
   )
   const handleClick = useClickHandler(onClick)
 
+  // Hover out when the component unmounts
+  // NOTE: make sure the `onHover` callback is memoized!
+  React.useEffect(() => {
+    return () => {
+      onHover?.(undefined)
+    }
+  }, [onHover])
+
   return (
     <g>
       <MinoSvg

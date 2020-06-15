@@ -45,6 +45,12 @@ function Strand({ link, linkColor, coord, size }: StrandProps) {
   const isSelected = !!selected && selected.mino.equivalent(link.mino)
   const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
   const { fill, stroke } = getMinoColor(link.mino)
+  const handleHover = React.useCallback(
+    (mino) => {
+      setSelected(mino ? link : null)
+    },
+    [setSelected, link],
+  )
   return (
     <g>
       <path
@@ -56,7 +62,7 @@ function Strand({ link, linkColor, coord, size }: StrandProps) {
       />
       <SelectableMino
         mino={isSelected ? selected!.mino : link.mino}
-        onHover={(mino) => setSelected(mino ? link : null)}
+        onHover={handleHover}
         stroke={isSelected ? colors.highlight : stroke}
         coord={coord}
         size={size}

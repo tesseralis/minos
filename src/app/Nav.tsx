@@ -41,7 +41,7 @@ export default function Nav() {
         {["graph", "list", "pattern"].map((view) => (
           <li key={view}>
             <NavLink
-              to={view === "graph" ? "/" : `/${view}`}
+              to={`/${view}`}
               className={css`
                 font-size: 1.5rem;
                 line-height: 1.25;

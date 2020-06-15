@@ -1,5 +1,5 @@
 import React from "react"
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
 
 import KeyBindings from "./KeyBindings"
 import Nav from "./Nav"
@@ -22,7 +22,8 @@ export default function App() {
           bottomLeft={<InfoButton />}
         >
           <Routes>
-            <Route path="/" element={<FamilyTree />} />
+            <Route path="/" element={<Navigate to="/graph" />} />
+            <Route path="/graph" element={<FamilyTree />} />
             <Route path="/list" element={<MinoList />} />
             <Route path="/pattern" element={<MinoPattern />} />
           </Routes>
