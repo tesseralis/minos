@@ -24,6 +24,7 @@ const patterns = [
   "6-square",
   "7-rect",
   "7-square",
+  "8-rect",
   "8-square",
 ]
 
