@@ -52,7 +52,6 @@ export default function Nav() {
                   text-decoration: underline;
                 }
               `}
-              end
               activeClassName={css`
                 color: ${colors.highlight};
               `}

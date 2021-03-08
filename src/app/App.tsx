@@ -25,7 +25,12 @@ export default function App() {
             <Route path="/" element={<Navigate to="/graph" />} />
             <Route path="/graph" element={<FamilyTree />} />
             <Route path="/list" element={<MinoList />} />
-            <Route path="/pattern" element={<PatternPage />} />
+            {/* FIXME: put this logic in <PatternPage />? */}
+            <Route
+              path="/pattern"
+              element={<Navigate to="/pattern/5/rect" />}
+            />
+            <Route path="/pattern/:size/:shape" element={<PatternPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
