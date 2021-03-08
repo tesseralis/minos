@@ -9,7 +9,7 @@ import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
-import MinoPattern from "./MinoPattern"
+import PatternPage from "./PatternPage"
 
 export default function App() {
   return (
@@ -25,7 +25,7 @@ export default function App() {
             <Route path="/" element={<Navigate to="/graph" />} />
             <Route path="/graph" element={<FamilyTree />} />
             <Route path="/list" element={<MinoList />} />
-            <Route path="/pattern" element={<MinoPattern />} />
+            <Route path="/pattern" element={<PatternPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
