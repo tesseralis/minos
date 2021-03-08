@@ -5,7 +5,7 @@ import transition from "app/transition"
 import { useSelected } from "app/SelectedContext"
 import PatternMino from "./PatternMino"
 
-// FIXME maybe it's better if we just use public for this
+// TODO maybe it's better if we just use /public for this
 async function getPatternStr(patName: string): Promise<string> {
   const module = await import(`!!raw-loader!data/${patName}.txt`)
   return module.default
@@ -39,7 +39,7 @@ export default function MinoPattern({ size, shape }: Props) {
     [patternStr],
   )
 
-  // FIXME de-duplicate with the other two animations
+  // TODO de-duplicate with the other two animations
   const skipAnimation = pattern.length < 100
   React.useEffect(() => {
     if (skipAnimation) {
@@ -56,8 +56,6 @@ export default function MinoPattern({ size, shape }: Props) {
 
   if (!patternStr) return <div>Loading...</div>
 
-  // const patternStr = getPatternStr(patName)
-  // FIXME add this to the grid metadata
   const grid = patternStr
     .trim()
     .split("\n")
