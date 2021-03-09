@@ -25,7 +25,7 @@ const getSpread = scaleLinear()
 
 function getMinoAngleScale(gen: number) {
   return getAngleScale({
-    spread: getSpread(gen)!,
+    spread: getSpread(gen),
     start: 1 / 4,
     count: nodes[gen - 1].length,
     reverse: true,
@@ -40,6 +40,6 @@ export function getCoords(mino: Polyomino) {
   const getAngle = getMinoAngleScale(gen)
   return toCartesian({
     radius: ringRadius(gen),
-    angle: getAngle(getIndex(mino))!,
+    angle: getAngle(getIndex(mino)),
   })
 }
