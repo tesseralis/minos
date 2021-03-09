@@ -60,14 +60,6 @@ function mixColors(colors: Color[]) {
   })
 }
 
-interface MinoMeta {
-  parents: Set<MinoData>
-  children: Set<MinoData>
-  symmetry: Symmetry
-  color?: Color
-  index: number
-}
-
 function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
   return avg([...mino.freeParents()].map((p) => indices[p.data]))
 }

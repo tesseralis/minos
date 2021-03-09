@@ -79,12 +79,12 @@ const GenerationRing = memo(
 
 export default function GenerationRings() {
   const selected = useSelected()
-  const parents = selected ? selected.freeParents() : new Set<Polyomino>()
-  const children = selected ? selected.freeChildren() : new Set<Polyomino>()
 
   // Split up the "selected" parent and child minos by generation for performance
   const getSelected = useCallback(
     (gen) => {
+      const parents = selected ? selected.freeParents() : new Set<Polyomino>()
+      const children = selected ? selected.freeChildren() : new Set<Polyomino>()
       if (!selected) return
       const selectedGen = selected.order
       if (gen === selectedGen) {
@@ -95,7 +95,7 @@ export default function GenerationRings() {
         return children
       }
     },
-    [selected, children, parents],
+    [selected],
   )
 
   return (

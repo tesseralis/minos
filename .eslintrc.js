@@ -24,6 +24,7 @@ module.exports = {
     "@typescript-eslint/no-explicit-any": "off",
     // Too annoying for a personal project -- maybe enable for specific libs?
     "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
     // Lots of places where we use ! for simplicity
     "@typescript-eslint/no-non-null-assertion": "off",
     // Enabled only for parameters with defaults for clarity

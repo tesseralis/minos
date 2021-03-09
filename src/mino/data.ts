@@ -39,11 +39,11 @@ export const MAX_WIDTH = 1 << WIDTH_BITS
 /**
  * Return the raw data portion of the mino.
  */
-export function getData(mino: MinoData) {
+export function getData(mino: MinoData): number {
   return mino >> WIDTH_BITS
 }
 
-export function getOrder(mino: MinoData) {
+export function getOrder(mino: MinoData): number {
   let data = getData(mino)
   let size = 0
   while (data) {
