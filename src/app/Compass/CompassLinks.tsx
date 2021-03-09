@@ -107,7 +107,7 @@ function Strands({
   // Scale up each mino based on how many minos there are.
   // The less minos compared to the max possible, the larger the scaling
   const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)
-  const scaledSize = getBlockSize(gen) * sizeScale(numMinos)
+  const scaledSize = getBlockSize(gen) * sizeScale(numMinos)!
 
   // Scale up the radius so that the more minos there are,
   // the further away from the center
@@ -130,7 +130,7 @@ function Strands({
             size={scaledSize}
             coord={toCartesian({
               radius: scaledRadius,
-              angle: getAngle(i),
+              angle: getAngle(i)!,
             })}
           />
         )
