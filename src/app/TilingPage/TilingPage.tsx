@@ -16,6 +16,8 @@ function addCoords(u: Coord, v: Coord): Coord {
   return [u[0] + v[0], u[1] + v[1]]
 }
 
+const LIMIT = 10
+
 function Tiling({ mino }: { mino: Polyomino }) {
   const tiling = getTiling(mino)
   if (!tiling) {
@@ -27,9 +29,20 @@ function Tiling({ mino }: { mino: Polyomino }) {
   } = tiling
   return (
     <svg width={800} height={800} viewBox="-200 -200 400 400">
-      {range(-10, 10).map((i) => {
-        return range(-10, 10).map((j) => {
+      {range(-LIMIT, LIMIT).map((i) => {
+        return range(-LIMIT, LIMIT).map((j) => {
           const translate = addCoords(scaleCoord(u, i), scaleCoord(v, j))
+          const color1 = tinycolor.mix(
+            "red",
+            "green",
+            ((i + LIMIT) / (2 * LIMIT)) * 100,
+          )
+          const color2 = tinycolor.mix(
+            "blue",
+            "yellow",
+            ((j + LIMIT) / (2 * LIMIT)) * 100,
+          )
+          const color = tinycolor.mix(color1, color2)
           return (
             <>
               {pattern.map((tile, k) => (
@@ -38,7 +51,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
                   mino={tile.mino}
                   coord={scaleCoord(addCoords(tile.coord, translate), 20)}
                   size={20}
-                  fill={tinycolor.random().lighten(20).toString()}
+                  fill={color.toString()}
                   hideInner
                   stroke="black"
                   anchor="top left"
