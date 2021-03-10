@@ -10,6 +10,7 @@ import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
 import PatternPage from "./PatternPage"
+import TilingPage from "./TilingPage"
 
 export default function App() {
   return (
@@ -31,6 +32,7 @@ export default function App() {
               element={<Navigate to="/pattern/5/rect" />}
             />
             <Route path="/pattern/:size/:shape" element={<PatternPage />} />
+            <Route path="/tiling/:mino" element={<TilingPage />} />
           </Routes>
         </Layout>
       </BrowserRouter>
