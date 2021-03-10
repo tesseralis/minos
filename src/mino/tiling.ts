@@ -1,4 +1,4 @@
-import { zip, maxBy } from "lodash-es"
+import { range, zip, maxBy } from "lodash-es"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
 import { Direction, move, getEdgeList } from "./draw"
@@ -45,10 +45,19 @@ function* cycle<T>(list: T[]): Generator<T[]> {
 }
 
 // Get the breakpoints to partition an array of length n
+// into two or three elements
 function* getPartitionIndices(n: number): Generator<number[]> {
-  throw new Error("Not implemented")
+  for (const i of range(1, n)) {
+    yield [i]
+  }
+  for (const i of range(1, n - 1)) {
+    for (const j of range(i + 1, n)) {
+      yield [i, j]
+    }
+  }
 }
 
+// Partition the array at the given index breakpoints
 function partition<T>(array: T[], indices: number[]): T[][] {
   const result: T[][] = []
   let start = 0
