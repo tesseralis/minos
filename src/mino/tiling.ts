@@ -1,4 +1,4 @@
-import { maxBy } from "lodash-es"
+import { zip, maxBy } from "lodash-es"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
 import { Direction, move, getEdgeList } from "./draw"
@@ -38,12 +38,77 @@ type Segments = [
   f: EdgeList,
 ]
 
+function* cycle<T>(list: T[]): Generator<T[]> {
+  for (let i = 0; i < list.length; i++) {
+    yield list.slice(i).concat(list.slice(0, i))
+  }
+}
+
+// Get the breakpoints to partition an array of length n
+function* getPartitionIndices(n: number): Generator<number[]> {
+  throw new Error("Not implemented")
+}
+
+function partition<T>(array: T[], indices: number[]): T[][] {
+  const result: T[][] = []
+  let start = 0
+  for (const index of indices) {
+    result.push(array.slice(start, index))
+    start = index
+  }
+  result.push(array.slice(start))
+  return result
+}
+
+function getOppositeDir(d: Direction) {
+  switch (d) {
+    case "up":
+      return "down"
+    case "down":
+      return "up"
+    case "left":
+      return "right"
+    case "right":
+      return "left"
+  }
+}
+
+function isInverse(a: EdgeList, b: EdgeList): boolean {
+  const bInv = [...b].reverse()
+  const pairs = zip(a, bInv)
+  return pairs.every(([a, b]) => getOppositeDir(a!.dir) === b!.dir)
+}
+
+type SegmentPair = [EdgeList, EdgeList]
+// A list of pairs, each consisting of an opposite pair of edges
+type TransSegments = SegmentPair[]
+
 /**
  * Return the segments of the translation criterion for the given EdgeList,
  * or undefined if the edges do not satisfy the translation criterion.
  */
-function getTransSegments(edges: EdgeList): Segments | undefined {
-  throw new Error("Not implemented")
+function getTransSegments(edges: EdgeList): TransSegments | undefined {
+  // for each possible starting point
+  for (const rotation of cycle(edges)) {
+    // split into two parts
+    const half = Math.floor(rotation.length / 2)
+    const front = rotation.slice(0, half)
+    const back = rotation.slice(half)
+
+    for (const partitionIndices of getPartitionIndices(half)) {
+      const frontPart = partition(front, partitionIndices)
+      const backPart = partition(back, partitionIndices)
+      const pairs = zip(frontPart, backPart)
+      if (pairs.every(([a, b]) => isInverse(a!, b!))) {
+        return pairs as TransSegments
+      }
+    }
+
+    // for each partition of at least two pieces, check that each pair are opposites
+  }
+
+  // If no partition or rotation matches, this doesn't satisfy the criterion
+  return undefined
 }
 
 /**
@@ -67,21 +132,19 @@ function getCoordDistance(start: Coord, end: Coord): Coord {
 /**
  * Return the distance vector between the two edges.
  */
-function getTransDistance(startList: EdgeList, endList: EdgeList): Coord {
+function getTransDistance([startList, endList]: SegmentPair): Coord {
   const startEdge = startList[0]
   const endEdge = endList[endList.length - 1]
   return getCoordDistance(startEdge.start, getEndCoord(endEdge))
 }
 
 // Get the basis for the translation criterion segments
-function getTransBasis(segments: Segments): Basis {
-  const [a, b, c, d, e, f] = segments
-  const u1 = getTransDistance(a, d)
-  const u2 = getTransDistance(b, e)
-  // const u3 = getTransDistance(c, f)
+function getTransBasis(segments: TransSegments): Basis {
+  const u = getTransDistance(segments[0])
+  const v = getTransDistance(segments[1])
   // FIXME pick two out of the three based on a criterion,
   // such as vector length or segment length
-  return [u1, u2]
+  return [u, v]
 }
 
 /**
@@ -119,7 +182,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const pattern: MinoPlacement[] = [{ coord: [0, 0], mino }, inverse]
 
     // Use the translated pairs as one axis
-    const u = getTransDistance(a, d)
+    const u = getTransDistance([a, d])
     const v = u // FIXME this is something really complicated I can't express easily
     return { pattern, basis: [u, v] }
   }
