@@ -2,7 +2,7 @@ import { isEqual, minBy } from "lodash-es"
 
 import { Coord } from "./data"
 
-type Direction = "left" | "right" | "up" | "down"
+export type Direction = "left" | "right" | "up" | "down"
 
 function hasCoord(coords: Coord[], p: Coord) {
   return coords.some((p2) => isEqual(p, p2))
@@ -33,7 +33,7 @@ function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
   }
 }
 
-function move([x, y]: Coord, dir: Direction): Coord {
+export function move([x, y]: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
       return [x - 1, y]
