@@ -1,7 +1,7 @@
 import { maxBy } from "lodash-es"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
-import { Direction, move } from "./draw"
+import { Direction, move, getEdgeList } from "./draw"
 
 // FIXME dedupe from pattern.ts
 interface MinoPlacement {
@@ -37,14 +37,6 @@ type Segments = [
   e: EdgeList,
   f: EdgeList,
 ]
-
-/**
- * Convert the given mino into an edge list representation.
- */
-function toEdgeList(mino: Polyomino): EdgeList {
-  //
-  throw new Error("Not implemented")
-}
 
 /**
  * Return the segments of the translation criterion for the given EdgeList,
@@ -105,7 +97,7 @@ function getRotated(mino: Polyomino, segment: EdgeList): MinoPlacement {
 export function getTiling(mino: Polyomino): Tiling | undefined {
   // TODO: handle special paired cases
 
-  const edges = toEdgeList(mino)
+  const edges = getEdgeList(mino.coords())
 
   // If the polyomino satisfies the translation criterion:
   const transSegments = getTransSegments(edges)

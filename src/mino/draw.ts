@@ -92,3 +92,28 @@ export function getOutline(minoCoords: Coord[]) {
   } while (!isEqual(pos, origin))
   return result
 }
+
+// FIXME deduplicate/organize
+type Edge = { dir: Direction; start: Coord }
+type EdgeList = Edge[]
+
+/**
+ * Return the coordinates for the outline of a mino
+ */
+export function getEdgeList(minoCoords: Coord[]): EdgeList {
+  const origin = minBy(minoCoords)!
+  let pos = origin
+  let dir: Direction = "down"
+  const result: EdgeList = []
+  do {
+    if (canTurn(minoCoords, pos, dir)) {
+      dir = turnLeft(dir)
+    } else if (isBlocked(minoCoords, pos, dir)) {
+      dir = turnRight(dir)
+    } else {
+      result.push({ start: pos, dir })
+      pos = move(pos, dir)
+    }
+  } while (!isEqual(pos, origin))
+  return result
+}
