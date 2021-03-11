@@ -206,10 +206,14 @@ function getTransBasis(segments: TransSegments): Basis {
   return [u, v]
 }
 
+function getBottomRight(coords: Coord[]): Coord {
+  throw new Error("Not implemented")
+}
+
 /**
- * Get the inverse mino position flipped over the given edge.
+ * Flip the coordinate over the given segment
  */
-function getRotated(mino: Polyomino, segment: EdgeList): MinoPlacement {
+function flipPoint(coord: Coord, segment: EdgeList): Coord {
   throw new Error("Not implemented")
 }
 
@@ -237,8 +241,12 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const [a, b, c, d, e, f] = conwaySegments
     // Flip the mino over the longest segment and use that as the pattern
     const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
-    const inverse = getRotated(mino, longestSegment)
-    const pattern: MinoPlacement[] = [{ coord: [0, 0], mino }, inverse]
+    const minoBotRight = getBottomRight(mino.coords())
+    const inversePoint = flipPoint(minoBotRight, longestSegment)
+    const pattern: MinoPlacement[] = [
+      { coord: [0, 0], mino },
+      { coord: inversePoint, mino: mino.transform("rotateHalf") },
+    ]
 
     // Use the translated pairs as one axis
     const u = getTransDistance([a, d])
