@@ -24,7 +24,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
     return <div>This polyomino does not tile the plane</div>
   }
   const {
-    pattern,
+    domain: pattern,
     basis: [u, v],
   } = tiling
   return (

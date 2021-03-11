@@ -12,7 +12,7 @@ import {
   displayMino,
   fromString,
 } from "./data"
-import { getOutline } from "./draw"
+import { getOutline } from "./outline"
 import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
 import {
   Transform,
@@ -204,7 +204,7 @@ export default class Polyomino {
   // Miscellaneous
 
   /** Return the outline of this mino */
-  outline = lazy(() => getOutline(this.coords()))
+  outline = lazy(() => [...getOutline(this.coords())])
 
   /** Pretty-printed representation of the mino */
   display() {

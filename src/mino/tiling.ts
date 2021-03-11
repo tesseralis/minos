@@ -1,7 +1,13 @@
 import { range, zip, maxBy } from "lodash-es"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
-import { Direction, move, getEdgeList } from "./draw"
+import {
+  EdgeList,
+  isInverse,
+  getEdges,
+  segmentStart,
+  segmentEnd,
+} from "./outline"
 
 // FIXME dedupe from pattern.ts
 interface MinoPlacement {
@@ -16,31 +22,19 @@ type Basis = [u: Coord, v: Coord]
  * through translation.
  */
 interface Tiling {
-  /**
-   * The set of polyominoes that make up the base pattern for the tiling
-   */
-  pattern: MinoPlacement[]
-  /**
-   * Two vectors that determine how far to translate each repetition of the pattern
-   */
+  /** The set of polyominoes that make up the fundamental domain for the tiling */
+  domain: MinoPlacement[]
+
+  /** Two vectors that determine how far to translate each repetition of the pattern */
   basis: Basis
 }
-
-type Edge = { dir: Direction; start: Coord }
-type EdgeList = Edge[]
-
-type ConwaySegments = [
-  a: EdgeList,
-  b: EdgeList,
-  c: EdgeList,
-  d: EdgeList,
-  e: EdgeList,
-  f: EdgeList,
-]
 
 function diff(u: Coord, v: Coord): Coord {
   return [v[0] - u[0], v[1] - u[1]]
 }
+
+// Generic array functions
+// FIXME move out to a utility
 
 function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
   for (const i of range(limit)) {
@@ -51,6 +45,32 @@ function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
 function splitAt<T>(list: T[], index: number): [front: T[], back: T[]] {
   return [list.slice(0, index), list.slice(index)]
 }
+
+// Split the array at the given index breakpoints
+function splitAtIndices<T>(array: T[], indices: number[]): T[][] {
+  const result: T[][] = []
+  let start = 0
+  for (const index of indices) {
+    result.push(array.slice(start, index))
+    start = index
+  }
+  result.push(array.slice(start))
+  return result
+}
+
+/**
+ * Return the distance vector between the two edges.
+ */
+function getTransDistance([startList, endList]: SegmentPair): Coord {
+  return diff(segmentStart(startList), segmentEnd(endList))
+}
+
+// Translation Criterion:
+// The polyomino can be split into six segments ABCDEF such that AD, BE, CF are translations
+
+type SegmentPair = [EdgeList, EdgeList]
+// A list of pairs, each consisting of an opposite pair of edges
+type TransSegments = SegmentPair[]
 
 // Get the breakpoints to partition an array of length n
 // into two or three elements
@@ -65,49 +85,6 @@ function* getPartitionIndices(n: number): Generator<number[]> {
   }
 }
 
-// Partition the array at the given index breakpoints
-function partition<T>(array: T[], indices: number[]): T[][] {
-  const result: T[][] = []
-  let start = 0
-  for (const index of indices) {
-    result.push(array.slice(start, index))
-    start = index
-  }
-  result.push(array.slice(start))
-  return result
-}
-
-function getOppositeDir(d: Direction) {
-  switch (d) {
-    case "up":
-      return "down"
-    case "down":
-      return "up"
-    case "left":
-      return "right"
-    case "right":
-      return "left"
-  }
-}
-
-function segmentStart(edges: EdgeList): Coord {
-  return edges[0].start
-}
-
-function segmentEnd(edges: EdgeList): Coord {
-  return getEndCoord(edges[edges.length - 1])
-}
-
-function isInverse(a: EdgeList, b: EdgeList): boolean {
-  const bInv = [...b].reverse()
-  const pairs = zip(a, bInv)
-  return pairs.every(([a, b]) => getOppositeDir(a!.dir) === b!.dir)
-}
-
-type SegmentPair = [EdgeList, EdgeList]
-// A list of pairs, each consisting of an opposite pair of edges
-type TransSegments = SegmentPair[]
-
 /**
  * Return the segments of the translation criterion for the given EdgeList,
  * or undefined if the edges do not satisfy the translation criterion.
@@ -121,8 +98,8 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
 
     // for each partition of at least two pieces, check that each pair are opposites
     for (const partitionIndices of getPartitionIndices(half)) {
-      const frontPart = partition(front, partitionIndices)
-      const backPart = partition(back, partitionIndices)
+      const frontPart = splitAtIndices(front, partitionIndices)
+      const backPart = splitAtIndices(back, partitionIndices)
       const pairs = zip(frontPart, backPart)
       if (pairs.every(([a, b]) => isInverse(a!, b!))) {
         return pairs as TransSegments
@@ -134,6 +111,23 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
   return undefined
 }
 
+// Get the basis for the translation criterion segments
+function getTransBasis(segments: TransSegments): Basis {
+  const u = getTransDistance(segments[0])
+  const v = getTransDistance(segments[1])
+  // FIXME pick two out of the three based on a criterion,
+  // such as vector length or segment length
+  return [u, v]
+}
+
+// Conway Criterion:
+// The polyomino can be split into six segments ABCDEF such that:
+// AD are translations, and BCEF are each symmetric with respect to 180deg rotation.
+
+/**
+ * Tests if the edge list is a palindrome,
+ * meaning it is symmetric with respect to 180 degree rotation.
+ */
 function isPalindrome(edges: EdgeList): boolean {
   return range(Math.floor(edges.length / 2)).every(
     (i) => edges[i].dir === edges[edges.length - 1 - i].dir,
@@ -141,6 +135,7 @@ function isPalindrome(edges: EdgeList): boolean {
 }
 
 // Split edges into two edge lists, each of which is a palindrome
+// or return undefined if impossible
 function getPalindromePairs(edges: EdgeList): [EdgeList, EdgeList] | undefined {
   for (const i of range(1, edges.length)) {
     const [front, back] = splitAt(edges, i)
@@ -151,6 +146,15 @@ function getPalindromePairs(edges: EdgeList): [EdgeList, EdgeList] | undefined {
   return undefined
 }
 
+type ConwaySegments = [
+  a: EdgeList,
+  b: EdgeList,
+  c: EdgeList,
+  d: EdgeList,
+  e: EdgeList,
+  f: EdgeList,
+]
+
 /**
  * Return the segments of the Conway criterion for the given EdgeList,
  * or undefined if the edges do not satisfy the Conway criterion.
@@ -159,8 +163,8 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
   const half = Math.floor(edges.length / 2)
   // Cycle through all possible permutations
   for (const rotation of cycle(edges)) {
-    // For each possible translation pair in the start
     // TODO handle cases where A and D are both 0
+    // For each possible translation pair in the start
     for (const i of range(1, half - 1)) {
       const [a, tail] = splitAt(rotation, i)
       // try to find the inverse of A
@@ -168,8 +172,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       for (const j of range(0, tail.length - a.length - 1)) {
         if (isInverse(a, tail.slice(j, j + a.length))) {
           foundInverse = true
-          const [bc, def] = splitAt(tail, j)
-          const [d, ef] = splitAt(def, a.length)
+          const [bc, d, ef] = splitAtIndices(tail, [j, j + a.length])
           // ensure the remaining segments can be split into two palindromic segments
           const bcPal = getPalindromePairs(bc)
           const efPal = getPalindromePairs(ef)
@@ -180,39 +183,14 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
           }
         }
       }
-      // if no translated pair can be found, break and do the next rotation in the cycle
+      // If no translated twin can be found, none can be found for strings of longer length
+      // so break and do the next roation in the cycle
       if (!foundInverse) {
         break
       }
     }
   }
   throw new Error("Not implemented")
-}
-
-// Get the end coordinate of the edge
-function getEndCoord(edge: Edge): Coord {
-  return move(edge.start, edge.dir)
-}
-
-// FIXME do I really not have this util somewhere?
-function getCoordDistance(start: Coord, end: Coord): Coord {
-  return [end[0] - start[0], end[1] - start[1]]
-}
-
-/**
- * Return the distance vector between the two edges.
- */
-function getTransDistance([startList, endList]: SegmentPair): Coord {
-  return getCoordDistance(segmentStart(startList), segmentEnd(endList))
-}
-
-// Get the basis for the translation criterion segments
-function getTransBasis(segments: TransSegments): Basis {
-  const u = getTransDistance(segments[0])
-  const v = getTransDistance(segments[1])
-  // FIXME pick two out of the three based on a criterion,
-  // such as vector length or segment length
-  return [u, v]
 }
 
 function getBottomRight(coords: Coord[]): Coord {
@@ -222,9 +200,14 @@ function getBottomRight(coords: Coord[]): Coord {
 }
 
 /**
- * Flip the coordinate over the given segment
+ * Flip the coordinate over the center of the given palindromic segment.
  */
 function flipPoint(coord: Coord, segment: EdgeList): Coord {
+  // if A and Z are the start and endpoints of the segment,
+  // the center is given by M = (A+Z)/2.
+  // If O is our coordinate, then:
+  // O' = 2M - O
+  //    = A + Z - O
   const segStart = segmentStart(segment)
   const segEnd = segmentEnd(segment)
   return [
@@ -238,8 +221,7 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
  */
 export function getTiling(mino: Polyomino): Tiling | undefined {
   // TODO: handle special paired cases
-
-  const edges = getEdgeList(mino.coords())
+  const edges = [...getEdges(mino.coords())]
 
   // If the polyomino satisfies the translation criterion:
   const transSegments = getTransSegments(edges)
@@ -248,7 +230,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const pattern: MinoPlacement[] = [{ coord: [0, 0], mino }]
     // Get two edge pairs and use them as the basis
     const basis = getTransBasis(transSegments)
-    return { pattern, basis }
+    return { domain: pattern, basis }
   }
 
   // If the polyomino satisfies the Conway criterion:
@@ -271,8 +253,11 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     // flip the end of the other segment over
     const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
     const v = diff(endpoint, segmentStart(otherSegment))
-    return { pattern, basis: [u, v] }
+    return { domain: pattern, basis: [u, v] }
   }
 
+  // For polyominoes of size 8 or less, a tiling mino *must* satisfy one of the two criteria
+  // or be one of the special cases. If neither are satisfied, then the polyomino does not
+  // tile the plane.
   return undefined
 }

@@ -1,4 +1,4 @@
-import { isEqual, minBy } from "lodash-es"
+import { zip, isEqual, minBy } from "lodash-es"
 
 import { Coord } from "./data"
 
@@ -20,6 +20,7 @@ function canTurn(points: Coord[], [x, y]: Coord, dir: Direction) {
       return !hasCoord(points, [x - 1, y - 1])
   }
 }
+
 function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
   switch (dir) {
     case "up":
@@ -45,6 +46,20 @@ export function move([x, y]: Coord, dir: Direction): Coord {
       return [x, y - 1]
   }
 }
+
+function getOppositeDir(d: Direction) {
+  switch (d) {
+    case "up":
+      return "down"
+    case "down":
+      return "up"
+    case "left":
+      return "right"
+    case "right":
+      return "left"
+  }
+}
+
 function turnLeft(dir: Direction) {
   switch (dir) {
     case "left":
@@ -71,49 +86,56 @@ function turnRight(dir: Direction) {
   }
 }
 
+export type Edge = { dir: Direction; start: Coord }
+export type EdgeList = Edge[]
+
 /**
- * Return the coordinates for the outline of a mino
+ * Return if the two segments are inverses of each other.
  */
-export function getOutline(minoCoords: Coord[]) {
-  const origin = minBy(minoCoords)!
-  let pos = origin
-  let dir: Direction = "down"
-  const result = [origin]
-  do {
-    if (canTurn(minoCoords, pos, dir)) {
-      result.push(pos)
-      dir = turnLeft(dir)
-    } else if (isBlocked(minoCoords, pos, dir)) {
-      result.push(pos)
-      dir = turnRight(dir)
-    } else {
-      pos = move(pos, dir)
-    }
-  } while (!isEqual(pos, origin))
-  return result
+export function isInverse(a: EdgeList, b: EdgeList): boolean {
+  const bInv = [...b].reverse()
+  const pairs = zip(a, bInv)
+  return pairs.every(([a, b]) => getOppositeDir(a!.dir) === b!.dir)
 }
 
-// FIXME deduplicate/organize
-type Edge = { dir: Direction; start: Coord }
-type EdgeList = Edge[]
+export function segmentStart(edges: EdgeList): Coord {
+  return edges[0].start
+}
+
+export function segmentEnd(edges: EdgeList): Coord {
+  const edge = edges[edges.length - 1]
+  return move(edge.start, edge.dir)
+}
 
 /**
- * Return the coordinates for the outline of a mino
+ * Return the edges of a mino.
  */
-export function getEdgeList(minoCoords: Coord[]): EdgeList {
+export function* getEdges(minoCoords: Coord[]): Generator<Edge> {
   const origin = minBy(minoCoords)!
   let pos = origin
   let dir: Direction = "down"
-  const result: EdgeList = []
   do {
     if (canTurn(minoCoords, pos, dir)) {
       dir = turnLeft(dir)
     } else if (isBlocked(minoCoords, pos, dir)) {
       dir = turnRight(dir)
     } else {
-      result.push({ start: pos, dir })
+      yield { start: pos, dir }
       pos = move(pos, dir)
     }
   } while (!isEqual(pos, origin))
-  return result
+}
+
+/**
+ * Return the coordinates for the outline of a mino
+ */
+export function* getOutline(minoCoords: Coord[]): Generator<Coord> {
+  let currentDir
+  for (const edge of getEdges(minoCoords)) {
+    // Only yield coordinates when we turn
+    if (currentDir !== edge.dir) {
+      currentDir = edge.dir
+      yield edge.start
+    }
+  }
 }
