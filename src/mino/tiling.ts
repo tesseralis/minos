@@ -28,8 +28,9 @@ interface Tiling {
 
 type Edge = { dir: Direction; start: Coord }
 type EdgeList = Edge[]
+type DirectionList = Direction[]
 
-type Segments = [
+type ConwaySegments = [
   a: EdgeList,
   b: EdgeList,
   c: EdgeList,
@@ -42,6 +43,10 @@ function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
   for (const i of range(limit)) {
     yield list.slice(i).concat(list.slice(0, i))
   }
+}
+
+function splitAt<T>(list: T[], index: number): [front: T[], back: T[]] {
+  return [list.slice(0, index), list.slice(index)]
 }
 
 // Get the breakpoints to partition an array of length n
@@ -101,8 +106,7 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
   const half = Math.floor(edges.length / 2)
   for (const rotation of cycle(edges, half)) {
     // split into two parts
-    const front = rotation.slice(0, half)
-    const back = rotation.slice(half)
+    const [front, back] = splitAt(rotation, half)
 
     // for each partition of at least two pieces, check that each pair are opposites
     for (const partitionIndices of getPartitionIndices(half)) {
@@ -119,11 +123,58 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
   return undefined
 }
 
+function isPalindrome(edges: EdgeList): boolean {
+  return range(Math.floor(edges.length / 2)).every(
+    (i) => edges[i].dir === edges[edges.length - 1 - i].dir,
+  )
+}
+
+// Split edges into two edge lists, each of which is a palindrome
+function getPalindromePairs(edges: EdgeList): [EdgeList, EdgeList] | undefined {
+  for (const i of range(1, edges.length)) {
+    const [front, back] = splitAt(edges, i)
+    if (isPalindrome(front) && isPalindrome(back)) {
+      return [front, back]
+    }
+  }
+  return undefined
+}
+
 /**
  * Return the segments of the Conway criterion for the given EdgeList,
  * or undefined if the edges do not satisfy the Conway criterion.
  */
-function getConwaySegments(edges: EdgeList): Segments | undefined {
+function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
+  const half = Math.floor(edges.length / 2)
+  // Cycle through all possible permutations
+  for (const rotation of cycle(edges)) {
+    // For each possible translation pair in the start
+    // TODO handle cases where A and D are both 0
+    for (const i of range(1, half - 1)) {
+      const [a, tail] = splitAt(rotation, i)
+      // try to find the inverse of A
+      let foundInverse = false
+      for (const j of range(0, tail.length - a.length - 1)) {
+        if (isInverse(a, tail.slice(j, j + a.length))) {
+          foundInverse = true
+          const [bc, def] = splitAt(tail, j)
+          const [d, ef] = splitAt(def, a.length)
+          // ensure the remaining segments can be split into two palindromic segments
+          const bcPal = getPalindromePairs(bc)
+          const efPal = getPalindromePairs(ef)
+          if (bcPal && efPal) {
+            const [b, c] = bcPal
+            const [e, f] = efPal
+            return [a, b, c, d, e, f]
+          }
+        }
+      }
+      // if no translated pair can be found, break and do the next rotation in the cycle
+      if (!foundInverse) {
+        break
+      }
+    }
+  }
   throw new Error("Not implemented")
 }
 
