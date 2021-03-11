@@ -38,8 +38,8 @@ type Segments = [
   f: EdgeList,
 ]
 
-function* cycle<T>(list: T[]): Generator<T[]> {
-  for (let i = 0; i < list.length; i++) {
+function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
+  for (const i of range(limit)) {
     yield list.slice(i).concat(list.slice(0, i))
   }
 }
@@ -98,12 +98,13 @@ type TransSegments = SegmentPair[]
  */
 function getTransSegments(edges: EdgeList): TransSegments | undefined {
   // for each possible starting point
-  for (const rotation of cycle(edges)) {
+  for (const rotation of cycle(edges, edges.length / 2)) {
     // split into two parts
     const half = Math.floor(rotation.length / 2)
     const front = rotation.slice(0, half)
     const back = rotation.slice(half)
 
+    // for each partition of at least two pieces, check that each pair are opposites
     for (const partitionIndices of getPartitionIndices(half)) {
       const frontPart = partition(front, partitionIndices)
       const backPart = partition(back, partitionIndices)
@@ -112,8 +113,6 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
         return pairs as TransSegments
       }
     }
-
-    // for each partition of at least two pieces, check that each pair are opposites
   }
 
   // If no partition or rotation matches, this doesn't satisfy the criterion
