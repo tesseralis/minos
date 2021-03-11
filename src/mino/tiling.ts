@@ -98,9 +98,9 @@ type TransSegments = SegmentPair[]
  */
 function getTransSegments(edges: EdgeList): TransSegments | undefined {
   // for each possible starting point
-  for (const rotation of cycle(edges, edges.length / 2)) {
+  const half = Math.floor(edges.length / 2)
+  for (const rotation of cycle(edges, half)) {
     // split into two parts
-    const half = Math.floor(rotation.length / 2)
     const front = rotation.slice(0, half)
     const back = rotation.slice(half)
 
