@@ -39,6 +39,10 @@ type ConwaySegments = [
   f: EdgeList,
 ]
 
+function diff(u: Coord, v: Coord): Coord {
+  return [v[0] - u[0], v[1] - u[1]]
+}
+
 function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
   for (const i of range(limit)) {
     yield list.slice(i).concat(list.slice(0, i))
@@ -250,7 +254,14 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
 
     // Use the translated pairs as one axis
     const u = getTransDistance([a, d])
-    const v = u // FIXME this is something really complicated I can't express easily
+    // Pick a segment on the *other* region than the one the longest segment is in
+    const otherSegment = [b, c].includes(longestSegment) ? e : b
+    // flip the end of the other segment over
+    const endpoint = flipPoint(
+      getEndCoord(otherSegment[otherSegment.length - 1]),
+      longestSegment,
+    )
+    const v = diff(endpoint, otherSegment[0].start)
     return { pattern, basis: [u, v] }
   }
 
