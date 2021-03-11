@@ -28,7 +28,6 @@ interface Tiling {
 
 type Edge = { dir: Direction; start: Coord }
 type EdgeList = Edge[]
-type DirectionList = Direction[]
 
 type ConwaySegments = [
   a: EdgeList,
@@ -89,6 +88,14 @@ function getOppositeDir(d: Direction) {
     case "right":
       return "left"
   }
+}
+
+function segmentStart(edges: EdgeList): Coord {
+  return edges[0].start
+}
+
+function segmentEnd(edges: EdgeList): Coord {
+  return getEndCoord(edges[edges.length - 1])
 }
 
 function isInverse(a: EdgeList, b: EdgeList): boolean {
@@ -196,9 +203,7 @@ function getCoordDistance(start: Coord, end: Coord): Coord {
  * Return the distance vector between the two edges.
  */
 function getTransDistance([startList, endList]: SegmentPair): Coord {
-  const startEdge = startList[0]
-  const endEdge = endList[endList.length - 1]
-  return getCoordDistance(startEdge.start, getEndCoord(endEdge))
+  return getCoordDistance(segmentStart(startList), segmentEnd(endList))
 }
 
 // Get the basis for the translation criterion segments
@@ -211,14 +216,21 @@ function getTransBasis(segments: TransSegments): Basis {
 }
 
 function getBottomRight(coords: Coord[]): Coord {
-  throw new Error("Not implemented")
+  const xs = coords.map((u) => u[0])
+  const ys = coords.map((u) => u[1])
+  return [Math.max(...xs) + 1, Math.max(...ys) + 1]
 }
 
 /**
  * Flip the coordinate over the given segment
  */
 function flipPoint(coord: Coord, segment: EdgeList): Coord {
-  throw new Error("Not implemented")
+  const segStart = segmentStart(segment)
+  const segEnd = segmentEnd(segment)
+  return [
+    segStart[0] + segEnd[0] - coord[0],
+    segStart[1] + segEnd[1] - coord[1],
+  ]
 }
 
 /**
@@ -247,6 +259,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
     const minoBotRight = getBottomRight(mino.coords())
     const inversePoint = flipPoint(minoBotRight, longestSegment)
+    console.log({ minoBotRight, longestSegment, inversePoint })
     const pattern: MinoPlacement[] = [
       { coord: [0, 0], mino },
       { coord: inversePoint, mino: mino.transform("rotateHalf") },
@@ -257,11 +270,8 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     // Pick a segment on the *other* region than the one the longest segment is in
     const otherSegment = [b, c].includes(longestSegment) ? e : b
     // flip the end of the other segment over
-    const endpoint = flipPoint(
-      getEndCoord(otherSegment[otherSegment.length - 1]),
-      longestSegment,
-    )
-    const v = diff(endpoint, otherSegment[0].start)
+    const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
+    const v = diff(endpoint, segmentStart(otherSegment))
     return { pattern, basis: [u, v] }
   }
 
