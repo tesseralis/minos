@@ -259,7 +259,6 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
     const minoBotRight = getBottomRight(mino.coords())
     const inversePoint = flipPoint(minoBotRight, longestSegment)
-    console.log({ minoBotRight, longestSegment, inversePoint })
     const pattern: MinoPlacement[] = [
       { coord: [0, 0], mino },
       { coord: inversePoint, mino: mino.transform("rotateHalf") },
