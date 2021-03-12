@@ -3,15 +3,16 @@ import { css } from "emotion"
 
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
-import { Point, Circle } from "app/svg"
+import { Circle } from "app/svg"
 
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"
 import { useSetSelected } from "./SelectedContext"
+import Vector from "vector"
 
 interface Props {
   mino: Polyomino
-  coord: Point
+  coord: Vector
   size: number
   fill: string
   stroke: string

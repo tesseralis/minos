@@ -2,6 +2,7 @@
  * Utilities for calculating relatives of polyominoes
  */
 
+import Vector from "vector"
 import {
   MinoData,
   Coord,
@@ -72,17 +73,17 @@ function doAdd(mino: MinoData, i: number, j: number): MinoData {
 /**
  * Append the square at [i,j] to the mino
  */
-export function addSquare(mino: MinoData, [i, j]: Coord): MinoData {
-  if (i < 0) {
-    return doAdd(shiftUp(mino), 0, j)
+export function addSquare(mino: MinoData, p: Coord): MinoData {
+  if (p.x < 0) {
+    return doAdd(shiftUp(mino), 0, p.y)
   }
-  if (j < 0) {
-    return doAdd(shiftLeft(mino), i, 0)
+  if (p.y < 0) {
+    return doAdd(shiftLeft(mino), p.x, 0)
   }
-  if (j === getWidth(mino)) {
-    return doAdd(incWidth(mino), i, j)
+  if (p.y === getWidth(mino)) {
+    return doAdd(incWidth(mino), p.x, p.y)
   }
-  return doAdd(mino, i, j)
+  return doAdd(mino, p.x, p.y)
 }
 
 function bottomRowEmpty(mino: MinoData): boolean {
@@ -105,8 +106,8 @@ function doRemove(mino: MinoData, i: number, j: number): MinoData {
 /**
  * Remove the square at coordinate [i, j] from the Mino
  */
-export function removeSquare(mino: MinoData, [i, j]: Coord): MinoData {
-  const removed = doRemove(mino, i, j)
+export function removeSquare(mino: MinoData, p: Coord): MinoData {
+  const removed = doRemove(mino, p.x, p.y)
   if (bottomRowEmpty(removed)) {
     return shiftDown(removed)
   } else if (rightColumnEmpty(removed)) {
@@ -120,13 +121,13 @@ export function removeSquare(mino: MinoData, [i, j]: Coord): MinoData {
 /**
  * Return the neighbors of the coord [i,j]
  */
-export function* getNeighbors([i, j]: Coord): Generator<Coord> {
+export function* getNeighbors(p: Coord): Generator<Coord> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
-  yield [i + 1, j]
-  yield [i - 1, j]
-  yield [i, j + 1]
-  yield [i, j - 1]
+  yield p.add(Vector.RIGHT)
+  yield p.add(Vector.LEFT)
+  yield p.add(Vector.DOWN)
+  yield p.add(Vector.UP)
 }
 
 export function isValid(mino: MinoData): boolean {
@@ -142,8 +143,7 @@ export function isValid(mino: MinoData): boolean {
 
   while (queue.length) {
     const p = queue.pop()!
-    const [i, j] = p
-    const mask = getCoordMask(i, j, width)
+    const mask = getCoordMask(p.x, p.y, width)
     if (visited & mask) continue
     visited |= mask
 

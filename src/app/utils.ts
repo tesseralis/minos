@@ -1,5 +1,5 @@
+import Vector from "vector"
 import {
-  Point,
   TAU,
   equalsToPrecision,
   getPointAngle,
@@ -43,14 +43,14 @@ export function getAngleScale({
  * Get the path of the circular arc connecting `src` to `tgt`
  * that also passes through `base`.
  */
-export function getArc(src: Point, tgt: Point, origin: Point) {
+export function getArc(src: Vector, tgt: Vector, origin: Vector) {
   // Special case: If we're colinear, just draw a straight line
   if (
     equalsToPrecision(getPointAngle(origin, src), getPointAngle(origin, tgt))
   ) {
     const path = d3path()
-    path.moveTo(...src)
-    path.lineTo(...tgt)
+    path.moveTo(src.x, src.y)
+    path.lineTo(tgt.x, tgt.y)
     return path.toString()
   }
 
@@ -58,10 +58,10 @@ export function getArc(src: Point, tgt: Point, origin: Point) {
   const ccw = getPointAngle(origin, src) > getPointAngle(origin, tgt)
 
   const path = d3path()
-  path.moveTo(...src)
+  path.moveTo(src.x, src.y)
   path.arc(
-    center[0],
-    center[1],
+    center.x,
+    center.y,
     radius,
     getPointAngle(center, src),
     getPointAngle(center, tgt),
@@ -94,10 +94,10 @@ function getCoordAnchor(ns: number[], anchor: string) {
 /**
  * Gets the "anchor" point given a list of points and anchor string
  */
-export function getAnchor(points: Point[], anchor: string) {
-  const xs = points.map((p) => p[0])
-  const ys = points.map((p) => p[1])
+export function getAnchor(points: Vector[], anchor: string) {
+  const xs = points.map((p) => p.x)
+  const ys = points.map((p) => p.y)
 
   const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
-  return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
+  return new Vector(getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor))
 }

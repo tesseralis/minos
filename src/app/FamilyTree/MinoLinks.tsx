@@ -1,6 +1,7 @@
 import React, { memo } from "react"
 import { css, cx, keyframes } from "emotion"
 
+import Vector from "vector"
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
 
@@ -16,7 +17,7 @@ import { useSelected } from "app/SelectedContext"
  * scaled according to the radius of the generation.
  */
 function getLinkPath([srcMino, tgtMino]: [Polyomino, Polyomino]) {
-  const origin = [0, -1 - ringRadius(srcMino.order) * 0.75] as const
+  const origin = new Vector(0, -1 - ringRadius(srcMino.order) * 0.75)
   return getArc(getCoords(srcMino), getCoords(tgtMino), origin)
 }
 

@@ -8,6 +8,7 @@ import {
   useSelected,
   useSelectedColor,
 } from "./compassHelpers"
+import Vector from "vector"
 
 interface RotMarkerProps extends Omit<PolygonProps, "points"> {
   // if true, render asymmetric symbol
@@ -16,7 +17,11 @@ interface RotMarkerProps extends Omit<PolygonProps, "points"> {
 
 function RotationMarker({ chiral, ...svgProps }: RotMarkerProps) {
   const size = 10
-  const points: Point[] = [[0, size], [size, 0], chiral ? [0, 0] : [-size, 0]]
+  const points: Point[] = [
+    [0, size],
+    [size, 0],
+    chiral ? [0, 0] : [-size, 0],
+  ].map((p) => new Vector(p[0], p[1]))
   return <Polygon {...svgProps} strokeWidth={2} points={points} />
 }
 

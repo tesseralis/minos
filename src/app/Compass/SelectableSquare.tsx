@@ -1,9 +1,9 @@
-import { isEqual } from "lodash-es"
 import { cx, css } from "emotion"
 import React from "react"
 
+import Vector from "vector"
 import { PossibleRelativeLink } from "mino"
-import { Point, Rect } from "app/svg"
+import { Rect } from "app/svg"
 import { getAnchor } from "app/utils"
 import { useSetSelected } from "app/SelectedContext"
 import { colors } from "style/theme"
@@ -18,11 +18,12 @@ function useMinoTransform() {
   const mino = useSelected()
   const size = getBlockSize(mino.order)
   const outline = mino.outline()
-  const scale = ([x, y]: Point) => [x * size, y * size] as Point
-  const [avgX, avgY] = getAnchor(outline.map(scale), "center center")
+  const anchor = getAnchor(
+    outline.map((v) => v.scale(size)),
+    "center center",
+  )
 
-  const translate = ([x, y]: Point) => [x - avgX, y - avgY] as Point
-  const transform = (p: Point) => translate(scale(p))
+  const transform = (p: Vector) => p.scale(size).sub(anchor)
   return { size, transform }
 }
 
@@ -43,7 +44,7 @@ export default function SelectableSquare({
   const setRelative = RelativeCtx.useSetValue()
   const { size, transform } = useMinoTransform()
   const selected = RelativeCtx.useValue()
-  const isSelected = isEqual(selected?.coord, coord)
+  const isSelected = selected?.coord?.equals?.(coord)
 
   const selectableStyle = css`
     transition: all 150ms ease-in-out;
@@ -75,7 +76,7 @@ export function Hole() {
   return (
     <Rect
       fill={colors.bg}
-      coord={transform([1, 1])}
+      coord={transform(new Vector(1, 1))}
       width={size}
       height={size}
       stroke="none"

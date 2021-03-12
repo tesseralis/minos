@@ -136,7 +136,7 @@ export default class Polyomino {
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
         // TODO hash instead of string
-        const nbrString = nbr.toString()
+        const nbrString = nbr.toArray().toString()
         if (!contains(this.data, nbr) && !visited.has(nbrString)) {
           visited.add(nbrString)
           yield nbr

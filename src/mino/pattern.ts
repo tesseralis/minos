@@ -5,6 +5,7 @@
 import Polyomino from "./Polyomino"
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
+import Vector from "vector"
 
 interface MinoPlacement {
   mino: Polyomino
@@ -15,13 +16,13 @@ type MinoPattern = MinoPlacement[]
 function* getCoords([w, h]: Dims) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      yield [x, y] as Coord
+      yield new Vector(x, y)
     }
   }
 }
 
-function inBounds([x, y]: Coord, [w, h]: Dims) {
-  return x >= 0 && x < w && y >= 0 && y < h
+function inBounds(p: Coord, [w, h]: Dims) {
+  return p.x >= 0 && p.x < w && p.y >= 0 && p.y < h
 }
 
 // a black/white square has two code points and can't be split easily
@@ -40,11 +41,10 @@ export function parsePattern(patternStr: string): MinoPattern {
   const pattern: MinoPattern = []
   const visited: Set<string> = new Set()
   for (const coord of getCoords(dims)) {
-    const [x, y] = coord
     if (visited.has(coord.toString())) {
       continue
     }
-    const color = grid[y][x]
+    const color = grid[coord.y][coord.x]
     // ignore holes
     if (color === holeColor) {
       visited.add(coord.toString())
@@ -60,10 +60,9 @@ export function parsePattern(patternStr: string): MinoPattern {
       minoCoords.push(current!)
       visited.add(current!.toString())
       for (const nbr of getNeighbors(current!)) {
-        const [x1, y1] = nbr
         if (
           inBounds(nbr, dims) &&
-          grid[y1]?.[x1] === color &&
+          grid[nbr.y]?.[nbr.x] === color &&
           !visited.has(nbr.toString())
         ) {
           queue.push(nbr)
@@ -71,12 +70,11 @@ export function parsePattern(patternStr: string): MinoPattern {
       }
     }
     // get the coordinates of the mino
-    const xMin = Math.min(...minoCoords.map((p) => p[0]))
-    const yMin = Math.min(...minoCoords.map((p) => p[1]))
-    const mino = Polyomino.fromCoords(
-      minoCoords.map(([x, y]) => [x - xMin, y - yMin]),
-    )
-    pattern.push({ mino, coord: [xMin, yMin] })
+    const xMin = Math.min(...minoCoords.map((p) => p.x))
+    const yMin = Math.min(...minoCoords.map((p) => p.y))
+    const min = new Vector(xMin, yMin)
+    const mino = Polyomino.fromCoords(minoCoords.map((p) => p.sub(min)))
+    pattern.push({ mino, coord: min })
   }
 
   return pattern

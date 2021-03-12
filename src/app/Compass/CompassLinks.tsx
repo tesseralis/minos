@@ -1,7 +1,8 @@
 import React from "react"
 import { scaleLinear } from "d3-scale"
 
-import { Point, toCartesian } from "math"
+import Vector from "vector"
+import { toCartesian } from "math"
 import { Polyomino, RelativeLink } from "mino"
 
 import { colors } from "style/theme"
@@ -34,7 +35,7 @@ interface StrandProps {
   // block size of the relative mino
   size: number
   // x and y coordinates of the relative mino
-  coord: Point
+  coord: Vector
 }
 
 /**
@@ -43,7 +44,7 @@ interface StrandProps {
 function Strand({ link, linkColor, coord, size }: StrandProps) {
   const [selected, setSelected] = RelativeCtx.useState()
   const isSelected = !!selected && selected.mino.equivalent(link.mino)
-  const linkPath = getArc(coord, [0, 0], [0, -linkRadius * 2])
+  const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))
   const { fill, stroke } = getMinoColor(link.mino)
   const handleHover = React.useCallback(
     (mino) => {

@@ -8,6 +8,7 @@ import {
   useSelected,
   useSelectedColor,
 } from "./compassHelpers"
+import Vector from "vector"
 
 export const reflectionOrder = [
   "flipVert",
@@ -31,8 +32,8 @@ export default function ReflectionAxes() {
           (mino.hasSymmetry(reflection) || isHovered) && (
             <Line
               key={i}
-              p1={[-radius, 0]}
-              p2={[radius, 0]}
+              p1={new Vector(-radius, 0)}
+              p2={new Vector(radius, 0)}
               stroke={isHovered ? colors.highlight : color}
               strokeWidth={isHovered ? 4 : 2}
               transform={svgTransform().rotate(45 * i)}

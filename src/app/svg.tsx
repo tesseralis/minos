@@ -3,11 +3,11 @@
  */
 
 import React from "react"
-import { Point } from "math"
 import type { Instance as Color } from "tinycolor2"
+import Vector from "vector"
 
 // Re-export Point for convenience
-export type { Point } from "math"
+export type Point = Vector
 export type { Instance as Color } from "tinycolor2"
 
 export class SVGTransform {
@@ -77,10 +77,10 @@ export function Line({ p1, p2, ...svgProps }: LineProps) {
   return (
     <line
       {...getBaseSVGProps(svgProps)}
-      x1={p1[0]}
-      y1={p1[1]}
-      x2={p2[0]}
-      y2={p2[1]}
+      x1={p1.x}
+      y1={p1.y}
+      x2={p2.x}
+      y2={p2.y}
     />
   )
 }
@@ -94,7 +94,7 @@ export function Polygon({ points, ...svgProps }: PolygonProps) {
   return (
     <polygon
       {...getBaseSVGProps(svgProps)}
-      points={points.map((p) => p.join(",")).join(" ")}
+      points={points.map((p) => `${p.x},${p.y}`).join(" ")}
     />
   )
 }
@@ -104,27 +104,24 @@ export interface CircleProps
   center?: Point
 }
 
-export function Circle({
-  center: [cx, cy] = [0, 0],
-  ...svgProps
-}: CircleProps) {
-  return <circle {...getBaseSVGProps(svgProps)} cx={cx} cy={cy} />
+export function Circle({ center = Vector.ZERO, ...svgProps }: CircleProps) {
+  return <circle {...getBaseSVGProps(svgProps)} cx={center.x} cy={center.y} />
 }
 
 export interface RectProps extends Omit<SVGProps<SVGRectElement>, "x" | "y"> {
   coord?: Point
 }
 
-export function Rect({ coord: [x, y] = [0, 0], ...svgProps }: RectProps) {
-  return <rect {...getBaseSVGProps(svgProps)} x={x} y={y} />
+export function Rect({ coord = Vector.ZERO, ...svgProps }: RectProps) {
+  return <rect {...getBaseSVGProps(svgProps)} x={coord.x} y={coord.y} />
 }
 
 export interface TextProps extends Omit<SVGProps<SVGTextElement>, "x" | "y"> {
   coord?: Point
 }
 
-export function Text({ coord: [x, y] = [0, 0], ...svgProps }: TextProps) {
-  return <text {...getBaseSVGProps(svgProps)} x={x} y={y} />
+export function Text({ coord = Vector.ZERO, ...svgProps }: TextProps) {
+  return <text {...getBaseSVGProps(svgProps)} x={coord.x} y={coord.y} />
 }
 
 export function G(props: SVGProps<SVGGElement>) {

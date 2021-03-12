@@ -1,48 +1,49 @@
-import { isEqual, minBy } from "lodash-es"
+import { minBy } from "lodash-es"
 
+import Vector from "vector"
 import { Coord } from "./data"
 
 type Direction = "left" | "right" | "up" | "down"
 
 function hasCoord(coords: Coord[], p: Coord) {
-  return coords.some((p2) => isEqual(p, p2))
+  return coords.some((p2) => p.equals(p2))
 }
 
-function canTurn(points: Coord[], [x, y]: Coord, dir: Direction) {
+function canTurn(points: Coord[], v: Coord, dir: Direction) {
   switch (dir) {
     case "left":
-      return !hasCoord(points, [x - 1, y])
+      return !hasCoord(points, v.add(new Vector(-1, 0)))
     case "down":
-      return !hasCoord(points, [x, y])
+      return !hasCoord(points, v)
     case "right":
-      return !hasCoord(points, [x, y - 1])
+      return !hasCoord(points, v.add(new Vector(0, -1)))
     case "up":
-      return !hasCoord(points, [x - 1, y - 1])
+      return !hasCoord(points, v.add(new Vector(-1, -1)))
   }
 }
-function isBlocked(coords: Coord[], [x, y]: Coord, dir: Direction) {
+function isBlocked(coords: Coord[], v: Coord, dir: Direction) {
   switch (dir) {
     case "up":
-      return hasCoord(coords, [x, y - 1])
+      return hasCoord(coords, v.add(new Vector(0, -1)))
     case "right":
-      return hasCoord(coords, [x, y])
+      return hasCoord(coords, v)
     case "down":
-      return hasCoord(coords, [x - 1, y])
+      return hasCoord(coords, v.add(new Vector(-1, 0)))
     case "left":
-      return hasCoord(coords, [x - 1, y - 1])
+      return hasCoord(coords, v.add(new Vector(-1, -1)))
   }
 }
 
-function move([x, y]: Coord, dir: Direction): Coord {
+function move(p: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
-      return [x - 1, y]
+      return p.add(Vector.LEFT)
     case "right":
-      return [x + 1, y]
+      return p.add(Vector.RIGHT)
     case "down":
-      return [x, y + 1]
+      return p.add(Vector.DOWN)
     case "up":
-      return [x, y - 1]
+      return p.add(Vector.UP)
   }
 }
 function turnLeft(dir: Direction) {
@@ -89,6 +90,6 @@ export function getOutline(minoCoords: Coord[]) {
     } else {
       pos = move(pos, dir)
     }
-  } while (!isEqual(pos, origin))
+  } while (!pos.equals(origin))
   return result
 }

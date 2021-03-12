@@ -2,6 +2,7 @@
  * This modules describes utility functions to apply transformations to polyominoes.
  */
 
+import Vector from "vector"
 import { Coord, Dims } from "./data"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
@@ -20,21 +21,21 @@ export type Reflection = typeof reflections[number]
 export type Transform = typeof transforms[number]
 
 export function transformCoord(
-  [i, j]: Coord,
+  p: Coord,
   [w, h]: Dims,
   transform: Transform,
 ): Coord {
-  const i1 = w - 1 - i
-  const j1 = h - 1 - j
+  const x1 = w - 1 - p.x
+  const y1 = h - 1 - p.y
   const transforms = {
-    identity: [i, j],
-    rotateLeft: [j, i1],
-    rotateHalf: [i1, j1],
-    rotateRight: [j1, i],
-    flipHoriz: [i1, j],
-    flipVert: [i, j1],
-    flipMainDiag: [j, i],
-    flipMinorDiag: [j1, i1],
+    identity: p,
+    rotateLeft: new Vector(p.y, x1),
+    rotateHalf: new Vector(x1, y1),
+    rotateRight: new Vector(y1, p.x),
+    flipHoriz: new Vector(x1, p.y),
+    flipVert: new Vector(p.x, y1),
+    flipMainDiag: new Vector(p.y, p.x),
+    flipMinorDiag: new Vector(y1, x1),
   } as const
   return transforms[transform]
 }
