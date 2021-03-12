@@ -1,4 +1,13 @@
+import Vector from "vector"
 import Polyomino from "../Polyomino"
+
+function toVecs(coords: [number, number][]) {
+  return coords.map((coord) => new Vector(...coord))
+}
+
+function fromCoords(coords: [number, number][]) {
+  return Polyomino.fromCoords(toVecs(coords))
+}
 
 describe("mino", () => {
   describe("order", () => {
@@ -18,7 +27,7 @@ describe("mino", () => {
 
   describe("fromCoords", () => {
     it("correctly creates an L tetromino", () => {
-      const actual = Polyomino.fromCoords([
+      const actual = fromCoords([
         [0, 0],
         [0, 1],
         [1, 1],
@@ -58,32 +67,32 @@ describe("mino", () => {
 
   describe("outline", () => {
     it("works on L tetromino", () => {
-      const mino = Polyomino.fromCoords([
+      const mino = fromCoords([
         [0, 0],
         [1, 0],
         [0, 1],
         [0, 2],
       ])
-      const expected = [
+      const expected = toVecs([
         [0, 0],
         [0, 3],
         [1, 3],
         [1, 1],
         [2, 1],
         [2, 0],
-      ]
+      ])
       expect(mino.outline()).toEqual(expected)
     })
 
     it("works with concave minos", () => {
-      const mino = Polyomino.fromCoords([
+      const mino = fromCoords([
         [0, 0],
         [1, 0],
         [2, 0],
         [0, 1],
         [2, 1],
       ])
-      const expected = [
+      const expected = toVecs([
         [0, 0],
         [0, 2],
         [1, 2],
@@ -92,12 +101,12 @@ describe("mino", () => {
         [2, 2],
         [3, 2],
         [3, 0],
-      ]
+      ])
       expect(mino.outline()).toEqual(expected)
     })
 
     it("works with minos with holes", () => {
-      const mino = Polyomino.fromCoords([
+      const mino = fromCoords([
         [0, 0],
         [1, 0],
         [2, 0],
@@ -106,7 +115,7 @@ describe("mino", () => {
         [0, 2],
         [1, 2],
       ])
-      const expected = [
+      const expected = toVecs([
         [0, 0],
         [0, 3],
         [2, 3],
@@ -117,7 +126,7 @@ describe("mino", () => {
         [2, 2],
         [3, 2],
         [3, 0],
-      ]
+      ])
       expect(mino.outline()).toEqual(expected)
     })
   })
