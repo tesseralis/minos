@@ -1,5 +1,4 @@
 import React from "react"
-import { Coord } from "mino"
 import { range } from "lodash-es"
 import { css } from "emotion"
 import { Polyomino } from "mino"
@@ -7,14 +6,6 @@ import { useMatch } from "react-router-dom"
 import MinoSvg from "app/MinoSvg"
 import { getTiling } from "mino/tiling"
 import tinycolor from "tinycolor2"
-
-function scaleCoord(u: Coord, x: number): Coord {
-  return [u[0] * x, u[1] * x]
-}
-
-function addCoords(u: Coord, v: Coord): Coord {
-  return [u[0] + v[0], u[1] + v[1]]
-}
 
 const LIMIT = 10
 
@@ -31,7 +22,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
     <svg width={800} height={800} viewBox="-200 -200 400 400">
       {range(-LIMIT, LIMIT).map((i) => {
         return range(-LIMIT, LIMIT).map((j) => {
-          const translate = addCoords(scaleCoord(u, i), scaleCoord(v, j))
+          const translate = u.scale(i).add(v.scale(j))
           const color1 = tinycolor.mix(
             "red",
             "green",
@@ -49,7 +40,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
                 <MinoSvg
                   key={k}
                   mino={tile.mino}
-                  coord={scaleCoord(addCoords(tile.coord, translate), 20)}
+                  coord={tile.coord.add(translate).scale(20)}
                   size={20}
                   fill={color.toString()}
                   hideInner

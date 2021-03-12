@@ -1,10 +1,11 @@
 import { css } from "emotion"
 import React from "react"
 
+import Vector from "vector"
 import { Polyomino, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
-import { G, Point, Rect, Polygon } from "./svg"
+import { G, Rect, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
 const style = css`
@@ -13,7 +14,7 @@ const style = css`
 
 interface Props {
   mino: Polyomino
-  coord: Point
+  coord: Vector
   size: number
   fill: string
   stroke: string
@@ -41,15 +42,14 @@ export default function MinoSvg({
   onClick,
   onHover,
 }: Props) {
-  const [cx, cy] = coord
   const strokeWidth = size / 8
   const minoPoints = mino.coords()
   const outline = mino.outline()
-  const scale = ([x, y]: Point) => [x * size, y * size] as Point
+  const scale = (v: Vector) => v.scale(size)
   const scaledOutline = outline.map(scale)
-  const [avgX, avgY] = getAnchor(scaledOutline, anchor)
+  const anchorPoint = getAnchor(scaledOutline, anchor)
 
-  const translate = ([x, y]: Point) => [x - avgX + cx, y - avgY + cy] as Point
+  const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
   const outlinePoints = scaledOutline.map(translate)
 
   const points = minoPoints.map(scale).map(translate)
@@ -76,7 +76,7 @@ export default function MinoSvg({
       {mino.equals(O_OCTOMINO) && (
         <Rect
           fill={colors.bg}
-          coord={translate(scale([1, 1]))}
+          coord={translate(scale(new Vector(1, 1)))}
           width={size}
           height={size}
           stroke="none"

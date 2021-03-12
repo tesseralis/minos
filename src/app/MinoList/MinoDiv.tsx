@@ -6,6 +6,7 @@ import { Polyomino } from "mino"
 import { colors } from "style/theme"
 import { NUM_GENERATIONS, getMinoColor } from "app/graph"
 import SelectableMino from "app/SelectableMino"
+import Vector from "vector"
 
 const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
@@ -40,7 +41,7 @@ export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
         viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
       >
         <SelectableMino
-          coord={[0, 0]}
+          coord={Vector.ZERO}
           mino={mino}
           size={blockSize}
           stroke={isSelected ? colors.highlight : stroke}

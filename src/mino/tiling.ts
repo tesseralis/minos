@@ -1,4 +1,5 @@
 import { range, zip, maxBy } from "lodash-es"
+import Vector from "vector"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
 import {
@@ -27,10 +28,6 @@ interface Tiling {
 
   /** Two vectors that determine how far to translate each repetition of the pattern */
   basis: Basis
-}
-
-function diff(u: Coord, v: Coord): Coord {
-  return [v[0] - u[0], v[1] - u[1]]
 }
 
 // Generic array functions
@@ -62,7 +59,7 @@ function splitAtIndices<T>(array: T[], indices: number[]): T[][] {
  * Return the distance vector between the two edges.
  */
 function getTransDistance([startList, endList]: SegmentPair): Coord {
-  return diff(segmentStart(startList), segmentEnd(endList))
+  return segmentStart(startList).sub(segmentEnd(endList))
 }
 
 // Translation Criterion:
@@ -194,9 +191,9 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
 }
 
 function getBottomRight(coords: Coord[]): Coord {
-  const xs = coords.map((u) => u[0])
-  const ys = coords.map((u) => u[1])
-  return [Math.max(...xs) + 1, Math.max(...ys) + 1]
+  const xs = coords.map((u) => u.x)
+  const ys = coords.map((u) => u.y)
+  return new Vector(Math.max(...xs) + 1, Math.max(...ys) + 1)
 }
 
 /**
@@ -210,10 +207,7 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
   //    = A + Z - O
   const segStart = segmentStart(segment)
   const segEnd = segmentEnd(segment)
-  return [
-    segStart[0] + segEnd[0] - coord[0],
-    segStart[1] + segEnd[1] - coord[1],
-  ]
+  return segStart.add(segEnd).sub(coord)
 }
 
 /**
@@ -227,7 +221,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
   const transSegments = getTransSegments(edges)
   if (transSegments) {
     // the given mino can be translated without appending any translations
-    const pattern: MinoPlacement[] = [{ coord: [0, 0], mino }]
+    const pattern: MinoPlacement[] = [{ coord: Vector.ZERO, mino }]
     // Get two edge pairs and use them as the basis
     const basis = getTransBasis(transSegments)
     return { domain: pattern, basis }
@@ -242,7 +236,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const minoBotRight = getBottomRight(mino.coords())
     const inversePoint = flipPoint(minoBotRight, longestSegment)
     const pattern: MinoPlacement[] = [
-      { coord: [0, 0], mino },
+      { coord: Vector.ZERO, mino },
       { coord: inversePoint, mino: mino.transform("rotateHalf") },
     ]
 
@@ -252,7 +246,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const otherSegment = [b, c].includes(longestSegment) ? e : b
     // flip the end of the other segment over
     const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
-    const v = diff(endpoint, segmentStart(otherSegment))
+    const v = endpoint.sub(segmentStart(otherSegment))
     return { domain: pattern, basis: [u, v] }
   }
 

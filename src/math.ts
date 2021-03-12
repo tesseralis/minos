@@ -1,13 +1,7 @@
-export type Point = readonly [number, number]
-
-// A polar coordinate
-export interface Polar {
-  radius: number
-  angle: number
-}
+import Vector from "vector"
 
 export interface Circle {
-  center: Point
+  center: Vector
   radius: number
 }
 
@@ -24,20 +18,6 @@ export function equalsToPrecision(
   precision: number = PRECISION,
 ) {
   return Math.abs(n1 - n2) < precision
-}
-
-/**
- * Convert the given polar coordinate to Cartesian
- */
-export function toCartesian({ radius, angle }: Polar): Point {
-  return [radius * Math.sin(angle), radius * -Math.cos(angle)]
-}
-
-/**
- * Get the signed angle formed by line segments made by the two points and the origin.
- */
-export function getPointAngle([x0, y0]: Point, [x1, y1]: Point) {
-  return Math.atan2(y1 - y0, x1 - x0)
 }
 
 /**
@@ -80,34 +60,34 @@ export function sumOfSq(x1: number, x2: number) {
  * http://www.ambrsoft.com/trigocalc/circle3d.htm
  */
 export function getCircleFromPoints(
-  [x1, y1]: Point,
-  [x2, y2]: Point,
-  [x3, y3]: Point,
+  v1: Vector,
+  v2: Vector,
+  v3: Vector,
 ): Circle {
   const A = det3([
-    [x1, y1, 1],
-    [x2, y2, 1],
-    [x3, y3, 1],
+    [v1.x, v1.y, 1],
+    [v2.x, v2.y, 1],
+    [v3.x, v3.y, 1],
   ])
-  const d1 = sumOfSq(x1, y1)
-  const d2 = sumOfSq(x2, y2)
-  const d3 = sumOfSq(x3, y3)
+  const d1 = sumOfSq(v1.x, v1.y)
+  const d2 = sumOfSq(v2.x, v2.y)
+  const d3 = sumOfSq(v3.x, v3.y)
   const B = -det3([
-    [d1, y1, 1],
-    [d2, y2, 1],
-    [d3, y3, 1],
+    [d1, v1.y, 1],
+    [d2, v2.y, 1],
+    [d3, v3.y, 1],
   ])
   const C = det3([
-    [d1, x1, 1],
-    [d2, x2, 1],
-    [d3, x3, 1],
+    [d1, v1.x, 1],
+    [d2, v2.x, 1],
+    [d3, v3.x, 1],
   ])
   const D = -det3([
-    [d1, x1, y1],
-    [d2, x2, y2],
-    [d3, x3, y3],
+    [d1, v1.x, v1.y],
+    [d2, v2.x, v2.y],
+    [d3, v3.x, v3.y],
   ])
-  const center: Point = [-B / (2 * A), -C / (2 * A)]
+  const center = new Vector(-B / (2 * A), -C / (2 * A))
   const radius = Math.sqrt((B ** 2 + C ** 2 - 4 * A * D) / (4 * A ** 2))
   return { center, radius }
 }

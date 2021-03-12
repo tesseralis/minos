@@ -25,10 +25,12 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
+import Vector from "vector"
+
 // type for the encoded representation of a mino
 export type MinoData = number
 // type for the coordinates of a mino square
-export type Coord = readonly [number, number]
+export type Coord = Vector
 // type for the dimensions of a mino
 export type Dims = [number, number]
 
@@ -79,7 +81,7 @@ export function* getCoords(mino: MinoData): Generator<Coord> {
   let k = 0
   while (data) {
     if (data & 1) {
-      yield [(k / w) >> 0, k % w]
+      yield new Vector((k / w) >> 0, k % w)
     }
     k++
     data = data >> 1
@@ -90,10 +92,10 @@ export function* getCoords(mino: MinoData): Generator<Coord> {
  * Create a mino given a list of coordinates.
  */
 export function fromCoords(coords: Coord[]) {
-  const w = Math.max(...coords.map((p) => p[1])) + 1
+  const w = Math.max(...coords.map((p) => p.y)) + 1
   let result = 0
-  for (const [i, j] of coords) {
-    result = result | (1 << (w * i + j))
+  for (const p of coords) {
+    result = result | (1 << (w * p.x + p.y))
   }
   return fromBits(result, w)
 }
@@ -108,12 +110,12 @@ export function getCoordMask(i: number, j: number, w: number) {
 /**
  * Returns true if the mino contains the given coordinate
  */
-export function contains(mino: MinoData, [i, j]: Coord) {
+export function contains(mino: MinoData, p: Coord) {
   const w = getWidth(mino)
-  if (i < 0 || j < 0 || j >= w) {
+  if (p.x < 0 || p.y < 0 || p.y >= w) {
     return false
   }
-  return !!(mino & getCoordMask(i, j, w))
+  return !!(mino & getCoordMask(p.x, p.y, w))
 }
 
 /**

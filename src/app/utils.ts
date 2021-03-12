@@ -1,10 +1,5 @@
-import {
-  Point,
-  TAU,
-  equalsToPrecision,
-  getPointAngle,
-  getCircleFromPoints,
-} from "math"
+import Vector from "vector"
+import { TAU, equalsToPrecision, getCircleFromPoints } from "math"
 import { path as d3path } from "d3-path"
 import { scaleLinear } from "d3-scale"
 
@@ -43,28 +38,26 @@ export function getAngleScale({
  * Get the path of the circular arc connecting `src` to `tgt`
  * that also passes through `base`.
  */
-export function getArc(src: Point, tgt: Point, origin: Point) {
+export function getArc(src: Vector, tgt: Vector, origin: Vector) {
   // Special case: If we're colinear, just draw a straight line
-  if (
-    equalsToPrecision(getPointAngle(origin, src), getPointAngle(origin, tgt))
-  ) {
+  if (equalsToPrecision(origin.angleTo(src), origin.angleTo(tgt))) {
     const path = d3path()
-    path.moveTo(...src)
-    path.lineTo(...tgt)
+    path.moveTo(src.x, src.y)
+    path.lineTo(tgt.x, tgt.y)
     return path.toString()
   }
 
   const { radius, center } = getCircleFromPoints(src, tgt, origin)
-  const ccw = getPointAngle(origin, src) > getPointAngle(origin, tgt)
+  const ccw = origin.angleTo(src) > origin.angleTo(tgt)
 
   const path = d3path()
-  path.moveTo(...src)
+  path.moveTo(src.x, src.y)
   path.arc(
-    center[0],
-    center[1],
+    center.x,
+    center.y,
     radius,
-    getPointAngle(center, src),
-    getPointAngle(center, tgt),
+    center.angleTo(src),
+    center.angleTo(tgt),
     ccw,
   )
   return path.toString()
@@ -94,10 +87,10 @@ function getCoordAnchor(ns: number[], anchor: string) {
 /**
  * Gets the "anchor" point given a list of points and anchor string
  */
-export function getAnchor(points: Point[], anchor: string) {
-  const xs = points.map((p) => p[0])
-  const ys = points.map((p) => p[1])
+export function getAnchor(points: Vector[], anchor: string) {
+  const xs = points.map((p) => p.x)
+  const ys = points.map((p) => p.y)
 
   const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
-  return [getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor)]
+  return new Vector(getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor))
 }

@@ -3,11 +3,11 @@
  */
 
 import React from "react"
-import { Point } from "math"
 import type { Instance as Color } from "tinycolor2"
+import Vector from "vector"
 
-// Re-export Point for convenience
-export type { Point } from "math"
+// SVGs can accept either arrays or vectors for point coordinates
+export type Point = Vector | readonly [number, number]
 export type { Instance as Color } from "tinycolor2"
 
 export class SVGTransform {
@@ -73,16 +73,8 @@ export interface LineProps
   p2: Point
 }
 
-export function Line({ p1, p2, ...svgProps }: LineProps) {
-  return (
-    <line
-      {...getBaseSVGProps(svgProps)}
-      x1={p1[0]}
-      y1={p1[1]}
-      x2={p2[0]}
-      y2={p2[1]}
-    />
-  )
+export function Line({ p1: [x1, y1], p2: [x2, y2], ...svgProps }: LineProps) {
+  return <line {...getBaseSVGProps(svgProps)} x1={x1} y1={y1} x2={x2} y2={y2} />
 }
 
 export interface PolygonProps
@@ -94,7 +86,7 @@ export function Polygon({ points, ...svgProps }: PolygonProps) {
   return (
     <polygon
       {...getBaseSVGProps(svgProps)}
-      points={points.map((p) => p.join(",")).join(" ")}
+      points={points.map(([x, y]) => `${x},${y}`).join(" ")}
     />
   )
 }
@@ -105,7 +97,7 @@ export interface CircleProps
 }
 
 export function Circle({
-  center: [cx, cy] = [0, 0],
+  center: [cx, cy] = Vector.ZERO,
   ...svgProps
 }: CircleProps) {
   return <circle {...getBaseSVGProps(svgProps)} cx={cx} cy={cy} />
@@ -115,7 +107,7 @@ export interface RectProps extends Omit<SVGProps<SVGRectElement>, "x" | "y"> {
   coord?: Point
 }
 
-export function Rect({ coord: [x, y] = [0, 0], ...svgProps }: RectProps) {
+export function Rect({ coord: [x, y] = Vector.ZERO, ...svgProps }: RectProps) {
   return <rect {...getBaseSVGProps(svgProps)} x={x} y={y} />
 }
 
@@ -123,7 +115,7 @@ export interface TextProps extends Omit<SVGProps<SVGTextElement>, "x" | "y"> {
   coord?: Point
 }
 
-export function Text({ coord: [x, y] = [0, 0], ...svgProps }: TextProps) {
+export function Text({ coord: [x, y] = Vector.ZERO, ...svgProps }: TextProps) {
   return <text {...getBaseSVGProps(svgProps)} x={x} y={y} />
 }
 
