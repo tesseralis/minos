@@ -20,7 +20,56 @@ export type Rotation = typeof rotations[number]
 export type Reflection = typeof reflections[number]
 export type Transform = typeof transforms[number]
 
-export function transformCoord(
+type AnchorPos = "start" | "end"
+interface Anchor {
+  x: AnchorPos
+  y: AnchorPos
+}
+
+function getAnchorValue(nums: number[], pos: AnchorPos) {
+  return pos === "start" ? Math.min(...nums) : Math.max(...nums) + 1
+}
+
+export function getAnchor(coords: Coord[], anchor: Anchor): Coord {
+  const xs = coords.map((p) => p.x)
+  const ys = coords.map((p) => p.y)
+  return new Vector(getAnchorValue(xs, anchor.x), getAnchorValue(ys, anchor.y))
+}
+
+// Get what will be the top-left anchor if transforming the mino
+export function transformAnchor(transform: Transform): Anchor {
+  switch (transform) {
+    case "identity":
+    case "flipMainDiag":
+      return { x: "start", y: "start" }
+    case "rotateLeft":
+    case "flipHoriz":
+      return { x: "end", y: "start" }
+    case "rotateHalf":
+    case "flipMinorDiag":
+      return { x: "end", y: "end" }
+    case "rotateRight":
+    case "flipVert":
+      return { x: "start", y: "end" }
+  }
+}
+
+export function transformCoord(p: Coord, transform: Transform) {
+  const transforms = {
+    identity: p,
+    rotateLeft: new Vector(p.y, -p.x),
+    rotateHalf: new Vector(-p.x, -p.y),
+    rotateRight: new Vector(-p.y, p.x),
+    flipHoriz: new Vector(-p.x, p.y),
+    flipVert: new Vector(p.x, -p.y),
+    flipMainDiag: new Vector(p.y, p.x),
+    flipMinorDiag: new Vector(-p.y, -p.x),
+  } as const
+  return transforms[transform]
+}
+
+// FIXME express this in terms of transformCoord
+export function transformMinoCoord(
   p: Coord,
   [w, h]: Dims,
   transform: Transform,

@@ -9,6 +9,7 @@ import {
   segmentStart,
   segmentEnd,
 } from "./outline"
+import { getAnchor } from "./transform"
 
 // FIXME dedupe from pattern.ts
 interface MinoPlacement {
@@ -190,12 +191,6 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
   throw new Error("Not implemented")
 }
 
-function getBottomRight(coords: Coord[]): Coord {
-  const xs = coords.map((u) => u.x)
-  const ys = coords.map((u) => u.y)
-  return new Vector(Math.max(...xs) + 1, Math.max(...ys) + 1)
-}
-
 /**
  * Flip the coordinate over the center of the given palindromic segment.
  */
@@ -233,7 +228,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
     const [a, b, c, d, e, f] = conwaySegments
     // Flip the mino over the longest segment and use that as the pattern
     const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
-    const minoBotRight = getBottomRight(mino.coords())
+    const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" })
     const inversePoint = flipPoint(minoBotRight, longestSegment)
     const pattern: MinoPlacement[] = [
       { coord: Vector.ZERO, mino },

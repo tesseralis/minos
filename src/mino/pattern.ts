@@ -2,15 +2,27 @@
  * Utility functions for parsing and handling patterns/tilings of polyominoes.
  */
 
+import Vector from "vector"
 import Polyomino from "./Polyomino"
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
-import Vector from "vector"
+import {
+  getAnchor,
+  Transform,
+  transformAnchor,
+  transformCoord,
+} from "./transform"
 
+/**
+ * Represents the placement of a single polyomino in a coordinate grid
+ */
 interface MinoPlacement {
+  /** The polyomino to place */
   mino: Polyomino
+  /** The position of the polyomino, anchored at the top-left */
   coord: Coord
 }
+
 type MinoPattern = MinoPlacement[]
 
 function* getCoords([w, h]: Dims) {
@@ -80,7 +92,28 @@ export function parsePattern(patternStr: string): MinoPattern {
   return pattern
 }
 
+function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
+  const newAnchor = transformAnchor(transform)
+  // Get the *current* position of the coord that will be the new top-left anchor
+  const newAnchorCoord = coord.add(getAnchor(mino.coords(), newAnchor))
+
+  const newCoord = transformCoord(newAnchorCoord, transform)
+  return { mino: mino.transform(transform), coord: newCoord }
+}
+
+export function transformPattern(pattern: MinoPattern, transform: Transform) {
+  return pattern.map((placement) => transformMino(placement, transform))
+}
+
+export function shiftPattern(pattern: MinoPattern, newOrigin: Coord) {
+  return pattern.map(({ mino, coord }) => ({
+    mino,
+    coord: coord.sub(newOrigin),
+  }))
+}
+
 // verify whether the given mino pattern contains all the right minos
+// TODO implement this and write a test for all patterns we have
 export function verifyPattern(pattern: MinoPattern): boolean {
   return false
 }

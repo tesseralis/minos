@@ -18,7 +18,7 @@ import {
   Transform,
   transforms,
   reflections,
-  transformCoord,
+  transformMinoCoord,
   getSymmetry,
 } from "./transform"
 
@@ -163,7 +163,7 @@ export default class Polyomino {
   /** Transform this mino with the given transformation */
   transform(trans: Transform) {
     return Polyomino.fromCoords(
-      this.coords().map((p) => transformCoord(p, this.dims, trans)),
+      this.coords().map((p) => transformMinoCoord(p, this.dims, trans)),
     )
   }
 
