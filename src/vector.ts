@@ -27,6 +27,10 @@ export default class Vector {
     return [this.x, this.y]
   }
 
+  toString() {
+    return this.toArray().toString()
+  }
+
   /** Return whether this vector is equal to the provided other vector */
   equals(v: Vector) {
     return this.x === v.x && this.y === v.y
