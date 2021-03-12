@@ -1,6 +1,7 @@
 import Vector from "vector"
 import Polyomino from "../Polyomino"
 
+// TODO remove the need for these testing functions
 function toVecs(coords: [number, number][]) {
   return coords.map((coord) => new Vector(...coord))
 }

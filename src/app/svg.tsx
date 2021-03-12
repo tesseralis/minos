@@ -6,6 +6,7 @@ import React from "react"
 import type { Instance as Color } from "tinycolor2"
 import Vector from "vector"
 
+// SVGs can accept either arrays or vectors for point coordinates
 export type Point = Vector | readonly [number, number]
 export type { Instance as Color } from "tinycolor2"
 
