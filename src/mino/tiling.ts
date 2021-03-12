@@ -10,12 +10,7 @@ import {
   segmentEnd,
 } from "./outline"
 import { getAnchor } from "./transform"
-
-// FIXME dedupe from pattern.ts
-interface MinoPlacement {
-  mino: Polyomino
-  coord: Coord
-}
+import { MinoPlacement, MinoPattern, toCoords } from "./pattern"
 
 type Basis = [u: Coord, v: Coord]
 
@@ -61,6 +56,10 @@ function splitAtIndices<T>(array: T[], indices: number[]): T[][] {
  */
 function getTransDistance([startList, endList]: SegmentPair): Coord {
   return segmentStart(startList).sub(segmentEnd(endList))
+}
+
+function getPatternEdges(pattern: MinoPattern): EdgeList {
+  return [...getEdges([...toCoords(pattern)])]
 }
 
 // Translation Criterion:
@@ -109,13 +108,22 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
   return undefined
 }
 
-// Get the basis for the translation criterion segments
-function getTransBasis(segments: TransSegments): Basis {
-  const u = getTransDistance(segments[0])
-  const v = getTransDistance(segments[1])
+function getTransTiling(
+  pattern: MinoPattern,
+  edges: EdgeList = getPatternEdges(pattern),
+): Tiling | undefined {
+  // Check if the edges satisfy the translation criterion
+  const segments = getTransSegments(edges)
+  if (!segments) {
+    return undefined
+  }
   // FIXME pick two out of the three based on a criterion,
   // such as vector length or segment length
-  return [u, v]
+  // the given domain can be translated as-is
+  // Get two edge pairs and use them as the basis
+  const u = getTransDistance(segments[0])
+  const v = getTransDistance(segments[1])
+  return { domain: pattern, basis: [u, v] }
 }
 
 // Conway Criterion:
@@ -205,48 +213,63 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
   return segStart.add(segEnd).sub(coord)
 }
 
-/**
- * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
- */
-export function getTiling(mino: Polyomino): Tiling | undefined {
-  // TODO: handle special paired cases
-  const edges = [...getEdges(mino.coords())]
+// Flip the given mino placement over the given segment
+function flipPlacement(
+  placement: MinoPlacement,
+  segment: EdgeList,
+): MinoPlacement {
+  const { mino, coord } = placement
+  const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" }).add(
+    coord,
+  )
+  // Flip that point over the segment to get the new coordinate
+  const newCoord = flipPoint(minoBotRight, segment)
+  return { mino: mino.transform("rotateHalf"), coord: newCoord }
+}
 
-  // If the polyomino satisfies the translation criterion:
-  const transSegments = getTransSegments(edges)
-  if (transSegments) {
-    // the given mino can be translated without appending any translations
-    const pattern: MinoPlacement[] = [{ coord: Vector.ZERO, mino }]
-    // Get two edge pairs and use them as the basis
-    const basis = getTransBasis(transSegments)
-    return { domain: pattern, basis }
-  }
-
-  // If the polyomino satisfies the Conway criterion:
+function getConwayTiling(
+  pattern: MinoPattern,
+  edges: EdgeList = getPatternEdges(pattern),
+): Tiling | undefined {
   const conwaySegments = getConwaySegments(edges)
   if (conwaySegments) {
     const [a, b, c, d, e, f] = conwaySegments
     // Flip the mino over the longest segment and use that as the pattern
     const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
-    const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" })
-    const inversePoint = flipPoint(minoBotRight, longestSegment)
-    const pattern: MinoPlacement[] = [
-      { coord: Vector.ZERO, mino },
-      { coord: inversePoint, mino: mino.transform("rotateHalf") },
-    ]
+    const flipped = pattern.map((placement) =>
+      flipPlacement(placement, longestSegment),
+    )
+    const domain = pattern.concat(flipped)
 
     // Use the translated pairs as one axis
     const u = getTransDistance([a, d])
     // Pick a segment on the *other* region than the one the longest segment is in
+    // FIXME pick a better criterion for this
     const otherSegment = [b, c].includes(longestSegment) ? e : b
     // flip the end of the other segment over
     const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
     const v = endpoint.sub(segmentStart(otherSegment))
-    return { domain: pattern, basis: [u, v] }
+    return { domain, basis: [u, v] }
   }
 
   // For polyominoes of size 8 or less, a tiling mino *must* satisfy one of the two criteria
   // or be one of the special cases. If neither are satisfied, then the polyomino does not
   // tile the plane.
   return undefined
+}
+
+/**
+ * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
+ */
+export function getTiling(mino: Polyomino): Tiling | undefined {
+  // TODO: handle special paired cases
+  const pattern: MinoPattern = [{ mino, coord: Vector.ZERO }]
+  const edges = getPatternEdges(pattern)
+
+  const transTiling = getTransTiling(pattern, edges)
+  if (transTiling) {
+    return transTiling
+  }
+
+  return getConwayTiling(pattern, edges)
 }

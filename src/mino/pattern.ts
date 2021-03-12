@@ -16,16 +16,17 @@ import {
 /**
  * Represents the placement of a single polyomino in a coordinate grid
  */
-interface MinoPlacement {
+export interface MinoPlacement {
   /** The polyomino to place */
   mino: Polyomino
   /** The position of the polyomino, anchored at the top-left */
   coord: Coord
 }
 
-type MinoPattern = MinoPlacement[]
+export type MinoPattern = MinoPlacement[]
 
-function* getCoords([w, h]: Dims) {
+// Get all possible coordinates within the dimensions
+function* allCoords([w, h]: Dims) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       yield new Vector(x, y)
@@ -52,7 +53,7 @@ export function parsePattern(patternStr: string): MinoPattern {
   const dims: Dims = [width, height]
   const pattern: MinoPattern = []
   const visited: Set<string> = new Set()
-  for (const coord of getCoords(dims)) {
+  for (const coord of allCoords(dims)) {
     if (visited.has(coord.toString())) {
       continue
     }
@@ -110,6 +111,17 @@ export function shiftPattern(pattern: MinoPattern, newOrigin: Coord) {
     mino,
     coord: coord.sub(newOrigin),
   }))
+}
+
+/**
+ * Iterate over all coordinates of the given pattern.
+ */
+export function* toCoords(pattern: MinoPattern): Generator<Coord> {
+  for (const { mino, coord } of pattern) {
+    for (const p of mino.coords()) {
+      yield p.add(coord)
+    }
+  }
 }
 
 // verify whether the given mino pattern contains all the right minos
