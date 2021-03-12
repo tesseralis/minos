@@ -1,11 +1,5 @@
 import Vector from "vector"
 
-// A polar coordinate
-export interface Polar {
-  radius: number
-  angle: number
-}
-
 export interface Circle {
   center: Vector
   radius: number
