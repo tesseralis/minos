@@ -9,6 +9,10 @@ function hasCoord(coords: Coord[], p: Coord) {
   return coords.some((p2) => p.equals(p2))
 }
 
+/**
+ * Return whether, given a set of coordinates, starting at  point v,
+ * we can move in the given direction dir while moving counterclockwise.
+ */
 function canTurn(points: Coord[], v: Coord, dir: Direction) {
   switch (dir) {
     case "left":
@@ -76,6 +80,7 @@ function turnRight(dir: Direction) {
  * Return the coordinates for the outline of a mino
  */
 export function getOutline(minoCoords: Coord[]) {
+  // FIXME this might not be correct?
   const origin = minBy(minoCoords)!
   let pos = origin
   let dir: Direction = "down"

@@ -31,6 +31,11 @@ export default class Vector {
     return this.toArray().toString()
   }
 
+  *[Symbol.iterator](): Generator<number> {
+    yield this.x
+    yield this.y
+  }
+
   /** Return whether this vector is equal to the provided other vector */
   equals(v: Vector) {
     return this.x === v.x && this.y === v.y
