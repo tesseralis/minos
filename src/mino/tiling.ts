@@ -152,6 +152,34 @@ function getPalindromePairs(edges: EdgeList): [EdgeList, EdgeList] | undefined {
   return undefined
 }
 
+/**
+ * Flip the coordinate over the center of the given palindromic segment.
+ */
+function flipPoint(coord: Coord, segment: EdgeList): Coord {
+  // if A and Z are the start and endpoints of the segment,
+  // the center is given by M = (A+Z)/2.
+  // If O is our coordinate, then:
+  // O' = 2M - O
+  //    = A + Z - O
+  const segStart = segmentStart(segment)
+  const segEnd = segmentEnd(segment)
+  return segStart.add(segEnd).sub(coord)
+}
+
+// Flip the given mino placement over the given segment
+function flipPlacement(
+  placement: MinoPlacement,
+  segment: EdgeList,
+): MinoPlacement {
+  const { mino, coord } = placement
+  const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" }).add(
+    coord,
+  )
+  // Flip that point over the segment to get the new coordinate
+  const newCoord = flipPoint(minoBotRight, segment)
+  return { mino: mino.transform("rotateHalf"), coord: newCoord }
+}
+
 type ConwaySegments = [
   a: EdgeList,
   b: EdgeList,
@@ -197,34 +225,6 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
     }
   }
   throw new Error("Not implemented")
-}
-
-/**
- * Flip the coordinate over the center of the given palindromic segment.
- */
-function flipPoint(coord: Coord, segment: EdgeList): Coord {
-  // if A and Z are the start and endpoints of the segment,
-  // the center is given by M = (A+Z)/2.
-  // If O is our coordinate, then:
-  // O' = 2M - O
-  //    = A + Z - O
-  const segStart = segmentStart(segment)
-  const segEnd = segmentEnd(segment)
-  return segStart.add(segEnd).sub(coord)
-}
-
-// Flip the given mino placement over the given segment
-function flipPlacement(
-  placement: MinoPlacement,
-  segment: EdgeList,
-): MinoPlacement {
-  const { mino, coord } = placement
-  const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" }).add(
-    coord,
-  )
-  // Flip that point over the segment to get the new coordinate
-  const newCoord = flipPoint(minoBotRight, segment)
-  return { mino: mino.transform("rotateHalf"), coord: newCoord }
 }
 
 function getConwayTiling(
