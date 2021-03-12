@@ -2,7 +2,6 @@ import React from "react"
 import { scaleLinear } from "d3-scale"
 
 import Vector from "vector"
-import { toCartesian } from "math"
 import { Polyomino, RelativeLink } from "mino"
 
 import { colors } from "style/theme"
@@ -129,10 +128,7 @@ function Strands({
             link={link}
             linkColor={linkColor(link.mino)}
             size={scaledSize}
-            coord={toCartesian({
-              radius: scaledRadius,
-              angle: getAngle(i),
-            })}
+            coord={Vector.fromPolar(scaledRadius, getAngle(i))}
           />
         )
       })}

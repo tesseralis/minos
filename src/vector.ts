@@ -16,27 +16,44 @@ export default class Vector {
     this.y = y
   }
 
+  /**
+   * Convert the given polar coordinate to Cartesian
+   */
+  static fromPolar(radius: number, angle: number) {
+    return new Vector(radius * Math.sin(angle), radius * -Math.cos(angle))
+  }
+
   toArray(): [number, number] {
     return [this.x, this.y]
   }
 
+  /** Return whether this vector is equal to the provided other vector */
   equals(v: Vector) {
     return this.x === v.x && this.y === v.y
   }
 
+  /** Return the inverse of this vector */
   inverse() {
     return new Vector(-this.x, -this.y)
   }
 
+  /** Scale (multiply) this vector by s */
   scale(s: number) {
     return new Vector(this.x * s, this.y * s)
   }
 
+  /** Add the given vector to this vector */
   add(v: Vector) {
     return new Vector(this.x + v.x, this.y + v.y)
   }
 
+  /** Subtract the given vector from this vector */
   sub(v: Vector) {
-    return this.add(v.inverse())
+    return new Vector(this.x - v.x, this.y - v.y)
+  }
+
+  /** Get the signed angle from this vector to the provided vector */
+  angleTo(v: Vector) {
+    return Math.atan2(v.y - this.y, v.x - this.x)
   }
 }

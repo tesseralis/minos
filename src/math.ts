@@ -27,20 +27,6 @@ export function equalsToPrecision(
 }
 
 /**
- * Convert the given polar coordinate to Cartesian
- */
-export function toCartesian({ radius, angle }: Polar): Vector {
-  return new Vector(radius * Math.sin(angle), radius * -Math.cos(angle))
-}
-
-/**
- * Get the signed angle formed by line segments made by the two points and the origin.
- */
-export function getPointAngle(v0: Vector, v1: Vector) {
-  return Math.atan2(v1.y - v0.y, v1.x - v0.x)
-}
-
-/**
  * Get the determinant of the 2x2 matrix
  */
 export function det2([[x1, x2], [x3, x4]]: any) {

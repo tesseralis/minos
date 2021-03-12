@@ -1,10 +1,5 @@
 import Vector from "vector"
-import {
-  TAU,
-  equalsToPrecision,
-  getPointAngle,
-  getCircleFromPoints,
-} from "math"
+import { TAU, equalsToPrecision, getCircleFromPoints } from "math"
 import { path as d3path } from "d3-path"
 import { scaleLinear } from "d3-scale"
 
@@ -45,9 +40,7 @@ export function getAngleScale({
  */
 export function getArc(src: Vector, tgt: Vector, origin: Vector) {
   // Special case: If we're colinear, just draw a straight line
-  if (
-    equalsToPrecision(getPointAngle(origin, src), getPointAngle(origin, tgt))
-  ) {
+  if (equalsToPrecision(origin.angleTo(src), origin.angleTo(tgt))) {
     const path = d3path()
     path.moveTo(src.x, src.y)
     path.lineTo(tgt.x, tgt.y)
@@ -55,7 +48,7 @@ export function getArc(src: Vector, tgt: Vector, origin: Vector) {
   }
 
   const { radius, center } = getCircleFromPoints(src, tgt, origin)
-  const ccw = getPointAngle(origin, src) > getPointAngle(origin, tgt)
+  const ccw = origin.angleTo(src) > origin.angleTo(tgt)
 
   const path = d3path()
   path.moveTo(src.x, src.y)
@@ -63,8 +56,8 @@ export function getArc(src: Vector, tgt: Vector, origin: Vector) {
     center.x,
     center.y,
     radius,
-    getPointAngle(center, src),
-    getPointAngle(center, tgt),
+    center.angleTo(src),
+    center.angleTo(tgt),
     ccw,
   )
   return path.toString()
