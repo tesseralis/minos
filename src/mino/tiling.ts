@@ -9,8 +9,14 @@ import {
   segmentStart,
   segmentEnd,
 } from "./outline"
-import { getAnchor } from "./transform"
-import { MinoPlacement, MinoPattern, toCoords } from "./pattern"
+import { Transform, getAnchor, transforms } from "./transform"
+import {
+  MinoPlacement,
+  MinoPattern,
+  toCoords,
+  transformPattern,
+  shiftPattern,
+} from "./pattern"
 
 type Basis = [u: Coord, v: Coord]
 
@@ -25,6 +31,8 @@ interface Tiling {
   /** Two vectors that determine how far to translate each repetition of the pattern */
   basis: Basis
 }
+
+type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
 // Generic array functions
 // FIXME move out to a utility
@@ -62,12 +70,53 @@ function getPatternEdges(pattern: MinoPattern): EdgeList {
   return [...getEdges([...toCoords(pattern)])]
 }
 
+function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
+  const result: Record<number, MinoPattern> = {}
+  for (const [minoStr, pairTransform, coord] of pairs) {
+    const mino = Polyomino.fromString(minoStr)
+    const pairPoint = new Vector(...coord)
+    const pattern: MinoPattern = [
+      { mino, coord: Vector.ZERO },
+      { mino: mino.transform(pairTransform), coord: pairPoint },
+    ]
+    for (const transform of transforms) {
+      const transformedPattern = transformPattern(pattern, transform)
+      result[mino.data] = shiftPattern(
+        transformedPattern,
+        transformedPattern[0].coord,
+      )
+    }
+  }
+  return result
+}
+
 // Translation Criterion:
 // The polyomino can be split into six segments ABCDEF such that AD, BE, CF are translations
 
 type SegmentPair = [EdgeList, EdgeList]
 // A list of pairs, each consisting of an opposite pair of edges
 type TransSegments = SegmentPair[]
+
+const transPairs: TilingPair[] = [
+  ["1001_1111_0010", "flipMinorDiag", [0, 3]],
+  ["11011_01110", "rotateLeft", [1, 2]],
+  ["11011_11110", "flipMainDiag", [-3, 5]],
+  ["00011_10110_11100", "flipMainDiag", [-3, 5]],
+  ["1001_1111_0010_0010", "flipMainDiag", [1, 3]],
+  ["0101_0111_1100_0100", "flipMinorDiag", [-1, 3]],
+  ["11110_01010_00011", "rotateRight", [-3, 2]],
+  ["00100_11111_10000_10000", "flipMainDiag", [-1, 3]],
+  ["01000_11111_10001", "flipMainDiag", [-2, 4]],
+  ["1100_0111_1100_1000", "flipMainDiag", [-1, 3]],
+  ["00100_11111_10010", "flipMainDiag", [-2, 4]],
+  ["11111_10001_00001", "flipMinorDiag", [1, 5]],
+  ["001111_111001", "flipMinorDiag", [-5, 1]],
+  ["011100_110111", "flipMainDiag", [-3, 5]],
+  ["0100_1100_1111_0100", "flipMainDiag", [1, 3]],
+  ["01001_11111_10000", "flipMainDiag", [2, 0]],
+]
+
+const transPairMap = getPairsMapping(transPairs)
 
 // Get the breakpoints to partition an array of length n
 // into two or three elements
@@ -129,6 +178,21 @@ function getTransTiling(
 // Conway Criterion:
 // The polyomino can be split into six segments ABCDEF such that:
 // AD are translations, and BCEF are each symmetric with respect to 180deg rotation.
+
+const conwayPairs: TilingPair[] = [
+  ["11111_01001", "flipMinorDiag", [-4, 1]],
+  ["1100_0111_0001_0001", "flipMinorDiag", [3, 1]],
+  ["111111_001001", "flipMinorDiag", [-5, 1]],
+  ["111111_010010", "rotateLeft", [-5, 3]],
+  ["00010_01111_11000_10000", "flipMainDiag", [-1, 3]],
+  ["111111_100001", "rotateLeft", [-5, 3]],
+  ["11110_10011_00010", "rotateLeft", [-3, 2]],
+  ["111111_010001", "flipMinorDiag", [-5, 1]],
+  ["10000_10000_11111_01000", "rotateLeft", [0, 4]],
+  ["10001_11111_10000", "rotateLeft", [-1, 4]],
+]
+
+const conwayPairMap = getPairsMapping(conwayPairs)
 
 /**
  * Tests if the edge list is a palindrome,
@@ -224,7 +288,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       }
     }
   }
-  throw new Error("Not implemented")
+  return undefined
 }
 
 function getConwayTiling(
@@ -263,6 +327,12 @@ function getConwayTiling(
  */
 export function getTiling(mino: Polyomino): Tiling | undefined {
   // TODO: handle special paired cases
+  if (transPairMap[mino.data]) {
+    return getTransTiling(transPairMap[mino.data])
+  }
+  if (conwayPairMap[mino.data]) {
+    return getConwayTiling(conwayPairMap[mino.data])
+  }
   const pattern: MinoPattern = [{ mino, coord: Vector.ZERO }]
   const edges = getPatternEdges(pattern)
 
