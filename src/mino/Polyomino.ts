@@ -11,6 +11,7 @@ import {
   fromCoords,
   displayMino,
   fromString,
+  toString,
 } from "./data"
 import { getOutline } from "./outline"
 import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
@@ -55,7 +56,7 @@ export default class Polyomino {
 
   private _free?: Polyomino
 
-  // Construtors
+  // Constructors
 
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
@@ -205,6 +206,11 @@ export default class Polyomino {
 
   /** Return the outline of this mino */
   outline = lazy(() => [...getOutline(this.coords())])
+
+  /** Print the delimited source string of the mino */
+  toString() {
+    return toString(this.data)
+  }
 
   /** Pretty-printed representation of the mino */
   display() {
