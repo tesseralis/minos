@@ -29,6 +29,8 @@ function getColor(domLength: number, patIdx: number, i: number, j: number) {
   return colors[patIdx]
 }
 
+const side = 400
+
 function Tiling({ mino }: { mino: Polyomino }) {
   const tiling = getTiling(mino)
   if (!tiling) {
@@ -39,7 +41,11 @@ function Tiling({ mino }: { mino: Polyomino }) {
     basis: [u, v],
   } = tiling
   return (
-    <svg width={800} height={800} viewBox="-200 -200 400 400">
+    <svg
+      width={600}
+      height={600}
+      viewBox={`${-side / 2} ${-side / 2} ${side} ${side}`}
+    >
       {range(-LIMIT, LIMIT).map((i) => {
         return range(-LIMIT, LIMIT).map((j) => {
           const translate = u.scale(i).add(v.scale(j))
