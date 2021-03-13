@@ -7,7 +7,7 @@ import MinoSvg from "app/MinoSvg"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
 
-const LIMIT = 10
+const LIMIT = 5
 
 const colors = ["#d15e5e", "#d64da9", "#9b45bf", "#7253c9"]
 function mod(n: number, d: number) {
