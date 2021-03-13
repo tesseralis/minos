@@ -25,9 +25,6 @@ describe("app mino logic", () => {
       const nontilers = nodes.map((gen) =>
         gen.filter((mino) => !getTiling(mino)),
       )
-      for (const nontiler of nontilers[6]) {
-        console.log(nontiler.display())
-      }
       const actualCounts = nontilers.map((gen) => gen.length)
       expect(actualCounts).toEqual(nontilerCounts)
     })

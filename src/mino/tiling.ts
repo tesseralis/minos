@@ -256,14 +256,10 @@ function flipPlacement(
   return { mino: mino.transform("rotateHalf"), coord: newCoord }
 }
 
-type ConwaySegments = [
-  a: EdgeList,
-  b: EdgeList,
-  c: EdgeList,
-  d: EdgeList,
-  e: EdgeList,
-  f: EdgeList,
-]
+type ConwaySegments = {
+  transDistance: Vector
+  palindromePairs: SegmentPair[]
+}
 
 /**
  * Return the segments of the Conway criterion for the given EdgeList,
@@ -287,9 +283,10 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
           const bcPal = getPalindromePairs(bc)
           const efPal = getPalindromePairs(ef)
           if (bcPal && efPal) {
-            const [b, c] = bcPal
-            const [e, f] = efPal
-            return [a, b, c, d, e, f]
+            return {
+              transDistance: getTransDistance([a, d]),
+              palindromePairs: [bcPal, efPal],
+            }
           }
         }
       }
@@ -297,6 +294,20 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       // so break and do the next roation in the cycle
       if (!foundInverse) {
         break
+      }
+    }
+    // Consider the case where A and D are empty.
+    // This is pretty rare (only one instance out of the heptominoes)
+    // so do this case last for efficiency
+    for (const k of range(1, edges.length - 1)) {
+      const [bc, ef] = splitAt(rotation, k)
+      const bcPal = getPalindromePairs(bc)
+      const efPal = getPalindromePairs(ef)
+      if (bcPal && efPal) {
+        return {
+          transDistance: ef[0].start.sub(bc[0].start),
+          palindromePairs: [bcPal, efPal],
+        }
       }
     }
   }
@@ -311,19 +322,23 @@ function getConwayTiling(
   if (!segments) {
     return undefined
   }
-  const [a, b, c, d, e, f] = segments
+  const {
+    transDistance,
+    palindromePairs: [bc, ef],
+  } = segments
   // Flip the mino over the longest segment and use that as the pattern
-  const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
+  const longestSegment = maxBy([...bc, ...ef], (edges) => edges.length)!
   const flipped = pattern.map((placement) =>
     flipPlacement(placement, longestSegment),
   )
   const domain = pattern.concat(flipped)
 
-  // Use the translated pairs as one axis
-  const u = getTransDistance([a, d])
+  // Use the distance between the translated pair as one axis
+  const u = transDistance
+
   // Pick a segment on the *other* region than the one the longest segment is in
   // FIXME pick a better criterion for this
-  const otherSegment = [b, c].includes(longestSegment) ? f : c
+  const otherSegment = bc.includes(longestSegment) ? ef[1] : bc[1]
 
   // flip the end of the other segment over
   const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
