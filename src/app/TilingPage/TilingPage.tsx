@@ -5,9 +5,29 @@ import { Polyomino } from "mino"
 import { useMatch } from "react-router-dom"
 import MinoSvg from "app/MinoSvg"
 import { getTiling } from "mino/tiling"
-import tinycolor from "tinycolor2"
 
 const LIMIT = 10
+
+const colors = ["#d15e5e", "#d64da9", "#9b45bf", "#7253c9"]
+function mod(n: number, d: number) {
+  const rem = n % d
+  return rem < 0 ? rem + d : rem
+}
+
+function getColor(domLength: number, patIdx: number, i: number, j: number) {
+  // If the domain has only one mino,
+  // then use a different color for each set of four
+  if (domLength === 1) {
+    const iRem = mod(i, 2)
+    const jRem = mod(j, 2)
+    return colors[2 * iRem + jRem]
+  }
+  if (domLength === 2) {
+    const range = mod(i + j, 2)
+    return colors[2 * range + patIdx]
+  }
+  return colors[patIdx]
+}
 
 function Tiling({ mino }: { mino: Polyomino }) {
   const tiling = getTiling(mino)
@@ -15,7 +35,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
     return <div>This polyomino does not tile the plane</div>
   }
   const {
-    domain: pattern,
+    domain,
     basis: [u, v],
   } = tiling
   return (
@@ -23,31 +43,23 @@ function Tiling({ mino }: { mino: Polyomino }) {
       {range(-LIMIT, LIMIT).map((i) => {
         return range(-LIMIT, LIMIT).map((j) => {
           const translate = u.scale(i).add(v.scale(j))
-          const color1 = tinycolor.mix(
-            "red",
-            "green",
-            ((i + LIMIT) / (2 * LIMIT)) * 100,
-          )
-          const color2 = tinycolor.mix(
-            "blue",
-            "yellow",
-            ((j + LIMIT) / (2 * LIMIT)) * 100,
-          )
-          const color = tinycolor.mix(color1, color2)
           return (
             <>
-              {pattern.map((tile, k) => (
-                <MinoSvg
-                  key={k}
-                  mino={tile.mino}
-                  coord={tile.coord.add(translate).scale(20)}
-                  size={20}
-                  fill={color.toString()}
-                  hideInner
-                  stroke="black"
-                  anchor="top left"
-                />
-              ))}
+              {domain.map((tile, k) => {
+                const color = getColor(domain.length, k, i, j)
+                return (
+                  <MinoSvg
+                    key={`${i},${j},${k}`}
+                    mino={tile.mino}
+                    coord={tile.coord.add(translate).scale(20)}
+                    size={20}
+                    fill={color.toString()}
+                    hideInner
+                    stroke="black"
+                    anchor="top left"
+                  />
+                )
+              })}
             </>
           )
         })
