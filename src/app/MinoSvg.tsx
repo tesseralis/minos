@@ -91,8 +91,8 @@ export default function MinoSvg({
           width={size}
           height={size}
           fill="none"
-          opacity={hideInner ? 0.0625 : 1}
-          strokeWidth={strokeWidth * 0.75}
+          opacity={hideInner ? 0.125 : 1}
+          strokeWidth={strokeWidth * (hideInner ? 0.5 : 0.75)}
         />
       ))}
     </G>

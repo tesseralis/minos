@@ -53,8 +53,8 @@ function Tiling({ mino }: { mino: Polyomino }) {
       height={600}
       viewBox={`${-side / 2} ${-side / 2} ${side} ${side}`}
     >
-      {range(-LIMIT, LIMIT).map((i) => {
-        return range(-LIMIT, LIMIT).map((j) => {
+      {range(-LIMIT, LIMIT + 1).map((i) => {
+        return range(-LIMIT, LIMIT + 1).map((j) => {
           const translate = u.scale(i).add(v.scale(j))
           return (
             <>
