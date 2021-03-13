@@ -67,7 +67,8 @@ function getTransDistance([startList, endList]: SegmentPair): Coord {
 }
 
 function getPatternEdges(pattern: MinoPattern): EdgeList {
-  return [...getEdges([...toCoords(pattern)])]
+  const coords = [...toCoords(pattern)]
+  return [...getEdges(coords)]
 }
 
 function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
@@ -81,7 +82,7 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     ]
     for (const transform of transforms) {
       const transformedPattern = transformPattern(pattern, transform)
-      result[mino.data] = shiftPattern(
+      result[mino.transform(transform).data] = shiftPattern(
         transformedPattern,
         transformedPattern[0].coord,
       )
@@ -102,7 +103,7 @@ const transPairs: TilingPair[] = [
   ["11011_01110", "rotateLeft", [1, 2]],
   ["11011_11110", "flipMainDiag", [-3, 5]],
   ["00011_10110_11100", "flipMainDiag", [-3, 5]],
-  ["1001_1111_0010_0010", "flipMainDiag", [1, 3]],
+  ["1001_1111_0010_0010", "flipMinorDiag", [1, 3]],
   ["0101_0111_1100_0100", "flipMinorDiag", [-1, 3]],
   ["11110_01010_00011", "rotateRight", [-3, 2]],
   ["00100_11111_10000_10000", "flipMainDiag", [-1, 3]],
@@ -181,7 +182,7 @@ function getTransTiling(
 
 const conwayPairs: TilingPair[] = [
   ["11111_01001", "flipMinorDiag", [-4, 1]],
-  ["1100_0111_0001_0001", "flipMinorDiag", [3, 1]],
+  ["1101_0111_0001_0001", "flipMinorDiag", [3, 1]],
   ["111111_001001", "flipMinorDiag", [-5, 1]],
   ["111111_010010", "rotateLeft", [-5, 3]],
   ["00010_01111_11000_10000", "flipMainDiag", [-1, 3]],
@@ -199,6 +200,9 @@ const conwayPairMap = getPairsMapping(conwayPairs)
  * meaning it is symmetric with respect to 180 degree rotation.
  */
 function isPalindrome(edges: EdgeList): boolean {
+  if (edges.length === 0) {
+    return true
+  }
   return range(Math.floor(edges.length / 2)).every(
     (i) => edges[i].dir === edges[edges.length - 1 - i].dir,
   )
@@ -207,7 +211,7 @@ function isPalindrome(edges: EdgeList): boolean {
 // Split edges into two edge lists, each of which is a palindrome
 // or return undefined if impossible
 function getPalindromePairs(edges: EdgeList): [EdgeList, EdgeList] | undefined {
-  for (const i of range(1, edges.length)) {
+  for (const i of range(0, edges.length)) {
     const [front, back] = splitAt(edges, i)
     if (isPalindrome(front) && isPalindrome(back)) {
       return [front, back]
@@ -295,31 +299,28 @@ function getConwayTiling(
   pattern: MinoPattern,
   edges: EdgeList = getPatternEdges(pattern),
 ): Tiling | undefined {
-  const conwaySegments = getConwaySegments(edges)
-  if (conwaySegments) {
-    const [a, b, c, d, e, f] = conwaySegments
-    // Flip the mino over the longest segment and use that as the pattern
-    const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
-    const flipped = pattern.map((placement) =>
-      flipPlacement(placement, longestSegment),
-    )
-    const domain = pattern.concat(flipped)
-
-    // Use the translated pairs as one axis
-    const u = getTransDistance([a, d])
-    // Pick a segment on the *other* region than the one the longest segment is in
-    // FIXME pick a better criterion for this
-    const otherSegment = [b, c].includes(longestSegment) ? e : b
-    // flip the end of the other segment over
-    const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
-    const v = endpoint.sub(segmentStart(otherSegment))
-    return { domain, basis: [u, v] }
+  const segments = getConwaySegments(edges)
+  if (!segments) {
+    return undefined
   }
+  const [a, b, c, d, e, f] = segments
+  // Flip the mino over the longest segment and use that as the pattern
+  const longestSegment = maxBy([b, c, e, f], (edges) => edges.length)!
+  const flipped = pattern.map((placement) =>
+    flipPlacement(placement, longestSegment),
+  )
+  const domain = pattern.concat(flipped)
 
-  // For polyominoes of size 8 or less, a tiling mino *must* satisfy one of the two criteria
-  // or be one of the special cases. If neither are satisfied, then the polyomino does not
-  // tile the plane.
-  return undefined
+  // Use the translated pairs as one axis
+  const u = getTransDistance([a, d])
+  // Pick a segment on the *other* region than the one the longest segment is in
+  // FIXME pick a better criterion for this
+  const otherSegment = [b, c].includes(longestSegment) ? f : c
+
+  // flip the end of the other segment over
+  const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
+  const v = endpoint.sub(segmentStart(otherSegment))
+  return { domain, basis: [u, v] }
 }
 
 /**

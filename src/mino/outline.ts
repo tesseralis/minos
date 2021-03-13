@@ -111,11 +111,17 @@ export function segmentEnd(edges: EdgeList): Coord {
   return move(edge.start, edge.dir)
 }
 
+function getStartPoint(coords: Coord[]) {
+  const minY = Math.min(...coords.map((coord) => coord.y))
+  const topRow = coords.filter((p) => p.y === minY)
+  return minBy(topRow, (p) => p.x)!
+}
+
 /**
  * Return the edges of a mino.
  */
 export function* getEdges(minoCoords: Coord[]): Generator<Edge> {
-  const origin = minBy(minoCoords)!
+  const origin = getStartPoint(minoCoords)
   let pos = origin
   let dir: Direction = "down"
   do {
