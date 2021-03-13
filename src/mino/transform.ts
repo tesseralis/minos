@@ -2,6 +2,7 @@
  * This modules describes utility functions to apply transformations to polyominoes.
  */
 
+import { Polyomino } from "mino"
 import Vector from "vector"
 import { Coord, Dims } from "./data"
 
@@ -26,14 +27,10 @@ interface Anchor {
   y: AnchorPos
 }
 
-function getAnchorValue(nums: number[], pos: AnchorPos) {
-  return pos === "start" ? Math.min(...nums) : Math.max(...nums) + 1
-}
-
-export function getAnchor(coords: Coord[], anchor: Anchor): Coord {
-  const xs = coords.map((p) => p.x)
-  const ys = coords.map((p) => p.y)
-  return new Vector(getAnchorValue(xs, anchor.x), getAnchorValue(ys, anchor.y))
+export function getAnchor(mino: Polyomino, anchor: Anchor): Coord {
+  const x = anchor.x === "start" ? 0 : mino.width
+  const y = anchor.y === "start" ? 0 : mino.height
+  return new Vector(x, y)
 }
 
 // Get what will be the top-left anchor if transforming the mino

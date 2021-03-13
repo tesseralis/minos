@@ -96,7 +96,7 @@ export function parsePattern(patternStr: string): MinoPattern {
 function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   const newAnchor = transformAnchor(transform)
   // Get the *current* position of the coord that will be the new top-left anchor
-  const newAnchorCoord = coord.add(getAnchor(mino.coords(), newAnchor))
+  const newAnchorCoord = coord.add(getAnchor(mino, newAnchor))
 
   const newCoord = transformCoord(newAnchorCoord, transform)
   return { mino: mino.transform(transform), coord: newCoord }

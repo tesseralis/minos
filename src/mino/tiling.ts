@@ -248,9 +248,7 @@ function flipPlacement(
   segment: EdgeList,
 ): MinoPlacement {
   const { mino, coord } = placement
-  const minoBotRight = getAnchor(mino.coords(), { x: "end", y: "end" }).add(
-    coord,
-  )
+  const minoBotRight = getAnchor(mino, { x: "end", y: "end" }).add(coord)
   // Flip that point over the segment to get the new coordinate
   const newCoord = flipPoint(minoBotRight, segment)
   return { mino: mino.transform("rotateHalf"), coord: newCoord }
