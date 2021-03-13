@@ -17,6 +17,7 @@ import {
   transformPattern,
   shiftPattern,
 } from "./pattern"
+import { O_OCTOMINO } from "./constants"
 
 type Basis = [u: Coord, v: Coord]
 
@@ -89,6 +90,13 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     }
   }
   return result
+}
+
+/**
+ * REturn whether the mino has a complete hole in it.
+ */
+function hasHole(mino: Polyomino) {
+  return mino.equals(O_OCTOMINO)
 }
 
 // Translation Criterion:
@@ -327,6 +335,9 @@ function getConwayTiling(
  * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
  */
 export function getTiling(mino: Polyomino): Tiling | undefined {
+  if (hasHole(mino)) {
+    return undefined
+  }
   // TODO: handle special paired cases
   if (transPairMap[mino.data]) {
     return getTransTiling(transPairMap[mino.data])
