@@ -54,6 +54,12 @@ function splitAt<T>(array: T[], indices: number | number[]): T[][] {
   return result
 }
 
+// EdgeList class
+// ==============
+
+/**
+ * A class representing a list of edges, with functions to manipulate them.
+ */
 export class EdgeList {
   data: Edge[]
   length: number
@@ -97,9 +103,5 @@ export class EdgeList {
 
   splitAt(indices: number | number[]): EdgeList[] {
     return splitAt(this.data, indices).map((es) => new EdgeList(es))
-  }
-
-  slice(start: number, end: number) {
-    return new EdgeList(this.data.slice(start, end))
   }
 }

@@ -170,9 +170,9 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       // try to find the inverse of A in the remaining segment
       let foundInverse = false
       for (const j of range(0, tail.length - a.length - 1)) {
-        if (a.isInverse(tail.slice(j, j + a.length))) {
+        const [bc, d, ef] = tail.splitAt([j, j + a.length])
+        if (a.isInverse(d)) {
           foundInverse = true
-          const [bc, d, ef] = tail.splitAt([j, j + a.length])
           // ensure the remaining segments can be split into two palindromic segments
           const palindromePairs = getPalindromePairs(bc, ef)
           if (palindromePairs) {
