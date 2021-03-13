@@ -4,8 +4,8 @@ import { getTiling } from "mino/tiling"
 const freeCounts = [1, 1, 2, 5, 12, 35, 108, 369]
 const nontilerCounts = [0, 0, 0, 0, 0, 0, 4, 26]
 
-// FIXME rename this file
-describe("app mino logic", () => {
+// Miscellaneous tests for counting the number of certain types of minos
+describe("enumeration", () => {
   let graph: ReturnType<typeof generateGraph>
   beforeAll(() => {
     graph = generateGraph(8)
