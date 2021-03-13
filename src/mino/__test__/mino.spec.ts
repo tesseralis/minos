@@ -11,6 +11,14 @@ function fromCoords(coords: [number, number][]) {
 }
 
 describe("mino", () => {
+  describe("strings", () => {
+    const sampleStrings = ["1", "11", "111_100_111", "1010_1111_0101"]
+    for (const string of sampleStrings) {
+      const mino = Polyomino.fromString(string)
+      expect(mino.toString()).toEqual(string)
+    }
+  })
+
   describe("order", () => {
     it("correctly gets mino size", () => {
       const minos = [

@@ -165,14 +165,13 @@ interface DisplayOpts {
  * Get the string representation of a mino,
  * using the same delimited expression as `fromString()`.
  */
-export function toString(mino: MinoData, delimiter: string = "_") {
+export function toString(mino: MinoData) {
   const w = getWidth(mino)
-  const result = []
+  const strs: string[] = []
   for (const row of rowBits(mino)) {
-    const str = row.toString(2).padStart(w, "0")
-    result.push([...str].join(" "))
+    strs.push(row.toString(2).padStart(w, "0"))
   }
-  return result.reverse().join(delimiter)
+  return strs.reverse().join("_")
 }
 
 /**
@@ -184,5 +183,11 @@ export function toString(mino: MinoData, delimiter: string = "_") {
  */
 export function displayMino(mino: MinoData, opts: DisplayOpts = {}) {
   const { block = "□", space = " " } = opts
-  return toString(mino, "\n").replace(/1/g, block).replace(/0/g, space)
+  const w = getWidth(mino)
+  const result = []
+  for (const row of rowBits(mino)) {
+    const str = row.toString(2).padStart(w, "0")
+    result.push([...str].join(" "))
+  }
+  return result.reverse().join("\n").replace(/1/g, block).replace(/0/g, space)
 }
