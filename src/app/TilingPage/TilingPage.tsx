@@ -58,8 +58,8 @@ function Tiling({ mino }: { mino: Polyomino }) {
           const translate = u.scale(i).add(v.scale(j))
           return (
             <>
-              {domain.map((tile, k) => {
-                const color = getColor(domain.length, k, i, j)
+              {domain.data.map((tile, k) => {
+                const color = getColor(domain.data.length, k, i, j)
                 return (
                   <MinoSvg
                     key={`${i},${j},${k}`}

@@ -10,13 +10,7 @@ import {
   isPalindrome,
 } from "./outline"
 import { Transform, getAnchor, transforms } from "./transform"
-import {
-  MinoPlacement,
-  MinoPattern,
-  transformPattern,
-  shiftPattern,
-  getPatternEdges,
-} from "./pattern"
+import { MinoPlacement, MinoPattern } from "./pattern"
 import { O_OCTOMINO } from "./constants"
 
 type Basis = [u: Coord, v: Coord]
@@ -27,7 +21,7 @@ type Basis = [u: Coord, v: Coord]
  */
 interface Tiling {
   /** The set of polyominoes that make up the fundamental domain for the tiling */
-  domain: MinoPlacement[]
+  domain: MinoPattern
 
   /** Two vectors that determine how far to translate each repetition of the pattern */
   basis: Basis
@@ -121,12 +115,9 @@ function getTransSegments(edges: EdgeList): TransSegments | undefined {
 /**
  * Get the tiling given by the translation criterion
  */
-function getTransTiling(
-  pattern: MinoPattern,
-  edges: EdgeList = getPatternEdges(pattern),
-): Tiling | undefined {
+function getTransTiling(pattern: MinoPattern): Tiling | undefined {
   // Check if the edges satisfy the translation criterion
-  const segments = getTransSegments(edges)
+  const segments = getTransSegments(pattern.edges())
   if (!segments) {
     return undefined
   }
@@ -256,11 +247,8 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
 /**
  * Get the tiling given by the Conway criterion.
  */
-function getConwayTiling(
-  pattern: MinoPattern,
-  edges: EdgeList = getPatternEdges(pattern),
-): Tiling | undefined {
-  const segments = getConwaySegments(edges)
+function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
+  const segments = getConwaySegments(pattern.edges())
   if (!segments) {
     return undefined
   }
@@ -270,10 +258,10 @@ function getConwayTiling(
   } = segments
   // Flip the mino over the longest segment and use that as the pattern
   const longestSegment = maxBy(bc.concat(ef), (edges) => edges.length)!
-  const flipped = pattern.map((placement) =>
+  const flipped = pattern.data.map((placement) =>
     flipPlacement(placement, longestSegment),
   )
-  const domain = pattern.concat(flipped)
+  const domain = new MinoPattern(pattern.data.concat(flipped))
 
   // Use the distance between the translated pair as one axis
   const u = transDistance
@@ -301,15 +289,14 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
     const pairPoint = new Vector(...coord)
-    const pattern: MinoPattern = [
+    const pattern = new MinoPattern([
       { mino, coord: Vector.ZERO },
       { mino: mino.transform(pairTransform), coord: pairPoint },
-    ]
+    ])
     for (const transform of transforms) {
-      const transformedPattern = transformPattern(pattern, transform)
-      result[mino.transform(transform).data] = shiftPattern(
-        transformedPattern,
-        transformedPattern[0].coord,
+      const transformedPattern = pattern.transform(transform)
+      result[mino.transform(transform).data] = transformedPattern.shift(
+        transformedPattern.data[0].coord,
       )
     }
   }
@@ -368,13 +355,12 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
   if (conwayPairMap[mino.data]) {
     return getConwayTiling(conwayPairMap[mino.data])
   }
-  const pattern: MinoPattern = [{ mino, coord: Vector.ZERO }]
-  const edges = getPatternEdges(pattern)
+  const pattern = new MinoPattern([{ mino, coord: Vector.ZERO }])
 
-  const transTiling = getTransTiling(pattern, edges)
+  const transTiling = getTransTiling(pattern)
   if (transTiling) {
     return transTiling
   }
 
-  return getConwayTiling(pattern, edges)
+  return getConwayTiling(pattern)
 }

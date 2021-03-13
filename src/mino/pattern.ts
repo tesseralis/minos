@@ -2,6 +2,7 @@
  * Utility functions for parsing and handling patterns/tilings of polyominoes.
  */
 
+import { once } from "lodash-es"
 import Vector from "vector"
 import Polyomino from "./Polyomino"
 import { Dims, Coord } from "./data"
@@ -24,7 +25,7 @@ export interface MinoPlacement {
   coord: Coord
 }
 
-export type MinoPattern = MinoPlacement[]
+export type PatternData = MinoPlacement[]
 
 // Get all possible coordinates within the dimensions
 function* allCoords([w, h]: Dims) {
@@ -44,7 +45,7 @@ function inBounds(p: Coord, [w, h]: Dims) {
 // https://www.npmjs.com/package/runes
 const holeColor = "🔲"
 
-export function parsePattern(patternStr: string): MinoPattern {
+export function parsePattern(patternStr: string): PatternData {
   const grid = patternStr
     .trim()
     .split("\n")
@@ -52,7 +53,7 @@ export function parsePattern(patternStr: string): MinoPattern {
   const height = grid.length
   const width = grid[0].length
   const dims: Dims = [width, height]
-  const pattern: MinoPattern = []
+  const pattern: PatternData = []
   const visited: Set<string> = new Set()
   for (const coord of allCoords(dims)) {
     if (visited.has(coord.toString())) {
@@ -103,35 +104,41 @@ function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   return { mino: mino.transform(transform), coord: newCoord }
 }
 
-export function transformPattern(pattern: MinoPattern, transform: Transform) {
-  return pattern.map((placement) => transformMino(placement, transform))
-}
+export class MinoPattern {
+  data: PatternData
 
-export function shiftPattern(pattern: MinoPattern, newOrigin: Coord) {
-  return pattern.map(({ mino, coord }) => ({
-    mino,
-    coord: coord.sub(newOrigin),
-  }))
-}
+  constructor(data: PatternData) {
+    this.data = data
+  }
 
-/**
- * Iterate over all coordinates of the given pattern.
- */
-export function* toCoords(pattern: MinoPattern): Generator<Coord> {
-  for (const { mino, coord } of pattern) {
-    for (const p of mino.coords()) {
-      yield p.add(coord)
+  /** Apply the provided transformation to this pattern */
+  transform(transform: Transform): MinoPattern {
+    return new MinoPattern(
+      this.data.map((mino) => transformMino(mino, transform)),
+    )
+  }
+
+  /** Translate this pattern so that the given point is the new origin */
+  shift(newOrigin: Coord): MinoPattern {
+    return new MinoPattern(
+      this.data.map(({ mino, coord }) => ({
+        mino,
+        coord: coord.sub(newOrigin),
+      })),
+    )
+  }
+
+  /** Iterate over the coordinates of this mino pattern */
+  *coords(): Generator<Coord> {
+    for (const { mino, coord } of this.data) {
+      for (const p of mino.coords()) {
+        yield p.add(coord)
+      }
     }
   }
-}
 
-export function getPatternEdges(pattern: MinoPattern): EdgeList {
-  const coords = [...toCoords(pattern)]
-  return [...getEdges(coords)]
-}
-
-// verify whether the given mino pattern contains all the right minos
-// TODO implement this and write a test for all patterns we have
-export function verifyPattern(pattern: MinoPattern): boolean {
-  return false
+  /** Get the outer edges of this mino pattern */
+  edges: () => EdgeList = once(() => {
+    return [...getEdges([...this.coords()])]
+  })
 }
