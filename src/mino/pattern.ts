@@ -12,6 +12,7 @@ import {
   transformAnchor,
   transformCoord,
 } from "./transform"
+import { getEdges, EdgeList } from "./outline"
 
 /**
  * Represents the placement of a single polyomino in a coordinate grid
@@ -122,6 +123,11 @@ export function* toCoords(pattern: MinoPattern): Generator<Coord> {
       yield p.add(coord)
     }
   }
+}
+
+export function getPatternEdges(pattern: MinoPattern): EdgeList {
+  const coords = [...toCoords(pattern)]
+  return [...getEdges(coords)]
 }
 
 // verify whether the given mino pattern contains all the right minos

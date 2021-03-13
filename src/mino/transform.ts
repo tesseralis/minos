@@ -2,7 +2,7 @@
  * This modules describes utility functions to apply transformations to polyominoes.
  */
 
-import { Polyomino } from "mino"
+import type { Polyomino } from "mino"
 import Vector from "vector"
 import { Coord, Dims } from "./data"
 
@@ -65,7 +65,7 @@ export function transformCoord(p: Coord, transform: Transform) {
   return transforms[transform]
 }
 
-// FIXME express this in terms of transformCoord
+// TODO express this in terms of transformCoord
 export function transformMinoCoord(
   p: Coord,
   [w, h]: Dims,

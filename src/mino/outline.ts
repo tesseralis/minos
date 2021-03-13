@@ -1,4 +1,4 @@
-import { zip, isEqual, minBy } from "lodash-es"
+import { zip, isEqual, minBy, range } from "lodash-es"
 
 import Vector from "vector"
 import { Coord } from "./data"
@@ -111,6 +111,21 @@ export function segmentEnd(edges: EdgeList): Coord {
   return move(edge.start, edge.dir)
 }
 
+/**
+ * Tests if the edge list is a palindrome,
+ * meaning it is symmetric with respect to 180 degree rotation.
+ */
+export function isPalindrome(edges: EdgeList): boolean {
+  if (edges.length === 0) {
+    return true
+  }
+  return range(Math.floor(edges.length / 2)).every(
+    (i) => edges[i].dir === edges[edges.length - 1 - i].dir,
+  )
+}
+
+// Pick a start point for the given coordinates
+// such that going "down" from the point is a valid edge
 function getStartPoint(coords: Coord[]) {
   const minY = Math.min(...coords.map((coord) => coord.y))
   const topRow = coords.filter((p) => p.y === minY)
@@ -120,14 +135,14 @@ function getStartPoint(coords: Coord[]) {
 /**
  * Return the edges of a mino.
  */
-export function* getEdges(minoCoords: Coord[]): Generator<Edge> {
-  const origin = getStartPoint(minoCoords)
+export function* getEdges(coords: Coord[]): Generator<Edge> {
+  const origin = getStartPoint(coords)
   let pos = origin
   let dir: Direction = "down"
   do {
-    if (canTurn(minoCoords, pos, dir)) {
+    if (canTurn(coords, pos, dir)) {
       dir = turnLeft(dir)
-    } else if (isBlocked(minoCoords, pos, dir)) {
+    } else if (isBlocked(coords, pos, dir)) {
       dir = turnRight(dir)
     } else {
       yield { start: pos, dir }
