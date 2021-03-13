@@ -51,9 +51,8 @@ export default function Compass() {
         <Link
           to={`/tiling/${selected.toString()}`}
           className={css`
-            text-decoration: none;
             color: ${colors.fg};
-            font: 1.75rem;
+            font-size: 1.5rem;
           `}
         >
           Tiling
