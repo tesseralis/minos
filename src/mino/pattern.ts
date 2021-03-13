@@ -13,7 +13,8 @@ import {
   transformAnchor,
   transformCoord,
 } from "./transform"
-import { getEdges, EdgeList } from "./outline"
+import { getEdges } from "./outline"
+import { EdgeList } from "./edges"
 
 /**
  * Represents the placement of a single polyomino in a coordinate grid
@@ -139,6 +140,6 @@ export class MinoPattern {
 
   /** Get the outer edges of this mino pattern */
   edges: () => EdgeList = once(() => {
-    return [...getEdges([...this.coords()])]
+    return new EdgeList([...getEdges([...this.coords()])])
   })
 }

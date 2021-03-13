@@ -2,13 +2,7 @@ import { range, zip, maxBy } from "lodash-es"
 import Vector from "vector"
 import Polyomino from "./Polyomino"
 import { Coord } from "./data"
-import {
-  EdgeList,
-  segmentStart,
-  segmentEnd,
-  isInverse,
-  isPalindrome,
-} from "./outline"
+import { EdgeList } from "./edges"
 import { Transform, getAnchor, transforms } from "./transform"
 import { MinoPlacement, MinoPattern } from "./pattern"
 import { O_OCTOMINO } from "./constants"
@@ -27,41 +21,12 @@ interface Tiling {
   basis: Basis
 }
 
-// Generic array functions
-// TODO move out to a utility if we need these elsewhere
-
-function* cycle<T>(list: T[], limit: number = list.length): Generator<T[]> {
-  for (const i of range(limit)) {
-    yield list.slice(i).concat(list.slice(0, i))
-  }
-}
-
-// Split the array at the given index breakpoints
-function splitAt<T>(array: T[], indices: number | number[]): T[][] {
-  const idxs = typeof indices === "number" ? [indices] : indices
-  const result: T[][] = []
-  let start = 0
-  for (const index of idxs) {
-    result.push(array.slice(start, index))
-    start = index
-  }
-  result.push(array.slice(start))
-  return result
-}
-
 // Return the distance vector between the two segments
 // which are translations of each other
 function transSegmentDist([startList, endList]: SegmentPair): Coord {
   // It suffices to compare two counterpart points
   // (e.g. the start of one segment and the end of the other)
-  return segmentStart(startList).sub(segmentEnd(endList))
-}
-
-/**
- * Return whether the mino has a complete hole in it.
- */
-function hasHole(mino: Polyomino) {
-  return mino.equals(O_OCTOMINO)
+  return startList.start().sub(endList.end())
 }
 
 // Translation Criterion
@@ -93,16 +58,16 @@ function* getPartitionIndices(n: number): Generator<number[]> {
 function getTransSegments(edges: EdgeList): TransSegments | undefined {
   // for each possible starting point
   const half = Math.floor(edges.length / 2)
-  for (const rotation of cycle(edges, half)) {
+  for (const rotation of edges.cycle(half)) {
     // split into two parts
-    const [front, back] = splitAt(rotation, half)
+    const [front, back] = rotation.splitAt(half)
 
     // for each partition of at least two pieces, check that each pair are opposites
     for (const partitionIndices of getPartitionIndices(half)) {
-      const frontPart = splitAt(front, partitionIndices)
-      const backPart = splitAt(back, partitionIndices)
+      const frontPart = front.splitAt(partitionIndices)
+      const backPart = back.splitAt(partitionIndices)
       const pairs = zip(frontPart, backPart)
-      if (pairs.every(([a, b]) => isInverse(a!, b!))) {
+      if (pairs.every(([a, b]) => a!.isInverse(b!))) {
         return pairs as TransSegments
       }
     }
@@ -143,8 +108,8 @@ function getTransTiling(pattern: MinoPattern): Tiling | undefined {
 // or return undefined if impossible
 function getPalindromePair(edges: EdgeList): SegmentPair | undefined {
   for (const i of range(0, edges.length)) {
-    const [front, back] = splitAt(edges, i)
-    if (isPalindrome(front) && isPalindrome(back)) {
+    const [front, back] = edges.splitAt(i)
+    if (front.isPalindrome() && back.isPalindrome()) {
       return [front, back]
     }
   }
@@ -169,9 +134,7 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
   // If O is our coordinate, then:
   // O' = 2M - O
   //    = A + Z - O
-  const segStart = segmentStart(segment)
-  const segEnd = segmentEnd(segment)
-  return segStart.add(segEnd).sub(coord)
+  return segment.start().add(segment.end()).sub(coord)
 }
 
 // Flip the given mino placement over the given palindromic segment
@@ -200,16 +163,16 @@ type ConwaySegments = {
 function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
   const half = Math.floor(edges.length / 2)
   // Cycle through all possible permutations
-  for (const rotation of cycle(edges)) {
+  for (const rotation of edges.cycle()) {
     // For each possible translation pair in the start:
     for (const i of range(1, half - 1)) {
-      const [a, tail] = splitAt(rotation, i)
+      const [a, tail] = rotation.splitAt(i)
       // try to find the inverse of A in the remaining segment
       let foundInverse = false
       for (const j of range(0, tail.length - a.length - 1)) {
-        if (isInverse(a, tail.slice(j, j + a.length))) {
+        if (a.isInverse(tail.slice(j, j + a.length))) {
           foundInverse = true
-          const [bc, d, ef] = splitAt(tail, [j, j + a.length])
+          const [bc, d, ef] = tail.splitAt([j, j + a.length])
           // ensure the remaining segments can be split into two palindromic segments
           const palindromePairs = getPalindromePairs(bc, ef)
           if (palindromePairs) {
@@ -230,12 +193,12 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
     // This is pretty rare (only one instance out of the heptominoes)
     // so do this case last for efficiency
     for (const k of range(1, edges.length - 1)) {
-      const [bc, ef] = splitAt(rotation, k)
+      const [bc, ef] = rotation.splitAt(k)
       const palindromePairs = getPalindromePairs(bc, ef)
       if (palindromePairs) {
         return {
           // Use the distance between the empty A-D segments
-          transDistance: ef[0].start.sub(bc[0].start),
+          transDistance: ef.start().sub(bc.start()),
           palindromePairs,
         }
       }
@@ -271,8 +234,8 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
   const otherSegment = bc.includes(longestSegment) ? ef[1] : bc[1]
 
   // flip the end of the other segment over
-  const endpoint = flipPoint(segmentEnd(otherSegment), longestSegment)
-  const v = endpoint.sub(segmentStart(otherSegment))
+  const endpoint = flipPoint(otherSegment.end(), longestSegment)
+  const v = endpoint.sub(otherSegment.start())
   return { domain, basis: [u, v] }
 }
 
@@ -340,6 +303,12 @@ const conwayPairMap = getPairsMapping(conwayPairs)
 
 // The tiling function
 // ===================
+
+// Return whether the mino has a hole
+function hasHole(mino: Polyomino) {
+  // For n <= 8, only one mino has a hole
+  return mino.equals(O_OCTOMINO)
+}
 
 /**
  * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.

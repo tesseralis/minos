@@ -1,9 +1,8 @@
-import { zip, isEqual, minBy, range } from "lodash-es"
+import { isEqual, minBy } from "lodash-es"
 
 import Vector from "vector"
 import { Coord } from "./data"
-
-export type Direction = "left" | "right" | "up" | "down"
+import { Edge, Direction, move } from "./edges"
 
 function hasCoord(coords: Coord[], p: Coord) {
   return coords.some((p2) => p.equals(p2))
@@ -38,32 +37,6 @@ function isBlocked(coords: Coord[], v: Coord, dir: Direction) {
   }
 }
 
-function move(p: Coord, dir: Direction): Coord {
-  switch (dir) {
-    case "left":
-      return p.add(Vector.LEFT)
-    case "right":
-      return p.add(Vector.RIGHT)
-    case "down":
-      return p.add(Vector.DOWN)
-    case "up":
-      return p.add(Vector.UP)
-  }
-}
-
-function getOppositeDir(d: Direction) {
-  switch (d) {
-    case "up":
-      return "down"
-    case "down":
-      return "up"
-    case "left":
-      return "right"
-    case "right":
-      return "left"
-  }
-}
-
 function turnLeft(dir: Direction) {
   switch (dir) {
     case "left":
@@ -88,40 +61,6 @@ function turnRight(dir: Direction) {
     case "down":
       return "left"
   }
-}
-
-export type Edge = { dir: Direction; start: Coord }
-export type EdgeList = Edge[]
-
-/**
- * Return if the two segments are inverses of each other.
- */
-export function isInverse(a: EdgeList, b: EdgeList): boolean {
-  const bInv = [...b].reverse()
-  const pairs = zip(a, bInv)
-  return pairs.every(([a, b]) => getOppositeDir(a!.dir) === b!.dir)
-}
-
-export function segmentStart(edges: EdgeList): Coord {
-  return edges[0].start
-}
-
-export function segmentEnd(edges: EdgeList): Coord {
-  const edge = edges[edges.length - 1]
-  return move(edge.start, edge.dir)
-}
-
-/**
- * Tests if the edge list is a palindrome,
- * meaning it is symmetric with respect to 180 degree rotation.
- */
-export function isPalindrome(edges: EdgeList): boolean {
-  if (edges.length === 0) {
-    return true
-  }
-  return range(Math.floor(edges.length / 2)).every(
-    (i) => edges[i].dir === edges[edges.length - 1 - i].dir,
-  )
 }
 
 // Pick a start point for the given coordinates
