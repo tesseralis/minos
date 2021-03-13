@@ -4,6 +4,7 @@ import { css } from "emotion"
 import { Polyomino } from "mino"
 import { useMatch } from "react-router-dom"
 import MinoSvg from "app/MinoSvg"
+import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
 
 const LIMIT = 10
@@ -32,6 +33,12 @@ function getColor(domLength: number, patIdx: number, i: number, j: number) {
 const side = 400
 
 function Tiling({ mino }: { mino: Polyomino }) {
+  // If no selection context, set it to the current mino.
+  const selected = useSelected()
+  const setSelected = useSetSelected()
+  if (!selected) {
+    setSelected(mino)
+  }
   const tiling = getTiling(mino)
   if (!tiling) {
     return <div>This polyomino does not tile the plane</div>

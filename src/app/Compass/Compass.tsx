@@ -1,5 +1,6 @@
 import React from "react"
 import { css } from "emotion"
+import { Link } from "react-router-dom"
 
 import { G } from "app/svg"
 import { useSelected } from "app/SelectedContext"
@@ -8,6 +9,7 @@ import Background from "./CompassBackground"
 import AlterableMino from "./AlterableMino"
 import SymmetryRing from "./SymmetryRing"
 import { RelativeCtx, svgSize } from "./compassHelpers"
+import { colors } from "style/theme"
 
 /**
  * Displays a mino and its direct children and parents.
@@ -40,6 +42,23 @@ export default function Compass() {
           </G>
         </G>
       </svg>
+      <div
+        className={css`
+          pointer-events: initial;
+          text-align: center;
+        `}
+      >
+        <Link
+          to={`/tiling/${selected.toString()}`}
+          className={css`
+            text-decoration: none;
+            color: ${colors.fg};
+            font: 1.75rem;
+          `}
+        >
+          Tiling
+        </Link>
+      </div>
     </RelativeCtx.Provider>
   )
 }
