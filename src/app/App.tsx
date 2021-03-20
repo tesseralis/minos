@@ -32,6 +32,7 @@ export default function App() {
               element={<Navigate to="/pattern/5/rect" />}
             />
             <Route path="/pattern/:size/:shape" element={<PatternPage />} />
+            {/* TODO landing page for the /tiling route */}
             <Route path="/tiling/:mino" element={<TilingPage />} />
           </Routes>
         </Layout>
