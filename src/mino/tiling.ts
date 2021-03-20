@@ -86,7 +86,7 @@ function getTransTiling(pattern: MinoPattern): Tiling | undefined {
   if (!segments) {
     return undefined
   }
-  // FIXME pick two out of the three based on a criterion,
+  // TODO pick two out of the three based on a criterion,
   // such as vector length or segment length
   // the given domain can be translated as-is
   // Get two edge pairs and use them as the basis
