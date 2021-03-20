@@ -31,6 +31,7 @@ function getColor(domLength: number, patIdx: number, i: number, j: number) {
 }
 
 const side = 400
+const svgSize = 500
 
 function Tiling({ mino }: { mino: Polyomino }) {
   // If no selection context, set it to the current mino.
@@ -41,7 +42,8 @@ function Tiling({ mino }: { mino: Polyomino }) {
   }
   const tiling = getTiling(mino)
   if (!tiling) {
-    return <div>This polyomino does not tile the plane</div>
+    // TODO actually show the mino.
+    return <div>This polyomino does not tile the plane.</div>
   }
   const {
     domain,
@@ -49,8 +51,8 @@ function Tiling({ mino }: { mino: Polyomino }) {
   } = tiling
   return (
     <svg
-      width={600}
-      height={600}
+      width={svgSize}
+      height={svgSize}
       viewBox={`${-side / 2} ${-side / 2} ${side} ${side}`}
     >
       {range(-LIMIT, LIMIT + 1).map((i) => {
@@ -92,6 +94,7 @@ export default function TilingPage() {
         max-width: 48rem;
         height: 100vh;
         margin-left: 10rem;
+        margin-top: 2rem;
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
