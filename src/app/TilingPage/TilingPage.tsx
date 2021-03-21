@@ -77,7 +77,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
                     mino={tile.mino}
                     coord={tile.coord.add(translate).scale(minoSize)}
                     size={minoSize}
-                    fill={color.toString()}
+                    fill={color}
                     hideInner
                     stroke="black"
                     anchor="top left"
