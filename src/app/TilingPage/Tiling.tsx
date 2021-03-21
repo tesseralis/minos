@@ -2,48 +2,72 @@ import React from "react"
 import { range } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
-import { Basis, getTiling } from "mino/tiling"
+import { getTiling, Tiling as MinoTiling } from "mino/tiling"
+import Vector from "vector"
 
+// Mod except it works for negative numbers
 function mod(n: number, d: number) {
   const rem = n % d
   return rem < 0 ? rem + d : rem
+}
+
+function mod2(n: number) {
+  return mod(n, 2)
+}
+
+const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#d1c9b4"]
+function getColor(domLength: number, i: number, j: number, patIdx: number) {
+  switch (domLength) {
+    // If the domain has only one mino,
+    // then use a different color for each set of four
+    case 1:
+      return 2 * mod2(i) + mod2(j)
+    // If it has two minos, use two of the colors for them and alternate based on the parity of i+j
+    case 2:
+      return 2 * mod2(i + j) + patIdx
+    // Otherwise, color each mino in the domain differently
+    default:
+      return patIdx
+  }
 }
 
 function inBounds(n: number, limit: number) {
   return n >= -limit && n <= limit
 }
 
-// Return the set of indices [i, j] such that iu + vj falls within the square of size s*s
-// centered at 0, with the buffer area [w, h]
-function* getIndices(
-  [u, v]: Basis,
-  size: number,
-  [w, h]: [number, number],
-): Generator<[number, number]> {
-  // TODO (perf) make this more sophisticated
-  for (const i of range(-size, size)) {
-    for (const j of range(-size, size)) {
-      const { x, y } = u.scale(i).add(v.scale(j))
-      if (inBounds(x, size / 2 + w) && inBounds(y, size / 2 + h)) {
-        yield [i, j]
-      }
-    }
-  }
+function inBox(p: Vector, size: number) {
+  const halfSize = Math.ceil(size / 2)
+  return inBounds(p.x, halfSize) && inBounds(p.y, halfSize)
 }
 
-const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#d1c9b4"]
-function getColor(domLength: number, patIdx: number, i: number, j: number) {
-  switch (domLength) {
-    // If the domain has only one mino,
-    // then use a different color for each set of four
-    case 1:
-      return colors[2 * mod(i, 2) + mod(j, 2)]
-    // If it has two minos, use two of the colors for them and alternate based on the parity of i+j
-    case 2:
-      return colors[2 * mod(i + j, 2) + patIdx]
-    // Otherwise, color each mino in the domain differently
-    default:
-      return colors[patIdx]
+interface Tile {
+  coord: Vector
+  mino: Polyomino
+  // the color index
+  color: number
+}
+
+// Get all the tiles that can be drawn on a square grid of the given size
+function* getTiles(tiling: MinoTiling, size: number): Generator<Tile> {
+  const {
+    basis: [u, v],
+    domain,
+  } = tiling
+  for (const i of range(-size, size)) {
+    for (const j of range(-size, size)) {
+      for (const k of range(domain.data.length)) {
+        const { coord, mino } = domain.data[k]
+        const p = u.scale(i).add(v.scale(j)).add(coord)
+        // Only add the tile if some point in the mino is visible within the grid
+        if (mino.coords().some((c) => inBox(p.add(c), size))) {
+          yield {
+            coord: p,
+            mino,
+            color: getColor(domain.data.length, i, j, k),
+          }
+        }
+      }
+    }
   }
 }
 
@@ -59,17 +83,16 @@ export default function Tiling({ mino }: Props) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
   // (for monominoes, this is the size of a checkerboard)
   // Also make sure that the side length is even
-  const length = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
-  const viewLength = squareSize * length
+  const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
+  const viewLength = squareSize * gridSize
 
   const tiling = getTiling(mino)
   if (!tiling) {
     // TODO (impl) actually show the mino.
     return <div>This polyomino does not tile the plane.</div>
   }
-  const { domain, basis } = tiling
-  const [u, v] = basis
-  const indices = [...getIndices(basis, length, tiling.domain.dims())]
+  const tiles = [...getTiles(tiling, gridSize)]
+
   return (
     <svg
       width={svgSize}
@@ -78,23 +101,19 @@ export default function Tiling({ mino }: Props) {
         -viewLength / 2
       } ${viewLength} ${viewLength}`}
     >
-      {indices.map(([i, j]) => {
-        const translate = u.scale(i).add(v.scale(j))
-        return domain.data.map((tile, k) => {
-          const color = getColor(domain.data.length, k, i, j)
-          return (
-            <MinoSvg
-              key={`${i},${j},${k}`}
-              mino={tile.mino}
-              coord={tile.coord.add(translate).scale(squareSize)}
-              size={squareSize}
-              fill={color}
-              hideInner
-              stroke="black"
-              anchor="top left"
-            />
-          )
-        })
+      {tiles.map(({ coord, mino, color }, key) => {
+        return (
+          <MinoSvg
+            key={key}
+            mino={mino}
+            coord={coord.scale(squareSize)}
+            size={squareSize}
+            fill={colors[color]}
+            hideInner
+            stroke="black"
+            anchor="top left"
+          />
+        )
       })}
     </svg>
   )
