@@ -145,15 +145,16 @@ export class MinoPattern {
     }
   }
 
-  /** Get the outer edges of this mino pattern */
-  edges: () => EdgeList = once(() => {
-    return new EdgeList([...getEdges([...this.coords()])])
-  })
-
+  /** Get the width and height of the pattern */
   dims(): Dims {
     const coords = [...this.coords()]
     const xs = coords.map((p) => p.x)
     const ys = coords.map((p) => p.y)
     return [getRange(xs), getRange(ys)]
   }
+
+  /** Get the outer edges of this mino pattern */
+  edges: () => EdgeList = once(() => {
+    return new EdgeList([...getEdges([...this.coords()])])
+  })
 }
