@@ -105,6 +105,13 @@ function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   return { mino: mino.transform(transform), coord: newCoord }
 }
 
+// Get the difference between the maximum and minimum of the given numbers
+function getRange(nums: number[]) {
+  const min = Math.min(...nums)
+  const max = Math.max(...nums)
+  return max - min + 1
+}
+
 export class MinoPattern {
   data: PatternData
 
@@ -142,4 +149,11 @@ export class MinoPattern {
   edges: () => EdgeList = once(() => {
     return new EdgeList([...getEdges([...this.coords()])])
   })
+
+  dims(): Dims {
+    const coords = [...this.coords()]
+    const xs = coords.map((p) => p.x)
+    const ys = coords.map((p) => p.y)
+    return [getRange(xs), getRange(ys)]
+  }
 }
