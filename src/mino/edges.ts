@@ -21,6 +21,7 @@ function flip(d: Direction) {
   }
 }
 
+/** Move a point in the given direction */
 export function move(p: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
