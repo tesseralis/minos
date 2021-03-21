@@ -32,7 +32,7 @@ function* getIndices(
   }
 }
 
-const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#b8b19e"]
+const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#d1c9b4"]
 function getColor(domLength: number, patIdx: number, i: number, j: number) {
   switch (domLength) {
     // If the domain has only one mino,

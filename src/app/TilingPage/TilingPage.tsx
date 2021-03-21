@@ -15,7 +15,7 @@ export default function TilingPage() {
         max-width: 48rem;
         height: 100vh;
         margin-left: 10rem;
-        margin-top: 2rem;
+        margin-top: 3rem;
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
