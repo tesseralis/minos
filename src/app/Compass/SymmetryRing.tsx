@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "emotion"
+import { css } from "@emotion/css"
 import tinycolor from "tinycolor2"
 
 import { Circle } from "app/svg"

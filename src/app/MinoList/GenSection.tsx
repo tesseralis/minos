@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "emotion"
+import { css } from "@emotion/css"
 import { colors } from "style/theme"
 
 const minoPrefixes = [

@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from "react"
-import { css } from "emotion"
+import { css } from "@emotion/css"
 
 import { Polyomino } from "mino"
 import { colors } from "style/theme"

@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { css, cx, keyframes } from "emotion"
+import { css, cx, keyframes } from "@emotion/css"
 
 import Vector from "vector"
 import { Polyomino } from "mino"

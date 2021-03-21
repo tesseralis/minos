@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "emotion"
+import { css } from "@emotion/css"
 import { Polyomino } from "mino"
 import { useMatch } from "react-router-dom"
 

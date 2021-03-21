@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "emotion"
+import { css } from "@emotion/css"
 import { scaleLinear } from "d3-scale"
 
 import { Polyomino } from "mino"
