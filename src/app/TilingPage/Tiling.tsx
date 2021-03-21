@@ -5,12 +5,12 @@ import MinoSvg from "app/MinoSvg"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
 
-const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#acbdbb"]
 function mod(n: number, d: number) {
   const rem = n % d
   return rem < 0 ? rem + d : rem
 }
 
+const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#b8b19e"]
 function getColor(domLength: number, patIdx: number, i: number, j: number) {
   switch (domLength) {
     // If the domain has only one mino,
