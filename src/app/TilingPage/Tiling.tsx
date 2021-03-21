@@ -1,52 +1,23 @@
 import React from "react"
-import { range, findIndex } from "lodash-es"
+import { range } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
 import { useSelected, useSetSelected } from "app/SelectedContext"
-import { getTiling } from "mino/tiling"
-import Vector from "vector"
+import { Basis, getTiling } from "mino/tiling"
 
 function mod(n: number, d: number) {
   const rem = n % d
   return rem < 0 ? rem + d : rem
 }
 
-function ensurePositive(v: Vector) {
-  return v.x < 0 ? v.inverse() : v
-}
-
-function normalizeBasis(basis: [Vector, Vector]): [Vector, Vector] {
-  // If a member of the basis is positive, return it as the first segment
-  const posIdx = findIndex(basis, (p) => p.x >= 0 && p.y >= 0)
-  if (posIdx >= 0) {
-    const otherIdx = 1 - posIdx
-    return [basis[posIdx], ensurePositive(basis[otherIdx])]
-  }
-
-  // If a vector has both negative coords, return its inverse
-  const negIdx = findIndex(basis, (p) => p.x <= 0 && p.y <= 0)
-  if (negIdx >= 0) {
-    const otherIdx = 1 - negIdx
-    return [basis[negIdx].inverse(), ensurePositive(basis[otherIdx])]
-  }
-
-  // If both of them are in the same quadrant, take their difference and make sure it's positive
-  const [u, v] = basis
-  if (u.x * v.x >= 0 && u.y * v.y >= 0) {
-    return [ensurePositive(v.sub(u)), ensurePositive(u)]
-  }
-
-  // Otherwise, take their sum and make sure it's positive
-  return [ensurePositive(u.add(v)), ensurePositive(u)]
-}
-
 function inBounds(n: number, limit: number) {
   return n >= -limit && n <= limit
 }
 
-// FIXME what the fuck what's happening to the colors??
+// Return the set of indices [i, j] such that iu + vj falls within the square of size s*s
+// centered at 0, with the buffer area [w, h]
 function* getIndices(
-  [u, v]: [Vector, Vector],
+  [u, v]: Basis,
   size: number,
   [w, h]: [number, number],
 ): Generator<[number, number]> {
@@ -102,8 +73,8 @@ export default function Tiling({ mino }: { mino: Polyomino }) {
     return <div>This polyomino does not tile the plane.</div>
   }
   const { domain, basis } = tiling
-  const [u, v] = normalizeBasis(basis)
-  const indices = [...getIndices([u, v], length, tiling.domain.dims())]
+  const [u, v] = basis
+  const indices = [...getIndices(basis, length, tiling.domain.dims())]
   return (
     <svg
       width={svgSize}

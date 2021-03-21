@@ -7,7 +7,7 @@ import { Transform, getAnchor, transforms } from "./transform"
 import { MinoPlacement, MinoPattern } from "./pattern"
 import { O_OCTOMINO } from "./constants"
 
-type Basis = [u: Coord, v: Coord]
+export type Basis = [u: Coord, v: Coord]
 
 /**
  * Represents a polyomino tiling that can be tesselated by repeating a pattern
