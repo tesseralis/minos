@@ -7,9 +7,7 @@ import MinoSvg from "app/MinoSvg"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
 
-const LIMIT = 5
-
-const colors = ["#d15e5e", "#d64da9", "#9b45bf", "#7253c9"]
+const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#acbdbb"]
 function mod(n: number, d: number) {
   const rem = n % d
   return rem < 0 ? rem + d : rem
@@ -32,6 +30,8 @@ function getColor(domLength: number, patIdx: number, i: number, j: number) {
 
 const minoSize = 20
 const svgSize = 500
+// TODO (impl) this should be calculated dynamically
+const iterLimit = 5
 
 function Tiling({ mino }: { mino: Polyomino }) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
@@ -48,7 +48,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
 
   const tiling = getTiling(mino)
   if (!tiling) {
-    // TODO actually show the mino.
+    // TODO (impl) actually show the mino.
     return <div>This polyomino does not tile the plane.</div>
   }
   const {
@@ -64,8 +64,8 @@ function Tiling({ mino }: { mino: Polyomino }) {
         -viewLength / 2
       } ${viewLength} ${viewLength}`}
     >
-      {range(-LIMIT, LIMIT + 1).map((i) => {
-        return range(-LIMIT, LIMIT + 1).map((j) => {
+      {range(-iterLimit, iterLimit + 1).map((i) => {
+        return range(-iterLimit, iterLimit + 1).map((j) => {
           const translate = u.scale(i).add(v.scale(j))
           return (
             <>
