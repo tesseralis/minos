@@ -2,6 +2,9 @@ import { range, zip } from "lodash-es"
 import Vector from "vector"
 import { Coord } from "./data"
 
+// Directions
+// ==========
+
 export type Direction = "left" | "right" | "up" | "down"
 export type Edge = { dir: Direction; start: Coord }
 
@@ -69,21 +72,31 @@ export class EdgeList {
     this.length = data.length
   }
 
+  /** Get the starting coordinate for this EdgeList */
   start(): Coord {
     return this.data[0].start
   }
 
+  /** Get the ending coordinate of this EdgeList */
   end(): Coord {
     const edge = this.data[this.length - 1]
     return move(edge.start, edge.dir)
   }
 
+  /**
+   * Return whether the two EdgeLists are inverses of each other.
+   * That is, if they represent the same edges with the directions flipped.
+   */
   isInverse(segment: EdgeList): boolean {
     const otherInv = [...segment.data].reverse()
     const pairs = zip(this.data, otherInv)
     return pairs.every(([e1, e2]) => flip(e1!.dir) === e2!.dir)
   }
 
+  /**
+   * Return whether the edgelist is a palindrome,
+   * and thus has 180deg rotational symmetry.
+   */
   isPalindrome(): boolean {
     if (this.length === 0) {
       return true
@@ -95,12 +108,14 @@ export class EdgeList {
 
   // Array util wrappers
 
+  /** Iterate over copies of this EdgeList with different edges as the starting segment. */
   *cycle(limit: number = this.length): Generator<EdgeList> {
     for (const rotation of cycle(this.data, limit)) {
       yield new EdgeList(rotation)
     }
   }
 
+  /** Split this edge list over the given indices. */
   splitAt(indices: number | number[]): EdgeList[] {
     return splitAt(this.data, indices).map((es) => new EdgeList(es))
   }
