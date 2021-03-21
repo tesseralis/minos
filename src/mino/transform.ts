@@ -27,13 +27,19 @@ interface Anchor {
   y: AnchorPos
 }
 
+/**
+ * Get the anchor point for the given polyomino.
+ */
 export function getAnchor(mino: Polyomino, anchor: Anchor): Coord {
   const x = anchor.x === "start" ? 0 : mino.width
   const y = anchor.y === "start" ? 0 : mino.height
   return new Vector(x, y)
 }
 
-// Get what will be the top-left anchor if transforming the mino
+/**
+ * Return the *current* anchor of the mino that will become the top-left anchor
+ * when undergoing the given transformation.
+ */
 export function transformAnchor(transform: Transform): Anchor {
   switch (transform) {
     case "identity":
@@ -51,6 +57,9 @@ export function transformAnchor(transform: Transform): Anchor {
   }
 }
 
+/**
+ * Execute the given transform on the provided point.
+ */
 export function transformCoord(p: Coord, transform: Transform) {
   const transforms = {
     identity: p,
