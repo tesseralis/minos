@@ -1,4 +1,4 @@
-import { range, zip } from "lodash-es"
+import { range } from "lodash-es"
 import Vector from "vector"
 import { Coord } from "./data"
 
@@ -89,19 +89,20 @@ export class EdgeList {
    * That is, if they represent the same edges with the directions flipped.
    */
   isInverse(segment: EdgeList): boolean {
-    const otherInv = [...segment.data].reverse()
-    const pairs = zip(this.data, otherInv)
-    return pairs.every(([e1, e2]) => flip(e1!.dir) === e2!.dir)
+    const len = segment.length
+    if (len !== this.data.length) {
+      return false
+    }
+    return this.data.every(
+      (e1, i) => e1.dir === flip(segment.data[len - 1 - i].dir),
+    )
   }
 
   /**
    * Return whether the edgelist is a palindrome,
-   * and thus has 180deg rotational symmetry.
+   * and thus has 180 deg rotational symmetry.
    */
   isPalindrome(): boolean {
-    if (this.length === 0) {
-      return true
-    }
     return range(Math.floor(this.length / 2)).every(
       (i) => this.data[i].dir === this.data[this.length - 1 - i].dir,
     )
