@@ -14,18 +14,18 @@ function mod(n: number, d: number) {
 }
 
 function getColor(domLength: number, patIdx: number, i: number, j: number) {
-  // If the domain has only one mino,
-  // then use a different color for each set of four
-  if (domLength === 1) {
-    const iRem = mod(i, 2)
-    const jRem = mod(j, 2)
-    return colors[2 * iRem + jRem]
+  switch (domLength) {
+    // If the domain has only one mino,
+    // then use a different color for each set of four
+    case 1:
+      return colors[2 * mod(i, 2) + mod(j, 2)]
+    // If it has two minos, use two of the colors for them and alternate based on the parity of i+j
+    case 2:
+      return colors[2 * mod(i + j, 2) + patIdx]
+    // Otherwise, color each mino in the domain differently
+    default:
+      return colors[patIdx]
   }
-  if (domLength === 2) {
-    const range = mod(i + j, 2)
-    return colors[2 * range + patIdx]
-  }
-  return colors[patIdx]
 }
 
 const minoSize = 20
@@ -40,6 +40,7 @@ function Tiling({ mino }: { mino: Polyomino }) {
   const viewLength = minoSize * length
 
   // If no selection context, set it to the current mino.
+  // TODO (bug) this triggers a console error when run
   const selected = useSelected()
   const setSelected = useSetSelected()
   if (!selected) {
