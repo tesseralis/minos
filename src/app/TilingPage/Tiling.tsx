@@ -15,7 +15,7 @@ function ensurePositive(v: Vector) {
   return v.x < 0 ? v.inverse() : v
 }
 
-function normalizeBasis(basis: [Vector, Vector]) {
+function normalizeBasis(basis: [Vector, Vector]): [Vector, Vector] {
   // If a member of the basis is positive, return it as the first segment
   const posIdx = findIndex(basis, (p) => p.x >= 0 && p.y >= 0)
   if (posIdx >= 0) {
@@ -99,10 +99,7 @@ export default function Tiling({ mino }: { mino: Polyomino }) {
   }
   const { domain, basis } = tiling
   const [u, v] = normalizeBasis(basis)
-  console.log(basis, u, v)
   const indices = [...getIndices([u, v], length, tiling.domain.dims())]
-
-  // console.log(indices.length * tiling.domain.data.length)
   return (
     <svg
       width={svgSize}
