@@ -1,13 +1,60 @@
 import React from "react"
-import { range } from "lodash-es"
+import { range, findIndex } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
+import Vector from "vector"
 
 function mod(n: number, d: number) {
   const rem = n % d
   return rem < 0 ? rem + d : rem
+}
+
+function ensurePositive(v: Vector) {
+  return v.x < 0 ? v.inverse() : v
+}
+
+function normalizeBasis(basis: [Vector, Vector]) {
+  // If a member of the basis is positive, return it as the first segment
+  const posIdx = findIndex(basis, (p) => p.x >= 0 && p.y >= 0)
+  if (posIdx >= 0) {
+    const otherIdx = 1 - posIdx
+    return [basis[posIdx], ensurePositive(basis[otherIdx])]
+  }
+
+  // If a vector has both negative coords, return its inverse
+  const negIdx = findIndex(basis, (p) => p.x <= 0 && p.y <= 0)
+  if (negIdx >= 0) {
+    const otherIdx = 1 - negIdx
+    return [basis[negIdx].inverse(), ensurePositive(basis[otherIdx])]
+  }
+
+  // If both of them are in the same quadrant, take their difference and make sure it's positive
+  const [u, v] = basis
+  if (u.x * v.x >= 0 && u.y * v.y >= 0) {
+    return [ensurePositive(v.sub(u)), ensurePositive(u)]
+  }
+
+  // Otherwise, take their sum and make sure it's positive
+  return [ensurePositive(u.add(v)), ensurePositive(u)]
+}
+
+// FIXME what the fuck what's happening to the colors??
+function* getIndices(
+  [u, v]: [Vector, Vector],
+  size: number,
+  [w, h]: [number, number],
+): Generator<[number, number]> {
+  // TODO (perf) make this more sophisticated
+  for (const i of range(-10, 50)) {
+    for (const j of range(-25, 25)) {
+      const { x, y } = u.scale(i).add(v.scale(j))
+      if (x >= -w && x <= size + w && y >= -h && y <= size + h) {
+        yield [i, j]
+      }
+    }
+  }
 }
 
 const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#b8b19e"]
@@ -30,8 +77,6 @@ function getColor(domLength: number, patIdx: number, i: number, j: number) {
 const squareSize = 20
 // Width/height of the svg
 const svgSize = 500
-// TODO (impl) this should be calculated dynamically
-const iterLimit = 5
 
 export default function Tiling({ mino }: { mino: Polyomino }) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
@@ -52,37 +97,34 @@ export default function Tiling({ mino }: { mino: Polyomino }) {
     // TODO (impl) actually show the mino.
     return <div>This polyomino does not tile the plane.</div>
   }
-  const {
-    domain,
-    basis: [u, v],
-  } = tiling
+  const { domain, basis } = tiling
+  const [u, v] = normalizeBasis(basis)
+  console.log(basis, u, v)
+  const indices = [...getIndices([u, v], length, tiling.domain.dims())]
 
+  // console.log(indices.length * tiling.domain.data.length)
   return (
     <svg
       width={svgSize}
       height={svgSize}
-      viewBox={`${-viewLength / 2} ${
-        -viewLength / 2
-      } ${viewLength} ${viewLength}`}
+      viewBox={`0 0 ${viewLength} ${viewLength}`}
     >
-      {range(-iterLimit, iterLimit + 1).map((i) => {
-        return range(-iterLimit, iterLimit + 1).map((j) => {
-          const translate = u.scale(i).add(v.scale(j))
-          return domain.data.map((tile, k) => {
-            const color = getColor(domain.data.length, k, i, j)
-            return (
-              <MinoSvg
-                key={`${i},${j},${k}`}
-                mino={tile.mino}
-                coord={tile.coord.add(translate).scale(squareSize)}
-                size={squareSize}
-                fill={color}
-                hideInner
-                stroke="black"
-                anchor="top left"
-              />
-            )
-          })
+      {indices.map(([i, j]) => {
+        const translate = u.scale(i).add(v.scale(j))
+        return domain.data.map((tile, k) => {
+          const color = getColor(domain.data.length, k, i, j)
+          return (
+            <MinoSvg
+              key={`${i},${j},${k}`}
+              mino={tile.mino}
+              coord={tile.coord.add(translate).scale(squareSize)}
+              size={squareSize}
+              fill={color}
+              hideInner
+              stroke="black"
+              anchor="top left"
+            />
+          )
         })
       })}
     </svg>
