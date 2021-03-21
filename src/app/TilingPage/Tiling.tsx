@@ -40,6 +40,10 @@ function normalizeBasis(basis: [Vector, Vector]): [Vector, Vector] {
   return [ensurePositive(u.add(v)), ensurePositive(u)]
 }
 
+function inBounds(n: number, limit: number) {
+  return n >= -limit && n <= limit
+}
+
 // FIXME what the fuck what's happening to the colors??
 function* getIndices(
   [u, v]: [Vector, Vector],
@@ -47,10 +51,10 @@ function* getIndices(
   [w, h]: [number, number],
 ): Generator<[number, number]> {
   // TODO (perf) make this more sophisticated
-  for (const i of range(-10, 50)) {
-    for (const j of range(-25, 25)) {
+  for (const i of range(-size, size)) {
+    for (const j of range(-size, size)) {
       const { x, y } = u.scale(i).add(v.scale(j))
-      if (x >= -w && x <= size + w && y >= -h && y <= size + h) {
+      if (inBounds(x, size / 2 + w) && inBounds(y, size / 2 + h)) {
         yield [i, j]
       }
     }
@@ -104,7 +108,9 @@ export default function Tiling({ mino }: { mino: Polyomino }) {
     <svg
       width={svgSize}
       height={svgSize}
-      viewBox={`0 0 ${viewLength} ${viewLength}`}
+      viewBox={`${-viewLength / 2} ${
+        -viewLength / 2
+      } ${viewLength} ${viewLength}`}
     >
       {indices.map(([i, j]) => {
         const translate = u.scale(i).add(v.scale(j))
