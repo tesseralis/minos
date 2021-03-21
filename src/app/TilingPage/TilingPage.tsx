@@ -67,25 +67,21 @@ function Tiling({ mino }: { mino: Polyomino }) {
       {range(-iterLimit, iterLimit + 1).map((i) => {
         return range(-iterLimit, iterLimit + 1).map((j) => {
           const translate = u.scale(i).add(v.scale(j))
-          return (
-            <>
-              {domain.data.map((tile, k) => {
-                const color = getColor(domain.data.length, k, i, j)
-                return (
-                  <MinoSvg
-                    key={`${i},${j},${k}`}
-                    mino={tile.mino}
-                    coord={tile.coord.add(translate).scale(minoSize)}
-                    size={minoSize}
-                    fill={color}
-                    hideInner
-                    stroke="black"
-                    anchor="top left"
-                  />
-                )
-              })}
-            </>
-          )
+          return domain.data.map((tile, k) => {
+            const color = getColor(domain.data.length, k, i, j)
+            return (
+              <MinoSvg
+                key={`${i},${j},${k}`}
+                mino={tile.mino}
+                coord={tile.coord.add(translate).scale(minoSize)}
+                size={minoSize}
+                fill={color}
+                hideInner
+                stroke="black"
+                anchor="top left"
+              />
+            )
+          })
         })
       })}
     </svg>
