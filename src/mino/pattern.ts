@@ -2,18 +2,34 @@
  * Utility functions for parsing and handling patterns/tilings of polyominoes.
  */
 
+import { once } from "lodash-es"
+import Vector from "vector"
 import Polyomino from "./Polyomino"
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
-import Vector from "vector"
+import {
+  getAnchor,
+  Transform,
+  transformAnchor,
+  transformCoord,
+} from "./transform"
+import { getEdges } from "./outline"
+import { EdgeList } from "./edges"
 
-interface MinoPlacement {
+/**
+ * Represents the placement of a single polyomino in a coordinate grid
+ */
+export interface MinoPlacement {
+  /** The polyomino to place */
   mino: Polyomino
+  /** The position of the polyomino, anchored at the top-left */
   coord: Coord
 }
-type MinoPattern = MinoPlacement[]
 
-function* getCoords([w, h]: Dims) {
+export type PatternData = MinoPlacement[]
+
+// Get all possible coordinates within the dimensions
+function* allCoords([w, h]: Dims) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
       yield new Vector(x, y)
@@ -30,7 +46,7 @@ function inBounds(p: Coord, [w, h]: Dims) {
 // https://www.npmjs.com/package/runes
 const holeColor = "🔲"
 
-export function parsePattern(patternStr: string): MinoPattern {
+export function parsePattern(patternStr: string): PatternData {
   const grid = patternStr
     .trim()
     .split("\n")
@@ -38,9 +54,9 @@ export function parsePattern(patternStr: string): MinoPattern {
   const height = grid.length
   const width = grid[0].length
   const dims: Dims = [width, height]
-  const pattern: MinoPattern = []
+  const pattern: PatternData = []
   const visited: Set<string> = new Set()
-  for (const coord of getCoords(dims)) {
+  for (const coord of allCoords(dims)) {
     if (visited.has(coord.toString())) {
       continue
     }
@@ -80,7 +96,65 @@ export function parsePattern(patternStr: string): MinoPattern {
   return pattern
 }
 
-// verify whether the given mino pattern contains all the right minos
-export function verifyPattern(pattern: MinoPattern): boolean {
-  return false
+function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
+  const newAnchor = transformAnchor(transform)
+  // Get the *current* position of the coord that will be the new top-left anchor
+  const newAnchorCoord = coord.add(getAnchor(mino, newAnchor))
+
+  const newCoord = transformCoord(newAnchorCoord, transform)
+  return { mino: mino.transform(transform), coord: newCoord }
+}
+
+// Get the difference between the maximum and minimum of the given numbers
+function getRange(nums: number[]) {
+  const min = Math.min(...nums)
+  const max = Math.max(...nums)
+  return max - min + 1
+}
+
+export class MinoPattern {
+  data: PatternData
+
+  constructor(data: PatternData) {
+    this.data = data
+  }
+
+  /** Apply the provided transformation to this pattern */
+  transform(transform: Transform): MinoPattern {
+    return new MinoPattern(
+      this.data.map((mino) => transformMino(mino, transform)),
+    )
+  }
+
+  /** Translate this pattern so that the given point is the new origin */
+  shift(newOrigin: Coord): MinoPattern {
+    return new MinoPattern(
+      this.data.map(({ mino, coord }) => ({
+        mino,
+        coord: coord.sub(newOrigin),
+      })),
+    )
+  }
+
+  /** Iterate over the coordinates of this mino pattern */
+  *coords(): Generator<Coord> {
+    for (const { mino, coord } of this.data) {
+      for (const p of mino.coords()) {
+        yield p.add(coord)
+      }
+    }
+  }
+
+  /** Get the width and height of the pattern */
+  dims(): Dims {
+    const coords = [...this.coords()]
+    const xs = coords.map((p) => p.x)
+    const ys = coords.map((p) => p.y)
+    return [getRange(xs), getRange(ys)]
+  }
+
+  /** Get the outer edges of this mino pattern */
+  edges: () => EdgeList = once(() => {
+    return new EdgeList([...getEdges([...this.coords()])])
+  })
 }

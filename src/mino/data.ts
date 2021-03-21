@@ -143,11 +143,6 @@ export function* rowBits(mino: MinoData): Generator<number> {
   }
 }
 
-interface DisplayOpts {
-  block?: string
-  space?: string
-}
-
 /**
  * Return the mino represented by the given delimited string:
  * e.g.
@@ -161,6 +156,24 @@ export function fromString(str: string) {
   return fromBits(bits, width)
 }
 
+interface DisplayOpts {
+  block?: string
+  space?: string
+}
+
+/**
+ * Get the string representation of a mino,
+ * using the same delimited expression as `fromString()`.
+ */
+export function toString(mino: MinoData) {
+  const w = getWidth(mino)
+  const strs: string[] = []
+  for (const row of rowBits(mino)) {
+    strs.push(row.toString(2).padStart(w, "0"))
+  }
+  return strs.reverse().join("_")
+}
+
 /**
  * Return a pretty printed representation of the polyomino
  *
@@ -169,7 +182,7 @@ export function fromString(str: string) {
  * @param space the string used to represent an unfilled block
  */
 export function displayMino(mino: MinoData, opts: DisplayOpts = {}) {
-  const { block = "□", space = " ️" } = opts
+  const { block = "□", space = " " } = opts
   const w = getWidth(mino)
   const result = []
   for (const row of rowBits(mino)) {

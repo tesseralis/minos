@@ -1,9 +1,8 @@
-import { minBy } from "lodash-es"
+import { isEqual, minBy } from "lodash-es"
 
 import Vector from "vector"
 import { Coord } from "./data"
-
-type Direction = "left" | "right" | "up" | "down"
+import { Edge, Direction, move } from "./edges"
 
 function hasCoord(coords: Coord[], p: Coord) {
   return coords.some((p2) => p.equals(p2))
@@ -38,18 +37,6 @@ function isBlocked(coords: Coord[], v: Coord, dir: Direction) {
   }
 }
 
-function move(p: Coord, dir: Direction): Coord {
-  switch (dir) {
-    case "left":
-      return p.add(Vector.LEFT)
-    case "right":
-      return p.add(Vector.RIGHT)
-    case "down":
-      return p.add(Vector.DOWN)
-    case "up":
-      return p.add(Vector.UP)
-  }
-}
 function turnLeft(dir: Direction) {
   switch (dir) {
     case "left":
@@ -76,25 +63,43 @@ function turnRight(dir: Direction) {
   }
 }
 
+// Pick a start point for the given coordinates
+// such that going "down" from the point is a valid edge
+function getStartPoint(coords: Coord[]) {
+  const minY = Math.min(...coords.map((coord) => coord.y))
+  const topRow = coords.filter((p) => p.y === minY)
+  return minBy(topRow, (p) => p.x)!
+}
+
+/**
+ * Return the edges of a mino.
+ */
+export function* getEdges(coords: Coord[]): Generator<Edge> {
+  const origin = getStartPoint(coords)
+  let pos = origin
+  let dir: Direction = "down"
+  do {
+    if (canTurn(coords, pos, dir)) {
+      dir = turnLeft(dir)
+    } else if (isBlocked(coords, pos, dir)) {
+      dir = turnRight(dir)
+    } else {
+      yield { start: pos, dir }
+      pos = move(pos, dir)
+    }
+  } while (!isEqual(pos, origin))
+}
+
 /**
  * Return the coordinates for the outline of a mino
  */
-export function getOutline(minoCoords: Coord[]) {
-  // FIXME this might not be correct?
-  const origin = minBy(minoCoords)!
-  let pos = origin
-  let dir: Direction = "down"
-  const result = [origin]
-  do {
-    if (canTurn(minoCoords, pos, dir)) {
-      result.push(pos)
-      dir = turnLeft(dir)
-    } else if (isBlocked(minoCoords, pos, dir)) {
-      result.push(pos)
-      dir = turnRight(dir)
-    } else {
-      pos = move(pos, dir)
+export function* getOutline(minoCoords: Coord[]): Generator<Coord> {
+  let currentDir
+  for (const edge of getEdges(minoCoords)) {
+    // Only yield coordinates when we turn
+    if (currentDir !== edge.dir) {
+      currentDir = edge.dir
+      yield edge.start
     }
-  } while (!pos.equals(origin))
-  return result
+  }
 }

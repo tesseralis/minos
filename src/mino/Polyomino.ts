@@ -11,14 +11,15 @@ import {
   fromCoords,
   displayMino,
   fromString,
+  toString,
 } from "./data"
-import { getOutline } from "./draw"
+import { getOutline } from "./outline"
 import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
 import {
   Transform,
   transforms,
   reflections,
-  transformCoord,
+  transformMinoCoord,
   getSymmetry,
 } from "./transform"
 
@@ -55,7 +56,7 @@ export default class Polyomino {
 
   private _free?: Polyomino
 
-  // Construtors
+  // Constructors
 
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
@@ -163,7 +164,7 @@ export default class Polyomino {
   /** Transform this mino with the given transformation */
   transform(trans: Transform) {
     return Polyomino.fromCoords(
-      this.coords().map((p) => transformCoord(p, this.dims, trans)),
+      this.coords().map((p) => transformMinoCoord(p, this.dims, trans)),
     )
   }
 
@@ -204,7 +205,12 @@ export default class Polyomino {
   // Miscellaneous
 
   /** Return the outline of this mino */
-  outline = lazy(() => getOutline(this.coords()))
+  outline = lazy(() => [...getOutline(this.coords())])
+
+  /** Print the delimited source string of the mino */
+  toString() {
+    return toString(this.data)
+  }
 
   /** Pretty-printed representation of the mino */
   display() {

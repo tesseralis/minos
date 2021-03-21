@@ -2,6 +2,7 @@
  * This modules describes utility functions to apply transformations to polyominoes.
  */
 
+import type { Polyomino } from "mino"
 import Vector from "vector"
 import { Coord, Dims } from "./data"
 
@@ -20,7 +21,61 @@ export type Rotation = typeof rotations[number]
 export type Reflection = typeof reflections[number]
 export type Transform = typeof transforms[number]
 
-export function transformCoord(
+type AnchorPos = "start" | "end"
+interface Anchor {
+  x: AnchorPos
+  y: AnchorPos
+}
+
+/**
+ * Get the anchor point for the given polyomino.
+ */
+export function getAnchor(mino: Polyomino, anchor: Anchor): Coord {
+  const x = anchor.x === "start" ? 0 : mino.width
+  const y = anchor.y === "start" ? 0 : mino.height
+  return new Vector(x, y)
+}
+
+/**
+ * Return the *current* anchor of the mino that will become the top-left anchor
+ * when undergoing the given transformation.
+ */
+export function transformAnchor(transform: Transform): Anchor {
+  switch (transform) {
+    case "identity":
+    case "flipMainDiag":
+      return { x: "start", y: "start" }
+    case "rotateLeft":
+    case "flipHoriz":
+      return { x: "end", y: "start" }
+    case "rotateHalf":
+    case "flipMinorDiag":
+      return { x: "end", y: "end" }
+    case "rotateRight":
+    case "flipVert":
+      return { x: "start", y: "end" }
+  }
+}
+
+/**
+ * Execute the given transform on the provided point.
+ */
+export function transformCoord(p: Coord, transform: Transform) {
+  const transforms = {
+    identity: p,
+    rotateLeft: new Vector(p.y, -p.x),
+    rotateHalf: new Vector(-p.x, -p.y),
+    rotateRight: new Vector(-p.y, p.x),
+    flipHoriz: new Vector(-p.x, p.y),
+    flipVert: new Vector(p.x, -p.y),
+    flipMainDiag: new Vector(p.y, p.x),
+    flipMinorDiag: new Vector(-p.y, -p.x),
+  } as const
+  return transforms[transform]
+}
+
+// TODO express this in terms of transformCoord
+export function transformMinoCoord(
   p: Coord,
   [w, h]: Dims,
   transform: Transform,
