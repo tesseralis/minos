@@ -13,7 +13,7 @@ export type Basis = [u: Coord, v: Coord]
  * Represents a polyomino tiling that can be tesselated by repeating a pattern
  * through translation.
  */
-interface Tiling {
+export interface Tiling {
   /** The set of polyominoes that make up the fundamental domain for the tiling */
   domain: MinoPattern
 

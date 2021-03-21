@@ -2,7 +2,6 @@ import React from "react"
 import { range } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
-import { useSelected, useSetSelected } from "app/SelectedContext"
 import { Basis, getTiling } from "mino/tiling"
 
 function mod(n: number, d: number) {
@@ -53,19 +52,15 @@ const squareSize = 20
 // Width/height of the svg
 const svgSize = 500
 
-export default function Tiling({ mino }: { mino: Polyomino }) {
+interface Props {
+  mino: Polyomino
+}
+export default function Tiling({ mino }: Props) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
   // (for monominoes, this is the size of a checkerboard)
-  const length = Math.round(Math.sqrt(64 * mino.order))
+  // Also make sure that the side length is even
+  const length = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const viewLength = squareSize * length
-
-  // If no selection context, set it to the current mino.
-  // TODO (bug) this triggers a console error when run
-  const selected = useSelected()
-  const setSelected = useSetSelected()
-  if (!selected) {
-    setSelected(mino)
-  }
 
   const tiling = getTiling(mino)
   if (!tiling) {
