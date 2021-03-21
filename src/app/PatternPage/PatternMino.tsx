@@ -22,8 +22,10 @@ export default React.memo(function PatternMino({
 }: Props) {
   const setSelected = useSetSelected()
   const [hovered, setHovered] = React.useState(false)
-  let { fill } = getMinoColor(mino)
-  fill = tinycolor(fill).saturate(20).toString()
+  const { fill } = getMinoColor(mino)
+  let baseFill = tinycolor(fill)
+  baseFill =
+    mino.symmetry() === "none" ? baseFill.saturate(40) : baseFill.desaturate(20)
   return (
     <MinoSvg
       mino={mino}
@@ -32,10 +34,10 @@ export default React.memo(function PatternMino({
       size={blockSize}
       fill={
         isSelected
-          ? tinycolor.mix(fill, colors.highlight).toString()
+          ? tinycolor.mix(baseFill, colors.highlight).toString()
           : hovered
-          ? tinycolor.mix(fill, colors.highlight, 30).toString()
-          : fill
+          ? tinycolor.mix(baseFill, colors.highlight, 30).toString()
+          : baseFill.toString()
       }
       stroke="black"
       hideInner
