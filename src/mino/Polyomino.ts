@@ -1,4 +1,4 @@
-import { sortBy } from "lodash-es"
+import { sortBy, once } from "lodash-es"
 import PointSet from "PointSet"
 import {
   MinoData,
@@ -29,18 +29,6 @@ export interface PossibleRelativeLink {
   coord: Coord
 }
 export type RelativeLink = Required<PossibleRelativeLink>
-
-// lazily evaluate the property
-// TODO cached lazy iterators
-function lazy<T>(fn: () => T) {
-  let cachedVal: T | null = null
-  return () => {
-    if (!cachedVal) {
-      cachedVal = fn()
-    }
-    return cachedVal
-  }
-}
 
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
@@ -105,7 +93,7 @@ export default class Polyomino {
   }
 
   /** Return the coordinate of the mino's squares */
-  coords = lazy(() => [...getCoords(this.data)])
+  coords = once(() => [...getCoords(this.data)])
 
   // Relationships
 
@@ -114,7 +102,7 @@ export default class Polyomino {
   }
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
-  possibleParents = lazy(() =>
+  possibleParents = once(() =>
     this.coords().map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
@@ -124,20 +112,19 @@ export default class Polyomino {
     }),
   )
 
-  enumerateParents = lazy(
+  enumerateParents = once(
     () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
   )
 
-  parents = lazy(() => this.enumerateParents().map((link) => link.mino))
+  parents = once(() => this.enumerateParents().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeParents = lazy(() => new Set(this.parents().map((p) => p.free())))
+  freeParents = once(() => new Set(this.parents().map((p) => p.free())))
 
   private *neighbors(): Generator<Coord> {
     const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
-        // TODO hash instead of string
         if (!contains(this.data, nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           yield nbr
@@ -146,7 +133,7 @@ export default class Polyomino {
     }
   }
 
-  enumerateChildren = lazy(() =>
+  enumerateChildren = once(() =>
     [...this.neighbors()].map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
@@ -154,10 +141,10 @@ export default class Polyomino {
   )
 
   /** Return the list of all children of this mino */
-  children = lazy(() => this.enumerateChildren().map((link) => link.mino))
+  children = once(() => this.enumerateChildren().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeChildren = lazy(() => new Set(this.children().map((c) => c.free())))
+  freeChildren = once(() => new Set(this.children().map((c) => c.free())))
 
   // Transforms and symmetry
 
@@ -170,7 +157,7 @@ export default class Polyomino {
 
   /** Return the list of all transforms of this mino */
   // TODO make this unique
-  transforms = lazy(() => transforms.map((t) => this.transform(t)))
+  transforms = once(() => transforms.map((t) => this.transform(t)))
 
   /** true if this mino is symmetric wrt the given transform */
   hasSymmetry(t: Transform) {
@@ -178,10 +165,10 @@ export default class Polyomino {
   }
 
   /** true if the mino is the same as its reflection */
-  isOneSided = lazy(() => !reflections.some((t) => this.hasSymmetry(t)))
+  isOneSided = once(() => !reflections.some((t) => this.hasSymmetry(t)))
 
   /** Get the symmetry of this mino */
-  symmetry = lazy(() => getSymmetry((axis) => this.hasSymmetry(axis)))
+  symmetry = once(() => getSymmetry((axis) => this.hasSymmetry(axis)))
 
   /** Get the free polyomino corresponding to this mino */
   free() {
@@ -205,7 +192,7 @@ export default class Polyomino {
   // Miscellaneous
 
   /** Return the outline of this mino */
-  outline = lazy(() => [...getOutline(this.coords())])
+  outline = once(() => [...getOutline(this.coords())])
 
   /** Print the delimited source string of the mino */
   toString() {

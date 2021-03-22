@@ -42,9 +42,7 @@ function inBounds(p: Coord, [w, h]: Dims) {
   return p.x >= 0 && p.x < w && p.y >= 0 && p.y < h
 }
 
-// a black/white square has two code points and can't be split easily
-// TODO use runes instead for flexibility:
-// https://www.npmjs.com/package/runes
+// we use this one because a black/white square has two code points and can't be split easily
 const holeColor = "🔲"
 
 export function parsePattern(patternStr: string): PatternData {

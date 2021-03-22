@@ -317,7 +317,6 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
   if (hasHole(mino)) {
     return undefined
   }
-  // TODO: handle special paired cases
   if (transPairMap[mino.data]) {
     return getTransTiling(transPairMap[mino.data])
   }
