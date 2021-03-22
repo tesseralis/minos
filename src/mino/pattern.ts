@@ -4,6 +4,7 @@
 
 import { once } from "lodash-es"
 import Vector from "vector"
+import PointSet from "PointSet"
 import Polyomino from "./Polyomino"
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
@@ -55,15 +56,15 @@ export function parsePattern(patternStr: string): PatternData {
   const width = grid[0].length
   const dims: Dims = [width, height]
   const pattern: PatternData = []
-  const visited: Set<string> = new Set()
+  const visited = new PointSet()
   for (const coord of allCoords(dims)) {
-    if (visited.has(coord.toString())) {
+    if (visited.has(coord)) {
       continue
     }
     const color = grid[coord.y][coord.x]
     // ignore holes
     if (color === holeColor) {
-      visited.add(coord.toString())
+      visited.add(coord)
       continue
     }
     // Select the next point in the grid that hasn't been visited yet
@@ -74,12 +75,12 @@ export function parsePattern(patternStr: string): PatternData {
     while (queue.length > 0) {
       const current = queue.pop()
       minoCoords.push(current!)
-      visited.add(current!.toString())
+      visited.add(current!)
       for (const nbr of getNeighbors(current!)) {
         if (
           inBounds(nbr, dims) &&
           grid[nbr.y]?.[nbr.x] === color &&
-          !visited.has(nbr.toString())
+          !visited.has(nbr)
         ) {
           queue.push(nbr)
         }

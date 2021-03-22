@@ -1,39 +1,37 @@
 import { isEqual, minBy } from "lodash-es"
 
 import Vector from "vector"
+import PointSet from "PointSet"
+
 import { Coord } from "./data"
 import { Edge, Direction, move } from "./edges"
-
-function hasCoord(coords: Coord[], p: Coord) {
-  return coords.some((p2) => p.equals(p2))
-}
 
 /**
  * Return whether, given a set of coordinates, starting at  point v,
  * we can move in the given direction dir while moving counterclockwise.
  */
-function canTurn(points: Coord[], v: Coord, dir: Direction) {
+function canTurn(points: PointSet, v: Coord, dir: Direction) {
   switch (dir) {
     case "left":
-      return !hasCoord(points, v.add(new Vector(-1, 0)))
+      return !points.has(v.add(new Vector(-1, 0)))
     case "down":
-      return !hasCoord(points, v)
+      return !points.has(v)
     case "right":
-      return !hasCoord(points, v.add(new Vector(0, -1)))
+      return !points.has(v.add(new Vector(0, -1)))
     case "up":
-      return !hasCoord(points, v.add(new Vector(-1, -1)))
+      return !points.has(v.add(new Vector(-1, -1)))
   }
 }
-function isBlocked(coords: Coord[], v: Coord, dir: Direction) {
+function isBlocked(points: PointSet, v: Coord, dir: Direction) {
   switch (dir) {
     case "up":
-      return hasCoord(coords, v.add(new Vector(0, -1)))
+      return points.has(v.add(new Vector(0, -1)))
     case "right":
-      return hasCoord(coords, v)
+      return points.has(v)
     case "down":
-      return hasCoord(coords, v.add(new Vector(-1, 0)))
+      return points.has(v.add(new Vector(-1, 0)))
     case "left":
-      return hasCoord(coords, v.add(new Vector(-1, -1)))
+      return points.has(v.add(new Vector(-1, -1)))
   }
 }
 
@@ -78,10 +76,12 @@ export function* getEdges(coords: Coord[]): Generator<Edge> {
   const origin = getStartPoint(coords)
   let pos = origin
   let dir: Direction = "down"
+  const coordSet = new PointSet()
+  coordSet.addAll(coords)
   do {
-    if (canTurn(coords, pos, dir)) {
+    if (canTurn(coordSet, pos, dir)) {
       dir = turnLeft(dir)
-    } else if (isBlocked(coords, pos, dir)) {
+    } else if (isBlocked(coordSet, pos, dir)) {
       dir = turnRight(dir)
     } else {
       yield { start: pos, dir }

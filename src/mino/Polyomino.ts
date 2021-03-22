@@ -1,4 +1,5 @@
 import { sortBy } from "lodash-es"
+import PointSet from "PointSet"
 import {
   MinoData,
   Dims,
@@ -133,13 +134,12 @@ export default class Polyomino {
   freeParents = lazy(() => new Set(this.parents().map((p) => p.free())))
 
   private *neighbors(): Generator<Coord> {
-    const visited = new Set<string>()
+    const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
         // TODO hash instead of string
-        const nbrString = nbr.toString()
-        if (!contains(this.data, nbr) && !visited.has(nbrString)) {
-          visited.add(nbrString)
+        if (!contains(this.data, nbr) && !visited.has(nbr)) {
+          visited.add(nbr)
           yield nbr
         }
       }
