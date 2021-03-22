@@ -203,6 +203,10 @@ export default class Polyomino {
 
   /** Return whether the polyomino contains a hole */
   hasHole() {
+    // First mino with a hole is a heptomino
+    if (this.order < 7) {
+      return false
+    }
     for (const x of range(1, this.width - 1)) {
       for (const y of range(1, this.height - 1)) {
         // Has a hole if there is a point inside the mino that isn't contained in the mino
