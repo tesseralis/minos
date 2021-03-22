@@ -1,5 +1,6 @@
-import { sortBy, once } from "lodash-es"
+import { sortBy, once, range } from "lodash-es"
 import PointSet from "PointSet"
+import Vector from "vector"
 import {
   MinoData,
   Dims,
@@ -46,6 +47,7 @@ export default class Polyomino {
   private _free?: Polyomino
 
   // Constructors
+  // ============
 
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
@@ -75,6 +77,7 @@ export default class Polyomino {
   }
 
   // Static methods
+  // ==============
 
   /** Sort the minos in a canonical order */
   static sort(minos: Polyomino[]): Polyomino[] {
@@ -86,6 +89,7 @@ export default class Polyomino {
   }
 
   // Properties
+  // ==========
 
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
@@ -96,6 +100,7 @@ export default class Polyomino {
   coords = once(() => [...getCoords(this.data)])
 
   // Relationships
+  // =============
 
   contains(coord: Coord) {
     return contains(this.data, coord)
@@ -147,6 +152,7 @@ export default class Polyomino {
   freeChildren = once(() => new Set(this.children().map((c) => c.free())))
 
   // Transforms and symmetry
+  // =======================
 
   /** Transform this mino with the given transformation */
   transform(trans: Transform) {
@@ -190,9 +196,29 @@ export default class Polyomino {
   }
 
   // Miscellaneous
+  // =============
 
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
+
+  hasHole() {
+    for (const x of range(1, this.width - 1)) {
+      for (const y of range(1, this.height - 1)) {
+        // Has a hole if there is a point inside the mino that isn't contained in the mino
+        // but its neighbors are all in the mino.
+        // Note: this only works for order <= 8
+        const p = new Vector(x, y)
+        if (this.contains(p)) {
+          break
+        }
+        const nbrs = [...getNeighbors(p)]
+        if (nbrs.every((nbr) => this.contains(nbr))) {
+          return true
+        }
+      }
+    }
+    return false
+  }
 
   /** Print the delimited source string of the mino */
   toString() {
