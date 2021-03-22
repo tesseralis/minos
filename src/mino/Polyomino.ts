@@ -201,6 +201,7 @@ export default class Polyomino {
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
 
+  /** Return whether the polyomino contains a hole */
   hasHole() {
     for (const x of range(1, this.width - 1)) {
       for (const y of range(1, this.height - 1)) {
