@@ -1,6 +1,5 @@
 import { isEqual, minBy } from "lodash-es"
 
-import Vector from "vector"
 import PointSet from "PointSet"
 
 import { Coord } from "./data"
@@ -13,25 +12,25 @@ import { Edge, Direction, move } from "./edges"
 function canTurn(points: PointSet, v: Coord, dir: Direction) {
   switch (dir) {
     case "left":
-      return !points.has(v.add(new Vector(-1, 0)))
+      return !points.has(v.add([-1, 0]))
     case "down":
       return !points.has(v)
     case "right":
-      return !points.has(v.add(new Vector(0, -1)))
+      return !points.has(v.add([0, -1]))
     case "up":
-      return !points.has(v.add(new Vector(-1, -1)))
+      return !points.has(v.add([-1, -1]))
   }
 }
 function isBlocked(points: PointSet, v: Coord, dir: Direction) {
   switch (dir) {
     case "up":
-      return points.has(v.add(new Vector(0, -1)))
+      return points.has(v.add([0, -1]))
     case "right":
       return points.has(v)
     case "down":
-      return points.has(v.add(new Vector(-1, 0)))
+      return points.has(v.add([-1, 0]))
     case "left":
-      return points.has(v.add(new Vector(-1, -1)))
+      return points.has(v.add([-1, -1]))
   }
 }
 

@@ -1,7 +1,6 @@
 import { parsePattern, MinoPattern } from "../pattern"
 import fs from "fs"
 import Vector from "vector"
-import Polyomino from "mino/Polyomino"
 
 const files = [
   "5-rect",
@@ -37,9 +36,9 @@ describe("pattern", () => {
   describe("MinoPattern", () => {
     describe(".coords()", () => {
       it("lists all coords of the pattern", () => {
-        const pattern = new MinoPattern([
-          { coord: new Vector(-1, -1), mino: Polyomino.fromString("11_10") },
-          { coord: new Vector(-1, 0), mino: Polyomino.fromString("11_10_10") },
+        const pattern = MinoPattern.of([
+          { coord: [-1, -1], mino: "11_10" },
+          { coord: [-1, 0], mino: "11_10_10" },
         ])
         const coords = [...pattern.coords()]
         const expected: [number, number][] = [
@@ -52,16 +51,16 @@ describe("pattern", () => {
           [1, 1],
         ]
         expect(coords).toEqual(
-          expect.arrayContaining(expected.map((p) => new Vector(...p))),
+          expect.arrayContaining(expected.map(Vector.fromArray)),
         )
       })
     })
 
     describe(".shift()", () => {
       it("translates the contents of the pattern correctly", () => {
-        const pattern = new MinoPattern([
-          { coord: new Vector(1, 1), mino: Polyomino.fromString("100_111") },
-          { coord: new Vector(0, 0), mino: Polyomino.fromString("1") },
+        const pattern = MinoPattern.of([
+          { coord: [1, 1], mino: "100_111" },
+          { coord: [0, 0], mino: "1" },
         ])
 
         const shifted = pattern.shift(new Vector(1, 1))
@@ -72,12 +71,8 @@ describe("pattern", () => {
 
     describe(".transform()", () => {
       it("transforms the positions and transforms of everything in the pattern", () => {
-        const pattern = new MinoPattern([
-          { coord: new Vector(1, 1), mino: Polyomino.fromString("01_01_11") },
-        ])
-        const expected = new MinoPattern([
-          { coord: new Vector(1, -4), mino: Polyomino.fromString("100_111") },
-        ])
+        const pattern = MinoPattern.of([{ coord: [1, 1], mino: "01_01_11" }])
+        const expected = MinoPattern.of([{ coord: [1, -4], mino: "100_111" }])
 
         expect(pattern.transform("rotateLeft").data).toEqual(expected.data)
       })
