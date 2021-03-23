@@ -224,7 +224,7 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
   const flipped = pattern.data.map((placement) =>
     flipPlacement(placement, longestSegment),
   )
-  const domain = new MinoPattern(pattern.data.concat(flipped))
+  const domain = MinoPattern.of(pattern.data.concat(flipped))
 
   // Use the distance between the translated pair as one axis
   const u = transDistance
@@ -251,10 +251,9 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
   const result: Record<number, MinoPattern> = {}
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
-    const pairPoint = Vector.fromArray(coord)
-    const pattern = new MinoPattern([
+    const pattern = MinoPattern.of([
       { mino, coord: Vector.ZERO },
-      { mino: mino.transform(pairTransform), coord: pairPoint },
+      { mino: mino.transform(pairTransform), coord },
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
@@ -323,7 +322,7 @@ export function getTiling(mino: Polyomino): Tiling | undefined {
   if (conwayPairMap[mino.data]) {
     return getConwayTiling(conwayPairMap[mino.data])
   }
-  const pattern = new MinoPattern([{ mino, coord: Vector.ZERO }])
+  const pattern = MinoPattern.of([{ mino, coord: Vector.ZERO }])
 
   const transTiling = getTransTiling(pattern)
   if (transTiling) {

@@ -34,6 +34,9 @@ export type RelativeLink = Required<PossibleRelativeLink>
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
 
+// type of stuff that can be cast into a Polyomino
+export type MinoLike = string | VectorLike[] | Polyomino
+
 export default class Polyomino {
   data: MinoData
   /** The number of squares in this polyomino */
@@ -69,11 +72,22 @@ export default class Polyomino {
    * Return the mino represented by the given coordinates
    */
   static fromCoords(coords: VectorLike[]) {
-    return this.fromData(fromCoords(coords))
+    return Polyomino.fromData(fromCoords(coords))
   }
 
   static fromString(str: string) {
-    return this.fromData(fromString(str))
+    return Polyomino.fromData(fromString(str))
+  }
+
+  static of(mino: MinoLike) {
+    if (mino instanceof Polyomino) {
+      return mino
+    }
+    if (typeof mino === "string") {
+      return Polyomino.fromString(mino)
+    }
+    // Otherwise it's a list of coordinates
+    return Polyomino.fromCoords(mino)
   }
 
   // Static methods

@@ -3,9 +3,9 @@
  */
 
 import { once } from "lodash-es"
-import Vector from "vector"
+import Vector, { VectorLike } from "vector"
 import PointSet from "PointSet"
-import Polyomino from "./Polyomino"
+import Polyomino, { MinoLike } from "./Polyomino"
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
 import {
@@ -25,6 +25,11 @@ export interface MinoPlacement {
   mino: Polyomino
   /** The position of the polyomino, anchored at the top-left */
   coord: Coord
+}
+
+interface PlacementLike {
+  mino: MinoLike
+  coord: VectorLike
 }
 
 export type PatternData = MinoPlacement[]
@@ -114,8 +119,17 @@ function getRange(nums: number[]) {
 export class MinoPattern {
   data: PatternData
 
-  constructor(data: PatternData) {
+  private constructor(data: PatternData) {
     this.data = data
+  }
+
+  static of(data: PlacementLike[]) {
+    return new MinoPattern(
+      data.map(({ mino, coord }) => ({
+        mino: Polyomino.of(mino),
+        coord: Vector.of(coord),
+      })),
+    )
   }
 
   /** Apply the provided transformation to this pattern */
