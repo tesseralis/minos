@@ -52,7 +52,7 @@ describe("pattern", () => {
           [1, 1],
         ]
         expect(coords).toEqual(
-          expect.arrayContaining(expected.map((p) => new Vector(...p))),
+          expect.arrayContaining(expected.map(Vector.fromArray)),
         )
       })
     })

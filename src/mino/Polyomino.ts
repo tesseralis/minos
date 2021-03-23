@@ -1,6 +1,6 @@
 import { sortBy, once, range } from "lodash-es"
 import PointSet from "PointSet"
-import Vector from "vector"
+import Vector, { VectorLike } from "vector"
 import {
   MinoData,
   Dims,
@@ -68,7 +68,7 @@ export default class Polyomino {
   /**
    * Return the mino represented by the given coordinates
    */
-  static fromCoords(coords: Coord[]) {
+  static fromCoords(coords: VectorLike[]) {
     return this.fromData(fromCoords(coords))
   }
 

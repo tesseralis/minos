@@ -2,7 +2,7 @@
  * Utilities for calculating relatives of polyominoes
  */
 
-import Vector from "vector"
+import Vector, { VectorLike } from "vector"
 import {
   MinoData,
   Coord,
@@ -73,17 +73,17 @@ function doAdd(mino: MinoData, i: number, j: number): MinoData {
 /**
  * Append the square at [i,j] to the mino
  */
-export function addSquare(mino: MinoData, p: Coord): MinoData {
-  if (p.x < 0) {
-    return doAdd(shiftUp(mino), 0, p.y)
+export function addSquare(mino: MinoData, [x, y]: VectorLike): MinoData {
+  if (x < 0) {
+    return doAdd(shiftUp(mino), 0, y)
   }
-  if (p.y < 0) {
-    return doAdd(shiftLeft(mino), p.x, 0)
+  if (y < 0) {
+    return doAdd(shiftLeft(mino), x, 0)
   }
-  if (p.y === getWidth(mino)) {
-    return doAdd(incWidth(mino), p.x, p.y)
+  if (y === getWidth(mino)) {
+    return doAdd(incWidth(mino), x, y)
   }
-  return doAdd(mino, p.x, p.y)
+  return doAdd(mino, x, y)
 }
 
 function bottomRowEmpty(mino: MinoData): boolean {
@@ -106,8 +106,8 @@ function doRemove(mino: MinoData, i: number, j: number): MinoData {
 /**
  * Remove the square at coordinate [i, j] from the Mino
  */
-export function removeSquare(mino: MinoData, p: Coord): MinoData {
-  const removed = doRemove(mino, p.x, p.y)
+export function removeSquare(mino: MinoData, [x, y]: VectorLike): MinoData {
+  const removed = doRemove(mino, x, y)
   if (bottomRowEmpty(removed)) {
     return shiftDown(removed)
   } else if (rightColumnEmpty(removed)) {

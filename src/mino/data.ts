@@ -25,7 +25,7 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
-import Vector from "vector"
+import Vector, { VectorLike } from "vector"
 
 // type for the encoded representation of a mino
 export type MinoData = number
@@ -91,11 +91,11 @@ export function* getCoords(mino: MinoData): Generator<Coord> {
 /**
  * Create a mino given a list of coordinates.
  */
-export function fromCoords(coords: Coord[]) {
-  const w = Math.max(...coords.map((p) => p.y)) + 1
+export function fromCoords(coords: VectorLike[]) {
+  const w = Math.max(...coords.map(([x, y]) => y)) + 1
   let result = 0
-  for (const p of coords) {
-    result = result | (1 << (w * p.x + p.y))
+  for (const [x, y] of coords) {
+    result = result | (1 << (w * x + y))
   }
   return fromBits(result, w)
 }

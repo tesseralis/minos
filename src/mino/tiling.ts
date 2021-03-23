@@ -251,7 +251,7 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
   const result: Record<number, MinoPattern> = {}
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
-    const pairPoint = new Vector(...coord)
+    const pairPoint = Vector.fromArray(coord)
     const pattern = new MinoPattern([
       { mino, coord: Vector.ZERO },
       { mino: mino.transform(pairTransform), coord: pairPoint },

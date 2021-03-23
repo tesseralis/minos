@@ -3,11 +3,7 @@ import Polyomino from "../Polyomino"
 
 // TODO remove the need for these testing functions
 function toVecs(coords: [number, number][]) {
-  return coords.map((coord) => new Vector(...coord))
-}
-
-function fromCoords(coords: [number, number][]) {
-  return Polyomino.fromCoords(toVecs(coords))
+  return coords.map(Vector.fromArray)
 }
 
 describe("mino", () => {
@@ -36,7 +32,7 @@ describe("mino", () => {
 
   describe("fromCoords", () => {
     it("correctly creates an L tetromino", () => {
-      const actual = fromCoords([
+      const actual = Polyomino.fromCoords([
         [0, 0],
         [0, 1],
         [1, 1],
@@ -76,7 +72,7 @@ describe("mino", () => {
 
   describe("outline", () => {
     it("works on L tetromino", () => {
-      const mino = fromCoords([
+      const mino = Polyomino.fromCoords([
         [0, 0],
         [1, 0],
         [0, 1],
@@ -94,7 +90,7 @@ describe("mino", () => {
     })
 
     it("works with concave minos", () => {
-      const mino = fromCoords([
+      const mino = Polyomino.fromCoords([
         [0, 0],
         [1, 0],
         [2, 0],
@@ -115,7 +111,7 @@ describe("mino", () => {
     })
 
     it("works with minos with holes", () => {
-      const mino = fromCoords([
+      const mino = Polyomino.fromCoords([
         [0, 0],
         [1, 0],
         [2, 0],

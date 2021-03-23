@@ -3,7 +3,7 @@
  */
 
 import type { Polyomino } from "mino"
-import Vector from "vector"
+import Vector, { Point } from "vector"
 import { Coord, Dims } from "./data"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
@@ -61,17 +61,17 @@ export function transformAnchor(transform: Transform): Anchor {
  * Execute the given transform on the provided point.
  */
 export function transformCoord(p: Coord, transform: Transform) {
-  const transforms = {
-    identity: p,
-    rotateLeft: new Vector(p.y, -p.x),
-    rotateHalf: new Vector(-p.x, -p.y),
-    rotateRight: new Vector(-p.y, p.x),
-    flipHoriz: new Vector(-p.x, p.y),
-    flipVert: new Vector(p.x, -p.y),
-    flipMainDiag: new Vector(p.y, p.x),
-    flipMinorDiag: new Vector(-p.y, -p.x),
-  } as const
-  return transforms[transform]
+  const transforms: Record<Transform, Point> = {
+    identity: [p.x, p.y],
+    rotateLeft: [p.y, -p.x],
+    rotateHalf: [-p.x, -p.y],
+    rotateRight: [-p.y, p.x],
+    flipHoriz: [-p.x, p.y],
+    flipVert: [p.x, -p.y],
+    flipMainDiag: [p.y, p.x],
+    flipMinorDiag: [-p.y, -p.x],
+  }
+  return Vector.fromArray(transforms[transform])
 }
 
 // TODO express this in terms of transformCoord
@@ -82,17 +82,17 @@ export function transformMinoCoord(
 ): Coord {
   const x1 = w - 1 - p.x
   const y1 = h - 1 - p.y
-  const transforms = {
-    identity: p,
-    rotateLeft: new Vector(p.y, x1),
-    rotateHalf: new Vector(x1, y1),
-    rotateRight: new Vector(y1, p.x),
-    flipHoriz: new Vector(x1, p.y),
-    flipVert: new Vector(p.x, y1),
-    flipMainDiag: new Vector(p.y, p.x),
-    flipMinorDiag: new Vector(y1, x1),
-  } as const
-  return transforms[transform]
+  const transforms: Record<Transform, Point> = {
+    identity: [p.x, p.y],
+    rotateLeft: [p.y, x1],
+    rotateHalf: [x1, y1],
+    rotateRight: [y1, p.x],
+    flipHoriz: [x1, p.y],
+    flipVert: [p.x, y1],
+    flipMainDiag: [p.y, p.x],
+    flipMinorDiag: [y1, x1],
+  }
+  return Vector.fromArray(transforms[transform])
 }
 
 export type Symmetry =

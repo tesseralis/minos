@@ -10,7 +10,7 @@ describe("polyomino outline", () => {
         [1, 1],
         [2, 1],
       ]
-      const edges = [...getEdges(coords.map((p) => new Vector(...p)))]
+      const edges = [...getEdges(coords.map(Vector.fromArray))]
       const expected = [
         "down",
         "left",
@@ -35,7 +35,7 @@ describe("polyomino outline", () => {
         [1, 1],
         [2, 1],
       ]
-      const outline = [...getOutline(coords.map((p) => new Vector(...p)))]
+      const outline = [...getOutline(coords.map(Vector.fromArray))]
       const expected = [
         [2, 0],
         [2, 1],

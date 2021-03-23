@@ -1,12 +1,11 @@
 import { range } from "lodash-es"
-import Vector from "vector"
+import Vector, { VectorLike } from "vector"
 import { Coord } from "./data"
 
 // Directions
 // ==========
 
 export type Direction = "left" | "right" | "up" | "down"
-export type Edge = { dir: Direction; start: Coord }
 
 function flip(d: Direction) {
   switch (d) {
@@ -61,6 +60,9 @@ function splitAt<T>(array: T[], indices: number | number[]): T[][] {
 // EdgeList class
 // ==============
 
+export type Edge = { dir: Direction; start: Coord }
+type EdgeLike = { dir: Direction; start: VectorLike }
+
 /**
  * A class representing a list of edges, with functions to manipulate them.
  */
@@ -68,9 +70,15 @@ export class EdgeList {
   data: Edge[]
   length: number
 
-  constructor(data: Edge[]) {
+  private constructor(data: Edge[]) {
     this.data = data
     this.length = data.length
+  }
+
+  static of(data: Iterable<EdgeLike>) {
+    return new EdgeList(
+      [...data].map(({ dir, start }) => ({ dir, start: Vector.of(start) })),
+    )
   }
 
   /** Get the starting coordinate for this EdgeList */

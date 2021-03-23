@@ -1,3 +1,8 @@
+/** An unwrapped vector */
+export type Point = [number, number]
+
+export type VectorLike = Point | Vector
+
 /**
  * A 2D vector class
  */
@@ -21,6 +26,17 @@ export default class Vector {
     this.y = y
   }
 
+  static fromArray([x, y]: Point) {
+    return new Vector(x, y)
+  }
+
+  static of(v: VectorLike) {
+    if (v instanceof Vector) {
+      return v
+    }
+    return Vector.fromArray(v)
+  }
+
   /**
    * Convert the given polar coordinate to Cartesian
    */
@@ -30,7 +46,7 @@ export default class Vector {
 
   // Casting
 
-  toArray(): [number, number] {
+  toArray(): Point {
     return [this.x, this.y]
   }
 
@@ -46,8 +62,8 @@ export default class Vector {
   }
 
   /** Return whether this vector is equal to the provided other vector */
-  equals(v: Vector) {
-    return this.x === v.x && this.y === v.y
+  equals([x, y]: VectorLike) {
+    return this.x === x && this.y === y
   }
 
   // Operations
@@ -63,17 +79,17 @@ export default class Vector {
   }
 
   /** Add the given vector to this vector */
-  add(v: Vector) {
-    return new Vector(this.x + v.x, this.y + v.y)
+  add([x, y]: VectorLike) {
+    return new Vector(this.x + x, this.y + y)
   }
 
   /** Subtract the given vector from this vector */
-  sub(v: Vector) {
-    return new Vector(this.x - v.x, this.y - v.y)
+  sub([x, y]: VectorLike) {
+    return new Vector(this.x - x, this.y - y)
   }
 
   /** Get the signed angle from this vector to the provided vector */
-  angleTo(v: Vector) {
-    return Math.atan2(v.y - this.y, v.x - this.x)
+  angleTo([x, y]: VectorLike) {
+    return Math.atan2(y - this.y, x - this.x)
   }
 }
