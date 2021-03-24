@@ -3,6 +3,8 @@ import { css } from "@emotion/css"
 
 import { Polyomino } from "mino"
 import transition from "app/transition"
+import { getMinoColor } from "app/graph"
+import { colors } from "style/theme"
 
 import GenSection from "./GenSection"
 import MinoDiv from "./MinoDiv"
@@ -11,6 +13,7 @@ interface Props {
   minos: Polyomino[]
   gen: number
   selected: Polyomino | null
+  onSelect(mino: Polyomino): void
   skipAnimation: boolean
 }
 
@@ -21,6 +24,7 @@ export default React.memo(function GenerationList({
   minos,
   gen,
   skipAnimation,
+  onSelect,
   selected,
 }: Props) {
   const [visIndex, setVisIndex] = React.useState(0)
@@ -50,7 +54,19 @@ export default React.memo(function GenerationList({
         {Polyomino.sort(minos).map((mino, i) => {
           if (!skipAnimation && i > visIndex) return null
           const isSelected = !!selected && mino.equivalent(selected)
-          return <MinoDiv key={mino.data} mino={mino} isSelected={isSelected} />
+          const { stroke, fill } = getMinoColor(mino)
+          return (
+            <MinoDiv
+              key={mino.data}
+              mino={
+                // TODO (refactor) where's the right place to do this flip?
+                mino.transform("flipMainDiag")
+              }
+              fill={fill}
+              stroke={isSelected ? colors.highlight : stroke}
+              onClick={() => onSelect(mino)}
+            />
+          )
         })}
       </div>
     </GenSection>

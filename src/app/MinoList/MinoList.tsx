@@ -1,43 +1,31 @@
 import React from "react"
 import { css } from "@emotion/css"
 
-import { nodes } from "app/graph"
-import useWindowEventListener from "app/useWindowEventListener"
-import { useSelected, useSetSelected } from "app/SelectedContext"
-
+import type { Polyomino } from "mino"
 import GenerationList from "./GenerationList"
 
 const START_GENS = 6
 
+interface Props {
+  /** The list of polyominoes to display */
+  minos: Polyomino[][]
+  selected?: Polyomino | null
+  onSelect(mino: Polyomino | null): void
+}
+
 /**
  * Displays the list of all minos for each generation
  */
-export default function MinoList() {
-  const selected = useSelected()
-  const setSelected = useSetSelected()
-  useWindowEventListener("click", (e) => {
-    // Deselect the current mino if the click target isn't a mino
-    // or the compass
-    // TODO this is kind of a hack
-    if (!(e.target instanceof SVGElement)) {
-      setSelected(null)
-    }
-  })
-
+export default function MinoList({ minos, selected = null, onSelect }: Props) {
   return (
-    <main
+    <div
       className={css`
-        width: 100%;
-        max-width: 48rem;
-        height: 100vh;
-        margin-left: 10rem;
-        overflow-y: scroll;
         display: flex;
         flex-wrap: wrap;
         justify-content: space-around;
       `}
     >
-      {nodes.map((minos, i) => {
+      {minos.map((minos, i) => {
         const gen = i + 1
         const hasSelected = !!selected && selected.order === gen
         return (
@@ -47,9 +35,10 @@ export default function MinoList() {
             key={gen}
             skipAnimation={gen <= START_GENS}
             selected={hasSelected ? selected : null}
+            onSelect={onSelect}
           />
         )
       })}
-    </main>
+    </div>
   )
 }

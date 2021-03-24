@@ -12,7 +12,7 @@ const style = css`
   transition: stroke 350ms ease-in-out;
 `
 
-interface Props {
+export interface Props {
   mino: Polyomino
   coord: Vector
   size: number

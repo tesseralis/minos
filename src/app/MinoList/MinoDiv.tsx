@@ -2,31 +2,23 @@ import React from "react"
 import { css } from "@emotion/css"
 import { scaleLinear } from "d3-scale"
 
-import { Polyomino } from "mino"
-import { colors } from "style/theme"
-import { NUM_GENERATIONS, getMinoColor } from "app/graph"
-import SelectableMino from "app/SelectableMino"
+import { NUM_GENERATIONS } from "app/graph"
+import MinoSvg, { Props as MinoSvgProps } from "app/MinoSvg"
 import Vector from "vector"
 
 const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
-interface Props {
-  mino: Polyomino
-  isSelected: boolean
-}
+type Props = Omit<MinoSvgProps, "coord" | "size">
 
 /**
  * A single mino wrapped in a div aligning with its dimensions.
  */
-export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
-  mino = mino.transform("flipMainDiag")
+export default React.memo(function MinoDiv({ mino, onClick, ...props }: Props) {
   const [width, height] = mino.dims
   const blockSize = getBlockSize(mino.order)
 
   const svgWidth = width * blockSize * 1.25
   const svgHeight = height * blockSize * 1.25
-
-  const { stroke, fill } = getMinoColor(mino)
 
   return (
     <div
@@ -39,14 +31,15 @@ export default React.memo(function MinoDiv({ mino, isSelected }: Props) {
         width={svgWidth}
         height={svgHeight}
         viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
+        onClick={onClick}
+        tabIndex={0}
+        className={css`
+          :hover {
+            cursor: pointer;
+          }
+        `}
       >
-        <SelectableMino
-          coord={Vector.ZERO}
-          mino={mino}
-          size={blockSize}
-          stroke={isSelected ? colors.highlight : stroke}
-          fill={fill}
-        />
+        <MinoSvg {...props} mino={mino} size={blockSize} coord={Vector.ZERO} />
       </svg>
     </div>
   )

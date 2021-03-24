@@ -8,7 +8,7 @@ import SelectedContext from "./SelectedContext"
 import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
-import MinoList from "./MinoList"
+import ListPage from "./ListPage"
 import PatternPage from "./PackingPage"
 import TilingPage from "./TilingPage"
 
@@ -24,7 +24,7 @@ export default function App() {
         >
           <Routes>
             <Route path="/" element={<Navigate to="/genaeology" />} />
-            <Route path="/list" element={<MinoList />} />
+            <Route path="/list" element={<ListPage />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
               path="/packing"
