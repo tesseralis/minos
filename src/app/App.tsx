@@ -9,7 +9,7 @@ import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
 import MinoList from "./MinoList"
-import PatternPage from "./PatternPage"
+import PatternPage from "./PackingPage"
 import TilingPage from "./TilingPage"
 
 export default function App() {
@@ -23,17 +23,17 @@ export default function App() {
           bottomLeft={<InfoButton />}
         >
           <Routes>
-            <Route path="/" element={<Navigate to="/graph" />} />
-            <Route path="/graph" element={<FamilyTree />} />
+            <Route path="/" element={<Navigate to="/genaeology" />} />
             <Route path="/list" element={<MinoList />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
-              path="/pattern"
-              element={<Navigate to="/pattern/5/rect" />}
+              path="/packing"
+              element={<Navigate to="/packing/5/rect" />}
             />
-            <Route path="/pattern/:size/:shape" element={<PatternPage />} />
+            <Route path="/packing/:size/:shape" element={<PatternPage />} />
             {/* TODO landing page for the /tiling route */}
             <Route path="/tiling/:mino" element={<TilingPage />} />
+            <Route path="/genaeology" element={<FamilyTree />} />
           </Routes>
         </Layout>
       </BrowserRouter>

@@ -68,7 +68,7 @@ function PatternNav({ shape }: any) {
 }
 
 export default function PatternPage() {
-  const { params } = useMatch("/pattern/:size/:shape")!
+  const { params } = useMatch("/packing/:size/:shape")!
   const { size, shape } = params
 
   return (
