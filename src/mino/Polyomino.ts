@@ -196,6 +196,7 @@ export default class Polyomino {
       const transforms = this.transforms()
       const free = Polyomino.sort(transforms)[0]
       // populate the free polyomino for all the transforms
+      // so we don't have to re-calculate
       for (const trans of transforms) {
         trans._free = free
       }
@@ -238,6 +239,11 @@ export default class Polyomino {
     return true
   }
 
+  /**
+   * Return whether this polyomino is convex,
+   * that is, whether there are no "gaps"
+   * between squares within the same row or coloumn.
+   */
   isConvex = once(() => {
     return this.isConvexAtAxis(true) && this.isConvexAtAxis(false)
   })
