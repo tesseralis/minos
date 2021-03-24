@@ -5,7 +5,6 @@ import KeyBindings from "./KeyBindings"
 import Nav from "./Nav"
 import Layout from "./Layout"
 import SelectedContext from "./SelectedContext"
-import InfoButton from "./InfoButton"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
 import ListPage from "./ListPage"
@@ -18,11 +17,7 @@ export default function App() {
     <SelectedContext.Provider>
       <KeyBindings />
       <BrowserRouter>
-        <Layout
-          topLeft={<Nav />}
-          topRight={<Compass />}
-          bottomLeft={<InfoButton />}
-        >
+        <Layout topLeft={<Nav />} topRight={<Compass />}>
           <Routes>
             <Route path="/" element={<Navigate to="/genaeology" />} />
             <Route path="/list" element={<ListPage />} />
