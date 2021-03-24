@@ -110,12 +110,12 @@ export function getCoordMask(i: number, j: number, w: number) {
 /**
  * Returns true if the mino contains the given coordinate
  */
-export function contains(mino: MinoData, p: Coord) {
+export function contains(mino: MinoData, [x, y]: VectorLike) {
   const w = getWidth(mino)
-  if (p.x < 0 || p.y < 0 || p.y >= w) {
+  if (x < 0 || y < 0 || y >= w) {
     return false
   }
-  return !!(mino & getCoordMask(p.x, p.y, w))
+  return !!(mino & getCoordMask(x, y, w))
 }
 
 /**

@@ -136,6 +136,30 @@ describe("mino", () => {
     })
   })
 
+  describe(".isConvex()", () => {
+    it("returns true for convex polyominoes", () => {
+      const cases = ["11111", "0100_1111_0100", "110_011_001"].map(
+        Polyomino.fromString,
+      )
+      for (const mino of cases) {
+        expect(mino.isConvex()).toBe(true)
+      }
+    })
+
+    it("returns false for concave polyominoes", () => {
+      const cases = [
+        "111_101",
+        "11_10_11",
+        "111_101_110",
+        "1010_1111_0101",
+        "11_10_10_11_10",
+      ].map(Polyomino.fromString)
+      for (const mino of cases) {
+        expect(mino.isConvex()).toBe(false)
+      }
+    })
+  })
+
   describe(".hasHole()", () => {
     it("returns true for all holey cases", () => {
       const cases = [
@@ -143,7 +167,7 @@ describe("mino", () => {
         "111_101_111",
         "0111_0101_1110",
         "0111_1101_0110",
-      ].map((str) => Polyomino.fromString(str))
+      ].map(Polyomino.fromString)
       for (const mino of cases) {
         expect(mino.hasHole()).toBe(true)
       }

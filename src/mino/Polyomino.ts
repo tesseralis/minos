@@ -116,7 +116,7 @@ export default class Polyomino {
   // Relationships
   // =============
 
-  contains(coord: Coord) {
+  contains(coord: VectorLike) {
     return contains(this.data, coord)
   }
 
@@ -215,8 +215,35 @@ export default class Polyomino {
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
 
+  private isConvexAtAxis(row: boolean) {
+    for (const x of range(0, row ? this.width : this.height)) {
+      let foundFirst = false
+      let inside = false
+      for (const y of range(0, row ? this.height : this.width)) {
+        if (this.contains(row ? [x, y] : [y, x])) {
+          // If we've already found a connected set of points befor
+          // this is not convex
+          if (foundFirst && !inside) {
+            return false
+          }
+          foundFirst = true
+          inside = true
+        } else {
+          inside = false
+        }
+      }
+    }
+    // If all rows/columns pass the test,
+    // the whole polyomino is convex along that axis
+    return true
+  }
+
+  isConvex = once(() => {
+    return this.isConvexAtAxis(true) && this.isConvexAtAxis(false)
+  })
+
   /** Return whether the polyomino contains a hole */
-  hasHole() {
+  hasHole = once(() => {
     // First mino with a hole is a heptomino
     if (this.order < 7) {
       return false
@@ -237,7 +264,7 @@ export default class Polyomino {
       }
     }
     return false
-  }
+  })
 
   /** Print the delimited source string of the mino */
   toString() {
