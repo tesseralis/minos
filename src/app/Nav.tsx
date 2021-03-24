@@ -43,7 +43,7 @@ export default function Nav() {
             <NavLink
               to={`/${view}`}
               className={css`
-                font-size: 1.5rem;
+                font-size: 1.25rem;
                 line-height: 1.25;
 
                 color: ${colors.fg};
