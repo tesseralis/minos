@@ -3,21 +3,20 @@ import { css } from "@emotion/css"
 import { Polyomino } from "mino"
 import { useMatch } from "react-router-dom"
 
-import { useSelected, useSetSelected } from "app/SelectedContext"
 import Tiling from "./Tiling"
+import MinoList from "app/MinoList"
+import { nodes } from "app/graph"
+import { useNavigate } from "react-router-dom"
+import { getTiling } from "mino/tiling"
+
+const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!getTiling(mino)))
 
 export default function TilingPage() {
   const { params } = useMatch("/tiling/:mino")!
   const code = params.mino
   const mino = Polyomino.fromString(code)
-
-  // If no selection context, set it to the current mino.
-  // TODO (bug) this triggers a console error when run
-  const selected = useSelected()
-  const setSelected = useSetSelected()
-  if (!selected) {
-    setSelected(mino)
-  }
+  // TODO (a11y) ideally, all the minos should be links...
+  const navigate = useNavigate()
 
   return (
     <div
@@ -26,14 +25,26 @@ export default function TilingPage() {
         max-width: 48rem;
         height: 100vh;
         margin-left: 10rem;
-        margin-top: 3rem;
-        overflow-y: scroll;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
+        padding-top: 3rem;
+        display: grid;
+        grid-template-columns: 24rem 1fr;
+        grid-gap: 2rem;
       `}
     >
-      <Tiling mino={mino} />
+      <div
+        className={css`
+          overflow-y: scroll;
+        `}
+      >
+        <MinoList
+          narrow
+          minos={tilingMinos}
+          onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
+        />
+      </div>
+      <div>
+        <Tiling mino={mino} />
+      </div>
     </div>
   )
 }

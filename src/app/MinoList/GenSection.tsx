@@ -17,12 +17,13 @@ const minoPrefixes = [
 interface Props {
   gen: number
   children: React.ReactElement
+  narrow?: boolean
 }
 
 /**
  * A wrapper for a generation section that includes a title
  */
-export default function GenSection({ gen, children }: Props) {
+export default function GenSection({ gen, children, narrow }: Props) {
   return (
     <section
       className={css`
@@ -30,7 +31,7 @@ export default function GenSection({ gen, children }: Props) {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: ${gen <= 4 ? 50 : 100}%;
+        width: ${!narrow && gen <= 4 ? 50 : 100}%;
         :not(:last-child) {
           border-bottom: 1px ${colors.fg} solid;
         }

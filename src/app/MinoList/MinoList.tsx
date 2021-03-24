@@ -9,6 +9,7 @@ const START_GENS = 6
 interface Props {
   /** The list of polyominoes to display */
   minos: Polyomino[][]
+  narrow?: boolean
   selected?: Polyomino | null
   onSelect(mino: Polyomino | null): void
 }
@@ -16,7 +17,12 @@ interface Props {
 /**
  * Displays the list of all minos for each generation
  */
-export default function MinoList({ minos, selected = null, onSelect }: Props) {
+export default function MinoList({
+  minos,
+  selected = null,
+  onSelect,
+  narrow,
+}: Props) {
   return (
     <div
       className={css`
@@ -30,6 +36,7 @@ export default function MinoList({ minos, selected = null, onSelect }: Props) {
         const hasSelected = !!selected && selected.order === gen
         return (
           <GenerationList
+            narrow={narrow}
             minos={minos}
             gen={gen}
             key={gen}

@@ -38,7 +38,7 @@ export default function Nav() {
     >
       <Title />
       <ul>
-        {["list", "packing", "genaeology"].map((view) => (
+        {["list", "packing", "tiling", "genaeology"].map((view) => (
           <li key={view}>
             <NavLink
               to={`/${view}`}
