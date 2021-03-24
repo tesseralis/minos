@@ -15,7 +15,7 @@ function Title() {
         margin-bottom: 1rem;
         color: ${colors.highlight};
         line-height: 1;
-        font-size: 2.25rem;
+        font-size: 1.5rem;
 
         span {
           margin-left: 0.0625rem;
@@ -23,8 +23,8 @@ function Title() {
         }
       `}
     >
-      <span>labyrinth of</span>
-      minos
+      <span>The labyrinth of</span>
+      polyominoes
     </h1>
   )
 }
