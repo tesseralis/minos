@@ -95,15 +95,18 @@ export function transformMinoCoord(
   return Vector.fromArray(transforms[transform])
 }
 
-export type Symmetry =
-  | "all"
-  | "dihedralOrtho"
-  | "dihedralDiag"
-  | "rotate4"
-  | "reflectOrtho"
-  | "reflectDiag"
-  | "rotate2"
-  | "none"
+export const symmetries = [
+  "all",
+  "dihedralOrtho",
+  "dihedralDiag",
+  "rotate4",
+  "reflectOrtho",
+  "reflectDiag",
+  "rotate2",
+  "none",
+] as const
+
+export type Symmetry = typeof symmetries[number]
 
 export function getSymmetry(predicate: (axis: Transform) => boolean) {
   function getSymCount(axes: Transform[]): number {

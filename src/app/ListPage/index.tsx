@@ -3,7 +3,7 @@ import { css } from "@emotion/css"
 import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 
-import { Symmetry } from "mino"
+import { symmetries, Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import { getTiling } from "mino/tiling"
@@ -31,6 +31,47 @@ interface Props {
   onUpdate(value: MinoFilter): void
 }
 
+function upsert<T>(array: T[], value: T) {
+  if (array.includes(value)) {
+    return array
+  }
+  return [...array, value]
+}
+
+function remove<T>(array: T[], value: T) {
+  const index = array.indexOf(value)
+  if (index >= 0) {
+    const result = [...array]
+    result.splice(index, 1)
+    return result
+  }
+  return array
+}
+
+function SymmetryOptions({ value = [], onUpdate }: any) {
+  return (
+    <div>
+      Symmetries:
+      {symmetries.map((sym) => {
+        return (
+          <label key={sym}>
+            <input
+              type="checkbox"
+              checked={value.includes(sym)}
+              onChange={(e) =>
+                onUpdate(
+                  e.target.checked ? upsert(value, sym) : remove(value, sym),
+                )
+              }
+            />
+            {sym}
+          </label>
+        )
+      })}
+    </div>
+  )
+}
+
 function YesNoOption({ name, value, onUpdate }: any) {
   return (
     <div>
@@ -56,6 +97,10 @@ function YesNoOption({ name, value, onUpdate }: any) {
 function Filter({ value, onUpdate }: Props) {
   return (
     <form>
+      <SymmetryOptions
+        value={value.symmetries}
+        onUpdate={(val: any) => onUpdate({ ...value, symmetries: val })}
+      />
       <YesNoOption
         name="isConvex"
         value={value.isConvex}
@@ -75,7 +120,12 @@ function Filter({ value, onUpdate }: Props) {
   )
 }
 
-function applyFilter({ isConvex, hasHole, hasTiling }: MinoFilter) {
+function applyFilter({
+  isConvex,
+  hasHole,
+  hasTiling,
+  symmetries = [],
+}: MinoFilter) {
   return nodes.map((generation) => {
     let filtered = generation
     if (isConvex) {
@@ -92,6 +142,9 @@ function applyFilter({ isConvex, hasHole, hasTiling }: MinoFilter) {
       filtered = filtered.filter((p) =>
         hasTiling === "yes" ? getTiling(p) : !getTiling(p),
       )
+    }
+    if (symmetries.length > 0) {
+      filtered = filtered.filter((p) => symmetries.includes(p.symmetry()))
     }
     return filtered
   })
