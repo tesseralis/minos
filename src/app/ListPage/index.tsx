@@ -6,11 +6,9 @@ import useWindowEventListener from "app/useWindowEventListener"
 import { Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
-import MinoSvg from "app/MinoSvg"
-import GenerationRings from "app/FamilyTree/GenerationRings"
 import { getTiling } from "mino/tiling"
 
-type YesNo = "yes" | "no"
+type YesNo = "yes" | "no" | ""
 type Range = [min: number, max: number]
 
 interface MinoFilter {
@@ -37,7 +35,7 @@ function YesNoOption({ name, value, onUpdate }: any) {
   return (
     <div>
       {name}:
-      {[undefined, "yes", "no"].map((val) => {
+      {["", "yes", "no"].map((val) => {
         return (
           <label key={val}>
             <input
@@ -47,7 +45,7 @@ function YesNoOption({ name, value, onUpdate }: any) {
               checked={value === val}
               onChange={(e) => onUpdate(e.target.value)}
             />
-            {val ?? "Show all"}
+            {val || "Show all"}
           </label>
         )
       })}
@@ -60,14 +58,17 @@ function Filter({ value, onUpdate }: Props) {
     <form>
       <YesNoOption
         name="isConvex"
+        value={value.isConvex}
         onUpdate={(val: any) => onUpdate({ ...value, isConvex: val })}
       />
       <YesNoOption
         name="hasHole"
+        value={value.hasHole}
         onUpdate={(val: any) => onUpdate({ ...value, hasHole: val })}
       />
       <YesNoOption
         name="hasTiling"
+        value={value.hasTiling}
         onUpdate={(val: any) => onUpdate({ ...value, hasTiling: val })}
       />
     </form>
