@@ -1,5 +1,6 @@
 import { css } from "@emotion/css"
 import React from "react"
+import { path as d3path } from "d3-path"
 
 import Vector from "vector"
 import { Polyomino, O_OCTOMINO } from "mino"
@@ -43,7 +44,6 @@ export default function MinoSvg({
   onHover,
 }: Props) {
   const strokeWidth = size / 8
-  const minoPoints = mino.coords()
   const outline = mino.outline()
   const scale = (v: Vector) => v.scale(size)
   const scaledOutline = outline.map(scale)
@@ -52,7 +52,14 @@ export default function MinoSvg({
   const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
   const outlinePoints = scaledOutline.map(translate)
 
+  const minoPoints = mino.coords()
   const points = minoPoints.map(scale).map(translate)
+  const path = d3path()
+  for (const point of points) {
+    path.moveTo(point.x, point.y + size)
+    path.lineTo(point.x, point.y)
+    path.lineTo(point.x + size, point.y)
+  }
 
   return (
     <G
@@ -82,19 +89,14 @@ export default function MinoSvg({
           stroke="none"
         />
       )}
-      {points.map((point, i) => (
-        <Rect
-          className={style}
-          style={{ stroke }}
-          key={i}
-          coord={point}
-          width={size}
-          height={size}
-          fill="none"
-          opacity={hideInner ? 0.125 : 1}
-          strokeWidth={strokeWidth * 0.5}
-        />
-      ))}
+      <path
+        d={path.toString()}
+        className={style}
+        style={{ stroke }}
+        fill="none"
+        opacity={hideInner ? 0.125 : 1}
+        strokeWidth={strokeWidth * 0.5}
+      />
     </G>
   )
 }
