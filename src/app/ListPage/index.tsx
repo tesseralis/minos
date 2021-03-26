@@ -140,7 +140,7 @@ function applyFilter({
     }
     if (hasTiling) {
       filtered = filtered.filter((p) =>
-        hasTiling === "yes" ? getTiling(p) : !getTiling(p),
+        hasTiling === "yes" ? p.tiling() : !p.tiling(),
       )
     }
     if (symmetries.length > 0) {
