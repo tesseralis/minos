@@ -5,7 +5,6 @@ import { Coord } from "./data"
 import { EdgeList } from "./edges"
 import { Transform, getAnchor, transforms } from "./transform"
 import { MinoPlacement, MinoPattern } from "./pattern"
-import { O_OCTOMINO } from "./constants"
 
 export type Basis = [u: Coord, v: Coord]
 
@@ -303,17 +302,11 @@ const conwayPairMap = getPairsMapping(conwayPairs)
 // The tiling function
 // ===================
 
-// Return whether the mino has a hole
-function hasHole(mino: Polyomino) {
-  // For n <= 8, only one mino has a hole
-  return mino.equals(O_OCTOMINO)
-}
-
 /**
  * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
  */
 export function getTiling(mino: Polyomino): Tiling | undefined {
-  if (hasHole(mino)) {
+  if (mino.hasHole()) {
     return undefined
   }
   if (transPairMap[mino.data]) {
