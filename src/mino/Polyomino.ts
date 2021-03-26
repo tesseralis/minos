@@ -140,7 +140,7 @@ export default class Polyomino {
   /** Return the set of all free parents of this mino */
   freeParents = once(() => new Set(this.parents().map((p) => p.free())))
 
-  private *neighbors(): Generator<Coord> {
+  private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
@@ -152,8 +152,10 @@ export default class Polyomino {
     }
   }
 
+  neighbors = once(() => [...this.iterNeighbors()])
+
   enumerateChildren = once(() =>
-    [...this.neighbors()].map((coord) => ({
+    this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
     })),
