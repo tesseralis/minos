@@ -6,7 +6,6 @@ import useWindowEventListener from "app/useWindowEventListener"
 import { symmetries, Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
-import { getTiling } from "mino/tiling"
 
 type YesNo = "yes" | "no" | ""
 type Range = [min: number, max: number]
