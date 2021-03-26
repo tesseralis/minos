@@ -7,9 +7,8 @@ import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
 import { nodes } from "app/graph"
 import { useNavigate } from "react-router-dom"
-import { getTiling } from "mino/tiling"
 
-const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!getTiling(mino)))
+const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!mino.tiling()))
 
 export default function TilingPage() {
   const { params } = useMatch("/tiling/:mino")!

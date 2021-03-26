@@ -1,5 +1,5 @@
 import Vector from "vector"
-import Polyomino from "../Polyomino"
+import { Polyomino } from ".."
 
 // TODO remove the need for these testing functions
 function toVecs(coords: [number, number][]) {

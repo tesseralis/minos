@@ -24,6 +24,8 @@ import {
   transformMinoCoord,
   getSymmetry,
 } from "./transform"
+// Import relative to the index to avoid circular dependency
+import { getTiling } from "."
 
 export interface PossibleRelativeLink {
   mino?: Polyomino
@@ -140,7 +142,7 @@ export default class Polyomino {
   /** Return the set of all free parents of this mino */
   freeParents = once(() => new Set(this.parents().map((p) => p.free())))
 
-  private *neighbors(): Generator<Coord> {
+  private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
@@ -152,8 +154,10 @@ export default class Polyomino {
     }
   }
 
+  neighbors = once(() => [...this.iterNeighbors()])
+
   enumerateChildren = once(() =>
-    [...this.neighbors()].map((coord) => ({
+    this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
     })),
@@ -270,6 +274,10 @@ export default class Polyomino {
       }
     }
     return false
+  })
+
+  tiling = once(() => {
+    return getTiling(this)
   })
 
   /** Print the delimited source string of the mino */

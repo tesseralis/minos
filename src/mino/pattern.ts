@@ -5,7 +5,8 @@
 import { once } from "lodash-es"
 import Vector, { VectorLike } from "vector"
 import PointSet from "PointSet"
-import Polyomino, { MinoLike } from "./Polyomino"
+import { MinoLike } from "./Polyomino"
+import { Polyomino } from "."
 import { Dims, Coord } from "./data"
 import { getNeighbors } from "./relatives"
 import {

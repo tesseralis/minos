@@ -2,7 +2,7 @@ import React from "react"
 import { range } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
-import { getTiling, Tiling as MinoTiling } from "mino/tiling"
+import { Tiling as MinoTiling } from "mino/tiling"
 import Vector from "vector"
 
 // Mod except it works for negative numbers
@@ -86,7 +86,7 @@ export default function Tiling({ mino }: Props) {
   const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const viewLength = squareSize * gridSize
 
-  const tiling = getTiling(mino)
+  const tiling = mino.tiling()
   if (!tiling) {
     // TODO (impl) actually show the mino.
     return <div>This polyomino does not tile the plane.</div>
