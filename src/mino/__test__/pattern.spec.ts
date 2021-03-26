@@ -1,6 +1,6 @@
-import { parsePattern, MinoPattern } from "../pattern"
 import fs from "fs"
 import Vector from "vector"
+import { parsePattern, MinoPattern } from ".."
 
 const files = [
   "5-rect",

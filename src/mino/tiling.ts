@@ -1,6 +1,7 @@
 import { range, zip, maxBy } from "lodash-es"
 import Vector from "vector"
-import Polyomino from "./Polyomino"
+// Import relative to the index to avoid circular dependency
+import { Polyomino } from "."
 import { Coord } from "./data"
 import { EdgeList } from "./edges"
 import { Transform, getAnchor, transforms } from "./transform"

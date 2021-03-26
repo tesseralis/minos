@@ -24,6 +24,8 @@ import {
   transformMinoCoord,
   getSymmetry,
 } from "./transform"
+// Import relative to the index to avoid circular dependency
+import { getTiling } from "."
 
 export interface PossibleRelativeLink {
   mino?: Polyomino
@@ -272,6 +274,10 @@ export default class Polyomino {
       }
     }
     return false
+  })
+
+  tiling = once(() => {
+    return getTiling(this)
   })
 
   /** Print the delimited source string of the mino */

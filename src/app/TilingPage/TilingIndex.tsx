@@ -2,12 +2,11 @@ import React from "react"
 import { css } from "@emotion/css"
 
 import { useNavigate } from "react-router-dom"
-import { getTiling } from "mino/tiling"
 import MinoList from "app/MinoList"
 import { nodes } from "app/graph"
 
 // TODO figure out how to make this the same page as TilingPage
-const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!getTiling(mino)))
+const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!mino.tiling()))
 
 export default function TilingPage() {
   const navigate = useNavigate()
