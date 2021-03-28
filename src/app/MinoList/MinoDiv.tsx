@@ -20,12 +20,7 @@ export default React.memo(function MinoDiv({
   const svgHeight = height * size * 1.25
 
   return (
-    <div
-      key={mino.data}
-      className={css`
-        margin: 0 0.5rem;
-      `}
-    >
+    <div key={mino.data}>
       <svg
         width={svgWidth}
         height={svgHeight}

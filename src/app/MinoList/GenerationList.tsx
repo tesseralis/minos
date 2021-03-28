@@ -61,17 +61,23 @@ export default React.memo(function GenerationList({
           const isSelected = !!selected && mino.equivalent(selected)
           const { stroke, fill } = getMinoColor(mino)
           return (
-            <MinoDiv
+            <div
               key={mino.data}
-              mino={
-                // TODO (refactor) where's the right place to do this flip?
-                mino.transform("flipMainDiag")
-              }
-              fill={fill}
-              size={getBlockSize(mino.order)}
-              stroke={isSelected ? colors.highlight : stroke}
-              onClick={() => onSelect(mino)}
-            />
+              className={css`
+                margin: 0 0.5rem;
+              `}
+            >
+              <MinoDiv
+                mino={
+                  // TODO (refactor) where's the right place to do this flip?
+                  mino.transform("flipMainDiag")
+                }
+                fill={fill}
+                size={getBlockSize(mino.order)}
+                stroke={isSelected ? colors.highlight : stroke}
+                onClick={() => onSelect(mino)}
+              />
+            </div>
           )
         })}
       </div>
