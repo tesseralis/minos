@@ -3,9 +3,11 @@ import { css } from "@emotion/css"
 import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 
-import { symmetries, Symmetry } from "mino"
+import { Polyomino, symmetries, Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
+import MinoSvg from "app/MinoSvg"
+import MinoDiv from "app/MinoList/MinoDiv"
 
 type YesNo = "yes" | "no" | ""
 type Range = [min: number, max: number]
@@ -47,13 +49,47 @@ function remove<T>(array: T[], value: T) {
   return array
 }
 
-function SymmetryOptions({ value = [], onUpdate }: any) {
+interface SymmetryType {
+  type: Symmetry
+  mino: Polyomino
+}
+
+const symSections: SymmetryType[] = [
+  { type: "none", mino: Polyomino.of("010_110_011") },
+  { type: "reflectOrtho", mino: Polyomino.of("100_111_100") },
+  { type: "reflectDiag", mino: Polyomino.of("100_100_111") },
+  { type: "rotate2", mino: Polyomino.of("001_111_100") },
+  { type: "dihedralOrtho", mino: Polyomino.of("101_111_101") },
+  { type: "dihedralDiag", mino: Polyomino.of("110_111_011") },
+  { type: "rotate4", mino: Polyomino.of("0010_1110_0111_0100") },
+  { type: "all", mino: Polyomino.of("010_111_010") },
+]
+
+interface SymOptProps {
+  value?: Symmetry[]
+  onUpdate(value: Symmetry[]): void
+}
+
+function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
   return (
-    <div>
+    <div
+      className={css`
+        display: grid;
+        grid-template-areas:
+          ".    reflectOrtho dihedralOrtho ."
+          "none reflectDiag  dihedralDiag  all"
+          ".    rotate2      rotate4       .";
+      `}
+    >
       Symmetries:
-      {symmetries.map((sym) => {
+      {symSections.map(({ type: sym, mino }) => {
         return (
-          <label key={sym}>
+          <label
+            key={sym}
+            className={css`
+              grid-area: ${sym};
+            `}
+          >
             <input
               type="checkbox"
               checked={value.includes(sym)}
@@ -63,7 +99,7 @@ function SymmetryOptions({ value = [], onUpdate }: any) {
                 )
               }
             />
-            {sym}
+            <MinoDiv mino={mino} fill="none" stroke="grey" />
           </label>
         )
       })}
