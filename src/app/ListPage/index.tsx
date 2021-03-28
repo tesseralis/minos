@@ -72,7 +72,10 @@ interface SymOptProps {
 function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
   return (
     <div>
-      Symmetries:
+      Symmetries{" "}
+      <button type="button" onClick={() => onUpdate([])}>
+        Clear
+      </button>
       <div
         className={css`
           display: grid;
@@ -116,11 +119,52 @@ function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
   )
 }
 
-function YesNoOption({ name, value, onUpdate }: any) {
+interface YesNoItem {
+  name: string
+  display: string
+  yes: string
+  no: string
+}
+
+const yesNoItems: YesNoItem[] = [
+  {
+    name: "isConvex",
+    display: "Convexity",
+    yes: "convex",
+    no: "concave",
+  },
+  {
+    name: "hasHole",
+    display: "Holes",
+    yes: "has hole",
+    no: "no holes",
+  },
+  {
+    name: "hasTiling",
+    display: "Tiling",
+    yes: "has tiling",
+    no: "no tiling",
+  },
+]
+
+interface YesNoProps {
+  name: string
+  item: YesNoItem
+  display: string
+  value?: string
+  onUpdate(val?: string): void
+}
+
+function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
   return (
     <div>
-      {name}:
-      {["", "yes", "no"].map((val) => {
+      <div>
+        {display}
+        <button type="button" onClick={() => onUpdate(undefined)}>
+          clear
+        </button>
+      </div>
+      {["yes", "no"].map((val) => {
         return (
           <label key={val}>
             <input
@@ -130,7 +174,7 @@ function YesNoOption({ name, value, onUpdate }: any) {
               checked={value === val}
               onChange={(e) => onUpdate(e.target.value)}
             />
-            {val || "Show all"}
+            {(item as any)[val]}
           </label>
         )
       })}
@@ -151,21 +195,16 @@ function Filter({ value, onUpdate }: Props) {
         onUpdate={(val: any) => onUpdate({ ...value, symmetries: val })}
       />
       <div>
-        <YesNoOption
-          name="isConvex"
-          value={value.isConvex}
-          onUpdate={(val: any) => onUpdate({ ...value, isConvex: val })}
-        />
-        <YesNoOption
-          name="hasHole"
-          value={value.hasHole}
-          onUpdate={(val: any) => onUpdate({ ...value, hasHole: val })}
-        />
-        <YesNoOption
-          name="hasTiling"
-          value={value.hasTiling}
-          onUpdate={(val: any) => onUpdate({ ...value, hasTiling: val })}
-        />
+        {yesNoItems.map((item) => (
+          <YesNoOption
+            key={item.name}
+            name={item.name}
+            display={item.display}
+            item={item}
+            value={(value as any)[item.name]}
+            onUpdate={(val: any) => onUpdate({ ...value, [item.name]: val })}
+          />
+        ))}
       </div>
     </form>
   )
