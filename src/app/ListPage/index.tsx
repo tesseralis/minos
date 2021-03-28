@@ -7,6 +7,7 @@ import { Polyomino, Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
 import MinoDiv from "app/MinoList/MinoDiv"
+import { colors } from "style/theme"
 
 type YesNo = "yes" | "no" | ""
 type Range = [min: number, max: number]
@@ -48,6 +49,39 @@ function remove<T>(array: T[], value: T) {
   return array
 }
 
+interface InputTitleProps {
+  display: string
+  onClear(): void
+}
+
+function InputTitle({ display, onClear }: InputTitleProps) {
+  return (
+    <div
+      className={css`
+        font-size: 1.125rem;
+      `}
+    >
+      {display}
+      <button
+        type="button"
+        onClick={onClear}
+        className={css`
+          margin-left: 1rem;
+          color: ${colors.fg};
+          background: none;
+          border: none;
+          cursor: pointer;
+          :hover {
+            color: ${colors.highlight};
+          }
+        `}
+      >
+        clear
+      </button>
+    </div>
+  )
+}
+
 interface SymmetryType {
   type: Symmetry
   mino: Polyomino
@@ -72,14 +106,12 @@ interface SymOptProps {
 function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
   return (
     <div>
-      Symmetries{" "}
-      <button type="button" onClick={() => onUpdate([])}>
-        Clear
-      </button>
+      <InputTitle display="Symmetries" onClear={() => onUpdate([])} />
       <div
         className={css`
+          margin-top: 1rem;
           display: grid;
-          grid-gap: 0.5rem;
+          grid-gap: 0.5rem 1rem;
           grid-template-areas:
             ".    reflectOrtho dihedralOrtho ."
             "none reflectDiag  dihedralDiag  all"
@@ -157,24 +189,36 @@ interface YesNoProps {
 
 function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
   return (
-    <div>
+    <div
+      className={css`
+        margin-bottom: 1rem;
+      `}
+    >
       <div>
-        {display}
-        <button type="button" onClick={() => onUpdate(undefined)}>
-          clear
-        </button>
+        <InputTitle display={display} onClear={() => onUpdate()} />
       </div>
       {["yes", "no"].map((val) => {
+        const checked = value === val
         return (
           <label key={val}>
             <input
               type="radio"
+              className="visually-hidden"
               name={name}
               value={val}
-              checked={value === val}
+              checked={checked}
               onChange={(e) => onUpdate(e.target.value)}
             />
-            {(item as any)[val]}
+            <span
+              className={css`
+                margin-right: 1rem;
+                color: ${checked ? colors.highlight : colors.fg};
+                text-decoration: ${checked ? "underline" : "none"};
+                cursor: pointer;
+              `}
+            >
+              {(item as any)[val]}
+            </span>
           </label>
         )
       })}
@@ -194,7 +238,11 @@ function Filter({ value, onUpdate }: Props) {
         value={value.symmetries}
         onUpdate={(val: any) => onUpdate({ ...value, symmetries: val })}
       />
-      <div>
+      <div
+        className={css`
+          margin-left: 2rem;
+        `}
+      >
         {yesNoItems.map((item) => (
           <YesNoOption
             key={item.name}
