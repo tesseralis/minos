@@ -6,7 +6,7 @@ import { Polyomino, RelativeLink, Symmetry, MONOMINO } from "mino"
 type Color = tinycolor.Instance
 type MinoData = number
 
-const baseColorMap: Record<Symmetry, string> = {
+export const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
   reflectOrtho: "#e22",
   reflectDiag: "#66f",

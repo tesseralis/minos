@@ -1,12 +1,11 @@
 import React, { useMemo, useState } from "react"
 import { css } from "@emotion/css"
-import { nodes } from "app/graph"
+import { nodes, baseColorMap } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 
-import { Polyomino, symmetries, Symmetry } from "mino"
+import { Polyomino, Symmetry } from "mino"
 import MinoList from "app/MinoList"
 import { useSelected, useSetSelected } from "app/SelectedContext"
-import MinoSvg from "app/MinoSvg"
 import MinoDiv from "app/MinoList/MinoDiv"
 
 type YesNo = "yes" | "no" | ""
@@ -72,37 +71,47 @@ interface SymOptProps {
 
 function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
   return (
-    <div
-      className={css`
-        display: grid;
-        grid-template-areas:
-          ".    reflectOrtho dihedralOrtho ."
-          "none reflectDiag  dihedralDiag  all"
-          ".    rotate2      rotate4       .";
-      `}
-    >
+    <div>
       Symmetries:
-      {symSections.map(({ type: sym, mino }) => {
-        return (
-          <label
-            key={sym}
-            className={css`
-              grid-area: ${sym};
-            `}
-          >
-            <input
-              type="checkbox"
-              checked={value.includes(sym)}
-              onChange={(e) =>
-                onUpdate(
-                  e.target.checked ? upsert(value, sym) : remove(value, sym),
-                )
-              }
-            />
-            <MinoDiv mino={mino} fill="none" stroke="grey" />
-          </label>
-        )
-      })}
+      <div
+        className={css`
+          display: grid;
+          width: 15rem;
+          grid-template-areas:
+            ".    reflectOrtho dihedralOrtho ."
+            "none reflectDiag  dihedralDiag  all"
+            ".    rotate2      rotate4       .";
+        `}
+      >
+        {symSections.map(({ type: sym, mino }) => {
+          const checked = value.includes(sym)
+          return (
+            <label
+              key={sym}
+              className={css`
+                grid-area: ${sym};
+              `}
+            >
+              <input
+                type="checkbox"
+                className="visually-hidden"
+                checked={checked}
+                onChange={(e) =>
+                  onUpdate(
+                    e.target.checked ? upsert(value, sym) : remove(value, sym),
+                  )
+                }
+              />
+              <MinoDiv
+                mino={mino}
+                fill="none"
+                stroke={checked ? baseColorMap[sym] : "grey"}
+                size={30 / mino.width}
+              />
+            </label>
+          )
+        })}
+      </div>
     </div>
   )
 }
@@ -131,26 +140,33 @@ function YesNoOption({ name, value, onUpdate }: any) {
 
 function Filter({ value, onUpdate }: Props) {
   return (
-    <form>
+    <form
+      className={css`
+        margin: 2rem;
+        display: flex;
+      `}
+    >
       <SymmetryOptions
         value={value.symmetries}
         onUpdate={(val: any) => onUpdate({ ...value, symmetries: val })}
       />
-      <YesNoOption
-        name="isConvex"
-        value={value.isConvex}
-        onUpdate={(val: any) => onUpdate({ ...value, isConvex: val })}
-      />
-      <YesNoOption
-        name="hasHole"
-        value={value.hasHole}
-        onUpdate={(val: any) => onUpdate({ ...value, hasHole: val })}
-      />
-      <YesNoOption
-        name="hasTiling"
-        value={value.hasTiling}
-        onUpdate={(val: any) => onUpdate({ ...value, hasTiling: val })}
-      />
+      <div>
+        <YesNoOption
+          name="isConvex"
+          value={value.isConvex}
+          onUpdate={(val: any) => onUpdate({ ...value, isConvex: val })}
+        />
+        <YesNoOption
+          name="hasHole"
+          value={value.hasHole}
+          onUpdate={(val: any) => onUpdate({ ...value, hasHole: val })}
+        />
+        <YesNoOption
+          name="hasTiling"
+          value={value.hasTiling}
+          onUpdate={(val: any) => onUpdate({ ...value, hasTiling: val })}
+        />
+      </div>
     </form>
   )
 }
