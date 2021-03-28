@@ -76,7 +76,7 @@ function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
       <div
         className={css`
           display: grid;
-          width: 15rem;
+          grid-gap: 0.5rem;
           grid-template-areas:
             ".    reflectOrtho dihedralOrtho ."
             "none reflectDiag  dihedralDiag  all"
