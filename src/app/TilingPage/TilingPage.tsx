@@ -10,18 +10,31 @@ import { useNavigate } from "react-router-dom"
 
 const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!mino.tiling()))
 
+function Index() {
+  return (
+    <div>
+      <h1>Tiling the plane</h1>
+      <p>
+        A polyomino <em>tiles the plane</em> if it is possible to cover an
+        infinite grid with copies of the polyomino such that no holes are left.
+      </p>
+      <p>Select a polyomino to see its tiling.</p>
+    </div>
+  )
+}
+
 export default function TilingPage() {
-  const { params } = useMatch("/tiling/:mino")!
-  const code = params.mino
-  const mino = Polyomino.fromString(code)
+  const match = useMatch("/tiling/:mino")!
+  const code = match?.params?.mino
   // TODO (a11y) ideally, all the minos should be links...
   const navigate = useNavigate()
+  const mino = code && Polyomino.fromString(code)
 
   return (
     <div
       className={css`
         width: 100%;
-        max-width: 48rem;
+        max-width: 54rem;
         height: 100vh;
         margin-left: 10rem;
         padding-top: 3rem;
@@ -41,9 +54,7 @@ export default function TilingPage() {
           onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
         />
       </div>
-      <div>
-        <Tiling mino={mino} />
-      </div>
+      <div>{mino ? <Tiling mino={mino} /> : <Index />}</div>
     </div>
   )
 }
