@@ -230,7 +230,7 @@ function Filter({ value, onUpdate }: Props) {
   return (
     <form
       className={css`
-        margin: 2rem;
+        margin: 0 4rem;
         display: flex;
       `}
     >
@@ -295,6 +295,7 @@ export default function ListPage() {
   const selected = useSelected()
   const setSelected = useSetSelected()
   const [filter, setFilter] = useState<MinoFilter>({})
+  const [showFilter, setShowFilter] = useState(false)
   useWindowEventListener("click", (e) => {
     // Deselect the current mino if the click target isn't a mino
     // or the compass
@@ -316,7 +317,26 @@ export default function ListPage() {
         overflow-y: scroll;
       `}
     >
-      <Filter value={filter} onUpdate={setFilter} />
+      <button
+        className={css`
+          color: ${colors.fg};
+          text-align: right;
+          background: none;
+          border: none;
+          font-family: serif;
+          font-size: 1.125rem;
+          margin-top: 2rem;
+          margin-left: 2rem;
+          cursor: pointer;
+          :hover {
+            color: ${colors.highlight};
+          }
+        `}
+        onClick={() => setShowFilter((filter) => !filter)}
+      >
+        {showFilter ? "Hide" : "Show"} filters
+      </button>
+      {showFilter && <Filter value={filter} onUpdate={setFilter} />}
       <MinoList minos={minos} selected={selected} onSelect={setSelected} />
     </main>
   )
