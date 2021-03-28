@@ -1,24 +1,23 @@
 import React from "react"
 import { css } from "@emotion/css"
-import { scaleLinear } from "d3-scale"
-
-import { NUM_GENERATIONS } from "app/graph"
 import MinoSvg, { Props as MinoSvgProps } from "app/MinoSvg"
 import Vector from "vector"
 
-const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
-
-type Props = Omit<MinoSvgProps, "coord" | "size">
+type Props = Omit<MinoSvgProps, "coord">
 
 /**
  * A single mino wrapped in a div aligning with its dimensions.
  */
-export default React.memo(function MinoDiv({ mino, onClick, ...props }: Props) {
+export default React.memo(function MinoDiv({
+  mino,
+  size,
+  onClick,
+  ...props
+}: Props) {
   const [width, height] = mino.dims
-  const blockSize = getBlockSize(mino.order)
 
-  const svgWidth = width * blockSize * 1.25
-  const svgHeight = height * blockSize * 1.25
+  const svgWidth = width * size * 1.25
+  const svgHeight = height * size * 1.25
 
   return (
     <div
@@ -39,7 +38,7 @@ export default React.memo(function MinoDiv({ mino, onClick, ...props }: Props) {
           }
         `}
       >
-        <MinoSvg {...props} mino={mino} size={blockSize} coord={Vector.ZERO} />
+        <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
       </svg>
     </div>
   )

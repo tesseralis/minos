@@ -5,7 +5,8 @@ import { Polyomino } from "mino"
 import transition from "app/transition"
 import { getMinoColor } from "app/graph"
 import { colors } from "style/theme"
-
+import { scaleLinear } from "d3-scale"
+import { NUM_GENERATIONS } from "app/graph"
 import GenSection from "./GenSection"
 import MinoDiv from "./MinoDiv"
 
@@ -17,6 +18,8 @@ interface Props {
   skipAnimation: boolean
   narrow?: boolean
 }
+
+const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
 /**
  * A list of all polyominoes of a certain order.
@@ -65,6 +68,7 @@ export default React.memo(function GenerationList({
                 mino.transform("flipMainDiag")
               }
               fill={fill}
+              size={getBlockSize(mino.order)}
               stroke={isSelected ? colors.highlight : stroke}
               onClick={() => onSelect(mino)}
             />
