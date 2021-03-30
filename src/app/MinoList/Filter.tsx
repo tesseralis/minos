@@ -230,7 +230,7 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
       className={css`
         margin: 0 4rem;
         display: flex;
-        flex-direction: ${narrow ? "column" : "row"};
+        flex-wrap: wrap;
       `}
     >
       <SymmetryOptions
