@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react"
 import { css } from "@emotion/css"
-import { colors } from "style/theme"
 
 import type { Polyomino } from "mino"
 import GenerationList from "./GenerationList"
@@ -19,32 +18,12 @@ interface Props {
  */
 export default function MinoList({ selected = null, onSelect, narrow }: Props) {
   const [filter, setFilter] = useState<MinoFilter>({})
-  const [showFilter, setShowFilter] = useState(false)
 
   const minos = useMemo(() => applyFilter(filter), [filter])
 
   return (
     <div>
-      <button
-        className={css`
-          color: ${colors.fg};
-          text-align: right;
-          background: none;
-          border: none;
-          font-family: serif;
-          font-size: 1.125rem;
-          margin-top: 2rem;
-          margin-left: 2rem;
-          cursor: pointer;
-          :hover {
-            color: ${colors.highlight};
-          }
-        `}
-        onClick={() => setShowFilter((filter) => !filter)}
-      >
-        {showFilter ? "Hide" : "Show"} filters
-      </button>
-      {showFilter && <Filter value={filter} onUpdate={setFilter} />}
+      <Filter value={filter} onUpdate={setFilter} />
       <div
         className={css`
           display: flex;

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { useState } from "react"
 import { css } from "@emotion/css"
 import { nodes, baseColorMap } from "app/graph"
 
@@ -223,7 +223,7 @@ function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
   )
 }
 
-export default function Filter({ value, onUpdate }: Props) {
+function FilterForm({ value, onUpdate }: Props) {
   return (
     <form
       className={css`
@@ -252,6 +252,35 @@ export default function Filter({ value, onUpdate }: Props) {
         ))}
       </div>
     </form>
+  )
+}
+
+export default function Filter({ value, onUpdate }: Props) {
+  const [showFilter, setShowFilter] = useState(false)
+
+  return (
+    <div>
+      <button
+        className={css`
+          color: ${colors.fg};
+          text-align: right;
+          background: none;
+          border: none;
+          font-family: serif;
+          font-size: 1.125rem;
+          margin-top: 2rem;
+          margin-left: 2rem;
+          cursor: pointer;
+          :hover {
+            color: ${colors.highlight};
+          }
+        `}
+        onClick={() => setShowFilter((filter) => !filter)}
+      >
+        {showFilter ? "Hide" : "Show"} filters
+      </button>
+      {showFilter && <FilterForm value={value} onUpdate={onUpdate} />}
+    </div>
   )
 }
 
