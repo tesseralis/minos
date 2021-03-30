@@ -20,7 +20,7 @@ export interface Props {
   fill: string
   stroke: string
   anchor?: string
-  hideInner?: boolean
+  gridStyle?: "thick" | "thin" | "none"
   onClick?(): void
   onHover?(hovered: boolean): void
 }
@@ -39,7 +39,7 @@ export default function MinoSvg({
   fill,
   stroke,
   anchor = "center center",
-  hideInner = false,
+  gridStyle = "thick",
   onClick,
   onHover,
 }: Props) {
@@ -89,14 +89,16 @@ export default function MinoSvg({
           stroke="none"
         />
       )}
-      <path
-        d={path.toString()}
-        className={style}
-        style={{ stroke }}
-        fill="none"
-        opacity={hideInner ? 0.125 : 1}
-        strokeWidth={strokeWidth * 0.5}
-      />
+      {gridStyle !== "none" && (
+        <path
+          d={path.toString()}
+          className={style}
+          style={{ stroke }}
+          fill="none"
+          opacity={gridStyle === "thick" ? 1 : 0.25}
+          strokeWidth={strokeWidth * 0.5}
+        />
+      )}
     </G>
   )
 }
