@@ -1,7 +1,7 @@
 import React, { useState, ReactNode } from "react"
 import { css } from "@emotion/css"
 import { nodes, baseColorMap } from "app/graph"
-import { Line } from "app/svg"
+import { Circle, Line } from "app/svg"
 
 import { Polyomino, Symmetry } from "mino"
 import MinoDiv from "app/MinoList/MinoDiv"
@@ -93,7 +93,11 @@ const symSections: SymmetryType[] = [
     mino: Polyomino.of("100_110_011"),
     lines: <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />,
   },
-  { type: "rotate2", mino: Polyomino.of("001_111_100") },
+  {
+    type: "rotate2",
+    mino: Polyomino.of("001_111_100"),
+    lines: <Circle r={10} stroke="grey" strokeWidth={1} fill="none" />,
+  },
   {
     type: "dihedralOrtho",
     mino: Polyomino.of("101_111_101"),
@@ -114,7 +118,11 @@ const symSections: SymmetryType[] = [
       </>
     ),
   },
-  { type: "rotate4", mino: Polyomino.of("0010_1110_0111_0100") },
+  {
+    type: "rotate4",
+    mino: Polyomino.of("0010_1110_0111_0100"),
+    lines: <Circle r={10} stroke="grey" strokeWidth={1} fill="none" />,
+  },
   {
     type: "all",
     mino: Polyomino.of("010_111_010"),
@@ -173,6 +181,7 @@ function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
                 fill="none"
                 stroke={checked ? baseColorMap[sym] : "grey"}
                 size={30 / mino.width}
+                gridStyle="none"
               >
                 {lines}
               </MinoDiv>
