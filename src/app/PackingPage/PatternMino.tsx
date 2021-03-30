@@ -40,7 +40,7 @@ export default React.memo(function PatternMino({
           : baseFill.toString()
       }
       stroke="black"
-      hideInner
+      gridStyle="thin"
       onClick={() => setSelected(mino)}
       onHover={setHovered}
     />

@@ -109,7 +109,7 @@ export default function Tiling({ mino }: Props) {
             coord={coord.scale(squareSize)}
             size={squareSize}
             fill={colors[color]}
-            hideInner
+            gridStyle="thin"
             stroke="black"
             anchor="top left"
           />
