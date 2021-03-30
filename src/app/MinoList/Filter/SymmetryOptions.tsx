@@ -86,12 +86,12 @@ const symSections: SymmetryType[] = [
   },
 ]
 
-interface SymOptProps {
+interface Props {
   value?: Symmetry[]
   onUpdate(value: Symmetry[]): void
 }
 
-export default function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
+export default function SymmetryOptions({ value = [], onUpdate }: Props) {
   return (
     <div>
       <InputTitle display="Symmetries" onClear={() => onUpdate([])} />
