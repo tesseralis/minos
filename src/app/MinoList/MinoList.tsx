@@ -23,7 +23,7 @@ export default function MinoList({ selected = null, onSelect, narrow }: Props) {
 
   return (
     <div>
-      <Filter value={filter} onUpdate={setFilter} />
+      <Filter value={filter} onUpdate={setFilter} narrow={narrow} />
       <div
         className={css`
           display: flex;

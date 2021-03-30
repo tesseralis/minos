@@ -24,11 +24,6 @@ export interface MinoFilter {
   numChildren?: Range
 }
 
-interface Props {
-  value: MinoFilter
-  onUpdate(value: MinoFilter): void
-}
-
 function upsert<T>(array: T[], value: T) {
   if (array.includes(value)) {
     return array
@@ -223,12 +218,19 @@ function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
   )
 }
 
-function FilterForm({ value, onUpdate }: Props) {
+interface Props {
+  value: MinoFilter
+  onUpdate(value: MinoFilter): void
+  narrow?: boolean
+}
+
+function FilterForm({ narrow, value, onUpdate }: Props) {
   return (
     <form
       className={css`
         margin: 0 4rem;
         display: flex;
+        flex-direction: ${narrow ? "column" : "row"};
       `}
     >
       <SymmetryOptions
@@ -237,7 +239,8 @@ function FilterForm({ value, onUpdate }: Props) {
       />
       <div
         className={css`
-          margin-left: 2rem;
+          margin-left: ${narrow ? 0 : "2rem"};
+          margin-top: ${narrow ? "2rem" : 0};
         `}
       >
         {yesNoItems.map((item) => (
@@ -255,7 +258,7 @@ function FilterForm({ value, onUpdate }: Props) {
   )
 }
 
-export default function Filter({ value, onUpdate }: Props) {
+export default function Filter(props: Props) {
   const [showFilter, setShowFilter] = useState(false)
 
   return (
@@ -279,7 +282,7 @@ export default function Filter({ value, onUpdate }: Props) {
       >
         {showFilter ? "Hide" : "Show"} filters
       </button>
-      {showFilter && <FilterForm value={value} onUpdate={onUpdate} />}
+      {showFilter && <FilterForm {...props} />}
     </div>
   )
 }
