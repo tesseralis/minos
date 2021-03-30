@@ -1,6 +1,7 @@
-import React, { useState } from "react"
+import React, { useState, ReactNode } from "react"
 import { css } from "@emotion/css"
 import { nodes, baseColorMap } from "app/graph"
+import { Line } from "app/svg"
 
 import { Polyomino, Symmetry } from "mino"
 import MinoDiv from "app/MinoList/MinoDiv"
@@ -77,17 +78,55 @@ function InputTitle({ display, onClear }: InputTitleProps) {
 interface SymmetryType {
   type: Symmetry
   mino: Polyomino
+  lines?: ReactNode
 }
 
 const symSections: SymmetryType[] = [
   { type: "none", mino: Polyomino.of("010_110_011") },
-  { type: "reflectOrtho", mino: Polyomino.of("100_111_100") },
-  { type: "reflectDiag", mino: Polyomino.of("100_100_111") },
+  {
+    type: "reflectOrtho",
+    mino: Polyomino.of("100_111_100"),
+    lines: <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />,
+  },
+  {
+    type: "reflectDiag",
+    mino: Polyomino.of("100_110_011"),
+    lines: <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />,
+  },
   { type: "rotate2", mino: Polyomino.of("001_111_100") },
-  { type: "dihedralOrtho", mino: Polyomino.of("101_111_101") },
-  { type: "dihedralDiag", mino: Polyomino.of("110_111_011") },
+  {
+    type: "dihedralOrtho",
+    mino: Polyomino.of("101_111_101"),
+    lines: (
+      <>
+        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={2} />
+      </>
+    ),
+  },
+  {
+    type: "dihedralDiag",
+    mino: Polyomino.of("110_111_011"),
+    lines: (
+      <>
+        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={2} />
+      </>
+    ),
+  },
   { type: "rotate4", mino: Polyomino.of("0010_1110_0111_0100") },
-  { type: "all", mino: Polyomino.of("010_111_010") },
+  {
+    type: "all",
+    mino: Polyomino.of("010_111_010"),
+    lines: (
+      <>
+        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={2} />
+        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={2} />
+      </>
+    ),
+  },
 ]
 
 interface SymOptProps {
@@ -110,7 +149,7 @@ function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
             ".    rotate2      rotate4       .";
         `}
       >
-        {symSections.map(({ type: sym, mino }) => {
+        {symSections.map(({ type: sym, mino, lines }) => {
           const checked = value.includes(sym)
           return (
             <label
@@ -134,7 +173,9 @@ function SymmetryOptions({ value = [], onUpdate }: SymOptProps) {
                 fill="none"
                 stroke={checked ? baseColorMap[sym] : "grey"}
                 size={30 / mino.width}
-              />
+              >
+                {lines}
+              </MinoDiv>
             </label>
           )
         })}

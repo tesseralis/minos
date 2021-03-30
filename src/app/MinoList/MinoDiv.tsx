@@ -1,9 +1,11 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
 import MinoSvg, { Props as MinoSvgProps } from "app/MinoSvg"
 import Vector from "vector"
 
-type Props = Omit<MinoSvgProps, "coord">
+interface Props extends Omit<MinoSvgProps, "coord"> {
+  children?: ReactNode
+}
 
 /**
  * A single mino wrapped in a div aligning with its dimensions.
@@ -12,6 +14,7 @@ export default React.memo(function MinoDiv({
   mino,
   size,
   onClick,
+  children,
   ...props
 }: Props) {
   const [width, height] = mino.dims
@@ -34,6 +37,7 @@ export default React.memo(function MinoDiv({
         `}
       >
         <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
+        {children}
       </svg>
     </div>
   )
