@@ -8,7 +8,6 @@ import SymmetryOptions from "./SymmetryOptions"
 import YesNoOptions from "./YesNoOptions"
 
 type YesNo = "yes" | "no" | ""
-type Range = [min: number, max: number]
 
 export interface MinoFilter {
   symmetries?: Symmetry[]
@@ -16,13 +15,6 @@ export interface MinoFilter {
   isConvex?: YesNo
   hasHole?: YesNo
   hasTiling?: YesNo
-  /** Minimum and maximum bounding boxes to allow */
-  minDimensions?: [number, number]
-  maxDimensions?: [number, number]
-  /** Range for number of parents to allow */
-  numParents?: Range
-  /** Range for number of children to allow */
-  numChildren?: Range
 }
 
 interface Props {
