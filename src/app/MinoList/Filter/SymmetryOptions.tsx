@@ -35,12 +35,12 @@ const symSections: SymmetryType[] = [
   {
     type: "reflectOrtho",
     mino: Polyomino.of("100_111_100"),
-    lines: <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />,
+    lines: <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />,
   },
   {
     type: "reflectDiag",
     mino: Polyomino.of("100_110_011"),
-    lines: <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />,
+    lines: <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />,
   },
   {
     type: "rotate2",
@@ -52,8 +52,8 @@ const symSections: SymmetryType[] = [
     mino: Polyomino.of("101_111_101"),
     lines: (
       <>
-        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />
-        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={2} />
+        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={1} />
       </>
     ),
   },
@@ -62,8 +62,8 @@ const symSections: SymmetryType[] = [
     mino: Polyomino.of("110_111_011"),
     lines: (
       <>
-        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />
-        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={1} />
       </>
     ),
   },
@@ -77,10 +77,10 @@ const symSections: SymmetryType[] = [
     mino: Polyomino.of("010_111_010"),
     lines: (
       <>
-        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={2} />
-        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={2} />
-        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={2} />
-        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={2} />
+        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={1} />
+        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={1} />
       </>
     ),
   },
