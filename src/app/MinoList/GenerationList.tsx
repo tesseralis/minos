@@ -10,6 +10,8 @@ import { NUM_GENERATIONS } from "app/graph"
 import GenSection from "./GenSection"
 import MinoDiv from "./MinoDiv"
 
+const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
+
 interface Props {
   minos: Polyomino[]
   gen: number
@@ -18,8 +20,6 @@ interface Props {
   skipAnimation: boolean
   narrow?: boolean
 }
-
-const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
 /**
  * A list of all polyominoes of a certain order.
@@ -78,6 +78,7 @@ export default React.memo(function GenerationList({
           )
         })}
       </div>
+      )
     </GenSection>
   )
 })
