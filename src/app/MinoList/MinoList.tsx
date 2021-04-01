@@ -18,13 +18,25 @@ const listMinos = nodes.map((gen) => {
   return Polyomino.sort(gen).map((mino) => mino.transform("flipMainDiag"))
 })
 
+function NoMatches() {
+  return (
+    <p
+      className={css`
+        font-size: 1.25rem;
+      `}
+    >
+      No polyominoes match the given criteria.
+    </p>
+  )
+}
+
 /**
  * Displays the list of all minos for each generation
  */
 export default function MinoList({ selected = null, onSelect, narrow }: Props) {
   const [filter, setFilter] = useState<MinoFilter>({})
 
-  const minos = useMemo(() => applyFilter(listMinos, filter), [filter])
+  const minoSets = useMemo(() => applyFilter(listMinos, filter), [filter])
 
   return (
     <div>
@@ -36,21 +48,25 @@ export default function MinoList({ selected = null, onSelect, narrow }: Props) {
           justify-content: space-around;
         `}
       >
-        {minos.map((minos, i) => {
-          const gen = i + 1
-          const hasSelected = !!selected && selected.order === gen
-          return (
-            <GenerationList
-              narrow={narrow}
-              minos={minos}
-              gen={gen}
-              key={gen}
-              skipAnimation={gen <= START_GENS}
-              selected={hasSelected ? selected : null}
-              onSelect={onSelect}
-            />
-          )
-        })}
+        {minoSets.every((set) => set.length === 0) ? (
+          <NoMatches />
+        ) : (
+          minoSets.map((minos, i) => {
+            const gen = i + 1
+            const hasSelected = !!selected && selected.order === gen
+            return (
+              <GenerationList
+                narrow={narrow}
+                minos={minos}
+                gen={gen}
+                key={gen}
+                skipAnimation={gen <= START_GENS}
+                selected={hasSelected ? selected : null}
+                onSelect={onSelect}
+              />
+            )
+          })
+        )}
       </div>
     </div>
   )
