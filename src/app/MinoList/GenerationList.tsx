@@ -78,7 +78,6 @@ export default React.memo(function GenerationList({
           )
         })}
       </div>
-      )
     </GenSection>
   )
 })
