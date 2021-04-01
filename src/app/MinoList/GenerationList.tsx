@@ -47,7 +47,7 @@ export default React.memo(function GenerationList({
   }, [minos, skipAnimation])
 
   return (
-    <GenSection gen={gen} narrow={narrow}>
+    <GenSection gen={gen} narrow={narrow} count={minos.length}>
       <div
         className={css`
           display: flex;
