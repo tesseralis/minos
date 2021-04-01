@@ -56,7 +56,7 @@ export default React.memo(function GenerationList({
           justify-content: center;
         `}
       >
-        {Polyomino.sort(minos).map((mino, i) => {
+        {minos.map((mino, i) => {
           if (!skipAnimation && i > visIndex) return null
           const isSelected = !!selected && mino.equivalent(selected)
           const { stroke, fill } = getMinoColor(mino)
@@ -68,10 +68,7 @@ export default React.memo(function GenerationList({
               `}
             >
               <MinoDiv
-                mino={
-                  // TODO (refactor) where's the right place to do this flip?
-                  mino.transform("flipMainDiag")
-                }
+                mino={mino}
                 fill={fill}
                 size={getBlockSize(mino.order)}
                 stroke={isSelected ? colors.highlight : stroke}

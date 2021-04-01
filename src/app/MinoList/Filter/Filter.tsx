@@ -1,8 +1,7 @@
 import React, { useState } from "react"
 import { css } from "@emotion/css"
-import { nodes } from "app/graph"
 
-import { Symmetry } from "mino"
+import { Polyomino, Symmetry } from "mino"
 import { colors } from "style/theme"
 import SymmetryOptions from "./SymmetryOptions"
 import YesNoOptions from "./YesNoOptions"
@@ -77,13 +76,11 @@ export default function Filter(props: Props) {
   )
 }
 
-export function applyFilter({
-  isConvex,
-  hasHole,
-  hasTiling,
-  symmetries = [],
-}: MinoFilter) {
-  return nodes.map((generation) => {
+export function applyFilter(
+  minos: Polyomino[][],
+  { isConvex, hasHole, hasTiling, symmetries = [] }: MinoFilter,
+) {
+  return minos.map((generation) => {
     let filtered = generation
     if (isConvex) {
       filtered = filtered.filter((p) =>

@@ -1,7 +1,8 @@
 import React, { useState, useMemo } from "react"
 import { css } from "@emotion/css"
 
-import type { Polyomino } from "mino"
+import { Polyomino } from "mino"
+import { nodes } from "app/graph"
 import GenerationList from "./GenerationList"
 import Filter, { MinoFilter, applyFilter } from "./Filter"
 
@@ -13,13 +14,17 @@ interface Props {
   onSelect(mino: Polyomino | null): void
 }
 
+const listMinos = nodes.map((gen) => {
+  return Polyomino.sort(gen).map((mino) => mino.transform("flipMainDiag"))
+})
+
 /**
  * Displays the list of all minos for each generation
  */
 export default function MinoList({ selected = null, onSelect, narrow }: Props) {
   const [filter, setFilter] = useState<MinoFilter>({})
 
-  const minos = useMemo(() => applyFilter(filter), [filter])
+  const minos = useMemo(() => applyFilter(listMinos, filter), [filter])
 
   return (
     <div>
