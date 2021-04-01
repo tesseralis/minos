@@ -47,6 +47,7 @@ export default function TilingPage() {
       >
         <MinoList
           narrow
+          initFilter={{ hasTiling: "yes" }}
           onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
         />
       </div>

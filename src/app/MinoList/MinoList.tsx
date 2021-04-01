@@ -11,6 +11,7 @@ const START_GENS = 6
 interface Props {
   narrow?: boolean
   selected?: Polyomino | null
+  initFilter?: MinoFilter
   onSelect(mino: Polyomino | null): void
 }
 
@@ -33,8 +34,13 @@ function NoMatches() {
 /**
  * Displays the list of all minos for each generation
  */
-export default function MinoList({ selected = null, onSelect, narrow }: Props) {
-  const [filter, setFilter] = useState<MinoFilter>({})
+export default function MinoList({
+  selected = null,
+  onSelect,
+  narrow,
+  initFilter = {},
+}: Props) {
+  const [filter, setFilter] = useState<MinoFilter>(initFilter)
 
   const minoSets = useMemo(() => applyFilter(listMinos, filter), [filter])
 
