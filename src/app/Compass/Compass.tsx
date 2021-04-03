@@ -1,6 +1,5 @@
 import React from "react"
 import { css } from "@emotion/css"
-import { Link } from "react-router-dom"
 
 import { G } from "app/svg"
 import { useSelected } from "app/SelectedContext"
@@ -9,7 +8,6 @@ import Background from "./CompassBackground"
 import AlterableMino from "./AlterableMino"
 import SymmetryRing from "./SymmetryRing"
 import { RelativeCtx, svgSize } from "./compassHelpers"
-import { colors } from "style/theme"
 
 /**
  * Displays a mino and its direct children and parents.
