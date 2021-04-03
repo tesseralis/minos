@@ -30,30 +30,40 @@ interface SymmetryType {
   lines?: ReactNode
 }
 
+// Choose a dimmer neutral color
+const outlineColor = "#999"
+
+// Common prop values for the symmetry lines
+const symLinesProps = {
+  stroke: outlineColor,
+  strokeWidth: 1,
+  fill: "none",
+}
+
 const symSections: SymmetryType[] = [
   { type: "none", mino: Polyomino.of("010_110_011") },
   {
     type: "reflectOrtho",
     mino: Polyomino.of("100_111_100"),
-    lines: <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />,
+    lines: <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />,
   },
   {
     type: "reflectDiag",
     mino: Polyomino.of("100_110_011"),
-    lines: <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />,
+    lines: <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />,
   },
   {
     type: "rotate2",
     mino: Polyomino.of("001_111_100"),
-    lines: <Circle r={10} stroke="grey" strokeWidth={1} fill="none" />,
+    lines: <Circle r={10} {...symLinesProps} />,
   },
   {
     type: "dihedralOrtho",
     mino: Polyomino.of("101_111_101"),
     lines: (
       <>
-        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />
-        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={1} />
+        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
+        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
       </>
     ),
   },
@@ -62,25 +72,25 @@ const symSections: SymmetryType[] = [
     mino: Polyomino.of("110_111_011"),
     lines: (
       <>
-        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />
-        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
+        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
       </>
     ),
   },
   {
     type: "rotate4",
     mino: Polyomino.of("0010_1110_0111_0100"),
-    lines: <Circle r={10} stroke="grey" strokeWidth={1} fill="none" />,
+    lines: <Circle r={10} {...symLinesProps} />,
   },
   {
     type: "all",
     mino: Polyomino.of("010_111_010"),
     lines: (
       <>
-        <Line p1={[0, 20]} p2={[0, -20]} stroke="grey" strokeWidth={1} />
-        <Line p1={[20, 0]} p2={[-20, 0]} stroke="grey" strokeWidth={1} />
-        <Line p1={[-20, 20]} p2={[20, -20]} stroke="grey" strokeWidth={1} />
-        <Line p1={[-20, -20]} p2={[20, 20]} stroke="grey" strokeWidth={1} />
+        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
+        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
+        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
+        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
       </>
     ),
   },
@@ -128,7 +138,7 @@ export default function SymmetryOptions({ value = [], onUpdate }: Props) {
               <MinoDiv
                 mino={mino}
                 fill={checked ? baseColorMap[sym] : "none"}
-                stroke="grey"
+                stroke={outlineColor}
                 size={30 / mino.width}
                 gridStyle="none"
               >
