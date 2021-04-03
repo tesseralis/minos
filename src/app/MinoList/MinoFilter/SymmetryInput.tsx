@@ -24,12 +24,6 @@ function remove<T>(array: T[], value: T) {
   return array
 }
 
-interface SymmetryType {
-  type: Symmetry
-  mino: Polyomino
-  lines?: ReactNode
-}
-
 // Choose a dimmer neutral color
 const outlineColor = "#999"
 
@@ -40,7 +34,17 @@ const symLinesProps = {
   fill: "none",
 }
 
-const symSections: SymmetryType[] = [
+interface SymmetryType {
+  // The type of symmetry
+  type: Symmetry
+  // The mino to display as the prototype for this symmetry
+  mino: Polyomino
+  // The symmetry lines to draw as a guide
+  lines?: ReactNode
+}
+
+// Array of display information for the symmetry classes
+const symmetryTypes: SymmetryType[] = [
   { type: "none", mino: Polyomino.of("010_110_011") },
   {
     type: "reflectOrtho",
@@ -101,6 +105,9 @@ interface Props {
   onUpdate(value: Symmetry[]): void
 }
 
+/**
+ * Input to select what symmetries should be filtered out.
+ */
 export default function SymmetryInput({ value = [], onUpdate }: Props) {
   return (
     <div>
@@ -116,7 +123,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
             ".    rotate2      rotate4       .";
         `}
       >
-        {symSections.map(({ type: sym, mino, lines }) => {
+        {symmetryTypes.map(({ type: sym, mino, lines }) => {
           const checked = value.includes(sym)
           return (
             <label

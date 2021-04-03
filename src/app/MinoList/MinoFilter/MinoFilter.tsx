@@ -37,6 +37,9 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
   )
 }
 
+/**
+ * Collapsible filter for various properties of polyominoes.
+ */
 export default function MinoFilter(props: Props) {
   const [showFilter, setShowFilter] = useState(false)
 
