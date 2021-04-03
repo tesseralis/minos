@@ -125,6 +125,7 @@ export default function SymmetryOptions({ value = [], onUpdate }: Props) {
                 grid-area: ${sym};
               `}
             >
+              {/* TODO (a11y) tab navigation */}
               <input
                 type="checkbox"
                 className="visually-hidden"

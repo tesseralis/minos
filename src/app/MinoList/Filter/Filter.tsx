@@ -52,6 +52,7 @@ export default function Filter(props: Props) {
 
   return (
     <div>
+      {/* TODO (a11y) probably aria-expanded? */}
       <button
         className={css`
           color: ${colors.fg};
