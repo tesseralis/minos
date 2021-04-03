@@ -127,8 +127,8 @@ export default function SymmetryOptions({ value = [], onUpdate }: Props) {
               />
               <MinoDiv
                 mino={mino}
-                fill="none"
-                stroke={checked ? baseColorMap[sym] : "grey"}
+                fill={checked ? baseColorMap[sym] : "none"}
+                stroke="grey"
                 size={30 / mino.width}
                 gridStyle="none"
               >
