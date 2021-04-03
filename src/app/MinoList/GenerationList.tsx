@@ -10,6 +10,8 @@ import { NUM_GENERATIONS } from "app/graph"
 import GenSection from "./GenSection"
 import MinoDiv from "./MinoDiv"
 
+const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
+
 interface Props {
   minos: Polyomino[]
   gen: number
@@ -18,8 +20,6 @@ interface Props {
   skipAnimation: boolean
   narrow?: boolean
 }
-
-const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
 /**
  * A list of all polyominoes of a certain order.
@@ -56,30 +56,29 @@ export default React.memo(function GenerationList({
           justify-content: center;
         `}
       >
-        {Polyomino.sort(minos).map((mino, i) => {
-          if (!skipAnimation && i > visIndex) return null
-          const isSelected = !!selected && mino.equivalent(selected)
-          const { stroke, fill } = getMinoColor(mino)
-          return (
-            <div
-              key={mino.data}
-              className={css`
-                margin: 0 0.5rem;
-              `}
-            >
-              <MinoDiv
-                mino={
-                  // TODO (refactor) where's the right place to do this flip?
-                  mino.transform("flipMainDiag")
-                }
-                fill={fill}
-                size={getBlockSize(mino.order)}
-                stroke={isSelected ? colors.highlight : stroke}
-                onClick={() => onSelect(mino)}
-              />
-            </div>
-          )
-        })}
+        {minos.length === 0
+          ? "——"
+          : minos.map((mino, i) => {
+              if (!skipAnimation && i > visIndex) return null
+              const isSelected = !!selected && mino.equivalent(selected)
+              const { stroke, fill } = getMinoColor(mino)
+              return (
+                <div
+                  key={mino.data}
+                  className={css`
+                    margin: 0 0.5rem;
+                  `}
+                >
+                  <MinoDiv
+                    mino={mino}
+                    fill={fill}
+                    size={getBlockSize(mino.order)}
+                    stroke={isSelected ? colors.highlight : stroke}
+                    onClick={() => onSelect(mino)}
+                  />
+                </div>
+              )
+            })}
       </div>
     </GenSection>
   )

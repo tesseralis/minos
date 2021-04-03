@@ -5,10 +5,7 @@ import { useMatch } from "react-router-dom"
 
 import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
-import { nodes } from "app/graph"
 import { useNavigate } from "react-router-dom"
-
-const tilingMinos = nodes.map((gen) => gen.filter((mino) => !!mino.tiling()))
 
 function Index() {
   return (
@@ -48,9 +45,10 @@ export default function TilingPage() {
           overflow-y: scroll;
         `}
       >
+        {/* TODO (perf): starting with an initial filter makes this really slow */}
         <MinoList
           narrow
-          minos={tilingMinos}
+          initFilter={{ yesNo: { hasTiling: "yes" } }}
           onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
         />
       </div>

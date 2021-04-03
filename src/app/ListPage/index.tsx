@@ -1,6 +1,5 @@
 import React from "react"
 import { css } from "@emotion/css"
-import { nodes } from "app/graph"
 import useWindowEventListener from "app/useWindowEventListener"
 
 import MinoList from "app/MinoList"
@@ -31,7 +30,7 @@ export default function ListPage() {
         overflow-y: scroll;
       `}
     >
-      <MinoList minos={nodes} selected={selected} onSelect={setSelected} />
+      <MinoList selected={selected} onSelect={setSelected} />
     </main>
   )
 }

@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
 import { colors } from "style/theme"
 
@@ -59,7 +59,7 @@ function Header({ gen, count }: HeaderProps) {
 interface Props {
   gen: number
   count: number
-  children: React.ReactElement
+  children: ReactNode
   narrow?: boolean
 }
 
