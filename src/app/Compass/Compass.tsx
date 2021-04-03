@@ -42,22 +42,6 @@ export default function Compass() {
           </G>
         </G>
       </svg>
-      <div
-        className={css`
-          pointer-events: initial;
-          text-align: center;
-        `}
-      >
-        <Link
-          to={`/tiling/${selected.toString()}`}
-          className={css`
-            color: ${colors.fg};
-            font-size: 1.5rem;
-          `}
-        >
-          Tiling
-        </Link>
-      </div>
     </RelativeCtx.Provider>
   )
 }
