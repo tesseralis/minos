@@ -1,20 +1,10 @@
 import React, { useState } from "react"
 import { css } from "@emotion/css"
 
-import { Polyomino, Symmetry } from "mino"
 import { colors } from "style/theme"
-import SymmetryOptions from "./SymmetryOptions"
-import YesNoOptions from "./YesNoOptions"
-
-type YesNo = "yes" | "no" | ""
-
-export interface FilterOptions {
-  symmetries?: Symmetry[]
-  // boolean properties
-  isConvex?: YesNo
-  hasHole?: YesNo
-  hasTiling?: YesNo
-}
+import SymmetryOptions from "./SymmetryInput"
+import YesNoOptions from "./YesNoInputs"
+import { FilterOptions } from "./common"
 
 interface Props {
   value: FilterOptions
@@ -75,32 +65,4 @@ export default function MinoFilter(props: Props) {
       {showFilter && <FilterForm {...props} />}
     </div>
   )
-}
-
-export function applyFilter(
-  minos: Polyomino[][],
-  { isConvex, hasHole, hasTiling, symmetries = [] }: FilterOptions,
-) {
-  return minos.map((generation) => {
-    let filtered = generation
-    if (isConvex) {
-      filtered = filtered.filter((p) =>
-        isConvex === "yes" ? p.isConvex() : !p.isConvex(),
-      )
-    }
-    if (hasHole) {
-      filtered = filtered.filter((p) =>
-        hasHole === "yes" ? p.hasHole() : !p.hasHole(),
-      )
-    }
-    if (hasTiling) {
-      filtered = filtered.filter((p) =>
-        hasTiling === "yes" ? p.tiling() : !p.tiling(),
-      )
-    }
-    if (symmetries.length > 0) {
-      filtered = filtered.filter((p) => symmetries.includes(p.symmetry()))
-    }
-    return filtered
-  })
 }

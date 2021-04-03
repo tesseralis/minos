@@ -4,14 +4,14 @@ import { css } from "@emotion/css"
 import { Polyomino } from "mino"
 import { nodes } from "app/graph"
 import GenerationList from "./GenerationList"
-import Filter, { MinoFilter, applyFilter } from "./MinoFilter"
+import Filter, { FilterOptions, applyFilter } from "./MinoFilter"
 
 const START_GENS = 6
 
 interface Props {
   narrow?: boolean
   selected?: Polyomino | null
-  initFilter?: MinoFilter
+  initFilter?: FilterOptions
   onSelect(mino: Polyomino | null): void
 }
 
@@ -40,7 +40,7 @@ export default function MinoList({
   narrow,
   initFilter = {},
 }: Props) {
-  const [filter, setFilter] = useState<MinoFilter>(initFilter)
+  const [filter, setFilter] = useState<FilterOptions>(initFilter)
 
   const minoSets = useMemo(() => applyFilter(listMinos, filter), [filter])
 

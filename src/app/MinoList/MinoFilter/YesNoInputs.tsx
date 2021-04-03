@@ -39,7 +39,7 @@ interface YesNoProps {
   onUpdate(val?: string): void
 }
 
-function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
+function YesNoInput({ display, name, value, onUpdate, item }: YesNoProps) {
   return (
     <div
       className={css`
@@ -78,11 +78,11 @@ function YesNoOption({ display, name, value, onUpdate, item }: YesNoProps) {
   )
 }
 
-export default function YesNoOptions({ value, onUpdate }: any) {
+export default function YesNoInputs({ value, onUpdate }: any) {
   return (
     <>
       {yesNoItems.map((item) => (
-        <YesNoOption
+        <YesNoInput
           key={item.name}
           name={item.name}
           display={item.display}

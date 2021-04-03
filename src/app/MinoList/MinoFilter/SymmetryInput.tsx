@@ -101,7 +101,7 @@ interface Props {
   onUpdate(value: Symmetry[]): void
 }
 
-export default function SymmetryOptions({ value = [], onUpdate }: Props) {
+export default function SymmetryInput({ value = [], onUpdate }: Props) {
   return (
     <div>
       <InputTitle display="Symmetries" onClear={() => onUpdate([])} />
