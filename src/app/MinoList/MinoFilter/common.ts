@@ -22,7 +22,7 @@ interface YesNoOption {
 const yesNoOpts: YesNoOption[] = [
   { name: "isConvex", predicate: (p) => p.isConvex() },
   { name: "hasHole", predicate: (p) => p.hasHole() },
-  { name: "hasTiling", predicate: (p) => !!p.tiling() },
+  { name: "hasTiling", predicate: (p) => p.hasTiling() },
 ]
 
 function applyToMino(

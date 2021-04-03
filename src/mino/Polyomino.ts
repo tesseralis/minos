@@ -276,6 +276,24 @@ export default class Polyomino {
     return false
   })
 
+  // Return whether the polyomino contains two opposite corners of its bounding box
+  private containsOppositeCorners() {
+    const [w, h] = this.dims
+    return (
+      (this.contains([0, 0]) && this.contains([w - 1, h - 1])) ||
+      (this.contains([0, h - 1]) && this.contains([w - 1, 0]))
+    )
+  }
+
+  /** Return whether this polyomino has a tiling */
+  hasTiling() {
+    // All small minos have a tiling
+    if (this.order <= 6) return true
+    // A heuristic to get rid of a lot of minos
+    if (this.isConvex() && this.containsOppositeCorners()) return true
+    return !!this.tiling()
+  }
+
   tiling = once(() => {
     return getTiling(this)
   })
