@@ -8,7 +8,7 @@ interface Props {
 }
 
 /**
- * The display for a group of inputs
+ * The title display for a group of inputs, with a clear button.
  */
 export default function InputTitle({ display, onClear }: Props) {
   return (
