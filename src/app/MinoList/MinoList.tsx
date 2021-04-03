@@ -4,7 +4,7 @@ import { css } from "@emotion/css"
 import { Polyomino } from "mino"
 import { nodes } from "app/graph"
 import GenerationList from "./GenerationList"
-import Filter, { MinoFilter, applyFilter } from "./Filter"
+import Filter, { MinoFilter, applyFilter } from "./MinoFilter"
 
 const START_GENS = 6
 

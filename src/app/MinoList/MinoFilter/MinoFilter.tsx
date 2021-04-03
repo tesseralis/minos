@@ -8,7 +8,7 @@ import YesNoOptions from "./YesNoOptions"
 
 type YesNo = "yes" | "no" | ""
 
-export interface MinoFilter {
+export interface FilterOptions {
   symmetries?: Symmetry[]
   // boolean properties
   isConvex?: YesNo
@@ -17,8 +17,8 @@ export interface MinoFilter {
 }
 
 interface Props {
-  value: MinoFilter
-  onUpdate(value: MinoFilter): void
+  value: FilterOptions
+  onUpdate(value: FilterOptions): void
   narrow?: boolean
 }
 
@@ -47,7 +47,7 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
   )
 }
 
-export default function Filter(props: Props) {
+export default function MinoFilter(props: Props) {
   const [showFilter, setShowFilter] = useState(false)
 
   return (
@@ -79,7 +79,7 @@ export default function Filter(props: Props) {
 
 export function applyFilter(
   minos: Polyomino[][],
-  { isConvex, hasHole, hasTiling, symmetries = [] }: MinoFilter,
+  { isConvex, hasHole, hasTiling, symmetries = [] }: FilterOptions,
 ) {
   return minos.map((generation) => {
     let filtered = generation
