@@ -45,9 +45,10 @@ export default function TilingPage() {
           overflow-y: scroll;
         `}
       >
+        {/* TODO (perf): starting with an initial filter makes this really slow */}
         <MinoList
           narrow
-          initFilter={{ hasTiling: "yes" }}
+          initFilter={{ yesNo: { hasTiling: "yes" } }}
           onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
         />
       </div>

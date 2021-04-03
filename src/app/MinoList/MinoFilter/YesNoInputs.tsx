@@ -2,44 +2,59 @@ import React from "react"
 import InputTitle from "./InputTitle"
 import { css } from "@emotion/css"
 import { colors } from "style/theme"
+import { YesNoName, YesNoOptions } from "./common"
 
 interface YesNoItem {
-  name: string
+  name: YesNoName
   display: string
-  yes: string
-  no: string
+  optDisplays: {
+    yes: string
+    no: string
+  }
 }
 
 const yesNoItems: YesNoItem[] = [
   {
     name: "isConvex",
     display: "Convexity",
-    yes: "convex",
-    no: "concave",
+    optDisplays: {
+      yes: "convex",
+      no: "concave",
+    },
   },
   {
     name: "hasHole",
     display: "Holes",
-    yes: "has hole",
-    no: "no holes",
+    optDisplays: {
+      yes: "has hole",
+      no: "no holes",
+    },
   },
   {
     name: "hasTiling",
     display: "Tiling",
-    yes: "has tiling",
-    no: "no tiling",
+    optDisplays: {
+      yes: "has tiling",
+      no: "no tiling",
+    },
   },
 ]
 
-interface YesNoProps {
-  name: string
-  item: YesNoItem
-  display: string
+interface YesNoProps extends YesNoItem {
   value?: string
   onUpdate(val?: string): void
 }
 
-function YesNoInput({ display, name, value, onUpdate, item }: YesNoProps) {
+/**
+ * A three-valued input that can be affirmative, negative, or undefined
+ */
+function YesNoInput({
+  display,
+  name,
+  value,
+  onUpdate,
+  optDisplays,
+}: YesNoProps) {
   return (
     <div
       className={css`
@@ -49,7 +64,7 @@ function YesNoInput({ display, name, value, onUpdate, item }: YesNoProps) {
       <div>
         <InputTitle display={display} onClear={() => onUpdate()} />
       </div>
-      {["yes", "no"].map((val) => {
+      {(["yes", "no"] as const).map((val) => {
         const checked = value === val
         return (
           <label key={val}>
@@ -69,7 +84,7 @@ function YesNoInput({ display, name, value, onUpdate, item }: YesNoProps) {
                 cursor: pointer;
               `}
             >
-              {(item as any)[val]}
+              {optDisplays[val]}
             </span>
           </label>
         )
@@ -78,17 +93,23 @@ function YesNoInput({ display, name, value, onUpdate, item }: YesNoProps) {
   )
 }
 
-export default function YesNoInputs({ value, onUpdate }: any) {
+interface Props {
+  value?: YesNoOptions
+  onUpdate(value: YesNoOptions): void
+}
+
+/**
+ * Display all possible yes-no inputs that can be filtered.
+ */
+export default function YesNoInputs({ value = {}, onUpdate }: Props) {
   return (
     <>
       {yesNoItems.map((item) => (
         <YesNoInput
+          {...item}
           key={item.name}
-          name={item.name}
-          display={item.display}
-          item={item}
-          value={(value as any)[item.name]}
-          onUpdate={(val: any) => onUpdate({ ...value, [item.name]: val })}
+          value={value[item.name]}
+          onUpdate={(val) => onUpdate({ ...value, [item.name]: val })}
         />
       ))}
     </>

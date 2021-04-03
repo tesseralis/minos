@@ -2,8 +2,8 @@ import React, { useState } from "react"
 import { css } from "@emotion/css"
 
 import { colors } from "style/theme"
-import SymmetryOptions from "./SymmetryInput"
-import YesNoOptions from "./YesNoInputs"
+import SymmetryInput from "./SymmetryInput"
+import YesNoInputs from "./YesNoInputs"
 import { FilterOptions } from "./common"
 
 interface Props {
@@ -21,9 +21,9 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
         flex-wrap: wrap;
       `}
     >
-      <SymmetryOptions
+      <SymmetryInput
         value={value.symmetries}
-        onUpdate={(val: any) => onUpdate({ ...value, symmetries: val })}
+        onUpdate={(val) => onUpdate({ ...value, symmetries: val })}
       />
       <div
         className={css`
@@ -31,7 +31,10 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
           margin-top: ${narrow ? "2rem" : 0};
         `}
       >
-        <YesNoOptions onUpdate={onUpdate} value={value} />
+        <YesNoInputs
+          onUpdate={(val) => onUpdate({ ...value, yesNo: val })}
+          value={value.yesNo}
+        />
       </div>
     </form>
   )
