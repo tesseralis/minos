@@ -18,7 +18,7 @@ export default function App() {
       <BrowserRouter>
         <Layout topLeft={<Nav />} topRight={<Compass />}>
           <Routes>
-            <Route path="/" element={<Navigate to="/genaeology" />} />
+            <Route path="/" element={<Navigate to="/genealogy" />} />
             <Route path="/list" element={<ListPage />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
@@ -28,7 +28,7 @@ export default function App() {
             <Route path="/packing/:size/:shape" element={<PatternPage />} />
             <Route path="/tiling" element={<TilingPage />} />
             <Route path="/tiling/:mino" element={<TilingPage />} />
-            <Route path="/genaeology" element={<FamilyTree />} />
+            <Route path="/genealogy" element={<FamilyTree />} />
           </Routes>
         </Layout>
       </BrowserRouter>
