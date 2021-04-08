@@ -7,7 +7,7 @@ import { YesNoName, YesNoOptions } from "./common"
 interface YesNoItem {
   name: YesNoName
   display: string
-  optDisplays: {
+  optDisplays?: {
     yes: string
     no: string
   }
@@ -22,6 +22,10 @@ const yesNoItems: YesNoItem[] = [
       no: "undirected",
     },
   },
+  // {
+  //   name: "isBarChart",
+  //   display: "Bar Chart",
+  // },
   {
     name: "isConvex",
     display: "Convexity",
@@ -61,7 +65,7 @@ function YesNoInput({
   name,
   value,
   onUpdate,
-  optDisplays,
+  optDisplays = { yes: "yes", no: "no" },
 }: YesNoProps) {
   return (
     <div

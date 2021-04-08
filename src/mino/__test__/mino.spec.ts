@@ -200,4 +200,21 @@ describe("mino", () => {
       }
     })
   })
+
+  describe("isBarChart", () => {
+    it("works on positive cases", () => {
+      const cases = ["11_10_11", "1111", "110_111_100"].map(
+        Polyomino.fromString,
+      )
+      for (const mino of cases) {
+        expect(mino.isBarChart()).toBe(true)
+      }
+    })
+    it("works on negative cases", () => {
+      const cases = ["100_111_001", "0111_1101"].map(Polyomino.fromString)
+      for (const mino of cases) {
+        expect(mino.isBarChart()).toBe(false)
+      }
+    })
+  })
 })

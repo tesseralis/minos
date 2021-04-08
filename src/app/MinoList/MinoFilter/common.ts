@@ -2,7 +2,12 @@ import { Polyomino, Symmetry } from "mino"
 
 export type YesNo = "yes" | "no"
 
-export type YesNoName = "isDirected" | "isConvex" | "hasHole" | "hasTiling"
+export type YesNoName =
+  | "isDirected"
+  | "isBarChart"
+  | "isConvex"
+  | "hasHole"
+  | "hasTiling"
 export type YesNoOptions = { [Name in YesNoName]?: YesNo }
 
 /**
@@ -21,6 +26,7 @@ interface YesNoOption {
 
 const yesNoOpts: YesNoOption[] = [
   { name: "isDirected", predicate: (p) => p.isDirected() },
+  { name: "isBarChart", predicate: (p) => p.isBarChart() },
   { name: "isConvex", predicate: (p) => p.isConvex() },
   { name: "hasHole", predicate: (p) => p.hasHole() },
   { name: "hasTiling", predicate: (p) => p.hasTiling() },

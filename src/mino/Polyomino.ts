@@ -244,8 +244,8 @@ export default class Polyomino {
   hasTiling() {
     // All small minos have a tiling
     if (this.order <= 6) return true
-    // A heuristic to get rid of a lot of minos
-    if (this.isConvex() && this.containsOppositeCorners()) return true
+    // Staircase minos always have a tiling
+    if (this.isStaircase()) return true
     return !!this.tiling()
   }
 
@@ -329,7 +329,8 @@ export default class Polyomino {
     }
   }
 
-  private isDirectedAt(anchor: Anchor) {
+  // Returns whether the polyomino is directed at the given anchor
+  private isDirectedAtAnchor(anchor: Anchor) {
     // Get the two directions of that corner
     const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
     const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
@@ -360,20 +361,56 @@ export default class Polyomino {
   isDirected = once(() => {
     // Get the corner along with its associated direction
     for (const anchor of this.getAnchors()) {
-      if (this.isDirectedAt(anchor)) {
+      if (this.isDirectedAtAnchor(anchor)) {
         return true
       }
     }
     return false
   })
 
+  /** Return whether this mino is a bar chart polyomino */
+  isBarChart() {
+    // Essentially, a bar chart mino is meta-bidirected
+    const directedAnchors = [...getAnchors()].filter(
+      (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
+    )
+    // If it's a higher class, return true
+    if (directedAnchors.length >= 3) return true
+    // If it's not bidirected, return false
+    if (directedAnchors.length < 2) return false
+    // Make sure the corners are next to each other
+    const [first, second] = directedAnchors
+    return first.x === second.x || first.y === second.y
+  }
+
   // Return whether the polyomino contains two opposite corners of its bounding box
   private containsOppositeCorners() {
-    const [w, h] = this.dims
     return (
-      (this.contains([0, 0]) && this.contains([w - 1, h - 1])) ||
-      (this.contains([0, h - 1]) && this.contains([w - 1, 0]))
+      (this.hasAnchor({ x: "start", y: "start" }) &&
+        this.hasAnchor({ x: "end", y: "end" })) ||
+      (this.hasAnchor({ x: "end", y: "start" }) &&
+        this.hasAnchor({ x: "start", y: "end" }))
     )
+  }
+
+  /** Return true if this mino is a stairase polyomino */
+  isStaircase() {
+    return this.isConvex() && this.containsOppositeCorners()
+  }
+
+  /** Return whether this mino is a stack polyomino */
+  isStack() {
+    return this.isConvex() && this.isBarChart()
+  }
+
+  /** Return whether this polyomino is a Ferrers diagram */
+  isFerrers() {
+    return this.isConvex() && [...this.getAnchors()].length >= 3
+  }
+
+  /** Return whether this polyomino is a rectangle */
+  isRectangle() {
+    return this.isConvex() && [...this.getAnchors()].length === 4
   }
 
   // Formatting
