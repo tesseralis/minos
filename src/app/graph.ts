@@ -61,7 +61,7 @@ function mixColors(colors: Color[]) {
 }
 
 function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
-  return avg([...mino.freeParents()].map((p) => indices[p.data]))
+  return avg([...mino.relatives.freeParents()].map((p) => indices[p.data]))
 }
 
 /**
@@ -86,7 +86,7 @@ export function generateGraph(n: number) {
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
-      for (const child of mino.freeChildren()) {
+      for (const child of mino.relatives.freeChildren()) {
         if (!visited.has(child.data)) {
           nextGen.push(child)
           visited.add(child.data)
@@ -113,7 +113,7 @@ export function generateGraph(n: number) {
         continue
       }
       const color = mixColors(
-        [...mino.freeParents()].map((parent) => colors[parent.data]),
+        [...mino.relatives.freeParents()].map((parent) => colors[parent.data]),
       )
       colors[mino.data] = tinycolor.mix(
         colorMap[symmetry],
@@ -132,10 +132,10 @@ const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
 const allMinos = nodes.flat()
 
 export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.freeParents().size),
+  ...allMinos.map((mino) => mino.relatives.freeParents().size),
 )
 export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.freeChildren().size),
+  ...allMinos.map((mino) => mino.relatives.freeChildren().size),
 )
 
 // Cached colors of each link
@@ -158,7 +158,7 @@ function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
  * Get the parents of the mino sorted by their indices in the graph
  */
 export function getSortedParents(mino: Polyomino): RelativeLink[] {
-  return getUniqSorted(mino.enumerateParents())
+  return getUniqSorted(mino.relatives.enumerateParents())
 }
 
 /**
@@ -166,7 +166,7 @@ export function getSortedParents(mino: Polyomino): RelativeLink[] {
  */
 export function getSortedChildren(mino: Polyomino): RelativeLink[] {
   if (mino.order === NUM_GENERATIONS) return []
-  return getUniqSorted(mino.enumerateChildren())
+  return getUniqSorted(mino.relatives.enumerateChildren())
 }
 
 /**
