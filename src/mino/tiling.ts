@@ -25,6 +25,9 @@ export interface Tiling {
   basis: Basis
 }
 
+/**
+ * Methods for querying tilings of a polyomino
+ */
 export default class MinoTilings {
   private mino: Polyomino
   constructor(mino: Polyomino) {

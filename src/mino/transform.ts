@@ -42,6 +42,9 @@ export const symmetries = [
 
 export type Symmetry = typeof symmetries[number]
 
+/**
+ * Methods related to the transformation and symmetry of a Polyomino
+ */
 export default class MinoTransform {
   private mino: Polyomino
   private _free?: Polyomino
@@ -95,6 +98,9 @@ export default class MinoTransform {
   }
 }
 
+/**
+ * List all possible anchors
+ */
 export function* getAnchors(): Generator<Anchor> {
   for (const x of anchorPositions) {
     for (const y of anchorPositions) {

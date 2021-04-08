@@ -1,7 +1,3 @@
-/**
- * Utilities for calculating relatives of polyominoes
- */
-
 import { once } from "lodash"
 import { Polyomino } from "./internal"
 import Vector, { VectorLike } from "vector"
@@ -27,6 +23,9 @@ export interface PossibleRelativeLink {
 
 export type RelativeLink = Required<PossibleRelativeLink>
 
+/**
+ * Methods for obtaining the parents and children of a polyomino.
+ */
 export default class MinoRelatives {
   private mino: Polyomino
 

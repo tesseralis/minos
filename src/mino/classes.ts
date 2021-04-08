@@ -6,6 +6,10 @@ import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
 const axes = ["row", "column"] as const
 type Axis = typeof axes[number]
 
+/**
+ * Predicates for testing whether a mino belongs into one of the
+ * specially defined classes of polyominoes, like directed minos.
+ */
 export default class MinoClasses {
   private mino: Polyomino
 
