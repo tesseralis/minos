@@ -1,5 +1,5 @@
 /**
- * This modules describes utility functions to apply transformations to polyominoes.
+ * Methods to apply transformations to polyominoes.
  */
 
 import { once } from "lodash-es"
@@ -27,6 +27,72 @@ type AnchorPos = typeof anchorPositions[number]
 export interface Anchor {
   x: AnchorPos
   y: AnchorPos
+}
+
+export const symmetries = [
+  "all",
+  "dihedralOrtho",
+  "dihedralDiag",
+  "rotate4",
+  "reflectOrtho",
+  "reflectDiag",
+  "rotate2",
+  "none",
+] as const
+
+export type Symmetry = typeof symmetries[number]
+
+export default class MinoTransform {
+  private mino: Polyomino
+  private _free?: Polyomino
+
+  constructor(mino: Polyomino) {
+    this.mino = mino
+  }
+
+  /** Transform this mino with the given transformation */
+  apply(trans: Transform) {
+    return Polyomino.fromCoords(
+      this.mino
+        .coords()
+        .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
+    )
+  }
+
+  /** Return the list of all transforms of this mino */
+  // TODO make this unique
+  all = once(() => transforms.map((t) => this.apply(t)))
+
+  /** true if this mino is symmetric wrt the given transform */
+  hasSymmetry(t: Transform) {
+    return this.mino.equals(this.apply(t))
+  }
+
+  /** true if the mino is the same as its reflection */
+  isOneSided = once(() => !reflections.some((t) => this.hasSymmetry(t)))
+
+  /** Get the symmetry of this mino */
+  symmetry = once(() => getSymmetry((axis) => this.hasSymmetry(axis)))
+
+  /** Get the free polyomino corresponding to this mino */
+  free() {
+    if (!this._free) {
+      const transforms = this.all()
+      const free = Polyomino.sort(transforms)[0]
+      // populate the free polyomino for all the transforms
+      // so we don't have to re-calculate
+      for (const trans of transforms) {
+        trans.transform._free = free
+      }
+    }
+    // this._free should now be defined
+    return this._free!
+  }
+
+  /** Returns true if the two minos are equivalent under transformations */
+  equivalent(other: Polyomino) {
+    return this.free().equals(other.transform.free())
+  }
 }
 
 export function* getAnchors(): Generator<Anchor> {
@@ -105,20 +171,7 @@ export function transformMinoCoord(
   return Vector.fromArray(transforms[transform])
 }
 
-export const symmetries = [
-  "all",
-  "dihedralOrtho",
-  "dihedralDiag",
-  "rotate4",
-  "reflectOrtho",
-  "reflectDiag",
-  "rotate2",
-  "none",
-] as const
-
-export type Symmetry = typeof symmetries[number]
-
-export function getSymmetry(predicate: (axis: Transform) => boolean) {
+function getSymmetry(predicate: (axis: Transform) => boolean) {
   function getSymCount(axes: Transform[]): number {
     return axes.filter((axis) => predicate(axis)).length
   }
@@ -137,60 +190,4 @@ export function getSymmetry(predicate: (axis: Transform) => boolean) {
   if (rotational === 1) return "rotate2"
 
   return "none"
-}
-
-export default class MinoTransform {
-  private mino: Polyomino
-  private _free?: Polyomino
-
-  constructor(mino: Polyomino) {
-    this.mino = mino
-  }
-
-  // Transforms and symmetry
-  // =======================
-
-  /** Transform this mino with the given transformation */
-  apply(trans: Transform) {
-    return Polyomino.fromCoords(
-      this.mino
-        .coords()
-        .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
-    )
-  }
-
-  /** Return the list of all transforms of this mino */
-  // TODO make this unique
-  transforms = once(() => transforms.map((t) => this.apply(t)))
-
-  /** true if this mino is symmetric wrt the given transform */
-  hasSymmetry(t: Transform) {
-    return this.mino.equals(this.apply(t))
-  }
-
-  /** true if the mino is the same as its reflection */
-  isOneSided = once(() => !reflections.some((t) => this.hasSymmetry(t)))
-
-  /** Get the symmetry of this mino */
-  symmetry = once(() => getSymmetry((axis) => this.hasSymmetry(axis)))
-
-  /** Get the free polyomino corresponding to this mino */
-  free() {
-    if (!this._free) {
-      const transforms = this.transforms()
-      const free = Polyomino.sort(transforms)[0]
-      // populate the free polyomino for all the transforms
-      // so we don't have to re-calculate
-      for (const trans of transforms) {
-        trans.transform._free = free
-      }
-    }
-    // this._free should now be defined
-    return this._free!
-  }
-
-  /** Returns true if the two minos are equivalent under transformations */
-  equivalent(other: Polyomino) {
-    return this.free().equals(other.transform.free())
-  }
 }

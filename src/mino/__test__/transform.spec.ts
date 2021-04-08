@@ -5,7 +5,7 @@ describe("transforms", () => {
     // 111
     // 100
     const mino = Polyomino.fromString("111_100")
-    const transforms = mino.transform.transforms()
+    const transforms = mino.transform.all()
     expect(transforms).toEqual(
       expect.arrayContaining([
         mino,
@@ -23,6 +23,6 @@ describe("transforms", () => {
   it("does not repeat transformations", () => {
     // The X pentomino
     const mino = Polyomino.fromString("010_111_010")
-    expect(new Set(mino.transform.transforms()).size).toEqual(1)
+    expect(new Set(mino.transform.all()).size).toEqual(1)
   })
 })
