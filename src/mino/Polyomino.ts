@@ -117,6 +117,8 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords = once(() => [...getCoords(this.data)])
+
+  /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
     return contains(this.data, coord)
   }
@@ -126,9 +128,6 @@ export default class Polyomino {
 
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
-
-  // Tiling
-  // ======
 
   // Formatting
   // ==========
