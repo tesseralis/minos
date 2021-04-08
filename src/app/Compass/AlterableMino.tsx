@@ -20,7 +20,7 @@ function InnerSquares({ highlight }: Props) {
   return (
     <g key={mino.data}>
       {mino.equals(O_OCTOMINO) && <Hole />}
-      {mino.possibleParents().map((link, i) => (
+      {mino.relatives.possibleParents().map((link, i) => (
         <MinoSquare
           key={i}
           link={link as any}
@@ -46,7 +46,7 @@ function OuterSquares() {
   if (mino.order >= NUM_GENERATIONS) return null
   return (
     <g key={mino.data}>
-      {mino.enumerateChildren().map((link, i) => (
+      {mino.relatives.enumerateChildren().map((link, i) => (
         <MinoSquare
           key={i}
           link={link}

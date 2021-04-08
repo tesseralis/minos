@@ -1,8 +1,7 @@
-/**
- * Utilities for calculating relatives of polyominoes
- */
-
+import { once } from "lodash"
+import { Polyomino } from "./internal"
 import Vector, { VectorLike } from "vector"
+import PointSet from "PointSet"
 import {
   MinoData,
   Coord,
@@ -16,6 +15,75 @@ import {
   getCoordMask,
   getColumnMask,
 } from "./data"
+
+export interface PossibleRelativeLink {
+  mino?: Polyomino
+  coord: Coord
+}
+
+export type RelativeLink = Required<PossibleRelativeLink>
+
+/**
+ * Methods for obtaining the parents and children of a polyomino.
+ */
+export default class MinoRelatives {
+  private mino: Polyomino
+
+  constructor(mino: Polyomino) {
+    this.mino = mino
+  }
+
+  /** Iterate over all points of this mino along with the possible parent associated with it. */
+  possibleParents = once(() =>
+    this.mino.coords().map((coord) => {
+      const parent = removeSquare(this.mino.data, coord)
+      return {
+        mino: isValid(parent) ? Polyomino.fromData(parent) : null,
+        coord,
+      }
+    }),
+  )
+
+  enumerateParents = once(
+    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
+  )
+
+  parents = once(() => this.enumerateParents().map((link) => link.mino))
+
+  /** Return the set of all free parents of this mino */
+  freeParents = once(
+    () => new Set(this.parents().map((p) => p.transform.free())),
+  )
+
+  private *iterNeighbors(): Generator<Coord> {
+    const visited = new PointSet()
+    for (const coord of this.mino.coords()) {
+      for (const nbr of getNeighbors(coord)) {
+        if (!this.mino.contains(nbr) && !visited.has(nbr)) {
+          visited.add(nbr)
+          yield nbr
+        }
+      }
+    }
+  }
+
+  neighbors = once(() => [...this.iterNeighbors()])
+
+  enumerateChildren = once(() =>
+    this.neighbors().map((coord) => ({
+      mino: Polyomino.fromData(addSquare(this.mino.data, coord)),
+      coord,
+    })),
+  )
+
+  /** Return the list of all children of this mino */
+  children = once(() => this.enumerateChildren().map((link) => link.mino))
+
+  /** Return the set of all free parents of this mino */
+  freeChildren = once(
+    () => new Set(this.children().map((c) => c.transform.free())),
+  )
+}
 
 /**
  * Return the mino with the width adjusted by delta (e.g. +1 or -1)

@@ -1,10 +1,8 @@
-import { sortBy, once, range } from "lodash-es"
-import PointSet from "PointSet"
-import Vector, { VectorLike } from "vector"
+import { sortBy, once } from "lodash-es"
+import { VectorLike } from "vector"
 import {
   MinoData,
   Dims,
-  Coord,
   getOrder,
   getWidth,
   getHeight,
@@ -16,27 +14,13 @@ import {
   toString,
 } from "./data"
 import { getOutline } from "./outline"
-import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
-import {
-  Anchor,
-  getAnchors,
-  Transform,
-  transforms,
-  reflections,
-  transformMinoCoord,
-  getSymmetry,
-} from "./transform"
 // Import relative to the index to avoid circular dependency
-import { getTiling } from "."
-
-export interface PossibleRelativeLink {
-  mino?: Polyomino
-  coord: Coord
-}
-export type RelativeLink = Required<PossibleRelativeLink>
-
-const axes = ["row", "column"] as const
-type Axis = typeof axes[number]
+import {
+  MinoTransform,
+  MinoRelatives,
+  MinoClasses,
+  MinoTilings,
+} from "./internal"
 
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
@@ -54,7 +38,18 @@ export default class Polyomino {
   height: number
   dims: Dims
 
-  private _free?: Polyomino
+  classes: MinoClasses
+  relatives: MinoRelatives
+  transform: MinoTransform
+
+  // This breaks tests if it's not lazily generated
+  private _tilings?: MinoTilings
+  get tilings() {
+    if (!this._tilings) {
+      this._tilings = new MinoTilings(this)
+    }
+    return this._tilings
+  }
 
   // Constructors
   // ============
@@ -66,9 +61,12 @@ export default class Polyomino {
     this.width = getHeight(data)
     this.height = getWidth(data)
     this.dims = [this.width, this.height]
+    this.classes = new MinoClasses(this)
+    this.relatives = new MinoRelatives(this)
+    this.transform = new MinoTransform(this)
   }
 
-  private static fromData(data: MinoData) {
+  static fromData(data: MinoData) {
     if (!cache[data]) {
       cache[data] = new Polyomino(data)
     }
@@ -120,115 +118,9 @@ export default class Polyomino {
   /** Return the coordinate of the mino's squares */
   coords = once(() => [...getCoords(this.data)])
 
-  // Get the point of this polyomino's bounding box at the given corner anchor
-  private pointAtAnchor({ x, y }: Anchor) {
-    const [w, h] = this.dims
-    const xCoord = x === "start" ? 0 : w - 1
-    const yCoord = y === "start" ? 0 : h - 1
-    return new Vector(xCoord, yCoord)
-  }
-
-  hasAnchor(anchor: Anchor) {
-    return this.contains(this.pointAtAnchor(anchor))
-  }
-
-  // Relationships
-  // =============
-
+  /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
     return contains(this.data, coord)
-  }
-
-  /** Iterate over all points of this mino along with the possible parent associated with it. */
-  possibleParents = once(() =>
-    this.coords().map((coord) => {
-      const parent = removeSquare(this.data, coord)
-      return {
-        mino: isValid(parent) ? Polyomino.fromData(parent) : null,
-        coord,
-      }
-    }),
-  )
-
-  enumerateParents = once(
-    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
-  )
-
-  parents = once(() => this.enumerateParents().map((link) => link.mino))
-
-  /** Return the set of all free parents of this mino */
-  freeParents = once(() => new Set(this.parents().map((p) => p.free())))
-
-  private *iterNeighbors(): Generator<Coord> {
-    const visited = new PointSet()
-    for (const coord of this.coords()) {
-      for (const nbr of getNeighbors(coord)) {
-        if (!contains(this.data, nbr) && !visited.has(nbr)) {
-          visited.add(nbr)
-          yield nbr
-        }
-      }
-    }
-  }
-
-  neighbors = once(() => [...this.iterNeighbors()])
-
-  enumerateChildren = once(() =>
-    this.neighbors().map((coord) => ({
-      mino: Polyomino.fromData(addSquare(this.data, coord)),
-      coord,
-    })),
-  )
-
-  /** Return the list of all children of this mino */
-  children = once(() => this.enumerateChildren().map((link) => link.mino))
-
-  /** Return the set of all free parents of this mino */
-  freeChildren = once(() => new Set(this.children().map((c) => c.free())))
-
-  // Transforms and symmetry
-  // =======================
-
-  /** Transform this mino with the given transformation */
-  transform(trans: Transform) {
-    return Polyomino.fromCoords(
-      this.coords().map((p) => transformMinoCoord(p, this.dims, trans)),
-    )
-  }
-
-  /** Return the list of all transforms of this mino */
-  // TODO make this unique
-  transforms = once(() => transforms.map((t) => this.transform(t)))
-
-  /** true if this mino is symmetric wrt the given transform */
-  hasSymmetry(t: Transform) {
-    return this.equals(this.transform(t))
-  }
-
-  /** true if the mino is the same as its reflection */
-  isOneSided = once(() => !reflections.some((t) => this.hasSymmetry(t)))
-
-  /** Get the symmetry of this mino */
-  symmetry = once(() => getSymmetry((axis) => this.hasSymmetry(axis)))
-
-  /** Get the free polyomino corresponding to this mino */
-  free() {
-    if (!this._free) {
-      const transforms = this.transforms()
-      const free = Polyomino.sort(transforms)[0]
-      // populate the free polyomino for all the transforms
-      // so we don't have to re-calculate
-      for (const trans of transforms) {
-        trans._free = free
-      }
-    }
-    // this._free should now be defined
-    return this._free!
-  }
-
-  /** Returns true if the two minos are equivalent under transformations */
-  equivalent(other: Polyomino) {
-    return this.free().equals(other.free())
   }
 
   // Boundary
@@ -236,182 +128,6 @@ export default class Polyomino {
 
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
-
-  // Tiling
-  // ======
-
-  /** Return whether this polyomino has a tiling */
-  hasTiling() {
-    // All small minos have a tiling
-    if (this.order <= 6) return true
-    // Staircase minos always have a tiling
-    if (this.isStaircase()) return true
-    return !!this.tiling()
-  }
-
-  tiling = once(() => {
-    return getTiling(this)
-  })
-
-  // Polyomino Classes
-  // =================
-
-  private isConvexAtAxis(axis: Axis) {
-    const isRow = axis === "row"
-    for (const x of range(0, isRow ? this.width : this.height)) {
-      let foundFirst = false
-      let inside = false
-      for (const y of range(0, isRow ? this.height : this.width)) {
-        if (this.contains(isRow ? [x, y] : [y, x])) {
-          // If we've already found a connected set of points befor
-          // this is not convex
-          if (foundFirst && !inside) {
-            return false
-          }
-          foundFirst = true
-          inside = true
-        } else {
-          inside = false
-        }
-      }
-    }
-    // If all rows/columns pass the test,
-    // the whole polyomino is convex along that axis
-    return true
-  }
-
-  /**
-   * Return true if this polyomino is either row-convex or column-convex.
-   */
-  isSemiConvex = once(() => {
-    return axes.some((axis) => this.isConvexAtAxis(axis))
-  })
-
-  /**
-   * Return whether this polyomino is convex,
-   * that is, whether there are no "gaps"
-   * between squares within the same row or coloumn.
-   */
-  isConvex = once(() => {
-    return axes.every((axis) => this.isConvexAtAxis(axis))
-  })
-
-  /** Return whether the polyomino contains a hole */
-  hasHole = once(() => {
-    // First mino with a hole is a heptomino
-    if (this.order < 7) {
-      return false
-    }
-    for (const x of range(1, this.width - 1)) {
-      for (const y of range(1, this.height - 1)) {
-        // Has a hole if there is a point inside the mino that isn't contained in the mino
-        // but its neighbors are all in the mino.
-        // Note: this only works for order <= 8
-        const p = new Vector(x, y)
-        if (this.contains(p)) {
-          break
-        }
-        const nbrs = [...getNeighbors(p)]
-        if (nbrs.every((nbr) => this.contains(nbr))) {
-          return true
-        }
-      }
-    }
-    return false
-  })
-
-  // Get all the corner points of this polyomino that are contained in it
-  private *getAnchors(): Generator<Anchor> {
-    for (const anchor of getAnchors()) {
-      if (this.hasAnchor(anchor)) {
-        yield anchor
-      }
-    }
-  }
-
-  // Returns whether the polyomino is directed at the given anchor
-  private isDirectedAtAnchor(anchor: Anchor) {
-    // Get the two directions of that corner
-    const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
-    const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
-    const start = this.pointAtAnchor(anchor)
-    // Do BFS in the two opposite directions
-    const visited = new PointSet()
-    visited.add(start)
-    const queue = [start]
-    while (queue.length > 0) {
-      const current = queue.pop()!
-      for (const nbrDir of [yDir, xDir]) {
-        const nbr = current.add(nbrDir)
-        if (this.contains(nbr) && !visited.has(nbr)) {
-          visited.add(nbr)
-          queue.push(nbr)
-        }
-      }
-    }
-    // If at the end, we visited all cells, it's directed
-    return visited.size === this.order
-  }
-
-  /**
-   * Returns whether the mino is directed, that is,
-   * there is some square in the mino such that all other squares
-   * can be reached from that mino by going in two orthogonal directions.
-   */
-  isDirected = once(() => {
-    // Get the corner along with its associated direction
-    for (const anchor of this.getAnchors()) {
-      if (this.isDirectedAtAnchor(anchor)) {
-        return true
-      }
-    }
-    return false
-  })
-
-  /** Return whether this mino is a bar chart polyomino */
-  isBarChart() {
-    // Essentially, a bar chart mino is meta-bidirected
-    const directedAnchors = [...getAnchors()].filter(
-      (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
-    )
-    // If it's a higher class, return true
-    if (directedAnchors.length >= 3) return true
-    // If it's not bidirected, return false
-    if (directedAnchors.length < 2) return false
-    // Make sure the corners are next to each other
-    const [first, second] = directedAnchors
-    return first.x === second.x || first.y === second.y
-  }
-
-  // Return whether the polyomino contains two opposite corners of its bounding box
-  private containsOppositeCorners() {
-    return (
-      (this.hasAnchor({ x: "start", y: "start" }) &&
-        this.hasAnchor({ x: "end", y: "end" })) ||
-      (this.hasAnchor({ x: "end", y: "start" }) &&
-        this.hasAnchor({ x: "start", y: "end" }))
-    )
-  }
-
-  /** Return true if this mino is a stairase polyomino */
-  isStaircase() {
-    return this.isConvex() && this.containsOppositeCorners()
-  }
-
-  /** Return whether this mino is a stack polyomino */
-  isStack() {
-    return this.isConvex() && this.isBarChart()
-  }
-
-  /** Return whether this polyomino is a Ferrers diagram */
-  isFerrers() {
-    return this.isConvex() && [...this.getAnchors()].length >= 3
-  }
-
-  /** Return whether this polyomino is a rectangle */
-  isRectangle() {
-    return this.isConvex() && [...this.getAnchors()].length === 4
-  }
 
   // Formatting
   // ==========

@@ -25,11 +25,11 @@ interface YesNoOption {
 }
 
 const yesNoOpts: YesNoOption[] = [
-  { name: "isDirected", predicate: (p) => p.isDirected() },
-  { name: "isBarChart", predicate: (p) => p.isBarChart() },
-  { name: "isConvex", predicate: (p) => p.isConvex() },
-  { name: "hasHole", predicate: (p) => p.hasHole() },
-  { name: "hasTiling", predicate: (p) => p.hasTiling() },
+  { name: "isDirected", predicate: (p) => p.classes.isDirected() },
+  { name: "isBarChart", predicate: (p) => p.classes.isBarChart() },
+  { name: "isConvex", predicate: (p) => p.classes.isConvex() },
+  { name: "hasHole", predicate: (p) => p.classes.hasHole() },
+  { name: "hasTiling", predicate: (p) => p.tilings.has() },
 ]
 
 function applyToMino(
@@ -41,7 +41,10 @@ function applyToMino(
       return false
     }
   }
-  if (symmetries.length > 0 && !symmetries.includes(mino.symmetry())) {
+  if (
+    symmetries.length > 0 &&
+    !symmetries.includes(mino.transform.symmetry())
+  ) {
     return false
   }
   return true

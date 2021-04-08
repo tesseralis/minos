@@ -1,6 +1,6 @@
 import fs from "fs"
 import Vector from "vector"
-import { parsePattern, MinoPattern } from ".."
+import { parsePattern, MinoPattern } from "../internal"
 
 const files = [
   "5-rect",
@@ -19,7 +19,7 @@ function testFile(filename: string) {
   const order = parseInt(filename.split("-")[0])
   const patStr = fs.readFileSync(`src/data/${filename}.txt`, "utf-8")
   const pattern = parsePattern(patStr)
-  const minos = new Set(pattern.map((p) => p.mino.free()))
+  const minos = new Set(pattern.map((p) => p.mino.transform.free()))
   expect(minos.size).toEqual(freeCounts[order])
   expect(pattern.every(({ mino }) => mino.order === order)).toBe(true)
 }

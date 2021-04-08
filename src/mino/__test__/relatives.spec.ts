@@ -1,6 +1,5 @@
-import Vector from "vector"
 import { fromString } from "../data"
-import { isValid, addSquare, removeSquare } from "../relatives"
+import { isValid, addSquare, removeSquare } from "../internal"
 
 describe("modify", () => {
   describe("addSquare", () => {

@@ -6,15 +6,15 @@ import { once } from "lodash-es"
 import Vector, { VectorLike } from "vector"
 import PointSet from "PointSet"
 import { MinoLike } from "./Polyomino"
-import { Polyomino } from "."
-import { Dims, Coord } from "./data"
-import { getNeighbors } from "./relatives"
 import {
+  Polyomino,
+  getNeighbors,
   getAnchor,
   Transform,
   transformAnchor,
   transformCoord,
-} from "./transform"
+} from "./internal"
+import { Dims, Coord } from "./data"
 import { getEdges } from "./outline"
 import { EdgeList } from "./edges"
 
@@ -107,7 +107,7 @@ function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   const newAnchorCoord = coord.add(getAnchor(mino, newAnchor))
 
   const newCoord = transformCoord(newAnchorCoord, transform)
-  return { mino: mino.transform(transform), coord: newCoord }
+  return { mino: mino.transform.apply(transform), coord: newCoord }
 }
 
 // Get the difference between the maximum and minimum of the given numbers

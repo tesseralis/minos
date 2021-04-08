@@ -1,6 +1,6 @@
 import React from "react"
 
-import { parsePattern } from "mino/pattern"
+import { parsePattern } from "mino"
 import transition from "app/transition"
 import { useSelected } from "app/SelectedContext"
 import PatternMino from "./PatternMino"
@@ -76,7 +76,7 @@ export default function MinoPattern({ size, shape }: Props) {
             mino={mino}
             coord={coord}
             blockSize={blockSize}
-            isSelected={!!selected && mino.equivalent(selected)}
+            isSelected={!!selected && mino.transform.equivalent(selected)}
           />
         ),
       )}

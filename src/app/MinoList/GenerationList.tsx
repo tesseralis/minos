@@ -60,7 +60,8 @@ export default React.memo(function GenerationList({
           ? "——"
           : minos.map((mino, i) => {
               if (!skipAnimation && i > visIndex) return null
-              const isSelected = !!selected && mino.equivalent(selected)
+              const isSelected =
+                !!selected && mino.transform.equivalent(selected)
               const { stroke, fill } = getMinoColor(mino)
               return (
                 <div

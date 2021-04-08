@@ -38,7 +38,7 @@ export default function RotationMarkers() {
   const mino = useSelected()
   const color = useSelectedColor()
   const transform = TransformCtx.useValue()
-  const order = rotationList.filter((t) => mino.hasSymmetry(t)).length
+  const order = rotationList.filter((t) => mino.transform.hasSymmetry(t)).length
   // TODO display properly for diagonally reflective minos
   const hoverIndex = transform ? rotationHover.get(transform)! : 0
   return (
@@ -55,7 +55,7 @@ export default function RotationMarkers() {
             <RotationMarker
               key={index}
               fill={isHover ? colors.highlight : color}
-              chiral={mino.isOneSided()}
+              chiral={mino.transform.isOneSided()}
               transform={svgTransform()
                 .translate(0, -radius)
                 .rotate(90 * index)}

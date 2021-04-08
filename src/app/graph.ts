@@ -61,7 +61,7 @@ function mixColors(colors: Color[]) {
 }
 
 function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
-  return avg([...mino.freeParents()].map((p) => indices[p.data]))
+  return avg([...mino.relatives.freeParents()].map((p) => indices[p.data]))
 }
 
 /**
@@ -86,7 +86,7 @@ export function generateGraph(n: number) {
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
-      for (const child of mino.freeChildren()) {
+      for (const child of mino.relatives.freeChildren()) {
         if (!visited.has(child.data)) {
           nextGen.push(child)
           visited.add(child.data)
@@ -107,13 +107,13 @@ export function generateGraph(n: number) {
   const colors: Record<MinoData, Color> = {}
   for (const generation of nodes) {
     for (const mino of generation) {
-      const symmetry = mino.symmetry()
+      const symmetry = mino.transform.symmetry()
       if (mino.equals(MONOMINO)) {
         colors[mino.data] = colorMap[symmetry]
         continue
       }
       const color = mixColors(
-        [...mino.freeParents()].map((parent) => colors[parent.data]),
+        [...mino.relatives.freeParents()].map((parent) => colors[parent.data]),
       )
       colors[mino.data] = tinycolor.mix(
         colorMap[symmetry],
@@ -132,10 +132,10 @@ const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
 const allMinos = nodes.flat()
 
 export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.freeParents().size),
+  ...allMinos.map((mino) => mino.relatives.freeParents().size),
 )
 export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.freeChildren().size),
+  ...allMinos.map((mino) => mino.relatives.freeChildren().size),
 )
 
 // Cached colors of each link
@@ -150,7 +150,7 @@ for (const [src, tgt] of links) {
 export { nodes, links }
 
 function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
-  const uniq = uniqBy([...minos], ({ mino }) => mino.free())
+  const uniq = uniqBy([...minos], ({ mino }) => mino.transform.free())
   return sortBy(uniq, ({ mino }) => getIndex(mino))
 }
 
@@ -158,7 +158,7 @@ function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
  * Get the parents of the mino sorted by their indices in the graph
  */
 export function getSortedParents(mino: Polyomino): RelativeLink[] {
-  return getUniqSorted(mino.enumerateParents())
+  return getUniqSorted(mino.relatives.enumerateParents())
 }
 
 /**
@@ -166,14 +166,14 @@ export function getSortedParents(mino: Polyomino): RelativeLink[] {
  */
 export function getSortedChildren(mino: Polyomino): RelativeLink[] {
   if (mino.order === NUM_GENERATIONS) return []
-  return getUniqSorted(mino.enumerateChildren())
+  return getUniqSorted(mino.relatives.enumerateChildren())
 }
 
 /**
  * Get the index of the mino within its generation
  */
 export function getIndex(mino: Polyomino) {
-  return indices[mino.free().data]
+  return indices[mino.transform.free().data]
 }
 
 /**
@@ -182,8 +182,8 @@ export function getIndex(mino: Polyomino) {
  * <MinoSvg {...getMinoColor(mino)} />
  */
 export function getMinoColor(mino: Polyomino) {
-  const color = colors[mino.free().data]
-  const symmetry = mino.symmetry()
+  const color = colors[mino.transform.free().data]
+  const symmetry = mino.transform.symmetry()
   return {
     fill: color!.toString(),
     stroke: borderColors[symmetry].toString(),
@@ -195,7 +195,8 @@ export function getMinoColor(mino: Polyomino) {
  */
 
 export function getLinkColor(src: Polyomino, tgt: Polyomino) {
-  const color = linkColors[src.free().data]?.[tgt.free().data]
+  const color =
+    linkColors[src.transform.free().data]?.[tgt.transform.free().data]
   if (!color) throw new Error(`Invalid mino pair given`)
   return color
 }
