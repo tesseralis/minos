@@ -28,7 +28,7 @@ export default function ReflectionAxes() {
       {reflectionOrder.map((reflection, i) => {
         const isHovered = reflection === selectedTrans
         return (
-          (mino.hasSymmetry(reflection) || isHovered) && (
+          (mino.transform.hasSymmetry(reflection) || isHovered) && (
             <Line
               key={i}
               p1={[-radius, 0]}

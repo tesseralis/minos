@@ -48,7 +48,7 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
         }
         ${className}
       `}
-      onClick={() => setSelected(mino.transform(trans))}
+      onClick={() => setSelected(mino.transform.apply(trans))}
       onHover={(hovered) => setTransform(hovered ? trans : null)}
       transform={svgTrans}
     >

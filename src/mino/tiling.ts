@@ -146,7 +146,7 @@ function flipPlacement(
   const minoBotRight = getAnchor(mino, { x: "end", y: "end" }).add(coord)
   // Flip that point over the segment to get the new coordinate
   const newCoord = flipPoint(minoBotRight, segment)
-  return { mino: mino.transform("rotateHalf"), coord: newCoord }
+  return { mino: mino.transform.apply("rotateHalf"), coord: newCoord }
 }
 
 type ConwaySegments = {
@@ -253,11 +253,11 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     const mino = Polyomino.fromString(minoStr)
     const pattern = MinoPattern.of([
       { mino, coord: Vector.ZERO },
-      { mino: mino.transform(pairTransform), coord },
+      { mino: mino.transform.apply(pairTransform), coord },
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
-      result[mino.transform(transform).data] = transformedPattern.shift(
+      result[mino.transform.apply(transform).data] = transformedPattern.shift(
         transformedPattern.data[0].coord,
       )
     }

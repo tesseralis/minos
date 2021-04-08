@@ -92,7 +92,7 @@ export default function GenerationRings() {
       if (!selected) return
       const selectedGen = selected.order
       if (gen === selectedGen) {
-        return new Set([selected.free()])
+        return new Set([selected.transform.free()])
       } else if (gen === selectedGen - 1) {
         return parents
       } else if (gen === selectedGen + 1) {

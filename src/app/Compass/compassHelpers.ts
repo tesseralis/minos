@@ -27,7 +27,7 @@ export function useSelected() {
  */
 export function useSelectedColor() {
   const selected = useSelected()
-  return getSymmetryColor(selected.symmetry())
+  return getSymmetryColor(selected.transform.symmetry())
 }
 
 /**

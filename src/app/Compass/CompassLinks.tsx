@@ -42,7 +42,7 @@ interface StrandProps {
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
   const [selected, setSelected] = RelativeCtx.useState()
-  const isSelected = !!selected && selected.mino.equivalent(link.mino)
+  const isSelected = !!selected && selected.mino.transform.equivalent(link.mino)
   const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))
   const { fill, stroke } = getMinoColor(link.mino)
   const handleHover = React.useCallback(

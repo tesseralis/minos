@@ -88,7 +88,9 @@ export default memo(function MinoLinks() {
             <MinoLink
               key={i}
               link={link}
-              isSelected={!!selected && link.includes(selected.free())}
+              isSelected={
+                !!selected && link.includes(selected.transform.free())
+              }
             />
           ),
       )}

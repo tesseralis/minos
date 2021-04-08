@@ -25,7 +25,9 @@ export default React.memo(function PatternMino({
   const { fill } = getMinoColor(mino)
   let baseFill = tinycolor(fill)
   baseFill =
-    mino.symmetry() === "none" ? baseFill.saturate(40) : baseFill.desaturate(20)
+    mino.transform.symmetry() === "none"
+      ? baseFill.saturate(40)
+      : baseFill.desaturate(20)
   return (
     <MinoSvg
       mino={mino}

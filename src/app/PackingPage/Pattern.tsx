@@ -76,7 +76,7 @@ export default function MinoPattern({ size, shape }: Props) {
             mino={mino}
             coord={coord}
             blockSize={blockSize}
-            isSelected={!!selected && mino.equivalent(selected)}
+            isSelected={!!selected && mino.transform.equivalent(selected)}
           />
         ),
       )}

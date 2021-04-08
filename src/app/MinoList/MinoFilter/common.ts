@@ -41,7 +41,10 @@ function applyToMino(
       return false
     }
   }
-  if (symmetries.length > 0 && !symmetries.includes(mino.symmetry())) {
+  if (
+    symmetries.length > 0 &&
+    !symmetries.includes(mino.transform.symmetry())
+  ) {
     return false
   }
   return true

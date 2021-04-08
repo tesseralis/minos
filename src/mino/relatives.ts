@@ -191,7 +191,9 @@ export default class MinoRelatives {
   parents = once(() => this.enumerateParents().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeParents = once(() => new Set(this.parents().map((p) => p.free())))
+  freeParents = once(
+    () => new Set(this.parents().map((p) => p.transform.free())),
+  )
 
   private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
@@ -218,5 +220,7 @@ export default class MinoRelatives {
   children = once(() => this.enumerateChildren().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeChildren = once(() => new Set(this.children().map((c) => c.free())))
+  freeChildren = once(
+    () => new Set(this.children().map((c) => c.transform.free())),
+  )
 }

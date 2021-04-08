@@ -1,7 +1,7 @@
 export type { Coord } from "./data"
 
 export type { Symmetry, Transform } from "./transform"
-export { symmetries } from "./transform"
+export { symmetries, default as MinoTransform } from "./transform"
 export { default as Polyomino } from "./Polyomino"
 export type { PossibleRelativeLink, RelativeLink } from "./relatives"
 export {
