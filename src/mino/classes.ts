@@ -142,6 +142,7 @@ export default class MinoClasses {
 
   /** Return whether this mino is a bar chart polyomino */
   isBarChart() {
+    if (!this.isSemiConvex()) return false
     // Essentially, a bar chart mino is meta-bidirected
     const directedAnchors = this.anchors().filter(
       (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),

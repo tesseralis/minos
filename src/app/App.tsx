@@ -10,6 +10,7 @@ import FamilyTree from "./FamilyTree"
 import ListPage from "./ListPage"
 import PatternPage from "./PackingPage"
 import TilingPage from "./TilingPage"
+import ClassesPage from "./ClassesPage"
 
 export default function App() {
   return (
@@ -26,6 +27,7 @@ export default function App() {
               element={<Navigate to="/packing/5/rect" />}
             />
             <Route path="/packing/:size/:shape" element={<PatternPage />} />
+            <Route path="/classes" element={<ClassesPage />} />
             <Route path="/tiling" element={<TilingPage />} />
             <Route path="/tiling/:mino" element={<TilingPage />} />
             <Route path="/genealogy" element={<FamilyTree />} />
