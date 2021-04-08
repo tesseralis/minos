@@ -95,13 +95,17 @@ export default class MinoClasses {
   })
 
   // Get all the corner points of this polyomino that are contained in it
-  private *getAnchors(): Generator<Anchor> {
+  private *iterAnchors(): Generator<Anchor> {
     for (const anchor of getAnchors()) {
       if (this.hasAnchor(anchor)) {
         yield anchor
       }
     }
   }
+
+  private anchors = once(() => {
+    return [...this.iterAnchors()]
+  })
 
   // Returns whether the polyomino is directed at the given anchor
   private isDirectedAtAnchor(anchor: Anchor) {
@@ -133,19 +137,13 @@ export default class MinoClasses {
    * can be reached from that mino by going in two orthogonal directions.
    */
   isDirected = once(() => {
-    // Get the corner along with its associated direction
-    for (const anchor of this.getAnchors()) {
-      if (this.isDirectedAtAnchor(anchor)) {
-        return true
-      }
-    }
-    return false
+    return this.anchors().some((anchor) => this.isDirectedAtAnchor(anchor))
   })
 
   /** Return whether this mino is a bar chart polyomino */
   isBarChart() {
     // Essentially, a bar chart mino is meta-bidirected
-    const directedAnchors = [...getAnchors()].filter(
+    const directedAnchors = this.anchors().filter(
       (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
     )
     // If it's a higher class, return true
@@ -179,11 +177,11 @@ export default class MinoClasses {
 
   /** Return whether this polyomino is a Ferrers diagram */
   isFerrers() {
-    return this.isConvex() && [...this.getAnchors()].length >= 3
+    return this.isConvex() && this.anchors().length >= 3
   }
 
   /** Return whether this polyomino is a rectangle */
   isRectangle() {
-    return this.isConvex() && [...this.getAnchors()].length === 4
+    return this.isConvex() && this.anchors().length === 4
   }
 }
