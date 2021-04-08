@@ -33,6 +33,9 @@ export interface PossibleRelativeLink {
 }
 export type RelativeLink = Required<PossibleRelativeLink>
 
+const axes = ["row", "column"] as const
+type Axis = typeof axes[number]
+
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
 
@@ -220,12 +223,13 @@ export default class Polyomino {
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
 
-  private isConvexAtAxis(row: boolean) {
-    for (const x of range(0, row ? this.width : this.height)) {
+  private isConvexAtAxis(axis: Axis) {
+    const isRow = axis === "row"
+    for (const x of range(0, isRow ? this.width : this.height)) {
       let foundFirst = false
       let inside = false
-      for (const y of range(0, row ? this.height : this.width)) {
-        if (this.contains(row ? [x, y] : [y, x])) {
+      for (const y of range(0, isRow ? this.height : this.width)) {
+        if (this.contains(isRow ? [x, y] : [y, x])) {
           // If we've already found a connected set of points befor
           // this is not convex
           if (foundFirst && !inside) {
@@ -244,12 +248,19 @@ export default class Polyomino {
   }
 
   /**
+   * Return true if this polyomino is either row-convex or column-convex.
+   */
+  isSemiConvex = once(() => {
+    return axes.some((axis) => this.isConvexAtAxis(axis))
+  })
+
+  /**
    * Return whether this polyomino is convex,
    * that is, whether there are no "gaps"
    * between squares within the same row or coloumn.
    */
   isConvex = once(() => {
-    return this.isConvexAtAxis(true) && this.isConvexAtAxis(false)
+    return axes.every((axis) => this.isConvexAtAxis(axis))
   })
 
   /** Return whether the polyomino contains a hole */
