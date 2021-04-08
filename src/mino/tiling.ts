@@ -307,7 +307,7 @@ const conwayPairMap = getPairsMapping(conwayPairs)
  * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
  */
 export function getTiling(mino: Polyomino): Tiling | undefined {
-  if (mino.hasHole()) {
+  if (mino.classes.hasHole()) {
     return undefined
   }
   if (transPairMap[mino.data]) {
