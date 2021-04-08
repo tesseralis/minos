@@ -277,21 +277,22 @@ export default class Polyomino {
   })
 
   private *getCorner(): Generator<{ point: Coord; anchor: [string, string] }> {
+    const [w, h] = this.dims
     const points: [Point, [string, string]][] = [
       [
         [0, 0],
         ["top", "left"],
       ],
       [
-        [this.width - 1, 0],
+        [w - 1, 0],
         ["top", "right"],
       ],
       [
-        [0, this.height - 1],
+        [0, h - 1],
         ["bottom", "left"],
       ],
       [
-        [this.width - 1, this.height - 1],
+        [w - 1, h - 1],
         ["bottom", "right"],
       ],
     ]
