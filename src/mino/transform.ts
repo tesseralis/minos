@@ -21,10 +21,19 @@ export type Rotation = typeof rotations[number]
 export type Reflection = typeof reflections[number]
 export type Transform = typeof transforms[number]
 
-type AnchorPos = "start" | "end"
-interface Anchor {
+const anchorPositions = ["start", "end"] as const
+type AnchorPos = typeof anchorPositions[number]
+export interface Anchor {
   x: AnchorPos
   y: AnchorPos
+}
+
+export function* getAnchors(): Generator<Anchor> {
+  for (const x of anchorPositions) {
+    for (const y of anchorPositions) {
+      yield { x, y }
+    }
+  }
 }
 
 /**

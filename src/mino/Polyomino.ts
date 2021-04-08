@@ -1,6 +1,6 @@
 import { sortBy, once, range } from "lodash-es"
 import PointSet from "PointSet"
-import Vector, { Point, VectorLike } from "vector"
+import Vector, { VectorLike } from "vector"
 import {
   MinoData,
   Dims,
@@ -18,6 +18,8 @@ import {
 import { getOutline } from "./outline"
 import { getNeighbors, isValid, addSquare, removeSquare } from "./relatives"
 import {
+  Anchor,
+  getAnchors,
   Transform,
   transforms,
   reflections,
@@ -118,6 +120,18 @@ export default class Polyomino {
   /** Return the coordinate of the mino's squares */
   coords = once(() => [...getCoords(this.data)])
 
+  // Get the point of this polyomino's bounding box at the given corner anchor
+  private pointAtAnchor({ x, y }: Anchor) {
+    const [w, h] = this.dims
+    const xCoord = x === "start" ? 0 : w - 1
+    const yCoord = y === "start" ? 0 : h - 1
+    return new Vector(xCoord, yCoord)
+  }
+
+  hasAnchor(anchor: Anchor) {
+    return this.contains(this.pointAtAnchor(anchor))
+  }
+
   // Relationships
   // =============
 
@@ -217,11 +231,30 @@ export default class Polyomino {
     return this.free().equals(other.free())
   }
 
-  // Miscellaneous
-  // =============
+  // Boundary
+  // ========
 
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
+
+  // Tiling
+  // ======
+
+  /** Return whether this polyomino has a tiling */
+  hasTiling() {
+    // All small minos have a tiling
+    if (this.order <= 6) return true
+    // A heuristic to get rid of a lot of minos
+    if (this.isConvex() && this.containsOppositeCorners()) return true
+    return !!this.tiling()
+  }
+
+  tiling = once(() => {
+    return getTiling(this)
+  })
+
+  // Polyomino Classes
+  // =================
 
   private isConvexAtAxis(axis: Axis) {
     const isRow = axis === "row"
@@ -287,42 +320,24 @@ export default class Polyomino {
     return false
   })
 
-  private *getCorner(): Generator<{ point: Coord; anchor: [string, string] }> {
-    const [w, h] = this.dims
-    const points: [Point, [string, string]][] = [
-      [
-        [0, 0],
-        ["top", "left"],
-      ],
-      [
-        [w - 1, 0],
-        ["top", "right"],
-      ],
-      [
-        [0, h - 1],
-        ["bottom", "left"],
-      ],
-      [
-        [w - 1, h - 1],
-        ["bottom", "right"],
-      ],
-    ]
-    for (const [point, anchor] of points) {
-      if (this.contains(point)) {
-        yield { point: Vector.of(point), anchor }
+  // Get all the corner points of this polyomino that are contained in it
+  private *getAnchors(): Generator<Anchor> {
+    for (const anchor of getAnchors()) {
+      if (this.hasAnchor(anchor)) {
+        yield anchor
       }
     }
   }
 
-  private isDirectedAt(corner: { point: Coord; anchor: [string, string] }) {
-    const [vert, horiz] = corner.anchor
+  private isDirectedAt(anchor: Anchor) {
     // Get the two directions of that corner
-    const yDir = vert === "bottom" ? Vector.UP : Vector.DOWN
-    const xDir = horiz === "left" ? Vector.RIGHT : Vector.LEFT
+    const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
+    const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
+    const start = this.pointAtAnchor(anchor)
     // Do BFS in the two opposite directions
     const visited = new PointSet()
-    visited.add(corner.point)
-    const queue = [corner.point]
+    visited.add(start)
+    const queue = [start]
     while (queue.length > 0) {
       const current = queue.pop()!
       for (const nbrDir of [yDir, xDir]) {
@@ -344,8 +359,8 @@ export default class Polyomino {
    */
   isDirected = once(() => {
     // Get the corner along with its associated direction
-    for (const corner of this.getCorner()) {
-      if (this.isDirectedAt(corner)) {
+    for (const anchor of this.getAnchors()) {
+      if (this.isDirectedAt(anchor)) {
         return true
       }
     }
@@ -361,18 +376,8 @@ export default class Polyomino {
     )
   }
 
-  /** Return whether this polyomino has a tiling */
-  hasTiling() {
-    // All small minos have a tiling
-    if (this.order <= 6) return true
-    // A heuristic to get rid of a lot of minos
-    if (this.isConvex() && this.containsOppositeCorners()) return true
-    return !!this.tiling()
-  }
-
-  tiling = once(() => {
-    return getTiling(this)
-  })
+  // Formatting
+  // ==========
 
   /** Print the delimited source string of the mino */
   toString() {
