@@ -1,4 +1,4 @@
-import { Polyomino } from ".."
+import { Polyomino } from "../internal"
 
 describe("MinoClasses", () => {
   describe(".isConvex()", () => {

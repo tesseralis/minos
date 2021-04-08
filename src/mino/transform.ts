@@ -3,9 +3,9 @@
  */
 
 import { once } from "lodash-es"
-import { Polyomino } from "."
 import Vector, { Point } from "vector"
 import { Coord, Dims } from "./data"
+import { Polyomino } from "./internal"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 

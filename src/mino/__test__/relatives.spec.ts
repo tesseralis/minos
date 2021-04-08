@@ -1,5 +1,5 @@
 import { fromString } from "../data"
-import { isValid, addSquare, removeSquare } from ".."
+import { isValid, addSquare, removeSquare } from "../internal"
 
 describe("modify", () => {
   describe("addSquare", () => {

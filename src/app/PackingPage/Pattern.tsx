@@ -1,6 +1,6 @@
 import React from "react"
 
-import { parsePattern } from "mino/pattern"
+import { parsePattern } from "mino"
 import transition from "app/transition"
 import { useSelected } from "app/SelectedContext"
 import PatternMino from "./PatternMino"

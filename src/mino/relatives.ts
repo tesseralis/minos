@@ -3,7 +3,7 @@
  */
 
 import { once } from "lodash"
-import { Polyomino } from "."
+import { Polyomino } from "./internal"
 import Vector, { VectorLike } from "vector"
 import PointSet from "PointSet"
 import {

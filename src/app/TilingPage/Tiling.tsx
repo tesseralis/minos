@@ -2,7 +2,7 @@ import React from "react"
 import { range } from "lodash-es"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
-import { Tiling as MinoTiling } from "mino/tiling"
+import { Tiling as MinoTiling } from "mino"
 import Vector from "vector"
 
 // Mod except it works for negative numbers

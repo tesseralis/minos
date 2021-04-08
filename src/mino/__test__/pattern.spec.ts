@@ -1,6 +1,6 @@
 import fs from "fs"
 import Vector from "vector"
-import { parsePattern, MinoPattern } from ".."
+import { parsePattern, MinoPattern } from "../internal"
 
 const files = [
   "5-rect",

@@ -15,8 +15,12 @@ import {
 } from "./data"
 import { getOutline } from "./outline"
 // Import relative to the index to avoid circular dependency
-import { MinoTransform, MinoRelatives, getTiling } from "."
-import MinoClasses from "./classes"
+import {
+  MinoTransform,
+  MinoRelatives,
+  MinoClasses,
+  getTiling,
+} from "./internal"
 
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
