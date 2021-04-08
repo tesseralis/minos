@@ -21,7 +21,9 @@ describe("enumeration", () => {
   describe("tiling", () => {
     it("returns the correct number of tiling minos", () => {
       const { nodes } = graph
-      const nontilers = nodes.map((gen) => gen.filter((mino) => !mino.tiling()))
+      const nontilers = nodes.map((gen) =>
+        gen.filter((mino) => !mino.tilings.get()),
+      )
       const actualCounts = nontilers.map((gen) => gen.length)
       expect(actualCounts).toEqual(nontilerCounts)
     })

@@ -29,7 +29,7 @@ const yesNoOpts: YesNoOption[] = [
   { name: "isBarChart", predicate: (p) => p.classes.isBarChart() },
   { name: "isConvex", predicate: (p) => p.classes.isConvex() },
   { name: "hasHole", predicate: (p) => p.classes.hasHole() },
-  { name: "hasTiling", predicate: (p) => p.hasTiling() },
+  { name: "hasTiling", predicate: (p) => p.tilings.has() },
 ]
 
 function applyToMino(

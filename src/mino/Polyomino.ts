@@ -19,7 +19,7 @@ import {
   MinoTransform,
   MinoRelatives,
   MinoClasses,
-  getTiling,
+  MinoTilings,
 } from "./internal"
 
 // cache of all created minos
@@ -41,6 +41,15 @@ export default class Polyomino {
   classes: MinoClasses
   relatives: MinoRelatives
   transform: MinoTransform
+
+  // This breaks tests if it's not lazily generated
+  private _tilings?: MinoTilings
+  get tilings() {
+    if (!this._tilings) {
+      this._tilings = new MinoTilings(this)
+    }
+    return this._tilings
+  }
 
   // Constructors
   // ============
@@ -120,19 +129,6 @@ export default class Polyomino {
 
   // Tiling
   // ======
-
-  /** Return whether this polyomino has a tiling */
-  hasTiling() {
-    // All small minos have a tiling
-    if (this.order <= 6) return true
-    // Staircase minos always have a tiling
-    if (this.classes.isStaircase()) return true
-    return !!this.tiling()
-  }
-
-  tiling = once(() => {
-    return getTiling(this)
-  })
 
   // Formatting
   // ==========

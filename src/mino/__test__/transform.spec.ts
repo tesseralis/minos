@@ -1,4 +1,4 @@
-import { Polyomino } from ".."
+import { Polyomino } from "../internal"
 
 describe("transforms", () => {
   it("generates the right transforms for the L mino", () => {

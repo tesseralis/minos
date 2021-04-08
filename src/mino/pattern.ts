@@ -6,15 +6,15 @@ import { once } from "lodash-es"
 import Vector, { VectorLike } from "vector"
 import PointSet from "PointSet"
 import { MinoLike } from "./Polyomino"
-import { Polyomino } from "./internal"
-import { Dims, Coord } from "./data"
-import { getNeighbors } from "./relatives"
 import {
+  Polyomino,
+  getNeighbors,
   getAnchor,
   Transform,
   transformAnchor,
   transformCoord,
-} from "./transform"
+} from "./internal"
+import { Dims, Coord } from "./data"
 import { getEdges } from "./outline"
 import { EdgeList } from "./edges"
 

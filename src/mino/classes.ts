@@ -1,9 +1,7 @@
 import { once, range } from "lodash-es"
 import Vector from "vector"
 import PointSet from "PointSet"
-import type Polyomino from "./Polyomino"
-import { Anchor, getAnchors } from "./transform"
-import { getNeighbors } from "./relatives"
+import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
 
 const axes = ["row", "column"] as const
 type Axis = typeof axes[number]

@@ -1,11 +1,15 @@
-import { range, zip, maxBy } from "lodash-es"
+import { once, range, zip, maxBy } from "lodash-es"
 import Vector from "vector"
-// Import relative to the index to avoid circular dependency
-import { Polyomino } from "./internal"
 import { Coord } from "./data"
 import { EdgeList } from "./edges"
-import { Transform, getAnchor, transforms } from "./transform"
-import { MinoPlacement, MinoPattern } from "./pattern"
+import {
+  Polyomino,
+  MinoPlacement,
+  MinoPattern,
+  Transform,
+  getAnchor,
+  transforms,
+} from "./internal"
 
 export type Basis = [u: Coord, v: Coord]
 
@@ -19,6 +23,43 @@ export interface Tiling {
 
   /** Two vectors that determine how far to translate each repetition of the pattern */
   basis: Basis
+}
+
+export default class MinoTilings {
+  private mino: Polyomino
+  constructor(mino: Polyomino) {
+    this.mino = mino
+  }
+
+  /** Return whether this polyomino has a tiling */
+  has() {
+    // All small minos have a tiling
+    if (this.mino.order <= 6) return true
+    // Staircase minos always have a tiling
+    if (this.mino.classes.isStaircase()) return true
+    return !!this.get()
+  }
+
+  /** Get the tiling of this mino */
+  get = once(() => {
+    if (this.mino.classes.hasHole()) {
+      return undefined
+    }
+    if (transPairMap[this.mino.data]) {
+      return getTransTiling(transPairMap[this.mino.data])
+    }
+    if (conwayPairMap[this.mino.data]) {
+      return getConwayTiling(conwayPairMap[this.mino.data])
+    }
+    const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
+
+    const transTiling = getTransTiling(pattern)
+    if (transTiling) {
+      return transTiling
+    }
+
+    return getConwayTiling(pattern)
+  })
 }
 
 // Return the distance vector between the two segments
@@ -299,29 +340,3 @@ const conwayPairs: TilingPair[] = [
 
 const transPairMap = getPairsMapping(transPairs)
 const conwayPairMap = getPairsMapping(conwayPairs)
-
-// The tiling function
-// ===================
-
-/**
- * Return a tiling of the plane by the given polyomino, or undefined if no tiling is possible.
- */
-export function getTiling(mino: Polyomino): Tiling | undefined {
-  if (mino.classes.hasHole()) {
-    return undefined
-  }
-  if (transPairMap[mino.data]) {
-    return getTransTiling(transPairMap[mino.data])
-  }
-  if (conwayPairMap[mino.data]) {
-    return getConwayTiling(conwayPairMap[mino.data])
-  }
-  const pattern = MinoPattern.of([{ mino, coord: Vector.ZERO }])
-
-  const transTiling = getTransTiling(pattern)
-  if (transTiling) {
-    return transTiling
-  }
-
-  return getConwayTiling(pattern)
-}

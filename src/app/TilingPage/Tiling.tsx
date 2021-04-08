@@ -86,7 +86,7 @@ export default function Tiling({ mino }: Props) {
   const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const viewLength = squareSize * gridSize
 
-  const tiling = mino.tiling()
+  const tiling = mino.tilings.get()
   if (!tiling) {
     // TODO (impl) actually show the mino.
     return <div>This polyomino does not tile the plane.</div>
