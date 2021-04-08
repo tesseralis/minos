@@ -1,5 +1,5 @@
 import { sortBy, once } from "lodash-es"
-import Vector, { VectorLike } from "vector"
+import { VectorLike } from "vector"
 import {
   MinoData,
   Dims,
@@ -14,7 +14,6 @@ import {
   toString,
 } from "./data"
 import { getOutline } from "./outline"
-import { Anchor } from "./transform"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoRelatives, getTiling } from "."
 import MinoClasses from "./classes"
@@ -105,19 +104,6 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords = once(() => [...getCoords(this.data)])
-
-  // Get the point of this polyomino's bounding box at the given corner anchor
-  pointAtAnchor({ x, y }: Anchor) {
-    const [w, h] = this.dims
-    const xCoord = x === "start" ? 0 : w - 1
-    const yCoord = y === "start" ? 0 : h - 1
-    return new Vector(xCoord, yCoord)
-  }
-
-  hasAnchor(anchor: Anchor) {
-    return this.contains(this.pointAtAnchor(anchor))
-  }
-
   contains(coord: VectorLike) {
     return contains(this.data, coord)
   }

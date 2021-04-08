@@ -15,6 +15,18 @@ export default class MinoClasses {
     this.mino = mino
   }
 
+  // Get the point of this polyomino's bounding box at the given corner anchor
+  private pointAtAnchor({ x, y }: Anchor) {
+    const [w, h] = this.mino.dims
+    const xCoord = x === "start" ? 0 : w - 1
+    const yCoord = y === "start" ? 0 : h - 1
+    return new Vector(xCoord, yCoord)
+  }
+
+  private hasAnchor(anchor: Anchor) {
+    return this.mino.contains(this.pointAtAnchor(anchor))
+  }
+
   private isConvexAtAxis(axis: Axis) {
     const isRow = axis === "row"
     const [w, h] = this.mino.dims
@@ -83,7 +95,7 @@ export default class MinoClasses {
   // Get all the corner points of this polyomino that are contained in it
   private *getAnchors(): Generator<Anchor> {
     for (const anchor of getAnchors()) {
-      if (this.mino.hasAnchor(anchor)) {
+      if (this.hasAnchor(anchor)) {
         yield anchor
       }
     }
@@ -94,7 +106,7 @@ export default class MinoClasses {
     // Get the two directions of that corner
     const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
     const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
-    const start = this.mino.pointAtAnchor(anchor)
+    const start = this.pointAtAnchor(anchor)
     // Do BFS in the two opposite directions
     const visited = new PointSet()
     visited.add(start)
@@ -132,8 +144,7 @@ export default class MinoClasses {
   isBarChart() {
     // Essentially, a bar chart mino is meta-bidirected
     const directedAnchors = [...getAnchors()].filter(
-      (anchor) =>
-        this.mino.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
+      (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
     )
     // If it's a higher class, return true
     if (directedAnchors.length >= 3) return true
@@ -147,10 +158,10 @@ export default class MinoClasses {
   // Return whether the polyomino contains two opposite corners of its bounding box
   private containsOppositeCorners() {
     return (
-      (this.mino.hasAnchor({ x: "start", y: "start" }) &&
-        this.mino.hasAnchor({ x: "end", y: "end" })) ||
-      (this.mino.hasAnchor({ x: "end", y: "start" }) &&
-        this.mino.hasAnchor({ x: "start", y: "end" }))
+      (this.hasAnchor({ x: "start", y: "start" }) &&
+        this.hasAnchor({ x: "end", y: "end" })) ||
+      (this.hasAnchor({ x: "end", y: "start" }) &&
+        this.hasAnchor({ x: "start", y: "end" }))
     )
   }
 
