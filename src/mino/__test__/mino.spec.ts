@@ -182,4 +182,22 @@ describe("mino", () => {
       }
     })
   })
+
+  describe("isDirected", () => {
+    it("works for positive cases", () => {
+      const cases = ["11", "011_110", "0111_1101"].map(Polyomino.fromString)
+      for (const mino of cases) {
+        expect(mino.isDirected()).toBe(true)
+      }
+    })
+
+    it("works for negative cases", () => {
+      const cases = ["010_111_010", "110_011_110", "011_101_111_010"].map(
+        Polyomino.fromString,
+      )
+      for (const mino of cases) {
+        expect(mino.isDirected()).toBe(false)
+      }
+    })
+  })
 })

@@ -1,6 +1,6 @@
 import { sortBy, once, range } from "lodash-es"
 import PointSet from "PointSet"
-import Vector, { VectorLike } from "vector"
+import Vector, { Point, VectorLike } from "vector"
 import {
   MinoData,
   Dims,
@@ -271,6 +271,70 @@ export default class Polyomino {
         if (nbrs.every((nbr) => this.contains(nbr))) {
           return true
         }
+      }
+    }
+    return false
+  })
+
+  private *getCorner(): Generator<{ point: Coord; anchor: [string, string] }> {
+    const points: [Point, [string, string]][] = [
+      [
+        [0, 0],
+        ["top", "left"],
+      ],
+      [
+        [this.width - 1, 0],
+        ["top", "right"],
+      ],
+      [
+        [0, this.height - 1],
+        ["bottom", "left"],
+      ],
+      [
+        [this.width - 1, this.height - 1],
+        ["bottom", "right"],
+      ],
+    ]
+    for (const [point, anchor] of points) {
+      if (this.contains(point)) {
+        yield { point: Vector.of(point), anchor }
+      }
+    }
+  }
+
+  private isDirectedAt(corner: { point: Coord; anchor: [string, string] }) {
+    const [vert, horiz] = corner.anchor
+    // Get the two directions of that corner
+    const yDir = vert === "bottom" ? Vector.UP : Vector.DOWN
+    const xDir = horiz === "left" ? Vector.RIGHT : Vector.LEFT
+    // Do BFS in the two opposite directions
+    const visited = new PointSet()
+    visited.add(corner.point)
+    const queue = [corner.point]
+    while (queue.length > 0) {
+      const current = queue.pop()!
+      for (const nbrDir of [yDir, xDir]) {
+        const nbr = current.add(nbrDir)
+        if (this.contains(nbr) && !visited.has(nbr)) {
+          visited.add(nbr)
+          queue.push(nbr)
+        }
+      }
+    }
+    // If at the end, we visited all cells, it's directed
+    return visited.size === this.order
+  }
+
+  /**
+   * Returns whether the mino is directed, that is,
+   * there is some square in the mino such that all other squares
+   * can be reached from that mino by going in two orthogonal directions.
+   */
+  isDirected = once(() => {
+    // Get the corner along with its associated direction
+    for (const corner of this.getCorner()) {
+      if (this.isDirectedAt(corner)) {
+        return true
       }
     }
     return false

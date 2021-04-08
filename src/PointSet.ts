@@ -7,9 +7,11 @@ import Vector from "vector"
  */
 export default class PointSet {
   data: boolean[][]
+  size: number
 
   constructor() {
     this.data = []
+    this.size = 0
   }
 
   add(p: Vector) {
@@ -17,6 +19,7 @@ export default class PointSet {
       this.data[p.x] = []
     }
     this.data[p.x][p.y] = true
+    this.size++
   }
 
   addAll(ps: Iterable<Vector>) {
