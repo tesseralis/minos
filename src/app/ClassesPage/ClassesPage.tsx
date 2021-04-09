@@ -213,7 +213,7 @@ export default function ClassesPage() {
         max-width: 72rem;
         height: 100vh;
         margin-left: 12rem;
-        margin-top: 1rem;
+        padding: 1rem 0;
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
