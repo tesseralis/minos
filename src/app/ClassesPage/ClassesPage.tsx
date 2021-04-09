@@ -83,7 +83,7 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
         flex-wrap: wrap;
         align-items: center;
         border: 1px grey solid;
-        margin: 0.5rem;
+        margin: 0.25rem;
         padding: 1rem;
       `}
     >
@@ -181,7 +181,7 @@ function ClassesChart() {
     <div
       className={css`
         display: grid;
-        grid-gap: 1rem;
+        /* grid-gap: 1rem; */
         grid-template-areas:
           "info          info          .             rect          rect"
           "info          info          ferrer        ferrer        ferrer"
