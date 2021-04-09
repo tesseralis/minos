@@ -79,9 +79,10 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
   return (
     <div
       className={css`
-        border: 1px grey solid;
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
+        border: 1px grey solid;
         padding: 1rem;
       `}
     >
