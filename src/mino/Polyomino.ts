@@ -136,7 +136,6 @@ export default class Polyomino {
   boundaryClass = once(() => {
     const classes = this.transform.all().map((t) => t.edges().boundaryClass())
     classes.sort()
-    console.log({ classes })
     return classes[0]
   })
 

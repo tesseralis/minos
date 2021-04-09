@@ -65,7 +65,7 @@ function getEquivalencies(minoClass: Polyomino[]) {
 }
 
 function getClasses() {
-  let minos = nodes.flat()
+  let minos = nodes.flat().map((mino) => mino.transform.apply("flipMainDiag"))
   const classMap: Record<string, Polyomino[][]> = {}
   for (const cls of classes) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
@@ -88,20 +88,21 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
       {minos.map((mino, key) => {
         const { stroke, fill } = getMinoColor(mino)
         return (
-          <MinoDiv
+          <div
             key={key}
-            mino={mino}
-            size={10}
-            fill={fill}
-            stroke={stroke}
-          />
+            className={css`
+              margin: 0 0.5rem;
+            `}
+          >
+            <MinoDiv mino={mino} size={10} fill={fill} stroke={stroke} />
+          </div>
         )
       })}
     </div>
   )
 }
 
-function MinoList({
+function MinoClass({
   name,
   display,
   minos,
@@ -129,7 +130,7 @@ function MinoList({
       <div
         className={css`
           display: flex;
-          justify-content: center;
+          /* justify-content: center; */
           align-items: center;
           flex-wrap: wrap;
         `}
@@ -166,7 +167,7 @@ function ClassesChart() {
         display: grid;
         grid-gap: 1rem;
         grid-template-areas:
-          "rect          rect          .             .             info       info"
+          "rect          rect          rect          rect          info       info"
           "ferrer        ferrer        ferrer        ferrer        info       info"
           "stack         stack         stair         stair         stair      stair"
           "bar           bar           dirConvex     dirConvex     dirConvex  dirConvex"
@@ -177,7 +178,7 @@ function ClassesChart() {
     >
       <Info />
       {classes.map((minoClass, i) => (
-        <MinoList
+        <MinoClass
           key={i}
           minos={(classMap as any)[minoClass.name]}
           display={minoClass.display}
