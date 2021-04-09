@@ -172,10 +172,10 @@ function ClassesChart() {
           "rect          rect          rect          rect          info       info"
           "ferrer        ferrer        ferrer        ferrer        info       info"
           "stack         stack         stair         stair         stair      stair"
-          "bar           bar           dirConvex     dirConvex     dirConvex  dirConvex"
+          "bar           dirConvex     dirConvex     dirConvex     dirConvex  dirConvex"
           "dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex convex     convex"
           "directed      semiConvex    semiConvex    semiConvex    semiConvex semiConvex"
-          "other         other         .             .             .          .";
+          "other         other         other         .             .          .";
       `}
     >
       <Info />
@@ -196,7 +196,7 @@ export default function ClassesPage() {
     <div
       className={css`
         width: 100%;
-        max-width: 60rem;
+        max-width: 72rem;
         height: 100vh;
         margin-left: 10rem;
         overflow-y: scroll;
