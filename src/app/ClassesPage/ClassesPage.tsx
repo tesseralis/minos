@@ -183,13 +183,13 @@ function ClassesChart() {
         display: grid;
         grid-gap: 1rem;
         grid-template-areas:
-          "info       info          rect          rect          rect          rect"
-          "info       info          ferrer        ferrer        ferrer        ferrer"
-          "stair      stair         stair         stair         stack         stack"
-          "dirConvex  dirConvex     dirConvex     dirConvex     dirConvex     bar"
-          "convex     convex        dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex"
-          "semiConvex semiConvex    semiConvex    semiConvex    semiConvex    directed"
-          ".          .             other         other         other         other";
+          "info          info          .             rect          rect"
+          "info          info          ferrer        ferrer        ferrer"
+          "stair         stair         stair         stack         stack"
+          "dirConvex     dirConvex     dirConvex     dirConvex     bar"
+          "convex        dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex"
+          "semiConvex    semiConvex    semiConvex    semiConvex    directed"
+          ".             .             .             other         other";
       `}
     >
       <Info />
