@@ -85,7 +85,14 @@ function MinoList({
         padding: 1rem;
       `}
     >
-      <h2>{display}</h2>
+      <h2
+        className={css`
+          font-weight: normal;
+          margin: 0;
+        `}
+      >
+        {display}
+      </h2>
       <div
         className={css`
           display: flex;
@@ -111,6 +118,22 @@ function MinoList({
   )
 }
 
+function Info() {
+  return (
+    <section
+      className={css`
+        grid-area: info;
+      `}
+    >
+      <h1>Special Classes of Polyominoes</h1>
+      <p>
+        Several classes of polyominoes are well-studied. This page shows the
+        hierarchy of some of these special classes.
+      </p>
+    </section>
+  )
+}
+
 function ClassesChart() {
   const classMap = getClasses()
   return (
@@ -119,8 +142,8 @@ function ClassesChart() {
         display: grid;
         grid-gap: 1rem;
         grid-template-areas:
-          "rect          rect          .             .             .          ."
-          "ferrer        ferrer        ferrer        ferrer        .          ."
+          "rect          rect          .             .             info       info"
+          "ferrer        ferrer        ferrer        ferrer        info       info"
           "stack         stack         stair         stair         stair      stair"
           "bar           bar           dirConvex     dirConvex     dirConvex  dirConvex"
           "dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex convex     convex"
@@ -128,6 +151,7 @@ function ClassesChart() {
           "other         other         .             .             .          .";
       `}
     >
+      <Info />
       {classes.map((minoClass, i) => (
         <MinoList
           key={i}
