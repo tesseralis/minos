@@ -1,4 +1,4 @@
-import { partition } from "lodash-es"
+import { groupBy, partition, sortBy } from "lodash-es"
 import React from "react"
 import { css } from "@emotion/css"
 import { nodes, getMinoColor } from "app/graph"
@@ -19,7 +19,7 @@ const classes: ClassType[] = [
   },
   {
     name: "ferrer",
-    display: "Ferrer's Diagram",
+    display: "Ferrers Diagram",
     predicate: (m) => m.classes.isFerrers(),
   },
   { name: "stack", display: "Stack", predicate: (m) => m.classes.isStack() },
@@ -57,15 +57,48 @@ const classes: ClassType[] = [
   { name: "other", display: "Other", predicate: () => true },
 ]
 
+function getEquivalencies(minoClass: Polyomino[]) {
+  const groups = Object.values(
+    groupBy(minoClass, (mino) => mino.boundaryClass()),
+  )
+  return sortBy(groups, (group) => -group.length)
+}
+
 function getClasses() {
   let minos = nodes.flat()
-  const classMap: Record<string, Polyomino[]> = {}
+  const classMap: Record<string, Polyomino[][]> = {}
   for (const cls of classes) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
     minos = nonMatches
-    classMap[cls.name] = matches
+    classMap[cls.name] = getEquivalencies(matches)
   }
   return classMap
+}
+
+function BoundaryClass({ minos }: { minos: Polyomino[] }) {
+  return (
+    <div
+      className={css`
+        border: 1px white solid;
+        display: flex;
+        flex-wrap: wrap;
+        padding: 1rem;
+      `}
+    >
+      {minos.map((mino, key) => {
+        const { stroke, fill } = getMinoColor(mino)
+        return (
+          <MinoDiv
+            key={key}
+            mino={mino}
+            size={10}
+            fill={fill}
+            stroke={stroke}
+          />
+        )
+      })}
+    </div>
+  )
 }
 
 function MinoList({
@@ -75,7 +108,7 @@ function MinoList({
 }: {
   name: string
   display: string
-  minos: Polyomino[]
+  minos: Polyomino[][]
 }) {
   return (
     <section
@@ -101,17 +134,8 @@ function MinoList({
           flex-wrap: wrap;
         `}
       >
-        {minos.map((mino, key) => {
-          const { stroke, fill } = getMinoColor(mino)
-          return (
-            <MinoDiv
-              key={key}
-              mino={mino}
-              size={10}
-              fill={fill}
-              stroke={stroke}
-            />
-          )
+        {minos.map((boundaryClass, key) => {
+          return <BoundaryClass minos={boundaryClass} key={key} />
         })}
       </div>
     </section>

@@ -92,6 +92,20 @@ export class EdgeList {
     return move(edge.start, edge.dir)
   }
 
+  *iterUniq() {
+    let currentDir
+    for (const edge of this.data) {
+      if (currentDir !== edge.dir) {
+        yield edge.dir
+        currentDir = edge.dir
+      }
+    }
+  }
+
+  boundaryClass() {
+    return [...this.iterUniq()].map((word) => word[0]).join("")
+  }
+
   /**
    * Return whether the two EdgeLists are inverses of each other.
    * That is, if they represent the same edges with the directions flipped.

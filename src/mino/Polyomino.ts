@@ -13,7 +13,8 @@ import {
   fromString,
   toString,
 } from "./data"
-import { getOutline } from "./outline"
+import { getEdges, getOutline } from "./outline"
+import { EdgeList } from "./edges"
 // Import relative to the index to avoid circular dependency
 import {
   MinoTransform,
@@ -128,6 +129,16 @@ export default class Polyomino {
 
   /** Return the outline of this mino */
   outline = once(() => [...getOutline(this.coords())])
+
+  /** Return the edge list for this mino */
+  edges = once(() => EdgeList.of(getEdges(this.coords())))
+
+  boundaryClass = once(() => {
+    return this.transform
+      .all()
+      .map((t) => t.edges().boundaryClass())
+      .sort()[0]
+  })
 
   // Formatting
   // ==========
