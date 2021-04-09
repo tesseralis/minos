@@ -22,12 +22,12 @@ const classes: ClassType[] = [
     display: "Ferrers Diagram",
     predicate: (m) => m.classes.isFerrers(),
   },
-  { name: "stack", display: "Stack", predicate: (m) => m.classes.isStack() },
   {
     name: "stair",
     display: "Staircase",
     predicate: (m) => m.classes.isStaircase(),
   },
+  { name: "stack", display: "Stack", predicate: (m) => m.classes.isStack() },
   {
     name: "dirConvex",
     display: "Directed Convex",
@@ -45,14 +45,14 @@ const classes: ClassType[] = [
     predicate: (m) => m.classes.isDirected() && m.classes.isSemiConvex(),
   },
   {
-    name: "directed",
-    display: "Directed",
-    predicate: (m) => m.classes.isDirected(),
-  },
-  {
     name: "semiConvex",
     display: "Semi-Convex",
     predicate: (m) => m.classes.isSemiConvex(),
+  },
+  {
+    name: "directed",
+    display: "Directed",
+    predicate: (m) => m.classes.isDirected(),
   },
   { name: "other", display: "Other", predicate: () => true },
 ]
@@ -96,7 +96,7 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
               margin: 0 0.5rem;
             `}
           >
-            <MinoDiv mino={mino} size={10} fill={fill} stroke={stroke} />
+            <MinoDiv mino={mino} size={8} fill={fill} stroke={stroke} />
           </div>
         )
       })}
@@ -150,6 +150,15 @@ function Info() {
     <section
       className={css`
         grid-area: info;
+        margin: 1rem;
+
+        h1 {
+          font-weight: normal;
+        }
+
+        p {
+          font-size: 1.125rem;
+        }
       `}
     >
       <h1>Special Classes of Polyominoes</h1>
@@ -157,6 +166,11 @@ function Info() {
         Several classes of polyominoes are well-studied. This page shows the
         hierarchy of some of these special classes.
       </p>
+      <p>
+        Sections that share a horizontal boundary are connected--for example,
+        all Ferrers diagrams are staircase polyominoes.
+      </p>
+      <p>Additionally, classes with similar boundaries are grouped together.</p>
     </section>
   )
 }
@@ -169,13 +183,13 @@ function ClassesChart() {
         display: grid;
         grid-gap: 1rem;
         grid-template-areas:
-          "rect          rect          rect          rect          info       info"
-          "ferrer        ferrer        ferrer        ferrer        info       info"
-          "stack         stack         stair         stair         stair      stair"
-          "bar           dirConvex     dirConvex     dirConvex     dirConvex  dirConvex"
-          "dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex convex     convex"
-          "directed      semiConvex    semiConvex    semiConvex    semiConvex semiConvex"
-          "other         other         other         .             .          .";
+          "info       info          rect          rect          rect          rect"
+          "info       info          ferrer        ferrer        ferrer        ferrer"
+          "stair      stair         stair         stair         stack         stack"
+          "dirConvex  dirConvex     dirConvex     dirConvex     dirConvex     bar"
+          "convex     convex        dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex"
+          "semiConvex semiConvex    semiConvex    semiConvex    semiConvex    directed"
+          ".          .             other         other         other         other";
       `}
     >
       <Info />
@@ -198,7 +212,8 @@ export default function ClassesPage() {
         width: 100%;
         max-width: 72rem;
         height: 100vh;
-        margin-left: 10rem;
+        margin-left: 12rem;
+        margin-top: 1rem;
         overflow-y: scroll;
         display: flex;
         flex-direction: column;
