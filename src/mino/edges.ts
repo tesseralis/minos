@@ -103,7 +103,9 @@ export class EdgeList {
   }
 
   boundaryClass() {
-    return [...this.iterUniq()].map((word) => word[0]).join("")
+    const letters = [...this.iterUniq()].map((word) => word[0])
+    const words = [...cycle(letters)].map((cycle) => cycle.join(""))
+    return words.sort()[0]
   }
 
   /**

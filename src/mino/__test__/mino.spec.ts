@@ -108,4 +108,12 @@ describe("mino", () => {
       expect(mino.outline()).toEqual(expected)
     })
   })
+
+  describe("boundary class", () => {
+    it("puts same mino classes in the same class", () => {
+      const mino1 = Polyomino.of("11_01_11")
+      const mino2 = Polyomino.of("001_101_111")
+      expect(mino1.boundaryClass()).toEqual(mino2.boundaryClass())
+    })
+  })
 })

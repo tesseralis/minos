@@ -134,10 +134,10 @@ export default class Polyomino {
   edges = once(() => EdgeList.of(getEdges(this.coords())))
 
   boundaryClass = once(() => {
-    return this.transform
-      .all()
-      .map((t) => t.edges().boundaryClass())
-      .sort()[0]
+    const classes = this.transform.all().map((t) => t.edges().boundaryClass())
+    classes.sort()
+    console.log({ classes })
+    return classes[0]
   })
 
   // Formatting
