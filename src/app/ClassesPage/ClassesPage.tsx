@@ -78,13 +78,19 @@ function MinoList({
   minos: Polyomino[]
 }) {
   return (
-    <section>
+    <section
+      className={css`
+        grid-area: ${name};
+        border: 1px white solid;
+        padding: 1rem;
+      `}
+    >
       <h2>{display}</h2>
       <div
         className={css`
-          border: 1px white solid;
-          padding: 1rem;
           display: flex;
+          justify-content: center;
+          align-items: center;
           flex-wrap: wrap;
         `}
       >
@@ -108,7 +114,20 @@ function MinoList({
 function ClassesChart() {
   const classMap = getClasses()
   return (
-    <div>
+    <div
+      className={css`
+        display: grid;
+        grid-gap: 1rem;
+        grid-template-areas:
+          "rect          rect          .             .             .          ."
+          "ferrer        ferrer        ferrer        ferrer        .          ."
+          "stack         stack         stair         stair         stair      stair"
+          "bar           bar           dirConvex     dirConvex     dirConvex  dirConvex"
+          "dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex convex     convex"
+          "directed      semiConvex    semiConvex    semiConvex    semiConvex semiConvex"
+          "other         other         .             .             .          .";
+      `}
+    >
       {classes.map((minoClass, i) => (
         <MinoList
           key={i}
@@ -126,7 +145,7 @@ export default function ClassesPage() {
     <div
       className={css`
         width: 100%;
-        max-width: 48rem;
+        max-width: 60rem;
         height: 100vh;
         margin-left: 10rem;
         overflow-y: scroll;
