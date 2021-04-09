@@ -79,7 +79,7 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
   return (
     <div
       className={css`
-        border: 1px white solid;
+        border: 1px grey solid;
         display: flex;
         flex-wrap: wrap;
         padding: 1rem;
@@ -115,7 +115,7 @@ function MinoClass({
     <section
       className={css`
         grid-area: ${name};
-        border: 1px white solid;
+        border: 2px grey solid;
         padding: 1rem;
       `}
     >
