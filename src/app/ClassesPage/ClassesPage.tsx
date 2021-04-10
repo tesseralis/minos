@@ -59,9 +59,17 @@ const classes: ClassType[] = [
 
 function getEquivalencies(minoClass: Polyomino[]) {
   const groups = Object.values(
-    groupBy(minoClass, (mino) => mino.boundaryClass()),
+    groupBy(
+      minoClass.map((mino) => mino.boundaryClassWithTransform()),
+      (mc) => mc.class,
+    ),
   )
-  return sortBy(groups, (group) => -group.length)
+  return sortBy(groups, (group) => -group.length).map((group) =>
+    sortBy(
+      group.map((item) => item.transform),
+      (mino) => [mino.order, -mino.height, -mino.width],
+    ),
+  )
 }
 
 function getClasses() {
