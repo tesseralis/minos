@@ -133,12 +133,6 @@ export default class Polyomino {
   /** Return the edge list for this mino */
   edges = once(() => EdgeList.of(getEdges(this.coords())))
 
-  boundaryClass = once(() => {
-    const classes = this.transform.all().map((t) => t.edges().boundaryClass())
-    classes.sort()
-    return classes[0]
-  })
-
   boundaryClassWithTransform = once(() => {
     const classes = this.transform
       .all()
