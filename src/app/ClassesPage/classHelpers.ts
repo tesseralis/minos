@@ -158,7 +158,7 @@ function getBoundaryFamilies(minoClass: Polyomino[]) {
 /**
  * Sort the list of polyominoes the various classes
  */
-function* populateMinos(): Generator<ClassMinos> {
+export function* getMinoClasses(): Generator<ClassMinos> {
   let minos = nodes.flat()
   for (const cls of classInfo) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
@@ -166,7 +166,3 @@ function* populateMinos(): Generator<ClassMinos> {
     yield { ...cls, minos: getBoundaryFamilies(matches) }
   }
 }
-
-const classes = [...populateMinos()]
-
-export { classes }

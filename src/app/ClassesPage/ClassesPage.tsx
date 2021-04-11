@@ -1,10 +1,10 @@
-import React from "react"
+import React, { useMemo } from "react"
 import { css } from "@emotion/css"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
-import { classes } from "./classHelpers"
+import { getMinoClasses } from "./classHelpers"
 
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
   return (
@@ -139,6 +139,7 @@ function Info() {
 }
 
 function ClassesChart() {
+  const classes = useMemo(() => [...getMinoClasses()], [])
   return (
     <div
       className={css`
