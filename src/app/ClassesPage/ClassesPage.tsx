@@ -20,8 +20,8 @@ const classes: ClassType[] = [
     predicate: (m) => m.classes.isRectangle(),
   },
   {
-    name: "ferrer",
-    display: "Ferrers Diagram",
+    name: "ferr",
+    display: "Ferrers Graph",
     predicate: (m) => m.classes.isFerrers(),
     link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
   },
@@ -38,36 +38,36 @@ const classes: ClassType[] = [
     link: "https://mathworld.wolfram.com/StackPolyomino.html",
   },
   {
-    name: "dirConvex",
+    name: "dcvx",
     display: "Directed Convex",
     predicate: (m) => m.classes.isDirected() && m.classes.isConvex(),
     link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
     name: "bar",
-    display: "Bar Chart",
+    display: "Bar Graph",
     predicate: (m) => m.classes.isBarChart(),
     link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
   },
   {
-    name: "convex",
+    name: "cvx",
     display: "Convex",
     predicate: (m) => m.classes.isConvex(),
     link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
   },
   {
-    name: "dirSemiConvex",
+    name: "dscvx",
     display: "Directed Semi-Convex",
     predicate: (m) => m.classes.isDirected() && m.classes.isSemiConvex(),
   },
   {
-    name: "semiConvex",
+    name: "scvx",
     display: "Semi-Convex",
     predicate: (m) => m.classes.isSemiConvex(),
     link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
-    name: "directed",
+    name: "dir",
     display: "Directed",
     predicate: (m) => m.classes.isDirected(),
   },
@@ -229,13 +229,13 @@ function ClassesChart() {
       className={css`
         display: grid;
         grid-template-areas:
-          "info          info          .             rect          rect"
-          "info          info          ferrer        ferrer        ferrer"
-          "stair         stair         stair         stack         stack"
-          "dirConvex     dirConvex     dirConvex     dirConvex     bar"
-          "convex        dirSemiConvex dirSemiConvex dirSemiConvex dirSemiConvex"
-          "semiConvex    semiConvex    semiConvex    semiConvex    directed"
-          ".             .             .             other         other";
+          "info  info  .     rect  rect"
+          "info  info  ferr  ferr  ferr"
+          "stair stair stair stack stack"
+          "dcvx  dcvx  dcvx  dcvx  bar"
+          "cvx   dscvx dscvx dscvx dscvx"
+          "scvx  scvx  scvx  scvx  dir"
+          ".     .     .     other other";
       `}
     >
       <Info />
