@@ -143,7 +143,7 @@ export default class Polyomino {
   boundaryClassWithTransform = once(() => {
     const classes = this.transform
       .all()
-      .map((t) => ({ transform: t, class: t.boundary().boundaryClass() }))
+      .map((t) => ({ transform: t, class: t.boundary().family() }))
 
     // If the mino is convex, make filter out transforms based on locations of anchors
     let filtered = classes

@@ -102,7 +102,6 @@ export class EdgeList {
     }
   }
 
-  /** Return the coordinates of each corner of this boundary */
   private *iterOutline() {
     let currentDir
     for (const edge of this.data) {
@@ -114,13 +113,18 @@ export class EdgeList {
     }
   }
 
+  /** Return the coordinates of each corner of this boundary */
   outline = once(() => [...this.iterOutline()])
 
-  boundaryClass() {
+  /**
+   * Get the "family" of this boundary: a string representing
+   * only the directions of this boundary word.
+   */
+  family = once(() => {
     const letters = [...this.iterUniq()].map((word) => word[0])
     const words = [...cycle(letters)].map((cycle) => cycle.join(""))
     return words.sort()[0]
-  }
+  })
 
   /**
    * Return whether the two EdgeLists are inverses of each other.

@@ -6,14 +6,14 @@ import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
 
-interface ClassType {
+interface ClassInfo {
   name: string
   display: string
   predicate(m: Polyomino): boolean
   link?: string
 }
 
-const classes: ClassType[] = [
+const classes: ClassInfo[] = [
   {
     name: "rect",
     display: "Rectangle",
@@ -78,7 +78,7 @@ const classes: ClassType[] = [
  * For the mino class, group it up into the different boundary classes
  * and sort them in a way that makes sense.
  */
-function getBoundaryClasses(minoClass: Polyomino[]) {
+function getBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.values(
     groupBy(
       minoClass.map((mino) => mino.boundaryClassWithTransform()),
@@ -102,12 +102,12 @@ function getClasses() {
   for (const cls of classes) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
     minos = nonMatches
-    classMap[cls.name] = getBoundaryClasses(matches)
+    classMap[cls.name] = getBoundaryFamilies(matches)
   }
   return classMap
 }
 
-function BoundaryClass({ minos }: { minos: Polyomino[] }) {
+function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
   return (
     <div
       className={css`
@@ -195,7 +195,7 @@ function PolyominoClass({
         `}
       >
         {minos.map((boundaryClass, key) => {
-          return <BoundaryClass minos={boundaryClass} key={key} />
+          return <BoundaryFamily minos={boundaryClass} key={key} />
         })}
       </div>
     </section>
@@ -229,7 +229,7 @@ function Info() {
         for example, all stack polyominoes are bar graphs.
       </p>
       <p>
-        Additionally, classes with equivalent boundary strings are grouped
+        Additionally, polyominoes with equivalent boundary strings are grouped
         together.
       </p>
     </section>
