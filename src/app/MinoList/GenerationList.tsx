@@ -54,6 +54,10 @@ export default React.memo(function GenerationList({
           flex-wrap: wrap;
           align-items: center;
           justify-content: center;
+
+          > * {
+            margin: 0.5rem;
+          }
         `}
       >
         {minos.length === 0
@@ -64,20 +68,14 @@ export default React.memo(function GenerationList({
                 !!selected && mino.transform.equivalent(selected)
               const { stroke, fill } = getMinoColor(mino)
               return (
-                <div
+                <MinoDiv
                   key={mino.data}
-                  className={css`
-                    margin: 0.5rem;
-                  `}
-                >
-                  <MinoDiv
-                    mino={mino}
-                    fill={fill}
-                    size={getBlockSize(mino.order)}
-                    stroke={isSelected ? colors.highlight : stroke}
-                    onClick={() => onSelect(mino)}
-                  />
-                </div>
+                  mino={mino}
+                  fill={fill}
+                  size={getBlockSize(mino.order)}
+                  stroke={isSelected ? colors.highlight : stroke}
+                  onClick={() => onSelect(mino)}
+                />
               )
             })}
       </div>
