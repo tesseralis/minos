@@ -14,20 +14,23 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
         flex-wrap: wrap;
         align-items: center;
         border: 1px grey solid;
-        padding: 1rem;
+        padding: 0.5rem;
+
+        > * {
+          margin: 0 0.5rem;
+        }
       `}
     >
-      {minos.map((mino, key) => {
+      {minos.map((mino) => {
         const { stroke, fill } = getMinoColor(mino)
         return (
-          <div
-            key={key}
-            className={css`
-              margin: 0 0.5rem;
-            `}
-          >
-            <MinoDiv mino={mino} size={8} fill={fill} stroke={stroke} />
-          </div>
+          <MinoDiv
+            key={mino.data}
+            mino={mino}
+            size={8}
+            fill={fill}
+            stroke={stroke}
+          />
         )
       })}
     </div>
