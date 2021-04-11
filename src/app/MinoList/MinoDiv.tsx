@@ -31,9 +31,7 @@ export default React.memo(function MinoDiv({
         onClick={onClick}
         tabIndex={0}
         className={css`
-          :hover {
-            cursor: pointer;
-          }
+          cursor: ${onClick ? "pointer" : "initial"};
         `}
       >
         <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
