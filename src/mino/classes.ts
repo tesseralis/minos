@@ -25,10 +25,12 @@ export default class MinoClasses {
     return new Vector(xCoord, yCoord)
   }
 
+  /** Return whether the polyomino has the given anchor */
   hasAnchor(anchor: Anchor) {
     return this.mino.contains(this.pointAtAnchor(anchor))
   }
 
+  /** Return whether the polyomino is row or column-convex */
   isConvexAtAxis(axis: Axis) {
     const isRow = axis === "row"
     const [w, h] = this.mino.dims
@@ -103,11 +105,12 @@ export default class MinoClasses {
     }
   }
 
+  /** Return all the contained anchors of this polyomino */
   anchors = once(() => {
     return [...this.iterAnchors()]
   })
 
-  // Returns whether the polyomino is directed at the given anchor
+  /** Returns whether the polyomino is directed at the given anchor */
   isDirectedAtAnchor(anchor: Anchor) {
     if (!this.hasAnchor(anchor)) {
       return false
@@ -134,6 +137,7 @@ export default class MinoClasses {
     return visited.size === this.mino.order
   }
 
+  /** Return all the anchors that this polyomino is directed at */
   directedAnchors = once(() => {
     return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
   })
