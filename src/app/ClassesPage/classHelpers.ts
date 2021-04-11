@@ -96,35 +96,14 @@ function getBoundaryFamily(mino: Polyomino) {
 
   // If the mino is convex, filter out transforms based on locations of anchors
   let filtered = families
-  // FIXME we should be able to consolidate these with the conditions below...
-  if (mino.classes.isConvex()) {
-    switch (mino.classes.anchors().length) {
-      case 3:
-        // Anchor it to the top left, so make sure the bottom-right isn't included
-        filtered = families.filter(
-          (f) => !f.mino.classes.hasAnchor({ x: "end", y: "end" }),
-        )
-        break
-      case 2:
-        if (mino.classes.isStaircase()) {
-          // For staircase minos, just make sure we have the bottom-left
-          filtered = families.filter((f) =>
-            f.mino.classes.hasAnchor({ x: "start", y: "end" }),
-          )
-        } else {
-          // For stacks, make sure both anchors are on the left
-          filtered = families.filter((f) =>
-            f.mino.classes.anchors().every((anchor) => anchor.x === "start"),
-          )
-        }
-        break
-      case 1:
-        // Make sure directed minos are rooted on the bottom-left
-        filtered = families.filter((f) =>
-          f.mino.classes.hasAnchor({ x: "start", y: "end" }),
-        )
-        break
-    }
+  if (mino.classes.isRectangle()) {
+    // get rid of rectangle as possibility
+  } else if (mino.classes.isFerrers()) {
+    // Make sure ferrers diagrams are rooted in the top-left
+    // by making sure the opposite end isn't included
+    filtered = families.filter(
+      (f) => !f.mino.classes.hasAnchor({ x: "end", y: "end" }),
+    )
   } else if (mino.classes.isBarChart()) {
     // Make sure both anchors for bar minos are on the left
     filtered = families.filter((f) =>
