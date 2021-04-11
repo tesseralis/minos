@@ -90,46 +90,49 @@ function countLetters(s: string) {
  * we want to use to represent it in the class diagram.
  */
 function getBoundaryFamily(mino: Polyomino) {
-  const families = mino.transform
-    .all()
-    .map((t) => ({ mino: t, family: t.boundary().family() }))
+  const transforms = mino.transform.all()
 
   // If the mino is convex, filter out transforms based on locations of anchors
-  let filtered = families
+  let filtered = transforms
   if (mino.classes.isRectangle()) {
     // get rid of rectangle as possibility
   } else if (mino.classes.isFerrers()) {
     // Make sure ferrers diagrams are rooted in the top-left
     // by making sure the opposite end isn't included
-    filtered = families.filter(
-      (f) => !f.mino.classes.hasAnchor({ x: "end", y: "end" }),
+    filtered = transforms.filter(
+      (f) => !f.classes.hasAnchor({ x: "end", y: "end" }),
     )
   } else if (mino.classes.isBarChart()) {
     // Make sure both anchors for bar minos are on the left
-    filtered = families.filter((f) =>
-      f.mino.classes.directedAnchors().every((anchor) => anchor.x === "start"),
+    filtered = transforms.filter((f) =>
+      f.classes.directedAnchors().every((anchor) => anchor.x === "start"),
     )
   } else if (mino.classes.isDirected()) {
     // Make sure directed minos are rooted in the bottom-left
-    filtered = families.filter((f) =>
-      f.mino.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
+    filtered = transforms.filter((f) =>
+      f.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
     )
   }
 
   // Make sure semi-convex minos are in their column-convex state
   // TODO column and row are reversed
   if (mino.classes.isSemiConvex()) {
-    filtered = filtered.filter((f) => f.mino.classes.isConvexAtAxis("column"))
+    filtered = filtered.filter((f) => f.classes.isConvexAtAxis("column"))
   }
+
+  const families = filtered.map((mino) => ({
+    mino,
+    family: mino.boundary().family(),
+  }))
   // Choose the boundary word that minimizes the number of "left" and "down"
   // which puts "longer" segments on top
-  const family = sortBy(filtered, (c) => {
+  const family = sortBy(families, (c) => {
     const counts = countLetters(c.family)
     return [counts["l"], counts["d"]]
   })[0].family
 
   // Get the representative mino of the family
-  const possibleMinos = filtered
+  const possibleMinos = families
     .filter((f) => f.family === family)
     .map((f) => f.mino)
   // Choose the mino that comes first in the default sort order
