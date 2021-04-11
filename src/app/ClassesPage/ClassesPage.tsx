@@ -129,7 +129,7 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
   )
 }
 
-function MinoClass({
+function PolyominoClass({
   name,
   display,
   minos,
@@ -240,7 +240,7 @@ function ClassesChart() {
     >
       <Info />
       {classes.map((minoClass, i) => (
-        <MinoClass
+        <PolyominoClass
           key={i}
           minos={(classMap as any)[minoClass.name]}
           display={minoClass.display}
@@ -254,7 +254,7 @@ function ClassesChart() {
 
 export default function ClassesPage() {
   return (
-    <div
+    <main
       className={css`
         width: 100%;
         max-width: 72rem;
@@ -268,6 +268,6 @@ export default function ClassesPage() {
       `}
     >
       <ClassesChart />
-    </div>
+    </main>
   )
 }
