@@ -25,11 +25,11 @@ export default class MinoClasses {
     return new Vector(xCoord, yCoord)
   }
 
-  private hasAnchor(anchor: Anchor) {
+  hasAnchor(anchor: Anchor) {
     return this.mino.contains(this.pointAtAnchor(anchor))
   }
 
-  private isConvexAtAxis(axis: Axis) {
+  isConvexAtAxis(axis: Axis) {
     const isRow = axis === "row"
     const [w, h] = this.mino.dims
     for (const x of range(0, isRow ? w : h)) {
@@ -103,12 +103,15 @@ export default class MinoClasses {
     }
   }
 
-  private anchors = once(() => {
+  anchors = once(() => {
     return [...this.iterAnchors()]
   })
 
   // Returns whether the polyomino is directed at the given anchor
-  private isDirectedAtAnchor(anchor: Anchor) {
+  isDirectedAtAnchor(anchor: Anchor) {
+    if (!this.hasAnchor(anchor)) {
+      return false
+    }
     // Get the two directions of that corner
     const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
     const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
@@ -130,6 +133,10 @@ export default class MinoClasses {
     // If at the end, we visited all cells, it's directed
     return visited.size === this.mino.order
   }
+
+  directedAnchors = once(() => {
+    return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
+  })
 
   /**
    * Returns whether the mino is directed, that is,

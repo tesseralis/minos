@@ -137,7 +137,64 @@ export default class Polyomino {
     const classes = this.transform
       .all()
       .map((t) => ({ transform: t, class: t.edges().boundaryClass() }))
-    return sortBy(classes, (c) => c.class)[0]
+
+    // If the mino is convex, make filter out transforms based on locations of anchors
+    let filtered = classes
+    if (this.classes.isConvex()) {
+      switch (this.classes.anchors().length) {
+        case 3:
+          filtered = classes.filter(
+            (cls) => !cls.transform.classes.hasAnchor({ x: "end", y: "end" }),
+          )
+          break
+        case 2:
+          if (this.classes.isStaircase()) {
+            filtered = classes.filter((cls) =>
+              cls.transform.classes.hasAnchor({ x: "start", y: "end" }),
+            )
+          } else {
+            filtered = classes.filter((cls) =>
+              cls.transform.classes
+                .anchors()
+                .every((anchor) => anchor.x === "start"),
+            )
+          }
+          break
+        case 1:
+          filtered = classes.filter((cls) =>
+            cls.transform.classes.hasAnchor({ x: "start", y: "end" }),
+          )
+          break
+        default:
+          filtered = classes
+      }
+    } else if (this.classes.isBarChart()) {
+      filtered = classes.filter((cls) =>
+        cls.transform.classes
+          .directedAnchors()
+          .every((anchor) => anchor.x === "start"),
+      )
+    } else if (this.classes.isDirected()) {
+      filtered = classes.filter((cls) =>
+        cls.transform.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
+      )
+    }
+
+    if (this.classes.isSemiConvex()) {
+      filtered = filtered.filter((cls) =>
+        cls.transform.classes.isConvexAtAxis("column"),
+      )
+    }
+    // Get the right boundary class out of the filtered options
+    const boundaryClass = sortBy(filtered, (c) => c.class)[0].class
+    // Get the representative mino of the class
+    const possibleMinos = filtered
+      .filter((f) => f.class === boundaryClass)
+      .map((f) => f.transform)
+    return {
+      class: boundaryClass,
+      transform: Polyomino.sort(possibleMinos)[0],
+    }
   })
 
   // Formatting

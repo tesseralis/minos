@@ -83,7 +83,7 @@ function getEquivalencies(minoClass: Polyomino[]) {
   )
   return sortBy(groups, (group) => -group.length).map((group) =>
     sortBy(
-      group.map((item) => item.transform.transform.apply("rotateHalf")),
+      group.map((item) => item.transform),
       (mino) => [mino.order, -mino.height, -mino.width],
     ),
   )
