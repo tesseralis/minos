@@ -74,7 +74,11 @@ const classes: ClassType[] = [
   { name: "other", display: "Other", predicate: () => true },
 ]
 
-function getEquivalencies(minoClass: Polyomino[]) {
+/**
+ * For the mino class, group it up into the different boundary classes
+ * and sort them in a way that makes sense.
+ */
+function getBoundaryClasses(minoClass: Polyomino[]) {
   const groups = Object.values(
     groupBy(
       minoClass.map((mino) => mino.boundaryClassWithTransform()),
@@ -89,13 +93,16 @@ function getEquivalencies(minoClass: Polyomino[]) {
   )
 }
 
+/**
+ * Sort the list of polyominoes the various classes
+ */
 function getClasses() {
   let minos = nodes.flat()
   const classMap: Record<string, Polyomino[][]> = {}
   for (const cls of classes) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
     minos = nonMatches
-    classMap[cls.name] = getEquivalencies(matches)
+    classMap[cls.name] = getBoundaryClasses(matches)
   }
   return classMap
 }
