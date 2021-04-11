@@ -4,11 +4,13 @@ import { css } from "@emotion/css"
 import { nodes, getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino } from "mino"
+import { colors } from "style/theme"
 
 interface ClassType {
   name: string
   display: string
   predicate(m: Polyomino): boolean
+  link?: string
 }
 
 const classes: ClassType[] = [
@@ -21,24 +23,38 @@ const classes: ClassType[] = [
     name: "ferrer",
     display: "Ferrers Diagram",
     predicate: (m) => m.classes.isFerrers(),
+    link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
   },
   {
     name: "stair",
     display: "Staircase",
     predicate: (m) => m.classes.isStaircase(),
+    link: "https://mathworld.wolfram.com/StaircasePolygon.html",
   },
-  { name: "stack", display: "Stack", predicate: (m) => m.classes.isStack() },
+  {
+    name: "stack",
+    display: "Stack",
+    predicate: (m) => m.classes.isStack(),
+    link: "https://mathworld.wolfram.com/StackPolyomino.html",
+  },
   {
     name: "dirConvex",
     display: "Directed Convex",
     predicate: (m) => m.classes.isDirected() && m.classes.isConvex(),
+    link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
     name: "bar",
     display: "Bar Chart",
     predicate: (m) => m.classes.isBarChart(),
+    link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
   },
-  { name: "convex", display: "Convex", predicate: (m) => m.classes.isConvex() },
+  {
+    name: "convex",
+    display: "Convex",
+    predicate: (m) => m.classes.isConvex(),
+    link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
+  },
   {
     name: "dirSemiConvex",
     display: "Directed Semi-Convex",
@@ -48,6 +64,7 @@ const classes: ClassType[] = [
     name: "semiConvex",
     display: "Semi-Convex",
     predicate: (m) => m.classes.isSemiConvex(),
+    link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
     name: "directed",
@@ -116,10 +133,12 @@ function MinoClass({
   name,
   display,
   minos,
+  link,
 }: {
   name: string
   display: string
   minos: Polyomino[][]
+  link?: string
 }) {
   return (
     <section
@@ -129,14 +148,33 @@ function MinoClass({
         padding: 1rem;
       `}
     >
-      <h2
+      <div
         className={css`
-          font-weight: normal;
-          margin: 0;
+          display: flex;
         `}
       >
-        {display}
-      </h2>
+        <h2
+          className={css`
+            font-weight: normal;
+            font-size: 1.5rem;
+            margin: 0;
+          `}
+        >
+          {display}
+        </h2>
+        {link && (
+          <a
+            href={link}
+            className={css`
+              color: ${colors.fg};
+              margin-left: auto;
+              font-size: 1.25rem;
+            `}
+          >
+            ref
+          </a>
+        )}
+      </div>
       <div
         className={css`
           display: flex;
@@ -207,6 +245,7 @@ function ClassesChart() {
           minos={(classMap as any)[minoClass.name]}
           display={minoClass.display}
           name={minoClass.name}
+          link={minoClass.link}
         />
       ))}
     </div>
