@@ -3,7 +3,7 @@ import { isEqual, minBy } from "lodash-es"
 import PointSet from "PointSet"
 
 import { Coord } from "./data"
-import { Edge, Direction, move } from "./edges"
+import { Edge, Direction, EdgeList, move } from "./edges"
 
 /**
  * Return whether, given a set of coordinates, starting at  point v,
@@ -71,7 +71,7 @@ function getStartPoint(coords: Coord[]) {
 /**
  * Return the edges of a mino.
  */
-export function* getEdges(coords: Coord[]): Generator<Edge> {
+function* iterEdges(coords: Coord[]): Generator<Edge> {
   const origin = getStartPoint(coords)
   let pos = origin
   let dir: Direction = "down"
@@ -90,15 +90,8 @@ export function* getEdges(coords: Coord[]): Generator<Edge> {
 }
 
 /**
- * Return the coordinates for the outline of a mino
+ * Get the boundary of a polyomino
  */
-export function* getOutline(minoCoords: Coord[]): Generator<Coord> {
-  let currentDir
-  for (const edge of getEdges(minoCoords)) {
-    // Only yield coordinates when we turn
-    if (currentDir !== edge.dir) {
-      currentDir = edge.dir
-      yield edge.start
-    }
-  }
+export function getEdges(coords: Coord[]) {
+  return EdgeList.of(iterEdges(coords))
 }

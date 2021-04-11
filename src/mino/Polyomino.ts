@@ -13,8 +13,7 @@ import {
   fromString,
   toString,
 } from "./data"
-import { getEdges, getOutline } from "./outline"
-import { EdgeList } from "./edges"
+import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
 import {
   MinoTransform,
@@ -138,16 +137,13 @@ export default class Polyomino {
   // Boundary
   // ========
 
-  /** Return the outline of this mino */
-  outline = once(() => [...getOutline(this.coords())])
-
   /** Return the edge list for this mino */
-  edges = once(() => EdgeList.of(getEdges(this.coords())))
+  boundary = once(() => getEdges(this.coords()))
 
   boundaryClassWithTransform = once(() => {
     const classes = this.transform
       .all()
-      .map((t) => ({ transform: t, class: t.edges().boundaryClass() }))
+      .map((t) => ({ transform: t, class: t.boundary().boundaryClass() }))
 
     // If the mino is convex, make filter out transforms based on locations of anchors
     let filtered = classes

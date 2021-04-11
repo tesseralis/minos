@@ -44,7 +44,7 @@ export default function MinoSvg({
   onHover,
 }: Props) {
   const strokeWidth = size / 8
-  const outline = mino.outline()
+  const outline = mino.boundary().outline()
   const scale = (v: Vector) => v.scale(size)
   const scaledOutline = outline.map(scale)
   const anchorPoint = getAnchor(scaledOutline, anchor)

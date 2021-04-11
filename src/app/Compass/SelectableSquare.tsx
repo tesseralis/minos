@@ -17,7 +17,7 @@ function getBlockSize(gen: number) {
 function useMinoTransform() {
   const mino = useSelected()
   const size = getBlockSize(mino.order)
-  const outline = mino.outline()
+  const outline = mino.boundary().outline()
   const anchor = getAnchor(
     outline.map((v) => v.scale(size)),
     "center center",

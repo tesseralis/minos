@@ -1,4 +1,4 @@
-import { range } from "lodash-es"
+import { once, range } from "lodash-es"
 import Vector, { VectorLike } from "vector"
 import { Coord } from "./data"
 
@@ -101,6 +101,20 @@ export class EdgeList {
       }
     }
   }
+
+  /** Return the coordinates of each corner of this boundary */
+  private *iterOutline() {
+    let currentDir
+    for (const edge of this.data) {
+      // Only yield coordinates when we turn
+      if (currentDir !== edge.dir) {
+        currentDir = edge.dir
+        yield edge.start
+      }
+    }
+  }
+
+  outline = once(() => [...this.iterOutline()])
 
   boundaryClass() {
     const letters = [...this.iterUniq()].map((word) => word[0])

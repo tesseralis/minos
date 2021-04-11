@@ -57,4 +57,24 @@ describe("EdgeList", () => {
       expect(edges.isPalindrome()).toBe(false)
     })
   })
+
+  describe(".outline()", () => {
+    it("only lists changes in direction", () => {
+      const edges = EdgeList.of([
+        { start: [0, 0], dir: "down" },
+        { start: [0, 1], dir: "down" },
+        { start: [0, 2], dir: "right" },
+        { start: [1, 2], dir: "up" },
+        { start: [1, 1], dir: "up" },
+        { start: [1, 0], dir: "left" },
+      ])
+      const expected = [
+        [0, 0],
+        [0, 2],
+        [1, 2],
+        [1, 0],
+      ]
+      expect(edges.outline().map((p) => p.toArray())).toEqual(expected)
+    })
+  })
 })
