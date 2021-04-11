@@ -165,6 +165,8 @@ function MinoClass({
         {link && (
           <a
             href={link}
+            target="_blank"
+            rel="noreferrer"
             className={css`
               color: ${colors.fg};
               margin-left: auto;
