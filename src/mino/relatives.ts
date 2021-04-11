@@ -192,10 +192,10 @@ export function removeSquare(mino: MinoData, [x, y]: VectorLike): MinoData {
 export function* getNeighbors(p: Coord): Generator<Coord> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
-  yield p.add(Vector.RIGHT)
-  yield p.add(Vector.LEFT)
   yield p.add(Vector.DOWN)
   yield p.add(Vector.UP)
+  yield p.add(Vector.RIGHT)
+  yield p.add(Vector.LEFT)
 }
 
 export function isValid(mino: MinoData): boolean {

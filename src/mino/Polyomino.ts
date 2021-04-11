@@ -102,8 +102,8 @@ export default class Polyomino {
   /** Sort the minos in a canonical order */
   static sort(minos: Polyomino[]): Polyomino[] {
     return sortBy(minos, [
-      (mino) => -mino.width,
       (mino) => -mino.height,
+      (mino) => -mino.width,
       (mino) => mino.data,
     ])
   }

@@ -15,9 +15,7 @@ interface Props {
   onSelect(mino: Polyomino | null): void
 }
 
-const listMinos = nodes.map((gen) => {
-  return Polyomino.sort(gen).map((mino) => mino.transform.apply("flipMainDiag"))
-})
+const listMinos = nodes.map(Polyomino.sort)
 
 function NoMatches() {
   return (

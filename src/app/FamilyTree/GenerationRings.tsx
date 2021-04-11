@@ -8,6 +8,10 @@ import SelectableMino from "app/SelectableMino"
 
 import { START_GENS, getCoords } from "./treeHelpers"
 
+const graphMinos = nodes.map((gen) =>
+  gen.map((mino) => mino.transform.apply("flipMainDiag")),
+)
+
 function getBlockSize(gen: number) {
   return 2 + (NUM_GENERATIONS - gen) ** 2 / 2
 }
@@ -104,7 +108,7 @@ export default function GenerationRings() {
 
   return (
     <g>
-      {nodes.map((minos, i) => {
+      {graphMinos.map((minos, i) => {
         const gen = i + 1
         return (
           <GenerationRing
