@@ -144,13 +144,13 @@ function ClassesChart() {
       className={css`
         display: grid;
         grid-template-areas:
-          "info  info  .     rect  rect"
-          "info  info  ferr  ferr  ferr"
-          "stair stair stair stack stack"
-          "dcvx  dcvx  dcvx  dcvx  bar"
-          "cvx   dscvx dscvx dscvx dscvx"
-          "scvx  scvx  scvx  scvx  dir"
-          ".     .     .     other other";
+          "info  info  .     rect  rect  rect"
+          "info  info  ferr  ferr  ferr  ferr"
+          "stair stair stair stack stack stack"
+          "dcvx  dcvx  dcvx  dcvx  bar   bar"
+          "cvx   dscvx dscvx dscvx dscvx dscvx"
+          "scvx  scvx  scvx  scvx  scvx  dir"
+          ".     .     .     .     other other";
       `}
     >
       <Info />
