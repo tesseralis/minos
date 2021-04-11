@@ -143,6 +143,7 @@ function ClassesChart() {
     <div
       className={css`
         display: grid;
+        grid-template-columns: 18rem 1fr 1fr 4rem 10rem 12rem;
         grid-template-areas:
           "info  info  .     rect  rect  rect"
           "info  info  ferr  ferr  ferr  ferr"
