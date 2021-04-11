@@ -108,7 +108,6 @@ function BoundaryClass({ minos }: { minos: Polyomino[] }) {
         flex-wrap: wrap;
         align-items: center;
         border: 1px grey solid;
-        margin: 0.5rem;
         padding: 1rem;
       `}
     >
@@ -182,6 +181,10 @@ function PolyominoClass({
           display: flex;
           align-items: stretch;
           flex-wrap: wrap;
+
+          > * {
+            margin: 0.5rem;
+          }
         `}
       >
         {minos.map((boundaryClass, key) => {
@@ -197,10 +200,11 @@ function Info() {
     <section
       className={css`
         grid-area: info;
-        margin: 1rem;
+        padding: 1rem 2rem;
 
         h1 {
           font-weight: normal;
+          line-height: 1.125;
         }
 
         p {
@@ -214,10 +218,13 @@ function Info() {
         hierarchy of some of these special classes.
       </p>
       <p>
-        Sections that share a horizontal boundary are connected--for example,
-        all Ferrers diagrams are staircase polyominoes.
+        Sections stacked on top of each other have a hierarchial relationship:
+        for example, all stack polyominoes are bar graphs.
       </p>
-      <p>Additionally, classes with similar boundaries are grouped together.</p>
+      <p>
+        Additionally, classes with equivalent boundary strings are grouped
+        together.
+      </p>
     </section>
   )
 }
@@ -242,10 +249,8 @@ function ClassesChart() {
       {classes.map((minoClass, i) => (
         <PolyominoClass
           key={i}
-          minos={(classMap as any)[minoClass.name]}
-          display={minoClass.display}
-          name={minoClass.name}
-          link={minoClass.link}
+          minos={classMap[minoClass.name]}
+          {...minoClass}
         />
       ))}
     </div>
@@ -262,9 +267,6 @@ export default function ClassesPage() {
         margin-left: 12rem;
         padding: 1rem 0;
         overflow-y: scroll;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
       `}
     >
       <ClassesChart />
