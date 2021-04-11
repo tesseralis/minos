@@ -85,70 +85,78 @@ function countLetters(s: string) {
   return count
 }
 
+/**
+ * Get the boundary family for this polyomino and the transform
+ * we want to use to represent it in the class diagram.
+ */
 function getBoundaryFamily(mino: Polyomino) {
-  const classes = mino.transform
+  const families = mino.transform
     .all()
-    .map((t) => ({ transform: t, class: t.boundary().family() }))
+    .map((t) => ({ mino: t, family: t.boundary().family() }))
 
-  // If the mino is convex, make filter out transforms based on locations of anchors
-  let filtered = classes
+  // If the mino is convex, filter out transforms based on locations of anchors
+  let filtered = families
+  // FIXME we should be able to consolidate these with the conditions below...
   if (mino.classes.isConvex()) {
     switch (mino.classes.anchors().length) {
       case 3:
-        filtered = classes.filter(
-          (cls) => !cls.transform.classes.hasAnchor({ x: "end", y: "end" }),
+        // Anchor it to the top left, so make sure the bottom-right isn't included
+        filtered = families.filter(
+          (f) => !f.mino.classes.hasAnchor({ x: "end", y: "end" }),
         )
         break
       case 2:
         if (mino.classes.isStaircase()) {
-          filtered = classes.filter((cls) =>
-            cls.transform.classes.hasAnchor({ x: "start", y: "end" }),
+          // For staircase minos, just make sure we have the bottom-left
+          filtered = families.filter((f) =>
+            f.mino.classes.hasAnchor({ x: "start", y: "end" }),
           )
         } else {
-          filtered = classes.filter((cls) =>
-            cls.transform.classes
-              .anchors()
-              .every((anchor) => anchor.x === "start"),
+          // For stacks, make sure both anchors are on the left
+          filtered = families.filter((f) =>
+            f.mino.classes.anchors().every((anchor) => anchor.x === "start"),
           )
         }
         break
       case 1:
-        filtered = classes.filter((cls) =>
-          cls.transform.classes.hasAnchor({ x: "start", y: "end" }),
+        // Make sure directed minos are rooted on the bottom-left
+        filtered = families.filter((f) =>
+          f.mino.classes.hasAnchor({ x: "start", y: "end" }),
         )
         break
-      default:
-        filtered = classes
     }
   } else if (mino.classes.isBarChart()) {
-    filtered = classes.filter((cls) =>
-      cls.transform.classes
-        .directedAnchors()
-        .every((anchor) => anchor.x === "start"),
+    // Make sure both anchors for bar minos are on the left
+    filtered = families.filter((f) =>
+      f.mino.classes.directedAnchors().every((anchor) => anchor.x === "start"),
     )
   } else if (mino.classes.isDirected()) {
-    filtered = classes.filter((cls) =>
-      cls.transform.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
+    // Make sure directed minos are rooted in the bottom-left
+    filtered = families.filter((f) =>
+      f.mino.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
     )
   }
 
+  // Make sure semi-convex minos are in their column-convex state
+  // TODO column and row are reversed
   if (mino.classes.isSemiConvex()) {
-    filtered = filtered.filter((cls) =>
-      cls.transform.classes.isConvexAtAxis("column"),
-    )
+    filtered = filtered.filter((f) => f.mino.classes.isConvexAtAxis("column"))
   }
-  // Get the right boundary class out of the filtered options
-  const boundaryClass = sortBy(filtered, (c) => {
-    const counts = countLetters(c.class)
+  // Choose the boundary word that minimizes the number of "left" and "down"
+  // which puts "longer" segments on top
+  const family = sortBy(filtered, (c) => {
+    const counts = countLetters(c.family)
     return [counts["l"], counts["d"]]
-  })[0].class
-  // Get the representative mino of the class
+  })[0].family
+
+  // Get the representative mino of the family
   const possibleMinos = filtered
-    .filter((f) => f.class === boundaryClass)
-    .map((f) => f.transform)
+    .filter((f) => f.family === family)
+    .map((f) => f.mino)
+  // Choose the mino that comes first in the default sort order
   return {
-    class: boundaryClass,
-    transform: Polyomino.sort(possibleMinos)[0],
+    family,
+    mino: Polyomino.sort(possibleMinos)[0],
   }
 }
 
@@ -158,11 +166,11 @@ function getBoundaryFamily(mino: Polyomino) {
  */
 function getBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.values(
-    groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.class),
+    groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.family),
   )
   return sortBy(groups, (group) => -group.length).map((group) =>
     sortBy(
-      group.map((item) => item.transform),
+      group.map((item) => item.mino),
       (mino) => [mino.order, -mino.height, -mino.width],
     ),
   )
