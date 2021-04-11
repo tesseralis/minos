@@ -17,7 +17,7 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
         padding: 0.5rem;
 
         > * {
-          margin: 0 0.5rem;
+          margin: 0.375rem;
         }
       `}
     >

@@ -19,8 +19,8 @@ export default React.memo(function MinoDiv({
 }: Props) {
   const [width, height] = mino.dims
 
-  const svgWidth = width * size * 1.25
-  const svgHeight = height * size * 1.25
+  const svgWidth = width * size + 2
+  const svgHeight = height * size + 2
 
   return (
     <div key={mino.data}>

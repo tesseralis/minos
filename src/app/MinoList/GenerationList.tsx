@@ -67,7 +67,7 @@ export default React.memo(function GenerationList({
                 <div
                   key={mino.data}
                   className={css`
-                    margin: 0 0.5rem;
+                    margin: 0.5rem;
                   `}
                 >
                   <MinoDiv
