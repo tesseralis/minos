@@ -1,4 +1,4 @@
-import { range } from "lodash-es"
+import { once, range } from "lodash-es"
 import Vector, { VectorLike } from "vector"
 import { Coord } from "./data"
 
@@ -91,6 +91,42 @@ export class EdgeList {
     const edge = this.data[this.length - 1]
     return move(edge.start, edge.dir)
   }
+
+  *iterUniq() {
+    let currentDir
+    for (const edge of this.data) {
+      if (currentDir !== edge.dir) {
+        yield edge.dir
+        currentDir = edge.dir
+      }
+    }
+  }
+
+  private *iterOutline() {
+    let currentDir
+    for (const edge of this.data) {
+      // Only yield coordinates when we turn
+      if (currentDir !== edge.dir) {
+        currentDir = edge.dir
+        yield edge.start
+      }
+    }
+  }
+
+  /** Return the coordinates of each corner of this boundary */
+  outline = once(() => [...this.iterOutline()])
+
+  /**
+   * Get the "family" of this boundary: a string representing
+   * only the directions of this boundary word.
+   */
+  family = once(() => {
+    const letters = [...this.iterUniq()].map((word) => word[0])
+    // Cycle through and return the minimal word by an arbitrary criterion
+    // so that identical displaced words always have the same family
+    const words = [...cycle(letters)].map((cycle) => cycle.join(""))
+    return words.sort()[0]
+  })
 
   /**
    * Return whether the two EdgeLists are inverses of each other.

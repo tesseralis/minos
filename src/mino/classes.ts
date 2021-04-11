@@ -25,11 +25,13 @@ export default class MinoClasses {
     return new Vector(xCoord, yCoord)
   }
 
-  private hasAnchor(anchor: Anchor) {
+  /** Return whether the polyomino has the given anchor */
+  hasAnchor(anchor: Anchor) {
     return this.mino.contains(this.pointAtAnchor(anchor))
   }
 
-  private isConvexAtAxis(axis: Axis) {
+  /** Return whether the polyomino is row or column-convex */
+  isConvexAtAxis(axis: Axis) {
     const isRow = axis === "row"
     const [w, h] = this.mino.dims
     for (const x of range(0, isRow ? w : h)) {
@@ -103,12 +105,16 @@ export default class MinoClasses {
     }
   }
 
-  private anchors = once(() => {
+  /** Return all the contained anchors of this polyomino */
+  anchors = once(() => {
     return [...this.iterAnchors()]
   })
 
-  // Returns whether the polyomino is directed at the given anchor
-  private isDirectedAtAnchor(anchor: Anchor) {
+  /** Returns whether the polyomino is directed at the given anchor */
+  isDirectedAtAnchor(anchor: Anchor) {
+    if (!this.hasAnchor(anchor)) {
+      return false
+    }
     // Get the two directions of that corner
     const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
     const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
@@ -131,6 +137,11 @@ export default class MinoClasses {
     return visited.size === this.mino.order
   }
 
+  /** Return all the anchors that this polyomino is directed at */
+  directedAnchors = once(() => {
+    return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
+  })
+
   /**
    * Returns whether the mino is directed, that is,
    * there is some square in the mino such that all other squares
@@ -142,6 +153,7 @@ export default class MinoClasses {
 
   /** Return whether this mino is a bar chart polyomino */
   isBarChart() {
+    if (!this.isSemiConvex()) return false
     // Essentially, a bar chart mino is meta-bidirected
     const directedAnchors = this.anchors().filter(
       (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
