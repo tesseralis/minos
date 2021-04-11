@@ -90,7 +90,7 @@ function getEquivalencies(minoClass: Polyomino[]) {
 }
 
 function getClasses() {
-  let minos = nodes.flat().map((mino) => mino.transform.apply("flipMainDiag"))
+  let minos = nodes.flat()
   const classMap: Record<string, Polyomino[][]> = {}
   for (const cls of classes) {
     const [matches, nonMatches] = partition(minos, cls.predicate)
