@@ -122,6 +122,8 @@ export class EdgeList {
    */
   family = once(() => {
     const letters = [...this.iterUniq()].map((word) => word[0])
+    // Cycle through and return the minimal word by an arbitrary criterion
+    // so that identical displaced words always have the same family
     const words = [...cycle(letters)].map((cycle) => cycle.join(""))
     return words.sort()[0]
   })
