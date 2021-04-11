@@ -29,6 +29,17 @@ const cache: Record<MinoData, Polyomino> = {}
 // type of stuff that can be cast into a Polyomino
 export type MinoLike = string | VectorLike[] | Polyomino
 
+function countLetters(s: string) {
+  const count: Record<string, number> = {}
+  for (const c of s) {
+    if (!count[c]) {
+      count[c] = 0
+    }
+    count[c]++
+  }
+  return count
+}
+
 export default class Polyomino {
   data: MinoData
   /** The number of squares in this polyomino */
@@ -186,7 +197,10 @@ export default class Polyomino {
       )
     }
     // Get the right boundary class out of the filtered options
-    const boundaryClass = sortBy(filtered, (c) => c.class)[0].class
+    const boundaryClass = sortBy(filtered, (c) => {
+      const counts = countLetters(c.class)
+      return [counts["l"], counts["d"]]
+    })[0].class
     // Get the representative mino of the class
     const possibleMinos = filtered
       .filter((f) => f.class === boundaryClass)
