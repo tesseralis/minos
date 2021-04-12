@@ -29,7 +29,7 @@ export default React.memo(function MinoDiv({
         height={svgHeight}
         viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
         onClick={onClick}
-        tabIndex={0}
+        tabIndex={onClick ? 0 : -1}
         className={css`
           cursor: ${onClick ? "pointer" : "initial"};
         `}
