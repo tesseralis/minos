@@ -64,7 +64,7 @@ function PolyominoClass({
         <h2
           className={css`
             font-weight: normal;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             margin: 0;
           `}
         >
@@ -113,11 +113,12 @@ function Info() {
 
         h1 {
           font-weight: normal;
+          font-size: 1.75rem;
           line-height: 1.125;
         }
 
         p {
-          font-size: 1.125rem;
+          font-size: 1rem;
         }
       `}
     >
@@ -144,7 +145,7 @@ function ClassesChart() {
     <div
       className={css`
         display: grid;
-        grid-template-columns: 18rem 1fr 1fr 4rem 10rem 12rem;
+        grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
         grid-template-areas:
           "info  info  .     rect  rect  rect"
           "info  info  ferr  ferr  ferr  ferr"
@@ -168,7 +169,7 @@ export default function ClassesPage() {
     <main
       className={css`
         width: 100%;
-        max-width: 72rem;
+        max-width: 66rem;
         height: 100vh;
         margin-left: 12rem;
         padding: 1rem 0;
