@@ -59,6 +59,7 @@ function PolyominoClass({
       <div
         className={css`
           display: flex;
+          margin: 0 0.5rem;
         `}
       >
         <h2
