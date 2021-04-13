@@ -38,28 +38,30 @@ export default function Nav() {
     >
       <Title />
       <ul>
-        {["list", "packing", "tiling", "classes", "genealogy"].map((view) => (
-          <li key={view}>
-            <NavLink
-              to={`/${view}`}
-              className={css`
-                font-size: 1.25rem;
-                line-height: 1.25;
+        {["catalog", "packing", "tiling", "classes", "genealogy"].map(
+          (view) => (
+            <li key={view}>
+              <NavLink
+                to={`/${view}`}
+                className={css`
+                  font-size: 1.25rem;
+                  line-height: 1.25;
 
-                color: ${colors.fg};
-                text-decoration: none;
-                :hover {
-                  text-decoration: underline;
-                }
-              `}
-              activeClassName={css`
-                color: ${colors.highlight};
-              `}
-            >
-              {view}
-            </NavLink>
-          </li>
-        ))}
+                  color: ${colors.fg};
+                  text-decoration: none;
+                  :hover {
+                    text-decoration: underline;
+                  }
+                `}
+                activeClassName={css`
+                  color: ${colors.highlight};
+                `}
+              >
+                {view}
+              </NavLink>
+            </li>
+          ),
+        )}
       </ul>
     </nav>
   )

@@ -20,7 +20,7 @@ export default function App() {
         <Layout topLeft={<Nav />} topRight={<Compass />}>
           <Routes>
             <Route path="/" element={<Navigate to="/genealogy" />} />
-            <Route path="/list" element={<ListPage />} />
+            <Route path="/catalog" element={<ListPage />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
               path="/packing"
