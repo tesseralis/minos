@@ -1,10 +1,66 @@
 import React from "react"
 import { css } from "@emotion/css"
 import { Polyomino } from "mino"
-import { useMatch, useNavigate } from "react-router-dom"
+import { Link, useMatch, useNavigate } from "react-router-dom"
+import { getMinoColor } from "app/graph"
 
 import MinoList from "app/MinoList"
 import MinoDiv from "app/MinoList/MinoDiv"
+
+function MinoInfo({ mino }: { mino: Polyomino }) {
+  const navigate = useNavigate()
+  return (
+    <div>
+      <MinoDiv mino={mino} size={12} {...getMinoColor(mino)} />
+      <div>Order: {mino.order}</div>
+      <div>Dimensions: {mino.dims.join(" × ")}</div>
+      <div>Symmetry: {mino.transform.symmetry()}</div>
+      <div>
+        Tiling:{" "}
+        {mino.tilings.has() ? (
+          <Link to={`/tiling/${mino.toString()}`}>yes</Link>
+        ) : (
+          "no"
+        )}
+      </div>
+      <h2>Parents</h2>
+      <div
+        className={css`
+          display: flex;
+          flex-wrap: wrap;
+        `}
+      >
+        {[...mino.relatives.freeParents()].map((parent) => (
+          <MinoDiv
+            key={parent.data}
+            mino={parent}
+            size={8}
+            onClick={() => navigate(`/catalog/${parent.toString()}`)}
+            {...getMinoColor(parent)}
+          />
+        ))}
+      </div>
+      <h2>Children</h2>
+      <div
+        className={css`
+          display: flex;
+          flex-wrap: wrap;
+        `}
+      >
+        {mino.order < 8 &&
+          [...mino.relatives.freeChildren()].map((child) => (
+            <MinoDiv
+              key={child.data}
+              mino={child}
+              size={8}
+              onClick={() => navigate(`/catalog/${child.toString()}`)}
+              {...getMinoColor(child)}
+            />
+          ))}
+      </div>
+    </div>
+  )
+}
 
 function Sidebar({ mino }: { mino?: Polyomino }) {
   return (
@@ -14,7 +70,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
       `}
     >
       {mino ? (
-        <MinoDiv mino={mino} size={10} stroke="black" fill="grey" />
+        <MinoInfo mino={mino} />
       ) : (
         <>
           <h1>Polyomino Catalog</h1>
