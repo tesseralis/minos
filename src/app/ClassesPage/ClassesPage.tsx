@@ -2,7 +2,7 @@ import React, { useMemo } from "react"
 import { css } from "@emotion/css"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
-import { Polyomino } from "mino"
+import { Polyomino, displayClass, MinoClass } from "mino"
 import { colors } from "style/theme"
 import { getMinoClasses } from "./classHelpers"
 
@@ -38,13 +38,13 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
 }
 
 function PolyominoClass({
+  name,
   area,
-  display,
   minos,
   link,
 }: {
+  name: MinoClass
   area: string
-  display: string
   minos: Polyomino[][]
   link?: string
 }) {
@@ -55,6 +55,7 @@ function PolyominoClass({
         border: 2px grey solid;
         padding: 1rem;
       `}
+      id={name}
     >
       <div
         className={css`
@@ -69,7 +70,7 @@ function PolyominoClass({
             margin: 0;
           `}
         >
-          {display}
+          {displayClass(name)}
         </h2>
         {link && (
           <a
