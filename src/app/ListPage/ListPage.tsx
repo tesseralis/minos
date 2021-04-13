@@ -1,6 +1,6 @@
 import React from "react"
 import { css } from "@emotion/css"
-import { Polyomino } from "mino"
+import { Polyomino, orderName, displayClass } from "mino"
 import { Link, useMatch, useNavigate } from "react-router-dom"
 import { getMinoColor } from "app/graph"
 
@@ -12,10 +12,10 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
   return (
     <div>
       <MinoDiv mino={mino} size={12} {...getMinoColor(mino)} />
-      <div>Order: {mino.order}</div>
+      <div>{orderName(mino.order)}</div>
       <div>Dimensions: {mino.dims.join(" × ")}</div>
       <div>Symmetry: {mino.transform.symmetry()}</div>
-      <div>Class: {mino.classes.best()}</div>
+      <div>Class: {displayClass(mino.classes.best())}</div>
       <div>
         Tiling:{" "}
         {mino.tilings.has() ? (
