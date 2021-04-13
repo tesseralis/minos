@@ -15,6 +15,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
       <div>Order: {mino.order}</div>
       <div>Dimensions: {mino.dims.join(" × ")}</div>
       <div>Symmetry: {mino.transform.symmetry()}</div>
+      <div>Class: {mino.classes.best()}</div>
       <div>
         Tiling:{" "}
         {mino.tilings.has() ? (
