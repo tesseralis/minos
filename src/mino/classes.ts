@@ -135,7 +135,7 @@ export default class MinoClasses {
     const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
     const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
     const start = this.pointAtAnchor(anchor)
-    // Do BFS in the two opposite directions
+    // Do BFS in the two orthogonal directions
     const visited = new PointSet()
     visited.add(start)
     const queue = [start]
@@ -170,41 +170,21 @@ export default class MinoClasses {
   /** Return whether this mino is a bar chart polyomino */
   isBar() {
     if (!this.isSemiConvex()) return false
-    // Essentially, a bar chart mino is meta-bidirected
-    const directedAnchors = this.anchors().filter(
-      (anchor) => this.hasAnchor(anchor) && this.isDirectedAtAnchor(anchor),
-    )
-    // If it's a higher class, return true
-    if (directedAnchors.length >= 3) return true
-    // If it's not bidirected, return false
-    if (directedAnchors.length < 2) return false
-    // Make sure the corners are next to each other
-    const [first, second] = directedAnchors
-    return first.x === second.x || first.y === second.y
+    return hasAdjacentAnchors(this.directedAnchors())
   }
 
   isDirectedConvex() {
     return this.isConvex() && this.anchors().length >= 1
   }
 
-  // Return whether the polyomino contains two opposite corners of its bounding box
-  private containsOppositeCorners() {
-    return (
-      (this.hasAnchor({ x: "start", y: "start" }) &&
-        this.hasAnchor({ x: "end", y: "end" })) ||
-      (this.hasAnchor({ x: "end", y: "start" }) &&
-        this.hasAnchor({ x: "start", y: "end" }))
-    )
-  }
-
   /** Return true if this mino is a stairase polyomino */
   isStaircase() {
-    return this.isConvex() && this.containsOppositeCorners()
+    return this.isConvex() && hasOppositeAnchors(this.anchors())
   }
 
   /** Return whether this mino is a stack polyomino */
   isStack() {
-    return this.isConvex() && this.isBar()
+    return this.isConvex() && hasAdjacentAnchors(this.anchors())
   }
 
   /** Return whether this polyomino is a Ferrers diagram */
@@ -243,4 +223,18 @@ export default class MinoClasses {
       return "other"
     }
   }
+}
+
+function hasAdjacentAnchors(anchors: Anchor[]) {
+  if (anchors.length > 2) return true
+  if (anchors.length < 2) return false
+  const [first, second] = anchors
+  return first.x === second.x || first.y === second.y
+}
+
+function hasOppositeAnchors(anchors: Anchor[]) {
+  if (anchors.length > 2) return true
+  if (anchors.length < 2) return false
+  const [first, second] = anchors
+  return first.x !== second.x && first.y !== second.y
 }
