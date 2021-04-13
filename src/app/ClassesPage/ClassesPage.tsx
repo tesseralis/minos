@@ -55,6 +55,7 @@ function PolyominoClass({
         border: 2px grey solid;
         padding: 1rem;
       `}
+      id={name}
     >
       <div
         className={css`
