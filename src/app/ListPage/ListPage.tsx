@@ -1,23 +1,30 @@
 import React from "react"
 import { css } from "@emotion/css"
-import useWindowEventListener from "app/useWindowEventListener"
+import { Polyomino } from "mino"
+import { useMatch, useNavigate } from "react-router-dom"
 
 import MinoList from "app/MinoList"
-import { useSelected, useSetSelected } from "app/SelectedContext"
+import MinoDiv from "app/MinoList/MinoDiv"
 
-function Sidebar() {
+function Sidebar({ mino }: { mino?: Polyomino }) {
   return (
-    <section
+    <main
       className={css`
         margin: 2rem;
       `}
     >
-      <h1>Polyomino Catalog</h1>
-      <p>
-        This catalog lists all the polyominoes up to octominoes. Select a
-        polyomino to see an overview of its properties.
-      </p>
-    </section>
+      {mino ? (
+        <MinoDiv mino={mino} size={10} stroke="black" fill="grey" />
+      ) : (
+        <>
+          <h1>Polyomino Catalog</h1>
+          <p>
+            This catalog lists all the polyominoes up to octominoes. Select a
+            polyomino to see an overview of its properties.
+          </p>
+        </>
+      )}
+    </main>
   )
 }
 
@@ -25,19 +32,14 @@ function Sidebar() {
  * Displays the list of all minos for each generation
  */
 export default function ListPage() {
-  const selected = useSelected()
-  const setSelected = useSetSelected()
-  useWindowEventListener("click", (e) => {
-    // Deselect the current mino if the click target isn't a mino
-    // or the compass
-    // TODO this is kind of a hack
-    if (!(e.target instanceof SVGElement)) {
-      setSelected(null)
-    }
-  })
+  const match = useMatch("/catalog/:mino")!
+  const code = match?.params?.mino
+  // TODO (a11y) ideally, all the minos should be links...
+  const navigate = useNavigate()
+  const mino = code ? Polyomino.fromString(code) : undefined
 
   return (
-    <main
+    <div
       className={css`
         width: 100%;
         height: 100vh;
@@ -51,9 +53,11 @@ export default function ListPage() {
           overflow-y: scroll;
         `}
       >
-        <MinoList selected={selected} onSelect={setSelected} />
+        <MinoList
+          onSelect={(mino) => navigate(`/catalog/${mino?.toString()}`)}
+        />
       </div>
-      <Sidebar />
-    </main>
+      <Sidebar mino={mino} />
+    </div>
   )
 }

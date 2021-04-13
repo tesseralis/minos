@@ -21,6 +21,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Navigate to="/genealogy" />} />
             <Route path="/catalog" element={<ListPage />} />
+            <Route path="/catalog/:mino" element={<ListPage />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
               path="/packing"

@@ -1,11 +1,10 @@
 import React from "react"
 import { css } from "@emotion/css"
 import { Polyomino } from "mino"
-import { useMatch } from "react-router-dom"
+import { useMatch, useNavigate } from "react-router-dom"
 
 import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
-import { useNavigate } from "react-router-dom"
 
 function Index() {
   return (
