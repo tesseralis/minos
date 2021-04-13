@@ -238,3 +238,11 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   const [first, second] = anchors
   return first.x !== second.x && first.y !== second.y
 }
+
+/** Render display name for the given polyomino class */
+export function displayClass(cls: MinoClass) {
+  return cls
+    .replace(/([A-Z])/g, " $1") // Replace camelCase to spaces
+    .replace(/^\w/, (c) => c.toUpperCase()) // Upper case the first word
+    .replace("Semi Convex", "Semi-Convex") // Add hyphen
+}

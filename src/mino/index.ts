@@ -1,5 +1,11 @@
 // Re-export everything from the mino module that is publically available outside
-export { Polyomino, MONOMINO, O_OCTOMINO, parsePattern } from "./internal"
+export {
+  Polyomino,
+  MONOMINO,
+  O_OCTOMINO,
+  parsePattern,
+  displayClass,
+} from "./internal"
 export type {
   Coord,
   Symmetry,
