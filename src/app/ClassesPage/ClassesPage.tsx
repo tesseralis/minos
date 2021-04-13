@@ -38,12 +38,12 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
 }
 
 function PolyominoClass({
-  name,
+  area,
   display,
   minos,
   link,
 }: {
-  name: string
+  area: string
   display: string
   minos: Polyomino[][]
   link?: string
@@ -51,7 +51,7 @@ function PolyominoClass({
   return (
     <section
       className={css`
-        grid-area: ${name};
+        grid-area: ${area};
         border: 2px grey solid;
         padding: 1rem;
       `}

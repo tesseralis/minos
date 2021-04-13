@@ -1,11 +1,11 @@
-import { groupBy, partition, sortBy } from "lodash-es"
+import { groupBy, sortBy } from "lodash-es"
 import { nodes } from "app/graph"
-import { Polyomino } from "mino"
+import { Polyomino, MinoClass } from "mino"
 
 interface ClassInfo {
-  name: string
+  name: MinoClass
+  area: string
   display: string
-  predicate(m: Polyomino): boolean
   link?: string
 }
 
@@ -15,63 +15,63 @@ interface ClassMinos extends ClassInfo {
 
 const classInfo: ClassInfo[] = [
   {
-    name: "rect",
+    name: "rectangle",
+    area: "rect",
     display: "Rectangle",
-    predicate: (m) => m.classes.isRectangle(),
   },
   {
-    name: "ferr",
+    name: "ferrersGraph",
+    area: "ferr",
     display: "Ferrers Graph",
-    predicate: (m) => m.classes.isFerrers(),
     link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
   },
   {
-    name: "stair",
+    name: "staircase",
+    area: "stair",
     display: "Staircase",
-    predicate: (m) => m.classes.isStaircase(),
     link: "https://mathworld.wolfram.com/StaircasePolygon.html",
   },
   {
     name: "stack",
+    area: "stack",
     display: "Stack",
-    predicate: (m) => m.classes.isStack(),
     link: "https://mathworld.wolfram.com/StackPolyomino.html",
   },
   {
-    name: "dcvx",
+    name: "directedConvex",
+    area: "dcvx",
     display: "Directed Convex",
-    predicate: (m) => m.classes.isDirected() && m.classes.isConvex(),
     link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
-    name: "bar",
+    name: "barGraph",
+    area: "bar",
     display: "Bar Graph",
-    predicate: (m) => m.classes.isBarChart(),
     link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
   },
   {
-    name: "cvx",
+    name: "convex",
+    area: "cvx",
     display: "Convex",
-    predicate: (m) => m.classes.isConvex(),
     link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
   },
   {
-    name: "dscvx",
+    name: "directedSemiConvex",
+    area: "dscvx",
     display: "Directed Semi-Convex",
-    predicate: (m) => m.classes.isDirected() && m.classes.isSemiConvex(),
   },
   {
-    name: "scvx",
+    name: "semiConvex",
+    area: "scvx",
     display: "Semi-Convex",
-    predicate: (m) => m.classes.isSemiConvex(),
     link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
-    name: "dir",
+    name: "directed",
+    area: "dir",
     display: "Directed",
-    predicate: (m) => m.classes.isDirected(),
   },
-  { name: "other", display: "Other", predicate: () => true },
+  { name: "other", area: "other", display: "Other" },
 ]
 
 function countLetters(s: string) {
@@ -102,7 +102,7 @@ function getBoundaryFamily(mino: Polyomino) {
     filtered = transforms.filter(
       (f) => !f.classes.hasAnchor({ x: "end", y: "end" }),
     )
-  } else if (mino.classes.isBarChart()) {
+  } else if (mino.classes.isBar()) {
     // Make sure both anchors for bar minos are on the left
     filtered = transforms.filter((f) =>
       f.classes.directedAnchors().every((anchor) => anchor.x === "start"),
@@ -162,10 +162,9 @@ function getBoundaryFamilies(minoClass: Polyomino[]) {
  * Sort the list of polyominoes the various classes
  */
 export function* getMinoClasses(): Generator<ClassMinos> {
-  let minos = nodes.flat()
+  const minos = nodes.flat()
+  const classes = groupBy(minos, (mino) => mino.classes.best())
   for (const cls of classInfo) {
-    const [matches, nonMatches] = partition(minos, cls.predicate)
-    minos = nonMatches
-    yield { ...cls, minos: getBoundaryFamilies(matches) }
+    yield { ...cls, minos: getBoundaryFamilies(classes[cls.name]) }
   }
 }
