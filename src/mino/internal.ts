@@ -18,7 +18,8 @@ export {
   removeSquare,
   getNeighbors,
 } from "./relatives"
-export { default as MinoClasses } from "./classes"
+export { default as MinoClasses, minoClasses } from "./classes"
+export type { MinoClass } from "./classes"
 export { MONOMINO, O_OCTOMINO } from "./constants"
 export { MinoPattern, parsePattern } from "./pattern"
 export type { MinoPlacement } from "./pattern"

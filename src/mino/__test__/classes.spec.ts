@@ -72,13 +72,13 @@ describe("MinoClasses", () => {
         Polyomino.fromString,
       )
       for (const mino of cases) {
-        expect(mino.classes.isBarChart()).toBe(true)
+        expect(mino.classes.isBar()).toBe(true)
       }
     })
     it("works on negative cases", () => {
       const cases = ["100_111_001", "0111_1101"].map(Polyomino.fromString)
       for (const mino of cases) {
-        expect(mino.classes.isBarChart()).toBe(false)
+        expect(mino.classes.isBar()).toBe(false)
       }
     })
   })

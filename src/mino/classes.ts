@@ -6,6 +6,22 @@ import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
 const axes = ["row", "column"] as const
 type Axis = typeof axes[number]
 
+export const minoClasses = [
+  "rectangle",
+  "ferrersGraph",
+  "staircase",
+  "stack",
+  "directedConvex",
+  "barGraph",
+  "convex",
+  "directedSemiConvex",
+  "semiConvex",
+  "directed",
+  "other",
+] as const
+
+export type MinoClass = typeof minoClasses[number]
+
 /**
  * Predicates for testing whether a mino belongs into one of the
  * specially defined classes of polyominoes, like directed minos.
@@ -152,7 +168,7 @@ export default class MinoClasses {
   })
 
   /** Return whether this mino is a bar chart polyomino */
-  isBarChart() {
+  isBar() {
     if (!this.isSemiConvex()) return false
     // Essentially, a bar chart mino is meta-bidirected
     const directedAnchors = this.anchors().filter(
@@ -165,6 +181,10 @@ export default class MinoClasses {
     // Make sure the corners are next to each other
     const [first, second] = directedAnchors
     return first.x === second.x || first.y === second.y
+  }
+
+  isDirectedConvex() {
+    return this.isConvex() && this.anchors().length >= 1
   }
 
   // Return whether the polyomino contains two opposite corners of its bounding box
@@ -184,7 +204,7 @@ export default class MinoClasses {
 
   /** Return whether this mino is a stack polyomino */
   isStack() {
-    return this.isConvex() && this.isBarChart()
+    return this.isConvex() && this.isBar()
   }
 
   /** Return whether this polyomino is a Ferrers diagram */
@@ -195,5 +215,32 @@ export default class MinoClasses {
   /** Return whether this polyomino is a rectangle */
   isRectangle() {
     return this.isConvex() && this.anchors().length === 4
+  }
+
+  /** Get the highest class in the class hierarchy that this mino is in */
+  best(): MinoClass {
+    if (this.isRectangle()) {
+      return "rectangle"
+    } else if (this.isFerrers()) {
+      return "ferrersGraph"
+    } else if (this.isStack()) {
+      return "stack"
+    } else if (this.isStaircase()) {
+      return "staircase"
+    } else if (this.isDirectedConvex()) {
+      return "directedConvex"
+    } else if (this.isBar()) {
+      return "barGraph"
+    } else if (this.isConvex()) {
+      return "convex"
+    } else if (this.isSemiConvex() && this.isDirected()) {
+      return "directedSemiConvex"
+    } else if (this.isSemiConvex()) {
+      return "semiConvex"
+    } else if (this.isDirected()) {
+      return "directed"
+    } else {
+      return "other"
+    }
   }
 }

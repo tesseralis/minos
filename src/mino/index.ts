@@ -8,5 +8,6 @@ export type {
   RelativeLink,
   MinoRelatives,
   MinoPattern,
+  MinoClass,
   Tiling,
 } from "./internal"
