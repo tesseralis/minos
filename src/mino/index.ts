@@ -5,6 +5,7 @@ export {
   O_OCTOMINO,
   parsePattern,
   displayClass,
+  orderName,
 } from "./internal"
 export type {
   Coord,

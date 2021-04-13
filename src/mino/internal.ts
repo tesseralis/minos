@@ -1,5 +1,5 @@
 export type { Coord } from "./data"
-export { default as Polyomino } from "./Polyomino"
+export { default as Polyomino, orderName } from "./Polyomino"
 export type { Symmetry, Transform, Anchor } from "./transform"
 export {
   default as MinoTransform,

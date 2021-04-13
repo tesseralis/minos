@@ -1,18 +1,7 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
 import { colors } from "style/theme"
-
-const minoPrefixes = [
-  "",
-  "mono",
-  "do",
-  "tro",
-  "tetro",
-  "pento",
-  "hexo",
-  "hepto",
-  "octo",
-]
+import { orderName } from "mino"
 
 interface HeaderProps {
   gen: number
@@ -42,7 +31,7 @@ function Header({ gen, count }: HeaderProps) {
           }
         `}
       >
-        {minoPrefixes[gen]}mino{gen > 2 ? "es" : ""} <span>(𝑛 = {gen})</span>
+        {orderName(gen, gen > 2)} <span>(𝑛 = {gen})</span>
       </h2>
       <span
         className={css`

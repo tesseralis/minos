@@ -139,3 +139,19 @@ export default class Polyomino {
     return displayMino(this.data)
   }
 }
+
+const orderPrefixes = [
+  "",
+  "mono",
+  "do",
+  "tro",
+  "tetro",
+  "pento",
+  "hexo",
+  "hepto",
+  "octo",
+]
+
+export function orderName(order: number, plural = false) {
+  return `${orderPrefixes[order]}mino${plural ? "es" : ""}`
+}
