@@ -46,7 +46,6 @@ export default function Nav() {
                 font-size: 1.25rem;
                 line-height: 1.25;
 
-                color: ${colors.fg};
                 text-decoration: none;
                 :hover {
                   text-decoration: underline;

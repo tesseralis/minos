@@ -3,7 +3,6 @@ import { css } from "@emotion/css"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino, displayClass, MinoClass } from "mino"
-import { colors } from "style/theme"
 import { getMinoClasses } from "./classHelpers"
 
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
@@ -78,7 +77,6 @@ function PolyominoClass({
             target="_blank"
             rel="noreferrer"
             className={css`
-              color: ${colors.fg};
               margin-left: auto;
               font-size: 1.25rem;
             `}
