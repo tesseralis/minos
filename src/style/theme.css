@@ -5,3 +5,7 @@ body {
   /* Don't adjust text size on iOS */
   -webkit-text-size-adjust: none;
 }
+
+a {
+  color: #ccc;
+}

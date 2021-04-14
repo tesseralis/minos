@@ -23,7 +23,6 @@ function PatternNavLink(props: any) {
       className={css`
         font-size: 1.25rem;
         margin-left: 0.5rem;
-        color: ${colors.fg};
         text-decoration: none;
       `}
       activeClassName={css`
