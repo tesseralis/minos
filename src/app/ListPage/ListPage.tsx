@@ -69,6 +69,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
   // const navigate = useNavigate()
   return (
     <>
+      <Link to="/catalog">close</Link>
       <div
         className={css`
           display: flex;
