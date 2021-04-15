@@ -8,12 +8,12 @@ type MinoData = number
 
 export const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
-  reflectOrtho: "#e22",
-  reflectDiag: "#66f",
-  rotate2: "limegreen",
-  dihedralOrtho: "gold",
-  dihedralDiag: "violet",
-  rotate4: "turquoise",
+  axis: "#e22",
+  diag: "#66f",
+  rot: "limegreen",
+  axis2: "gold",
+  diag2: "violet",
+  rot2: "turquoise",
   all: "#dee",
 }
 
@@ -33,12 +33,12 @@ const colorMap: Record<Symmetry, Color> = mapValues(baseColorMap, (col) =>
 // since we want desaturation in nonsymmetric minos to be prominent
 const mixMap = {
   none: 50,
-  reflectOrtho: 30,
-  reflectDiag: 30,
-  rotate2: 30,
-  dihedralOrtho: 20,
-  dihedralDiag: 20,
-  rotate4: 20,
+  axis: 30,
+  diag: 30,
+  rot: 30,
+  axis2: 20,
+  diag2: 20,
+  rot2: 20,
   all: 0,
 }
 

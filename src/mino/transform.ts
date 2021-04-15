@@ -31,12 +31,12 @@ export interface Anchor {
 
 export const symmetries = [
   "all",
-  "dihedralOrtho",
-  "dihedralDiag",
-  "rotate4",
-  "reflectOrtho",
-  "reflectDiag",
-  "rotate2",
+  "axis2",
+  "diag2",
+  "rot2",
+  "axis",
+  "diag",
+  "rot",
   "none",
 ] as const
 
@@ -187,13 +187,13 @@ function getSymmetry(predicate: (axis: Transform) => boolean) {
 
   if (orthogonal === 2 && diagonal === 2 && rotational === 2) return "all"
 
-  if (orthogonal === 2) return "dihedralOrtho"
-  if (diagonal === 2) return "dihedralDiag"
-  if (rotational === 2) return "rotate4"
+  if (orthogonal === 2) return "axis2"
+  if (diagonal === 2) return "diag2"
+  if (rotational === 2) return "rot2"
 
-  if (orthogonal === 1) return "reflectOrtho"
-  if (diagonal === 1) return "reflectDiag"
-  if (rotational === 1) return "rotate2"
+  if (orthogonal === 1) return "axis"
+  if (diagonal === 1) return "diag"
+  if (rotational === 1) return "rot"
 
   return "none"
 }
