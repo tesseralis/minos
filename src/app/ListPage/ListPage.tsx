@@ -109,7 +109,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
   return (
     <main
       className={css`
-        margin: 2rem;
+        padding: 2rem;
         overflow-y: scroll;
       `}
     >
