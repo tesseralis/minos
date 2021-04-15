@@ -3,7 +3,7 @@ import { css } from "@emotion/css"
 import { baseColorMap } from "app/graph"
 import { Circle, Line } from "app/svg"
 
-import { Polyomino, Symmetry } from "mino"
+import { Polyomino, Symmetry, printSymmetry } from "mino"
 import MinoDiv from "app/MinoList/MinoDiv"
 import InputTitle from "./InputTitle"
 
@@ -47,22 +47,22 @@ interface SymmetryType {
 const symmetryTypes: SymmetryType[] = [
   { type: "none", mino: Polyomino.of("010_110_011") },
   {
-    type: "reflectOrtho",
+    type: "axis",
     mino: Polyomino.of("100_111_100"),
     lines: <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />,
   },
   {
-    type: "reflectDiag",
+    type: "diag",
     mino: Polyomino.of("100_110_011"),
     lines: <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />,
   },
   {
-    type: "rotate2",
+    type: "rot",
     mino: Polyomino.of("001_111_100"),
     lines: <Circle r={10} {...symLinesProps} />,
   },
   {
-    type: "dihedralOrtho",
+    type: "axis2",
     mino: Polyomino.of("101_111_101"),
     lines: (
       <>
@@ -72,7 +72,7 @@ const symmetryTypes: SymmetryType[] = [
     ),
   },
   {
-    type: "dihedralDiag",
+    type: "diag2",
     mino: Polyomino.of("110_111_011"),
     lines: (
       <>
@@ -82,7 +82,7 @@ const symmetryTypes: SymmetryType[] = [
     ),
   },
   {
-    type: "rotate4",
+    type: "rot2",
     mino: Polyomino.of("0010_1110_0111_0100"),
     lines: <Circle r={10} {...symLinesProps} />,
   },
@@ -118,9 +118,9 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
           display: grid;
           grid-gap: 0.5rem 1rem;
           grid-template-areas:
-            ".    reflectOrtho dihedralOrtho ."
-            "none reflectDiag  dihedralDiag  all"
-            ".    rotate2      rotate4       .";
+            ".    axis axis2 ."
+            "none diag diag2 all"
+            ".    rot  rot2  .";
         `}
       >
         {symmetryTypes.map(({ type: sym, mino, lines }) => {
@@ -128,6 +128,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
           return (
             <label
               key={sym}
+              title={printSymmetry(sym)}
               className={css`
                 grid-area: ${sym};
               `}

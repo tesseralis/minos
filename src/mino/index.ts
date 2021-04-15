@@ -6,6 +6,7 @@ export {
   parsePattern,
   displayClass,
   orderName,
+  printSymmetry,
 } from "./internal"
 export type {
   Coord,
