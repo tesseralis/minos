@@ -1,5 +1,6 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
+import { capitalize } from "lodash-es"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { Link, useMatch, useNavigate } from "react-router-dom"
 import { getMinoColor } from "app/graph"
@@ -102,8 +103,21 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
       <dl>
         {data.map(({ name, display }) => (
           <>
-            <dt>{name}</dt>
-            <dd>{display(mino)}</dd>
+            <dt
+              className={css`
+                font-size: 1.125rem;
+              `}
+            >
+              {capitalize(name)}
+            </dt>
+            <dd
+              className={css`
+                margin: 0;
+                margin-bottom: 0.5rem;
+              `}
+            >
+              {display(mino)}
+            </dd>
           </>
         ))}
       </dl>
