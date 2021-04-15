@@ -19,6 +19,10 @@ function List({ minos }: { minos: Polyomino[] }) {
       className={css`
         display: flex;
         flex-wrap: wrap;
+
+        > * {
+          margin: 0.25rem;
+        }
       `}
     >
       {minos.map((mino) => (
@@ -106,6 +110,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
     <main
       className={css`
         margin: 2rem;
+        overflow-y: scroll;
       `}
     >
       {mino ? (
