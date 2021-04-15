@@ -197,3 +197,18 @@ function getSymmetry(predicate: (axis: Transform) => boolean) {
 
   return "none"
 }
+
+const symNames: Record<Symmetry, string> = {
+  none: "none",
+  axis: "reflective (axis)",
+  diag: "reflective (diagonal)",
+  rot: "rotational (2-fold)",
+  axis2: "reflective (2 axes)",
+  diag2: "reflective (2 diagonals)",
+  rot2: "rotational (4-fold)",
+  all: "all",
+}
+
+export function printSymmetry(sym: Symmetry) {
+  return symNames[sym]
+}

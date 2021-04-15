@@ -3,7 +3,7 @@ import { css } from "@emotion/css"
 import { baseColorMap } from "app/graph"
 import { Circle, Line } from "app/svg"
 
-import { Polyomino, Symmetry } from "mino"
+import { Polyomino, Symmetry, printSymmetry } from "mino"
 import MinoDiv from "app/MinoList/MinoDiv"
 import InputTitle from "./InputTitle"
 
@@ -128,6 +128,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
           return (
             <label
               key={sym}
+              title={printSymmetry(sym)}
               className={css`
                 grid-area: ${sym};
               `}

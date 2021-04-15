@@ -9,6 +9,7 @@ export {
   transforms,
   transformAnchor,
   transformCoord,
+  printSymmetry,
 } from "./transform"
 export type { PossibleRelativeLink, RelativeLink } from "./relatives"
 export {
