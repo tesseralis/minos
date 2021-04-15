@@ -1,65 +1,113 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
-import { Polyomino, orderName, displayClass } from "mino"
+import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { Link, useMatch, useNavigate } from "react-router-dom"
 import { getMinoColor } from "app/graph"
 
 import MinoList from "app/MinoList"
 import MinoDiv from "app/MinoList/MinoDiv"
 
-function MinoInfo({ mino }: { mino: Polyomino }) {
-  const navigate = useNavigate()
-  return (
-    <div>
-      <MinoDiv mino={mino} size={12} {...getMinoColor(mino)} />
-      <div>{orderName(mino.order)}</div>
-      <div>Dimensions: {mino.dims.join(" × ")}</div>
-      <div>Symmetry: {mino.transform.symmetry()}</div>
-      <div>Class: {displayClass(mino.classes.best())}</div>
-      <div>
-        Tiling:{" "}
-        {mino.tilings.has() ? (
-          <Link to={`/tiling/${mino.toString()}`}>yes</Link>
+interface MinoDatum {
+  name: string
+  display(mino: Polyomino): ReactNode
+}
+
+const data: MinoDatum[] = [
+  {
+    name: "order",
+    display: (m) => `${m.order} (${orderName(m.order)})`,
+  },
+  {
+    name: "dimensions",
+    display: (m) => m.dims.join(" × "),
+  },
+  {
+    name: "symmetry",
+    display: (m) => printSymmetry(m.transform.symmetry()),
+  },
+  {
+    name: "class",
+    display: (m) => displayClass(m.classes.best()),
+  },
+  {
+    name: "tiling",
+    display: (m) => (
+      <>
+        {m.tilings.has() ? (
+          <Link to={`/tiling/${m.toString()}`}>yes</Link>
         ) : (
           "no"
         )}
-      </div>
-      <h2>Parents</h2>
+      </>
+    ),
+  },
+  {
+    name: "parents",
+    display: (m) => (
       <div
         className={css`
           display: flex;
           flex-wrap: wrap;
         `}
       >
-        {[...mino.relatives.freeParents()].map((parent) => (
+        {[...m.relatives.freeParents()].map((parent) => (
           <MinoDiv
             key={parent.data}
             mino={parent}
             size={8}
-            onClick={() => navigate(`/catalog/${parent.toString()}`)}
             {...getMinoColor(parent)}
           />
         ))}
       </div>
-      <h2>Children</h2>
+    ),
+  },
+  {
+    name: "children",
+    display: (m) => (
       <div
         className={css`
           display: flex;
           flex-wrap: wrap;
         `}
       >
-        {mino.order < 8 &&
-          [...mino.relatives.freeChildren()].map((child) => (
+        {m.order < 8 &&
+          [...m.relatives.freeChildren()].map((child) => (
             <MinoDiv
               key={child.data}
               mino={child}
               size={8}
-              onClick={() => navigate(`/catalog/${child.toString()}`)}
               {...getMinoColor(child)}
             />
           ))}
       </div>
-    </div>
+    ),
+  },
+]
+
+function MinoInfo({ mino }: { mino: Polyomino }) {
+  // const navigate = useNavigate()
+  return (
+    <>
+      <div
+        className={css`
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          // Constant height so lower parts don't shift down
+          height: 6rem;
+        `}
+      >
+        <MinoDiv mino={mino} size={96 / mino.order} {...getMinoColor(mino)} />
+      </div>
+      <dl>
+        {data.map(({ name, display }) => (
+          <>
+            <dt>{name}</dt>
+            <dd>{display(mino)}</dd>
+          </>
+        ))}
+      </dl>
+    </>
   )
 }
 
