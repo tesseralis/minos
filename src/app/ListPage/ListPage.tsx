@@ -13,6 +13,21 @@ interface MinoDatum {
   display(mino: Polyomino): ReactNode
 }
 
+function List({ minos }: { minos: Polyomino[] }) {
+  return (
+    <div
+      className={css`
+        display: flex;
+        flex-wrap: wrap;
+      `}
+    >
+      {minos.map((mino) => (
+        <MinoDiv key={mino.data} mino={mino} size={8} {...getMinoColor(mino)} />
+      ))}
+    </div>
+  )
+}
+
 const data: MinoDatum[] = [
   {
     name: "order",
@@ -32,56 +47,17 @@ const data: MinoDatum[] = [
   },
   {
     name: "tiling",
-    display: (m) => (
-      <>
-        {m.tilings.has() ? (
-          <Link to={`/tiling/${m.toString()}`}>yes</Link>
-        ) : (
-          "no"
-        )}
-      </>
-    ),
+    display: (m) =>
+      m.tilings.has() ? <Link to={`/tiling/${m.toString()}`}>yes</Link> : "no",
   },
   {
     name: "parents",
-    display: (m) => (
-      <div
-        className={css`
-          display: flex;
-          flex-wrap: wrap;
-        `}
-      >
-        {[...m.relatives.freeParents()].map((parent) => (
-          <MinoDiv
-            key={parent.data}
-            mino={parent}
-            size={8}
-            {...getMinoColor(parent)}
-          />
-        ))}
-      </div>
-    ),
+    display: (m) => <List minos={[...m.relatives.freeParents()]} />,
   },
   {
     name: "children",
-    display: (m) => (
-      <div
-        className={css`
-          display: flex;
-          flex-wrap: wrap;
-        `}
-      >
-        {m.order < 8 &&
-          [...m.relatives.freeChildren()].map((child) => (
-            <MinoDiv
-              key={child.data}
-              mino={child}
-              size={8}
-              {...getMinoColor(child)}
-            />
-          ))}
-      </div>
-    ),
+    display: (m) =>
+      m.order < 8 ? <List minos={[...m.relatives.freeChildren()]} /> : null,
   },
 ]
 
