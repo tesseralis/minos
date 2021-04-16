@@ -57,7 +57,7 @@ const data: MinoDatum[] = [
   },
   {
     name: "class",
-    display: (m) => displayClass(m.classes.best()).toLowerCase(),
+    display: (m) => displayClass(m.classes.best()),
   },
   {
     name: "tiling",
