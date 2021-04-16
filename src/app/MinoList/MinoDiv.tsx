@@ -2,7 +2,7 @@ import React, { ReactNode } from "react"
 import MinoSvg, { Props as MinoSvgProps } from "app/MinoSvg"
 import Vector from "vector"
 
-export interface Props extends Omit<MinoSvgProps, "coord"> {
+export interface Props extends Omit<MinoSvgProps, "coord" | "onClick"> {
   children?: ReactNode
 }
 
@@ -12,7 +12,6 @@ export interface Props extends Omit<MinoSvgProps, "coord"> {
 export default React.memo(function MinoDiv({
   mino,
   size,
-  onClick,
   children,
   ...props
 }: Props) {
@@ -26,8 +25,6 @@ export default React.memo(function MinoDiv({
       width={svgWidth}
       height={svgHeight}
       viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
-      onClick={onClick}
-      tabIndex={onClick ? 0 : -1}
     >
       <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
       {children}
