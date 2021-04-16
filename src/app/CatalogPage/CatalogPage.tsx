@@ -23,9 +23,10 @@ function List({ minos }: { minos: Polyomino[] }) {
       className={css`
         display: flex;
         flex-wrap: wrap;
+        align-items: center;
 
         > * {
-          margin: 0.25rem;
+          margin: 0.375rem;
         }
       `}
     >
@@ -66,12 +67,18 @@ const data: MinoDatum[] = [
   },
   {
     name: "parents",
-    display: (m) => <List minos={[...m.relatives.freeParents()]} />,
+    display: (m) => (
+      <List minos={Polyomino.sort([...m.relatives.freeParents()])} />
+    ),
   },
   {
     name: "children",
     display: (m) =>
-      m.order < 8 ? <List minos={[...m.relatives.freeChildren()]} /> : null,
+      m.order < 8 ? (
+        <List minos={Polyomino.sort([...m.relatives.freeChildren()])} />
+      ) : (
+        "——"
+      ),
   },
 ]
 
