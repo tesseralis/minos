@@ -162,7 +162,10 @@ export default function CatalogPage() {
           overflow-y: scroll;
         `}
       >
-        <MinoList to={(mino) => `/catalog/${mino.toString()}`} />
+        <MinoList
+          to={(mino) => `/catalog/${mino.toString()}`}
+          selected={mino}
+        />
       </div>
       <Sidebar mino={mino} />
     </div>

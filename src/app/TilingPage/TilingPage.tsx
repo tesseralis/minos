@@ -22,7 +22,7 @@ function Index() {
 export default function TilingPage() {
   const match = useMatch("/tiling/:mino")!
   const code = match?.params?.mino
-  const mino = code && Polyomino.fromString(code)
+  const mino = code ? Polyomino.fromString(code) : undefined
 
   return (
     <div
@@ -46,6 +46,7 @@ export default function TilingPage() {
         <MinoList
           narrow
           initFilter={{ yesNo: { hasTiling: "yes" } }}
+          selected={mino}
           to={(mino) => `/tiling/${mino.toString()}`}
         />
       </div>
