@@ -2,10 +2,11 @@ import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
 import { capitalize } from "lodash-es"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
-import { Link, useMatch, useNavigate } from "react-router-dom"
+import { Link, useMatch } from "react-router-dom"
 import { getMinoColor } from "app/graph"
 
 import MinoList from "app/MinoList"
+import MinoLink from "app/MinoLink"
 import MinoDiv from "app/MinoList/MinoDiv"
 
 interface MinoDatum {
@@ -26,7 +27,13 @@ function List({ minos }: { minos: Polyomino[] }) {
       `}
     >
       {minos.map((mino) => (
-        <MinoDiv key={mino.data} mino={mino} size={8} {...getMinoColor(mino)} />
+        <MinoLink
+          key={mino.data}
+          mino={mino}
+          size={8}
+          {...getMinoColor(mino)}
+          to={`/catalog/${mino.toString()}`}
+        />
       ))}
     </div>
   )
@@ -66,7 +73,6 @@ const data: MinoDatum[] = [
 ]
 
 function MinoInfo({ mino }: { mino: Polyomino }) {
-  // const navigate = useNavigate()
   return (
     <>
       <Link to="/catalog">close</Link>
@@ -136,7 +142,6 @@ export default function ListPage() {
   const match = useMatch("/catalog/:mino")!
   const code = match?.params?.mino
   // TODO (a11y) ideally, all the minos should be links...
-  const navigate = useNavigate()
   const mino = code ? Polyomino.fromString(code) : undefined
 
   return (
@@ -154,9 +159,7 @@ export default function ListPage() {
           overflow-y: scroll;
         `}
       >
-        <MinoList
-          onSelect={(mino) => navigate(`/catalog/${mino?.toString()}`)}
-        />
+        <MinoList to={(mino) => `/catalog/${mino.toString()}`} />
       </div>
       <Sidebar mino={mino} />
     </div>

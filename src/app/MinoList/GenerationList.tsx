@@ -8,7 +8,7 @@ import { colors } from "style/theme"
 import { scaleLinear } from "d3-scale"
 import { NUM_GENERATIONS } from "app/graph"
 import GenSection from "./GenSection"
-import MinoDiv from "./MinoDiv"
+import MinoLink from "app/MinoLink"
 
 const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([18, 10])
 
@@ -16,7 +16,7 @@ interface Props {
   minos: Polyomino[]
   gen: number
   selected: Polyomino | null
-  onSelect(mino: Polyomino): void
+  to(mino: Polyomino): string
   skipAnimation: boolean
   narrow?: boolean
 }
@@ -28,7 +28,7 @@ export default React.memo(function GenerationList({
   minos,
   gen,
   skipAnimation,
-  onSelect,
+  to,
   selected,
   narrow,
 }: Props) {
@@ -68,13 +68,13 @@ export default React.memo(function GenerationList({
                 !!selected && mino.transform.equivalent(selected)
               const { stroke, fill } = getMinoColor(mino)
               return (
-                <MinoDiv
+                <MinoLink
                   key={mino.data}
                   mino={mino}
                   fill={fill}
-                  size={getBlockSize(mino.order)}
                   stroke={isSelected ? colors.highlight : stroke}
-                  onClick={() => onSelect(mino)}
+                  size={getBlockSize(mino.order)}
+                  to={to(mino)}
                 />
               )
             })}

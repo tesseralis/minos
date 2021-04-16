@@ -1,7 +1,7 @@
 import React from "react"
 import { css } from "@emotion/css"
 import { Polyomino } from "mino"
-import { useMatch, useNavigate } from "react-router-dom"
+import { useMatch } from "react-router-dom"
 
 import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
@@ -22,8 +22,6 @@ function Index() {
 export default function TilingPage() {
   const match = useMatch("/tiling/:mino")!
   const code = match?.params?.mino
-  // TODO (a11y) ideally, all the minos should be links...
-  const navigate = useNavigate()
   const mino = code && Polyomino.fromString(code)
 
   return (
@@ -48,7 +46,7 @@ export default function TilingPage() {
         <MinoList
           narrow
           initFilter={{ yesNo: { hasTiling: "yes" } }}
-          onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
+          to={(mino) => `/tiling/${mino.toString()}`}
         />
       </div>
       <div>{mino ? <Tiling mino={mino} /> : <Index />}</div>

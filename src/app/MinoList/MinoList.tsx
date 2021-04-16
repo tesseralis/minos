@@ -12,7 +12,7 @@ interface Props {
   narrow?: boolean
   selected?: Polyomino | null
   initFilter?: FilterOptions
-  onSelect(mino: Polyomino | null): void
+  to(mino: Polyomino): string
 }
 
 const listMinos = nodes.map(Polyomino.sort)
@@ -34,7 +34,7 @@ function NoMatches() {
  */
 export default function MinoList({
   selected = null,
-  onSelect,
+  to,
   narrow,
   initFilter = {},
 }: Props) {
@@ -66,7 +66,7 @@ export default function MinoList({
                 key={gen}
                 skipAnimation={gen <= START_GENS}
                 selected={hasSelected ? selected : null}
-                onSelect={onSelect}
+                to={to}
               />
             )
           })
