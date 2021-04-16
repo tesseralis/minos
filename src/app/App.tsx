@@ -7,7 +7,7 @@ import Layout from "./Layout"
 import SelectedContext from "./SelectedContext"
 import Compass from "./Compass"
 import FamilyTree from "./FamilyTree"
-import ListPage from "./ListPage"
+import CatalogPage from "./CatalogPage"
 import PatternPage from "./PackingPage"
 import TilingPage from "./TilingPage"
 import ClassesPage from "./ClassesPage"
@@ -20,8 +20,8 @@ export default function App() {
         <Layout topLeft={<Nav />} topRight={<Compass />}>
           <Routes>
             <Route path="/" element={<Navigate to="/genealogy" />} />
-            <Route path="/catalog" element={<ListPage />} />
-            <Route path="/catalog/:mino" element={<ListPage />} />
+            <Route path="/catalog" element={<CatalogPage />} />
+            <Route path="/catalog/:mino" element={<CatalogPage />} />
             {/* TODO: put this logic in <PatternPage somehow/> */}
             <Route
               path="/packing"

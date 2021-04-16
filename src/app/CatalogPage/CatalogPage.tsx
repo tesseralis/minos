@@ -138,7 +138,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
 /**
  * Displays the list of all minos for each generation
  */
-export default function ListPage() {
+export default function CatalogPage() {
   const match = useMatch("/catalog/:mino")!
   const code = match?.params?.mino
   // TODO (a11y) ideally, all the minos should be links...
