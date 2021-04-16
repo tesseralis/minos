@@ -146,7 +146,8 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
 }
 
 /**
- * Displays the list of all minos for each generation
+ * Displays the minos of each generation and allows the user to select
+ * one and open a list of information about it.
  */
 export default function CatalogPage() {
   const match = useMatch("/catalog/:mino")!

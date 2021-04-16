@@ -245,5 +245,5 @@ export function displayClass(cls: MinoClass) {
     .replace(/([A-Z])/g, " $1") // Replace camelCase to spaces
     .toLowerCase()
     .replace("semi convex", "semi-convex") // Add hyphen
-    .replace("ferrers", "Ferrers")
+    .replace("ferrers", "Ferrers") // Capitalize proper name
 }

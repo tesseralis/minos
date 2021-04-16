@@ -7,6 +7,9 @@ interface Props extends Omit<MinoDivProps, "onClick" | "children"> {
   to: string
 }
 
+/**
+ * A visual inline polyomino that links to another page.
+ */
 export default function MinoLink({ to, ...props }: Props) {
   return (
     <Link
