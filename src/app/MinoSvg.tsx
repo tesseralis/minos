@@ -10,9 +10,9 @@ import { G, Rect, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
 // TODO re-enable this when we need
-const style = css`
-  transition: stroke 350ms ease-in-out;
-`
+// const style = css`
+//   transition: stroke 350ms ease-in-out;
+// `
 
 export interface Props {
   mino: Polyomino
@@ -75,7 +75,6 @@ export default function MinoSvg({
       onHover={onHover}
     >
       <Polygon
-        className={style}
         style={{ stroke }}
         points={outlinePoints}
         fill={fill}
@@ -93,7 +92,6 @@ export default function MinoSvg({
       {gridStyle !== "none" && (
         <path
           d={path.toString()}
-          className={style}
           style={{ stroke }}
           fill="none"
           opacity={gridStyle === "thick" ? 1 : 0.25}
