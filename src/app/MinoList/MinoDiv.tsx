@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react"
-import { css } from "@emotion/css"
 import MinoSvg, { Props as MinoSvgProps } from "app/MinoSvg"
 import Vector from "vector"
 
-interface Props extends Omit<MinoSvgProps, "coord"> {
+export interface Props extends Omit<MinoSvgProps, "coord" | "onClick"> {
   children?: ReactNode
 }
 
@@ -13,7 +12,6 @@ interface Props extends Omit<MinoSvgProps, "coord"> {
 export default React.memo(function MinoDiv({
   mino,
   size,
-  onClick,
   children,
   ...props
 }: Props) {
@@ -23,20 +21,13 @@ export default React.memo(function MinoDiv({
   const svgHeight = height * size + 2
 
   return (
-    <div key={mino.data}>
-      <svg
-        width={svgWidth}
-        height={svgHeight}
-        viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
-        onClick={onClick}
-        tabIndex={onClick ? 0 : -1}
-        className={css`
-          cursor: ${onClick ? "pointer" : "initial"};
-        `}
-      >
-        <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
-        {children}
-      </svg>
-    </div>
+    <svg
+      width={svgWidth}
+      height={svgHeight}
+      viewBox={`${-svgWidth / 2} ${-svgHeight / 2} ${svgWidth} ${svgHeight}`}
+    >
+      <MinoSvg {...props} mino={mino} size={size} coord={Vector.ZERO} />
+      {children}
+    </svg>
   )
 })

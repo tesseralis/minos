@@ -243,6 +243,7 @@ function hasOppositeAnchors(anchors: Anchor[]) {
 export function displayClass(cls: MinoClass) {
   return cls
     .replace(/([A-Z])/g, " $1") // Replace camelCase to spaces
-    .replace(/^\w/, (c) => c.toUpperCase()) // Upper case the first word
-    .replace("Semi Convex", "Semi-Convex") // Add hyphen
+    .toLowerCase()
+    .replace("semi convex", "semi-convex") // Add hyphen
+    .replace("ferrers", "Ferrers") // Capitalize proper name
 }

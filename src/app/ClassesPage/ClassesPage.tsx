@@ -1,5 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/css"
+import { capitalize } from "lodash-es"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino, displayClass, MinoClass } from "mino"
@@ -69,7 +70,7 @@ function PolyominoClass({
             margin: 0;
           `}
         >
-          {displayClass(name)}
+          {capitalize(displayClass(name))}
         </h2>
         {link && (
           <a

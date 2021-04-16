@@ -5,7 +5,6 @@ import { useMatch } from "react-router-dom"
 
 import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
-import { useNavigate } from "react-router-dom"
 
 function Index() {
   return (
@@ -23,9 +22,7 @@ function Index() {
 export default function TilingPage() {
   const match = useMatch("/tiling/:mino")!
   const code = match?.params?.mino
-  // TODO (a11y) ideally, all the minos should be links...
-  const navigate = useNavigate()
-  const mino = code && Polyomino.fromString(code)
+  const mino = code ? Polyomino.fromString(code) : undefined
 
   return (
     <div
@@ -49,7 +46,8 @@ export default function TilingPage() {
         <MinoList
           narrow
           initFilter={{ yesNo: { hasTiling: "yes" } }}
-          onSelect={(mino) => navigate(`/tiling/${mino?.toString()}`)}
+          selected={mino}
+          to={(mino) => `/tiling/${mino.toString()}`}
         />
       </div>
       <div>{mino ? <Tiling mino={mino} /> : <Index />}</div>
