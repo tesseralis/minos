@@ -1,9 +1,10 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
 import { capitalize } from "lodash-es"
+import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { Link, useMatch } from "react-router-dom"
-import { getMinoColor } from "app/graph"
+import { getMinoColor, NUM_GENERATIONS } from "app/graph"
 
 import MinoList from "app/MinoList"
 import MinoLink from "app/MinoLink"
@@ -13,6 +14,8 @@ interface MinoDatum {
   name: string
   display(mino: Polyomino): ReactNode
 }
+
+const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([12, 8])
 
 function List({ minos }: { minos: Polyomino[] }) {
   return (
@@ -30,7 +33,7 @@ function List({ minos }: { minos: Polyomino[] }) {
         <MinoLink
           key={mino.data}
           mino={mino}
-          size={8}
+          size={getBlockSize(mino.order)}
           {...getMinoColor(mino)}
           to={`/catalog/${mino.toString()}`}
         />

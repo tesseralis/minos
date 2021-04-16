@@ -9,6 +9,7 @@ import { getAnchor } from "./utils"
 import { G, Rect, Polygon } from "./svg"
 
 // TODO figure out why this particular styling is efficient
+// TODO re-enable this when we need
 const style = css`
   transition: stroke 350ms ease-in-out;
 `
