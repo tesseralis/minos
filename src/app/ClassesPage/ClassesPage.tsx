@@ -65,7 +65,6 @@ function PolyominoClass({
       >
         <h2
           className={css`
-            font-weight: normal;
             font-size: 1.25rem;
             margin: 0;
           `}
@@ -113,7 +112,6 @@ function Info() {
         padding: 1rem 2rem;
 
         h1 {
-          font-weight: normal;
           font-size: 1.75rem;
           line-height: 1.125;
         }

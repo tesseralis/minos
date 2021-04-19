@@ -6,7 +6,7 @@ import { colors } from "style/theme"
 
 function Title() {
   return (
-    <h1
+    <div
       className={css`
         display: flex;
         flex-direction: column;
@@ -25,7 +25,7 @@ function Title() {
     >
       <span>The labyrinth of</span>
       polyominoes
-    </h1>
+    </div>
   )
 }
 

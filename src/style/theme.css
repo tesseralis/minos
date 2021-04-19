@@ -6,6 +6,11 @@ body {
   -webkit-text-size-adjust: none;
 }
 
+h1,
+h2 {
+  font-weight: normal;
+}
+
 a {
   color: #ccc;
 }

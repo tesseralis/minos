@@ -22,7 +22,6 @@ function Header({ gen, count }: HeaderProps) {
     >
       <h2
         className={css`
-          font-weight: normal;
           font-size: 1.25rem;
           margin: 0;
 
