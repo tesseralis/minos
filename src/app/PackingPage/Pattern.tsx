@@ -11,25 +11,17 @@ async function getPatternStr(patName: string): Promise<string> {
   return module.default
 }
 
-const maxWidth = 600
-
-function getPatternName(size: string | number, shape: string) {
-  if (typeof size === "string") {
-    size = size.replace("..", "_")
-  }
-  return `${size}-${shape}`
-}
+const maxWidth = 500
 
 interface Props {
-  size: string | number
-  shape: string
+  pattern: string
 }
 
-export default function MinoPattern({ size, shape }: Props) {
+export default function MinoPattern({ pattern: patName }: Props) {
   const [patternStr, setPatternStr] = React.useState<string | null>(null)
   const [visIndex, setVisIndex] = React.useState(-1)
   const selected = useSelected()
-  const patName = getPatternName(size, shape)
+  // const patName = getPatternName(size, shape)
 
   React.useEffect(() => {
     getPatternStr(patName).then((str) => setPatternStr(str))

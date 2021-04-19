@@ -1,15 +1,18 @@
 import React from "react"
 import { css } from "@emotion/css"
 import Pattern from "./Pattern"
+import { orderName } from "mino"
 import { NavLink, useMatch } from "react-router-dom"
 import { colors } from "style/theme"
 
 const sizes = ["1_4", 5, 6, 7, 8]
 const shapes = ["rect", "square"]
 
-function getSizeText(size: string | number) {
-  if (size === "1_4") return "1..4"
-  return size
+function getSizeText(size: number | string) {
+  if (typeof size === "string") {
+    return "small polyominoes"
+  }
+  return orderName(size) + "es"
 }
 
 function getShapeText(shape: string) {
@@ -21,76 +24,123 @@ function PatternNavLink(props: any) {
   return (
     <NavLink
       className={css`
-        font-size: 1.25rem;
-        margin-left: 0.5rem;
+        font-size: 1.125rem;
+        margin-right: 0.5rem;
         text-decoration: none;
       `}
       activeClassName={css`
         color: ${colors.highlight};
+        text-decoration: underline;
       `}
       {...props}
     />
   )
 }
 
-function PatternNav({ shape }: any) {
+function PatternNav() {
   return (
     <nav
       className={css`
         margin-top: 2rem;
-
-        a {
-          .active {
-            color: ${colors.highlight};
-          }
-        }
+        width: 18rem;
       `}
     >
-      <div>
-        𝑛 =
-        {sizes.map((size) => (
-          <PatternNavLink key={size} to={`../../${size}/${shape}`}>
+      {sizes.map((size) => (
+        <section
+          key={size}
+          className={css`
+            padding: 1rem;
+
+            :not(:last-child) {
+              border-bottom: 1px solid ${colors.fg};
+            }
+          `}
+        >
+          <h2
+            className={css`
+              font-weight: normal;
+              font-size: 1.25rem;
+              margin: 0;
+            `}
+          >
             {getSizeText(size)}
-          </PatternNavLink>
-        ))}
-      </div>
-      <div>
-        pattern =
-        {shapes.map((shape) => (
-          <PatternNavLink key={shape} to={`../${shape}`}>
-            {getShapeText(shape)}
-          </PatternNavLink>
-        ))}
-      </div>
+          </h2>
+          <div>
+            {shapes.map((shape) => {
+              return (
+                <PatternNavLink key={shape} to={`/packing/${size}-${shape}`}>
+                  {getShapeText(shape)}
+                </PatternNavLink>
+              )
+            })}
+          </div>
+        </section>
+      ))}
     </nav>
   )
 }
 
+function Info() {
+  return (
+    <div
+      className={css`
+        margin: 2rem 4rem;
+      `}
+    >
+      <h1>Packing polyominoes</h1>
+      <p>
+        Given a set of polyominoes, such as the set of all pentominoes, it is
+        natural to ask whether that set can be arranged to form certain
+        patterns, such as squares or rectangles, called <em>packing</em>.
+        Polyomino packing problems are popular and have been the basis of many
+        puzzles and video games.
+      </p>
+
+      <p>
+        This section reprints patterns sourced from various other polyomino
+        sites and publications.
+      </p>
+    </div>
+  )
+}
+
 export default function PatternPage() {
-  const { params } = useMatch("/packing/:size/:shape")!
-  const { size, shape } = params
+  const match = useMatch("/packing/:pattern")!
+  const pattern = match?.params?.pattern
 
   return (
     <div
       className={css`
         width: 100%;
-        max-width: 48rem;
+        max-width: 54rem;
         height: 100vh;
-        margin-left: 10rem;
+        margin-left: 12rem;
         overflow-y: scroll;
         display: flex;
-        flex-direction: column;
-        align-items: center;
       `}
     >
-      <PatternNav shape={shape} />
-      <div
+      <PatternNav />
+      <main
         className={css`
           margin: 1rem 0;
+          width: 100%;
         `}
       >
-        <Pattern size={size} shape={shape} />
-      </div>
+        {pattern ? (
+          <div
+            className={css`
+              margin-top: 2rem;
+              width: 100%;
+              display: flex;
+              justify-content: center;
+            `}
+          >
+            <Pattern pattern={pattern} />
+          </div>
+        ) : (
+          <Info />
+        )}
+      </main>
     </div>
   )
 }

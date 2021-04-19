@@ -17,11 +17,11 @@ export default function App() {
       <Layout topLeft={<Nav />}>
         <Routes>
           <Route path="/" element={<Navigate to="/genealogy" />} />
+          {/* TODO: put the double logic in the individual pages somehow */}
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/catalog/:mino" element={<CatalogPage />} />
-          {/* TODO: put this logic in <PatternPage somehow/> */}
-          <Route path="/packing" element={<Navigate to="/packing/5/rect" />} />
-          <Route path="/packing/:size/:shape" element={<PatternPage />} />
+          <Route path="/packing" element={<PatternPage />} />
+          <Route path="/packing/:pattern" element={<PatternPage />} />
           <Route path="/classes" element={<ClassesPage />} />
           <Route path="/tiling" element={<TilingPage />} />
           <Route path="/tiling/:mino" element={<TilingPage />} />
