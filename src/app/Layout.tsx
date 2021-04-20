@@ -1,5 +1,6 @@
 import React from "react"
 import { css } from "@emotion/css"
+import { useLocation } from "react-router-dom"
 
 interface Props {
   children?: React.ReactElement
@@ -20,6 +21,11 @@ const overlayInfo = [
  * A Layout that supports central content and one overlay at each corner.
  */
 export default function Layout({ children, ...overlays }: Props) {
+  // hack to not display nav on homepage for now
+  const location = useLocation()
+  if (location.pathname === "/") {
+    return children || null
+  }
   return (
     <div
       className={css`

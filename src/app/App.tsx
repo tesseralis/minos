@@ -1,9 +1,10 @@
 import React from "react"
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom"
+import { BrowserRouter, Routes, Route } from "react-router-dom"
 
 import KeyBindings from "./KeyBindings"
 import Nav from "./Nav"
 import Layout from "./Layout"
+import HomePage from "./HomePage"
 import FamilyTree from "./FamilyTree"
 import CatalogPage from "./CatalogPage"
 import PatternPage from "./PackingPage"
@@ -16,7 +17,7 @@ export default function App() {
       <KeyBindings />
       <Layout topLeft={<Nav />}>
         <Routes>
-          <Route path="/" element={<Navigate to="/genealogy" />} />
+          <Route path="/" element={<HomePage />} />
           {/* TODO: put the double logic in the individual pages somehow */}
           <Route path="/catalog" element={<CatalogPage />} />
           <Route path="/catalog/:mino" element={<CatalogPage />} />

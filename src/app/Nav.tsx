@@ -1,12 +1,13 @@
 import React from "react"
-import { NavLink } from "react-router-dom"
+import { Link, NavLink } from "react-router-dom"
 import { css } from "@emotion/css"
 
 import { colors } from "style/theme"
 
 function Title() {
   return (
-    <div
+    <Link
+      to="/"
       className={css`
         display: flex;
         flex-direction: column;
@@ -16,6 +17,7 @@ function Title() {
         color: ${colors.highlight};
         line-height: 1;
         font-size: 1.5rem;
+        text-decoration: none;
 
         span {
           margin-left: 0.0625rem;
@@ -25,7 +27,7 @@ function Title() {
     >
       <span>The labyrinth of</span>
       polyominoes
-    </div>
+    </Link>
   )
 }
 
