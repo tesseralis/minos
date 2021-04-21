@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import tinycolor from "tinycolor2"
 
 import { Circle } from "app/svg"
@@ -30,7 +30,7 @@ export default function SymmetryRing({ showTransforms }: Props) {
       <g opacity={2 / 3}>
         {/* Hide the strands behind the component */}
         <Circle
-          className={css`
+          css={css`
             pointer-events: initial;
           `}
           r={radius}

@@ -1,5 +1,5 @@
 import React, { memo, useState, useCallback } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
@@ -65,7 +65,7 @@ export default memo(function SelectableMino({
       />
       <Circle
         {...handleClick}
-        className={css`
+        css={css`
           opacity: 0;
           cursor: pointer;
           pointer-events: initial;

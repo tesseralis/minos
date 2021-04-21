@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { useLocation } from "react-router-dom"
 
 interface Props {
@@ -28,7 +28,7 @@ export default function Layout({ children, ...overlays }: Props) {
   }
   return (
     <div
-      className={css`
+      css={css`
         display: grid;
         position: fixed;
         top: 0;
@@ -45,7 +45,7 @@ export default function Layout({ children, ...overlays }: Props) {
           overlays[name] && (
             <div
               key={name}
-              className={css`
+              css={css`
                 grid-area: 1/1;
                 align-self: ${align};
                 justify-self: ${justify};
@@ -62,7 +62,7 @@ export default function Layout({ children, ...overlays }: Props) {
       )}
       {/* Render the main content at the very last */}
       <div
-        className={css`
+        css={css`
           grid-area: 1 / 1;
           /* Needed to make the content full-height in Safari */
           display: flex;

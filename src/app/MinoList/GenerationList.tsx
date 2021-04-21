@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
 import transition from "app/transition"
@@ -49,7 +49,7 @@ export default React.memo(function GenerationList({
   return (
     <GenSection gen={gen} narrow={narrow} count={minos.length}>
       <div
-        className={css`
+        css={css`
           display: flex;
           flex-wrap: wrap;
           align-items: center;

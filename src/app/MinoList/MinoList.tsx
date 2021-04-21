@@ -1,5 +1,5 @@
 import React, { useState, useMemo } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
 import { nodes } from "app/graph"
@@ -20,7 +20,7 @@ const listMinos = nodes.map(Polyomino.sort)
 function NoMatches() {
   return (
     <p
-      className={css`
+      css={css`
         font-size: 1.25rem;
       `}
     >
@@ -46,7 +46,7 @@ export default function MinoList({
     <div>
       <Filter value={filter} onUpdate={setFilter} narrow={narrow} />
       <div
-        className={css`
+        css={css`
           display: flex;
           flex-wrap: wrap;
           justify-content: space-around;

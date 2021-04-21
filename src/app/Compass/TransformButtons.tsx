@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { Transform } from "mino"
 import { colors } from "style/theme"
@@ -37,7 +37,7 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
 
   return (
     <Text
-      className={css`
+      css={css`
         cursor: pointer;
         fill: ${color};
         pointer-events: initial;
@@ -67,7 +67,7 @@ interface Props {
 export default function TransformButtons({ visible }: Props) {
   return (
     <g
-      className={css`
+      css={css`
         transition: opacity 100ms ease-in-out;
         opacity: ${visible ? 1 : 0};
       `}
@@ -88,7 +88,7 @@ export default function TransformButtons({ visible }: Props) {
             key={trans}
             icon={rotationSymbols[trans]}
             trans={trans}
-            className={css`
+            css={css`
               font-size: 20px;
               text-anchor: middle;
               dominant-baseline: ${trans === "rotateHalf"

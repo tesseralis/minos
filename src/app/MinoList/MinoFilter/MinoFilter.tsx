@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { colors } from "style/theme"
 import SymmetryInput from "./SymmetryInput"
@@ -15,7 +15,7 @@ interface Props {
 function FilterForm({ narrow, value, onUpdate }: Props) {
   return (
     <form
-      className={css`
+      css={css`
         margin: 0 4rem;
         display: flex;
         flex-wrap: wrap;
@@ -26,7 +26,7 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
         onUpdate={(val) => onUpdate({ ...value, symmetries: val })}
       />
       <div
-        className={css`
+        css={css`
           margin-left: ${narrow ? 0 : "2rem"};
           margin-top: ${narrow ? "2rem" : 0};
         `}
@@ -50,7 +50,7 @@ export default function MinoFilter(props: Props) {
     <div>
       {/* TODO (a11y) probably aria-expanded? */}
       <button
-        className={css`
+        css={css`
           color: ${colors.fg};
           text-align: right;
           background: none;

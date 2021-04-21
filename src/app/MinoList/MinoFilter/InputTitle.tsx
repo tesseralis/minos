@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { colors } from "style/theme"
 
 interface Props {
@@ -13,7 +13,7 @@ interface Props {
 export default function InputTitle({ display, onClear }: Props) {
   return (
     <div
-      className={css`
+      css={css`
         font-size: 1.125rem;
         width: 100%;
         display: grid;
@@ -24,7 +24,7 @@ export default function InputTitle({ display, onClear }: Props) {
       <button
         type="button"
         onClick={onClear}
-        className={css`
+        css={css`
           /* TODO (refactor) factor out this button style */
           font-size: 1rem;
           font-family: serif;

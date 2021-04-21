@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { colors } from "style/theme"
 import { Circle, Line } from "app/svg"
 
@@ -11,7 +11,7 @@ export default function Background() {
   return (
     <g opacity={2 / 3}>
       <Circle
-        className={css`
+        css={css`
           pointer-events: initial;
         `}
         r={outerRingRadius}

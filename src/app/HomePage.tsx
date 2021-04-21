@@ -1,19 +1,19 @@
 import Link from "next/link"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import Pattern from "app/PackingPage/Pattern"
 
 const links = ["catalog", "packing", "tiling", "classes", "genealogy"]
 function HomePageNav() {
   return (
     <nav
-      className={css`
+      css={css`
         margin-top: 2rem;
       `}
     >
       {links.map((link) => (
         <Link key={link} href={`/${link}`}>
           <a
-            className={css`
+            css={css`
               margin: 1rem;
               font-size: 1.5rem;
             `}
@@ -29,7 +29,7 @@ function HomePageNav() {
 export default function HomePage() {
   return (
     <div
-      className={css`
+      css={css`
         position: absolute;
         top: 0;
         left: 0;
@@ -41,7 +41,7 @@ export default function HomePage() {
       `}
     >
       <div
-        className={css`
+        css={css`
           grid-area: center;
           opacity: 25%;
           display: flex;
@@ -54,7 +54,7 @@ export default function HomePage() {
         <Pattern pattern="8-square" />
       </div>
       <main
-        className={css`
+        css={css`
           grid-area: center;
           display: flex;
           flex-direction: column;
@@ -65,7 +65,7 @@ export default function HomePage() {
       >
         <div>
           <h1
-            className={css`
+            css={css`
               display: flex;
               flex-direction: column;
               line-height: 1;
@@ -75,7 +75,7 @@ export default function HomePage() {
             The
             <span>
               <span
-                className={css`
+                css={css`
                   font-size: 4rem;
                 `}
               >
@@ -84,7 +84,7 @@ export default function HomePage() {
               of
             </span>{" "}
             <span
-              className={css`
+              css={css`
                 font-size: 6rem;
               `}
             >
@@ -92,7 +92,7 @@ export default function HomePage() {
             </span>
           </h1>
           <p
-            className={css`
+            css={css`
               text-align: right;
               font-size: 1.5rem;
               margin: 0;

@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { baseColorMap } from "app/graph"
 import { Circle, Line } from "app/svg"
 
@@ -113,7 +113,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
     <div>
       <InputTitle display="Symmetries" onClear={() => onUpdate([])} />
       <div
-        className={css`
+        css={css`
           margin-top: 1rem;
           display: grid;
           grid-gap: 0.5rem 1rem;
@@ -129,14 +129,14 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
             <label
               key={sym}
               title={printSymmetry(sym)}
-              className={css`
+              css={css`
                 grid-area: ${sym};
               `}
             >
               {/* TODO (a11y) tab navigation */}
               <input
                 type="checkbox"
-                className="visually-hidden"
+                css="visually-hidden"
                 checked={checked}
                 onChange={(e) =>
                   onUpdate(

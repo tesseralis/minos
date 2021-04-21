@@ -1,5 +1,5 @@
 import React, { memo } from "react"
-import { css, cx, keyframes } from "@emotion/css"
+import { css, keyframes } from "@emotion/react"
 
 import Vector from "vector"
 import { Polyomino } from "mino"
@@ -51,7 +51,7 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
   `
   return (
     <path
-      className={cx(base, gen >= START_GENS && fadeAnimation)}
+      css={[base, gen >= START_GENS && fadeAnimation]}
       style={{
         stroke: isSelected ? colors.highlight : getLinkColor(srcMino, tgtMino),
         strokeWidth: strokeWidth * (isSelected ? 3 : 1),

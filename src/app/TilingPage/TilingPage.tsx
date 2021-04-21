@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { Polyomino } from "mino"
 import { useMatch } from "react-router-dom"
 
@@ -26,7 +26,7 @@ export default function TilingPage() {
 
   return (
     <div
-      className={css`
+      css={css`
         width: 100%;
         max-width: 54rem;
         height: 100vh;
@@ -38,7 +38,7 @@ export default function TilingPage() {
       `}
     >
       <div
-        className={css`
+        css={css`
           overflow-y: scroll;
         `}
       >

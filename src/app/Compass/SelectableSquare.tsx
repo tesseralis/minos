@@ -1,4 +1,4 @@
-import { cx, css } from "@emotion/css"
+import { css } from "@emotion/react"
 import React from "react"
 
 import Vector from "vector"
@@ -55,11 +55,11 @@ export default function SelectableSquare({
 
   return (
     <Rect
-      className={cx(
+      css={[
         !!mino && selectableStyle,
         className,
         isSelected && selectedClassName,
-      )}
+      ]}
       coord={transform(coord)}
       width={size}
       height={size}

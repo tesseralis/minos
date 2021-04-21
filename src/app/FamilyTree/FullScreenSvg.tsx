@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { colors } from "style/theme"
 
 interface Props {
@@ -17,7 +17,7 @@ export default function FullScreenSvg({ width, children }: Props) {
 
   return (
     <svg
-      className={css`
+      css={css`
         width: 100%;
         height: 100%;
         background-color: ${colors.bg};

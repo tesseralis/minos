@@ -1,5 +1,5 @@
 import React, { useMemo } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
@@ -9,7 +9,7 @@ import { getMinoClasses } from "./classHelpers"
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
   return (
     <div
-      className={css`
+      css={css`
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -50,7 +50,7 @@ function PolyominoClass({
 }) {
   return (
     <section
-      className={css`
+      css={css`
         grid-area: ${area};
         border: 2px grey solid;
         padding: 1rem;
@@ -58,13 +58,13 @@ function PolyominoClass({
       id={name}
     >
       <div
-        className={css`
+        css={css`
           display: flex;
           margin: 0 0.5rem;
         `}
       >
         <h2
-          className={css`
+          css={css`
             font-size: 1.25rem;
             margin: 0;
           `}
@@ -76,7 +76,7 @@ function PolyominoClass({
             href={link}
             target="_blank"
             rel="noreferrer"
-            className={css`
+            css={css`
               margin-left: auto;
               font-size: 1.25rem;
             `}
@@ -86,7 +86,7 @@ function PolyominoClass({
         )}
       </div>
       <div
-        className={css`
+        css={css`
           display: flex;
           align-items: stretch;
           flex-wrap: wrap;
@@ -107,7 +107,7 @@ function PolyominoClass({
 function Info() {
   return (
     <section
-      className={css`
+      css={css`
         grid-area: info;
         padding: 1rem 2rem;
 
@@ -142,7 +142,7 @@ function ClassesChart() {
   const classes = useMemo(() => [...getMinoClasses()], [])
   return (
     <div
-      className={css`
+      css={css`
         display: grid;
         grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
         grid-template-areas:
@@ -166,7 +166,7 @@ function ClassesChart() {
 export default function ClassesPage() {
   return (
     <main
-      className={css`
+      css={css`
         width: 100%;
         max-width: 66rem;
         height: 100vh;

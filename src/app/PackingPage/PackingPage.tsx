@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import Pattern from "./Pattern"
 import { orderName } from "mino"
 import { NavLink, useMatch } from "react-router-dom"
@@ -23,12 +23,12 @@ function getShapeText(shape: string) {
 function PatternNavLink(props: any) {
   return (
     <NavLink
-      className={css`
+      css={css`
         font-size: 1.125rem;
         margin-right: 0.5rem;
         text-decoration: none;
       `}
-      activeClassName={css`
+      activecss={css`
         color: ${colors.highlight};
         text-decoration: underline;
       `}
@@ -40,7 +40,7 @@ function PatternNavLink(props: any) {
 function PatternNav() {
   return (
     <nav
-      className={css`
+      css={css`
         margin-top: 2rem;
         width: 18rem;
       `}
@@ -48,7 +48,7 @@ function PatternNav() {
       {sizes.map((size) => (
         <section
           key={size}
-          className={css`
+          css={css`
             padding: 1rem;
 
             :not(:last-child) {
@@ -57,7 +57,7 @@ function PatternNav() {
           `}
         >
           <h2
-            className={css`
+            css={css`
               font-size: 1.25rem;
               margin: 0;
             `}
@@ -82,7 +82,7 @@ function PatternNav() {
 function Info() {
   return (
     <div
-      className={css`
+      css={css`
         margin: 2rem 4rem;
       `}
     >
@@ -109,7 +109,7 @@ export default function PatternPage() {
 
   return (
     <div
-      className={css`
+      css={css`
         width: 100%;
         max-width: 54rem;
         height: 100vh;
@@ -120,14 +120,14 @@ export default function PatternPage() {
     >
       <PatternNav />
       <main
-        className={css`
+        css={css`
           margin: 1rem 0;
           width: 100%;
         `}
       >
         {pattern ? (
           <div
-            className={css`
+            css={css`
               margin-top: 2rem;
               width: 100%;
               display: flex;

@@ -1,4 +1,4 @@
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import React from "react"
 import { path as d3path } from "d3-path"
 
@@ -58,7 +58,7 @@ export default function MinoSvg({
 
   return (
     <G
-      className={
+      css={
         onClick
           ? css`
               cursor: pointer;

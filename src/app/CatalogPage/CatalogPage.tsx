@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
@@ -20,7 +20,7 @@ const getBlockSize = scaleLinear().domain([1, NUM_GENERATIONS]).range([12, 8])
 function List({ minos }: { minos: Polyomino[] }) {
   return (
     <div
-      className={css`
+      css={css`
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -87,7 +87,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
     <>
       <Link to="/catalog">close</Link>
       <div
-        className={css`
+        css={css`
           display: flex;
           justify-content: center;
           align-items: center;
@@ -101,14 +101,14 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
         {data.map(({ name, display }) => (
           <>
             <dt
-              className={css`
+              css={css`
                 font-size: 1.125rem;
               `}
             >
               {capitalize(name)}
             </dt>
             <dd
-              className={css`
+              css={css`
                 margin: 0;
                 margin-bottom: 0.5rem;
               `}
@@ -125,7 +125,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
 function Sidebar({ mino }: { mino?: Polyomino }) {
   return (
     <main
-      className={css`
+      css={css`
         padding: 2rem;
         overflow-y: scroll;
       `}
@@ -157,7 +157,7 @@ export default function CatalogPage() {
 
   return (
     <div
-      className={css`
+      css={css`
         width: 100%;
         height: 100vh;
         margin-left: 10rem;
@@ -166,7 +166,7 @@ export default function CatalogPage() {
       `}
     >
       <div
-        className={css`
+        css={css`
           overflow-y: scroll;
         `}
       >

@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import Background from "./Background"
 import PanZoom from "./PanZoom"
@@ -30,7 +30,7 @@ export default function FamilyTree() {
           </PanZoom>
         </FullScreenSvg>
         <div
-          className={css`
+          css={css`
             position: absolute;
             top: 0;
             right: 0;

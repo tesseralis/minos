@@ -1,6 +1,6 @@
 import React from "react"
 import { Link, NavLink } from "react-router-dom"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { colors } from "style/theme"
 
@@ -8,7 +8,7 @@ function Title() {
   return (
     <Link
       to="/"
-      className={css`
+      css={css`
         display: flex;
         flex-direction: column;
         font-weight: normal;
@@ -34,7 +34,7 @@ function Title() {
 export default function Nav() {
   return (
     <nav
-      className={css`
+      css={css`
         font-family: serif;
       `}
     >
@@ -45,7 +45,7 @@ export default function Nav() {
             <li key={view}>
               <NavLink
                 to={`/${view}`}
-                className={css`
+                css={css`
                   font-size: 1.25rem;
                   line-height: 1.25;
 
@@ -54,7 +54,7 @@ export default function Nav() {
                     text-decoration: underline;
                   }
                 `}
-                activeClassName={css`
+                activecss={css`
                   color: ${colors.highlight};
                 `}
               >

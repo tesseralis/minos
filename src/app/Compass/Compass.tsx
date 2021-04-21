@@ -1,5 +1,5 @@
 import React from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 
 import { G } from "app/svg"
 import { useSelected } from "app/SelectedContext"
@@ -25,7 +25,7 @@ export default function Compass() {
     <RelativeCtx.Provider>
       <svg
         viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
-        className={css`
+        css={css`
           width: 22rem;
           height: 22rem;
           pointer-events: none;

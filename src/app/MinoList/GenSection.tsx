@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { colors } from "style/theme"
 import { orderName } from "mino"
 
@@ -11,7 +11,7 @@ interface HeaderProps {
 function Header({ gen, count }: HeaderProps) {
   return (
     <div
-      className={css`
+      css={css`
         width: 100%;
         display: grid;
         grid-template-columns: 1fr 2rem;
@@ -21,7 +21,7 @@ function Header({ gen, count }: HeaderProps) {
       `}
     >
       <h2
-        className={css`
+        css={css`
           font-size: 1.25rem;
           margin: 0;
 
@@ -33,7 +33,7 @@ function Header({ gen, count }: HeaderProps) {
         {orderName(gen, gen > 2)} <span>(𝑛 = {gen})</span>
       </h2>
       <span
-        className={css`
+        css={css`
           font-size: 1rem;
           justify-self: end;
         `}
@@ -57,7 +57,7 @@ interface Props {
 export default function GenSection({ gen, count, children, narrow }: Props) {
   return (
     <section
-      className={css`
+      css={css`
         padding: 2rem;
         display: flex;
         flex-direction: column;

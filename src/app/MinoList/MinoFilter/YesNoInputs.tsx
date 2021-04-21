@@ -1,6 +1,6 @@
 import React from "react"
 import InputTitle from "./InputTitle"
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import { colors } from "style/theme"
 import { YesNoName, YesNoOptions } from "./common"
 
@@ -69,7 +69,7 @@ function YesNoInput({
 }: YesNoProps) {
   return (
     <div
-      className={css`
+      css={css`
         margin-bottom: 1rem;
       `}
     >
@@ -82,14 +82,14 @@ function YesNoInput({
           <label key={val}>
             <input
               type="radio"
-              className="visually-hidden"
+              css="visually-hidden"
               name={name}
               value={val}
               checked={checked}
               onChange={(e) => onUpdate(e.target.value)}
             />
             <span
-              className={css`
+              css={css`
                 margin-right: 1rem;
                 color: ${checked ? colors.highlight : colors.fg};
                 text-decoration: ${checked ? "underline" : "none"};
