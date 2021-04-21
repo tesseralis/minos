@@ -5,5 +5,5 @@ import { Polyomino } from "../../src/mino"
 export default function Page() {
   const router = useRouter()
   const { mino } = router.query
-  return <CatalogPage mino={Polyomino.fromString(mino as any)} />
+  return <CatalogPage mino={mino && Polyomino.fromString(mino as any)} />
 }
