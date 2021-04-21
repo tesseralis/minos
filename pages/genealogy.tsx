@@ -1,3 +1,3 @@
-import FamilyTree from "app/FamilyTree"
+import FamilyTree from "components/FamilyTree"
 
 export default FamilyTree

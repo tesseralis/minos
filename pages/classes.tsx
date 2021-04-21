@@ -1,3 +1,3 @@
-import ClassesPage from "app/ClassesPage"
+import ClassesPage from "components/ClassesPage"
 
 export default ClassesPage

@@ -1,4 +1,4 @@
-import CatalogPage from "app/CatalogPage"
+import CatalogPage from "components/CatalogPage"
 import { useRouter } from "next/router"
 import { Polyomino } from "mino"
 

@@ -1,4 +1,4 @@
-import TilingPage from "app/TilingPage"
+import TilingPage from "components/TilingPage"
 import { useRouter } from "next/router"
 import { Polyomino } from "mino"
 

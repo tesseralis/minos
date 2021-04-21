@@ -1,3 +1,3 @@
-import CatalogPage from "app/CatalogPage"
+import CatalogPage from "components/CatalogPage"
 
 export default CatalogPage
