@@ -41,7 +41,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "test": "jest --transformIgnorePatterns \"node_modules/(?!(lodash-es))/\"",
+    "test": "jest --watch",
     "prettier": "prettier '**/*.{json,css}'",
     "eslint": "eslint '**/*.{ts,tsx}'",
     "lint:other": "yarn prettier --check",
