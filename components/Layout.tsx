@@ -23,7 +23,7 @@ const overlayInfo = [
 export default function Layout({ children, ...overlays }: Props) {
   // hack to not display nav on homepage for now
   const router = useRouter()
-  if (router.pathname === "/") {
+  if (router.asPath === "/") {
     return children || null
   }
   return (

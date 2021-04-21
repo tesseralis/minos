@@ -51,7 +51,8 @@ function PatternNav() {
           <div>
             {shapes.map((shape) => {
               const route = `/packing/${size}-${shape}`
-              const isActive = router.pathname.startsWith(route)
+              console.log(router.asPath)
+              const isActive = router.asPath.startsWith(route)
               return (
                 <Link key={shape} href={route}>
                   <a

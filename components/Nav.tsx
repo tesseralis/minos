@@ -50,7 +50,7 @@ export default function Nav() {
                   css={css`
                     font-size: 1.25rem;
                     line-height: 1.25;
-                    color: ${router.pathname.startsWith(`/${view}`)
+                    color: ${router.asPath.startsWith(`/${view}`)
                       ? colors.highlight
                       : colors.fg};
 
