@@ -11,8 +11,7 @@ interface Props {
 export default function FullScreenSvg({ width, children }: Props) {
   // Only change the viewbox if the prop width changes, not the window ratio
   const viewBox = useMemo(() => {
-    // const height = (width / window.innerWidth) * window.innerHeight
-    // FIXME figure out how to do this based on window
+    // TODO does setting this matter if the window size is different?
     const height = (width / 16) * 9
     return `-${width / 2} ${-height / 10} ${width} ${height}`
   }, [width])
