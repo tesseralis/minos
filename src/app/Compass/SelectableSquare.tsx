@@ -1,6 +1,4 @@
-import { css } from "@emotion/react"
-import React from "react"
-
+import { css, SerializedStyles } from "@emotion/react"
 import Vector from "vector"
 import { PossibleRelativeLink } from "mino"
 import { Rect } from "app/svg"
@@ -28,15 +26,15 @@ function useMinoTransform() {
 }
 
 interface SquareProps {
-  className: string
-  selectedClassName: string
+  defaultCss: SerializedStyles
+  selectedCss: SerializedStyles
   link: PossibleRelativeLink
 }
 
 /** A single possibly selectable mino square */
 export default function SelectableSquare({
-  className,
-  selectedClassName,
+  defaultCss,
+  selectedCss,
   link,
 }: SquareProps) {
   const { mino, coord } = link
@@ -55,11 +53,7 @@ export default function SelectableSquare({
 
   return (
     <Rect
-      css={[
-        !!mino && selectableStyle,
-        className,
-        isSelected && selectedClassName,
-      ]}
+      css={[!!mino && selectableStyle, defaultCss, isSelected && selectedCss]}
       coord={transform(coord)}
       width={size}
       height={size}

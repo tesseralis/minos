@@ -1,5 +1,4 @@
 import { css } from "@emotion/react"
-import React from "react"
 import tinycolor from "tinycolor2"
 
 import { O_OCTOMINO } from "mino"
@@ -24,13 +23,13 @@ function InnerSquares({ highlight }: Props) {
         <MinoSquare
           key={i}
           link={link as any}
-          css={css`
+          defaultCss={css`
             fill: ${!!link.mino && highlight
               ? tinycolor.mix(fill, "white", 25).toString()
               : fill};
             stroke: ${stroke};
           `}
-          selectedcss={css`
+          selectedCss={css`
             fill: ${tinycolor.mix(fill, "white", 80).toString()};
           `}
         />
@@ -50,12 +49,12 @@ function OuterSquares() {
         <MinoSquare
           key={i}
           link={link}
-          css={css`
+          defaultCss={css`
             fill: ${colors.highlight};
             stroke: gray;
             opacity: 0;
           `}
-          selectedcss={css`
+          selectedCss={css`
             opacity: 0.5;
           `}
         />
