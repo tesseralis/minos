@@ -1,3 +1,3 @@
-import PackingPage from "../../src/app/PackingPage"
+import PackingPage from "app/PackingPage"
 
 export default PackingPage

@@ -1,3 +1,3 @@
-import ClassesPage from "../src/app/ClassesPage"
+import ClassesPage from "app/ClassesPage"
 
 export default ClassesPage

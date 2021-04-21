@@ -1,6 +1,6 @@
-import TilingPage from "../../src/app/TilingPage"
+import TilingPage from "app/TilingPage"
 import { useRouter } from "next/router"
-import { Polyomino } from "../../src/mino"
+import { Polyomino } from "mino"
 
 export default function Page() {
   const router = useRouter()

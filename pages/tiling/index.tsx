@@ -1,3 +1,3 @@
-import TilingPage from "../../src/app/TilingPage"
+import TilingPage from "app/TilingPage"
 
 export default TilingPage

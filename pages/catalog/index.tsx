@@ -1,3 +1,3 @@
-import CatalogPage from "../../src/app/CatalogPage"
+import CatalogPage from "app/CatalogPage"
 
 export default CatalogPage

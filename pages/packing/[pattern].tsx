@@ -1,5 +1,5 @@
 import { useRouter } from "next/router"
-import PackingPage from "../../src/app/PackingPage"
+import PackingPage from "app/PackingPage"
 
 export default function Page() {
   const router = useRouter()
