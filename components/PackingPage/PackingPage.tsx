@@ -54,7 +54,7 @@ function PatternNav() {
               console.log(router.asPath)
               const isActive = router.asPath.startsWith(route)
               return (
-                <Link key={shape} href={route}>
+                <Link key={shape} href={route} passHref>
                   <a
                     css={css`
                       font-size: 1.125rem;

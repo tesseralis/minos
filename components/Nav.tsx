@@ -6,7 +6,7 @@ import { colors } from "style/theme"
 
 function Title() {
   return (
-    <Link href="/">
+    <Link href="/" passHref>
       <a
         css={css`
           display: flex;
@@ -45,7 +45,7 @@ export default function Nav() {
         {["catalog", "packing", "tiling", "classes", "genealogy"].map(
           (view) => (
             <li key={view}>
-              <Link href={`/${view}`}>
+              <Link href={`/${view}`} passHref>
                 <a
                   css={css`
                     font-size: 1.25rem;

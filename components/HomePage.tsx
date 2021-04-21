@@ -8,18 +8,16 @@ function HomePageNav() {
     <nav
       css={css`
         margin-top: 2rem;
+
+        a {
+          margin: 1rem;
+          font-size: 1.5rem;
+        }
       `}
     >
       {links.map((link) => (
         <Link key={link} href={`/${link}`}>
-          <a
-            css={css`
-              margin: 1rem;
-              font-size: 1.5rem;
-            `}
-          >
-            {link}
-          </a>
+          <a>{link}</a>
         </Link>
       ))}
     </nav>

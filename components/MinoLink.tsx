@@ -12,11 +12,7 @@ interface Props extends Omit<MinoDivProps, "onClick" | "children"> {
 export default function MinoLink({ to, ...props }: Props) {
   return (
     <Link href={to}>
-      <a
-        css={css`
-          cursor: pointer;
-        `}
-      >
+      <a>
         <MinoDiv {...props} />
       </a>
     </Link>
