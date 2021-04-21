@@ -1,7 +1,6 @@
 import React from "react"
 import { css } from "@emotion/react"
 import { Polyomino } from "mino"
-import { useMatch } from "react-router-dom"
 
 import Tiling from "./Tiling"
 import MinoList from "app/MinoList"
@@ -19,11 +18,7 @@ function Index() {
   )
 }
 
-export default function TilingPage() {
-  const match = useMatch("/tiling/:mino")!
-  const code = match?.params?.mino
-  const mino = code ? Polyomino.fromString(code) : undefined
-
+export default function TilingPage({ mino }: { mino?: Polyomino }) {
   return (
     <div
       css={css`

@@ -1,9 +1,9 @@
 import React, { ReactNode } from "react"
+import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
-import { Link, useMatch } from "react-router-dom"
 import { getMinoColor, NUM_GENERATIONS } from "app/graph"
 
 import MinoList from "app/MinoList"
@@ -63,7 +63,13 @@ const data: MinoDatum[] = [
   {
     name: "tiling",
     display: (m) =>
-      m.tilings.has() ? <Link to={`/tiling/${m.toString()}`}>yes</Link> : "no",
+      m.tilings.has() ? (
+        <Link href={`/tiling/${m.toString()}`}>
+          <a>yes</a>
+        </Link>
+      ) : (
+        "no"
+      ),
   },
   {
     name: "parents",
@@ -85,7 +91,9 @@ const data: MinoDatum[] = [
 function MinoInfo({ mino }: { mino: Polyomino }) {
   return (
     <>
-      <Link to="/catalog">close</Link>
+      <Link href="/catalog">
+        <a>close</a>
+      </Link>
       <div
         css={css`
           display: flex;
@@ -149,12 +157,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
  * Displays the minos of each generation and allows the user to select
  * one and open a list of information about it.
  */
-export default function CatalogPage() {
-  const match = useMatch("/catalog/:mino")!
-  const code = match?.params?.mino
-  // TODO (a11y) ideally, all the minos should be links...
-  const mino = code ? Polyomino.fromString(code) : undefined
-
+export default function CatalogPage({ mino }: { mino?: Polyomino }) {
   return (
     <div
       css={css`
