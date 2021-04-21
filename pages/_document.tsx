@@ -17,7 +17,7 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           <meta charSet="utf-8" />
-          <link rel="shortcut icon" href="public/favicon.ico" />
+          <link rel="shortcut icon" href="/favicon.ico" />
           <meta
             name="viewport"
             content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
@@ -29,7 +29,7 @@ export default class MyDocument extends Document {
           <meta name="theme-color" content="#000000" />
           {/* manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/ */}
-          <link rel="manifest" href="public/manifest.json" />
+          <link rel="manifest" href="/manifest.json" />
           <title>The Labyrinth of Polyominoes</title>
         </Head>
         <body>
