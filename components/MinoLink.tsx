@@ -1,5 +1,4 @@
 import Link from "next/link"
-import { css } from "@emotion/react"
 import MinoDiv, { Props as MinoDivProps } from "components/MinoList/MinoDiv"
 
 interface Props extends Omit<MinoDivProps, "onClick" | "children"> {

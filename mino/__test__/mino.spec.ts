@@ -1,10 +1,4 @@
-import Vector from "vector"
 import { Polyomino } from ".."
-
-// TODO remove the need for these testing functions
-function toVecs(coords: [number, number][]) {
-  return coords.map(Vector.fromArray)
-}
 
 describe("mino", () => {
   describe("strings", () => {

@@ -14,8 +14,10 @@ module.exports = {
   plugins: ["prettier", "react", "jsx-a11y", "@typescript-eslint"],
   rules: {
     "import/no-webpack-loader-syntax": "off",
-    // not true in nextjs
+    // don't need to import react in NextJS
     "react/react-in-jsx-scope": "off",
+    // don't need hrefs in NextJS
+    "jsx-a11y/anchor-is-valid": "off",
     // we have a lot of anonymous renderers passed as props
     "react/display-name": "off",
     // I care more about readibility than possible errors
