@@ -1,9 +1,9 @@
-import React from "react"
+import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "./Pattern"
 import { orderName } from "mino"
-import { NavLink, useMatch } from "react-router-dom"
 import { colors } from "style/theme"
+import { useRouter } from "next/router"
 
 const sizes = ["1_4", 5, 6, 7, 8]
 const shapes = ["rect", "square"]
@@ -20,24 +20,8 @@ function getShapeText(shape: string) {
   return shape
 }
 
-function PatternNavLink(props: any) {
-  return (
-    <NavLink
-      css={css`
-        font-size: 1.125rem;
-        margin-right: 0.5rem;
-        text-decoration: none;
-      `}
-      activecss={css`
-        color: ${colors.highlight};
-        text-decoration: underline;
-      `}
-      {...props}
-    />
-  )
-}
-
 function PatternNav() {
+  const router = useRouter()
   return (
     <nav
       css={css`
@@ -66,10 +50,21 @@ function PatternNav() {
           </h2>
           <div>
             {shapes.map((shape) => {
+              const route = `/packing/${size}-${shape}`
+              const isActive = router.pathname.startsWith(route)
               return (
-                <PatternNavLink key={shape} to={`/packing/${size}-${shape}`}>
-                  {getShapeText(shape)}
-                </PatternNavLink>
+                <Link key={shape} href={route}>
+                  <a
+                    css={css`
+                      font-size: 1.125rem;
+                      margin-right: 0.5rem;
+                      color: ${isActive ? colors.highlight : colors.fg};
+                      text-decoration: ${isActive ? "underline" : "none"};
+                    `}
+                  >
+                    {getShapeText(shape)}
+                  </a>
+                </Link>
               )
             })}
           </div>
@@ -103,10 +98,7 @@ function Info() {
   )
 }
 
-export default function PatternPage() {
-  const match = useMatch("/packing/:pattern")!
-  const pattern = match?.params?.pattern
-
+export default function PackingPage({ pattern }: { pattern?: string }) {
   return (
     <div
       css={css`
