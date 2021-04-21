@@ -1,6 +1,5 @@
-import React from "react"
 import { css } from "@emotion/react"
-import { useLocation } from "react-router-dom"
+import { useRouter } from "next/router"
 
 interface Props {
   children?: React.ReactElement
@@ -22,8 +21,8 @@ const overlayInfo = [
  */
 export default function Layout({ children, ...overlays }: Props) {
   // hack to not display nav on homepage for now
-  const location = useLocation()
-  if (location.pathname === "/") {
+  const router = useRouter()
+  if (router.pathname === "/") {
     return children || null
   }
   return (
