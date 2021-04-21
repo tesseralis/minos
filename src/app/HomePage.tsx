@@ -1,6 +1,5 @@
-import React from "react"
+import Link from "next/link"
 import { css } from "@emotion/css"
-import { NavLink } from "react-router-dom"
 import Pattern from "app/PackingPage/Pattern"
 
 const links = ["catalog", "packing", "tiling", "classes", "genealogy"]
@@ -12,16 +11,16 @@ function HomePageNav() {
       `}
     >
       {links.map((link) => (
-        <NavLink
-          key={link}
-          to={`/${link}`}
-          className={css`
-            margin: 1rem;
-            font-size: 1.5rem;
-          `}
-        >
-          {link}
-        </NavLink>
+        <Link key={link} href={`/${link}`}>
+          <a
+            className={css`
+              margin: 1rem;
+              font-size: 1.5rem;
+            `}
+          >
+            {link}
+          </a>
+        </Link>
       ))}
     </nav>
   )
@@ -52,7 +51,7 @@ export default function HomePage() {
           transform: scale(5);
         `}
       >
-        <Pattern pattern="8-square" />
+        {/* <Pattern pattern="8-square" /> */}
       </div>
       <main
         className={css`
