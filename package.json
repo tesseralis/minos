@@ -41,7 +41,7 @@
     "dev": "next dev",
     "start": "next start",
     "build": "next build",
-    "test": "jest --watch",
+    "test": "jest",
     "prettier": "prettier '**/*.{json,css}'",
     "eslint": "eslint '**/*.{ts,tsx}'",
     "lint:other": "yarn prettier --check",
