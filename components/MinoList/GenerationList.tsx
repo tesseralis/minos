@@ -1,4 +1,4 @@
-import React from "react"
+import { memo, useState, useEffect } from "react"
 import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
@@ -24,7 +24,7 @@ interface Props {
 /**
  * A list of all polyominoes of a certain order.
  */
-export default React.memo(function GenerationList({
+export default memo(function GenerationList({
   minos,
   gen,
   skipAnimation,
@@ -32,8 +32,8 @@ export default React.memo(function GenerationList({
   selected,
   narrow,
 }: Props) {
-  const [visIndex, setVisIndex] = React.useState(0)
-  React.useEffect(() => {
+  const [visIndex, setVisIndex] = useState(0)
+  useEffect(() => {
     if (skipAnimation) {
       return
     }

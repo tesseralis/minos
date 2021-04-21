@@ -1,4 +1,3 @@
-import React from "react"
 import InputTitle from "./InputTitle"
 import { css } from "@emotion/react"
 import { colors } from "style/theme"

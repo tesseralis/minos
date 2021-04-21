@@ -1,4 +1,3 @@
-import React from "react"
 import { range } from "lodash"
 import { Polyomino } from "mino"
 import MinoSvg from "components/MinoSvg"

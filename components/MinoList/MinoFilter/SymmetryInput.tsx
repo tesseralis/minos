@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { baseColorMap } from "components/graph"
 import { Circle, Line } from "components/svg"

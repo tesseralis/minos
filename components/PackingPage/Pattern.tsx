@@ -1,4 +1,4 @@
-import React from "react"
+import { useState, useEffect, useMemo } from "react"
 
 import { parsePattern } from "mino"
 import transition from "components/transition"
@@ -18,22 +18,20 @@ interface Props {
 }
 
 export default function MinoPattern({ pattern: patName }: Props) {
-  const [patternStr, setPatternStr] = React.useState<string | null>(null)
-  const [visIndex, setVisIndex] = React.useState(-1)
+  const [patternStr, setPatternStr] = useState<string | null>(null)
+  const [visIndex, setVisIndex] = useState(-1)
   const selected = useSelected()
-  // const patName = getPatternName(size, shape)
 
-  React.useEffect(() => {
+  useEffect(() => {
     getPatternStr(patName).then((str) => setPatternStr(str))
   }, [patName])
-  const pattern = React.useMemo(
-    () => (patternStr ? parsePattern(patternStr) : []),
-    [patternStr],
-  )
+  const pattern = useMemo(() => (patternStr ? parsePattern(patternStr) : []), [
+    patternStr,
+  ])
 
   // TODO de-duplicate with the other two animations
   const skipAnimation = pattern.length < 100
-  React.useEffect(() => {
+  useEffect(() => {
     if (skipAnimation) {
       return
     }

@@ -1,4 +1,4 @@
-import React, { memo, useState, useCallback } from "react"
+import { memo, useState, useEffect, useCallback } from "react"
 import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
@@ -47,7 +47,7 @@ export default memo(function SelectableMino({
 
   // Hover out when the component unmounts
   // NOTE: make sure the `onHover` callback is memoized!
-  React.useEffect(() => {
+  useEffect(() => {
     return () => {
       onHover?.(undefined)
     }

@@ -1,4 +1,4 @@
-import React, { memo, useMemo, useCallback } from "react"
+import { memo, useState, useEffect, useMemo, useCallback } from "react"
 import { Polyomino } from "mino"
 
 import transition from "components/transition"
@@ -53,8 +53,8 @@ interface RingProps {
  */
 const GenerationRing = memo(
   ({ minos, skipAnimation, ...minoProps }: RingProps) => {
-    const [visIndex, setVisIndex] = React.useState(0)
-    React.useEffect(() => {
+    const [visIndex, setVisIndex] = useState(0)
+    useEffect(() => {
       if (skipAnimation) {
         return
       }

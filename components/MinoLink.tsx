@@ -1,4 +1,3 @@
-import React from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import MinoDiv, { Props as MinoDivProps } from "components/MinoList/MinoDiv"

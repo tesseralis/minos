@@ -1,5 +1,5 @@
 import { css } from "@emotion/react"
-import React from "react"
+
 import { path as d3path } from "d3-path"
 
 import Vector from "vector"

@@ -1,5 +1,3 @@
-import React from "react"
-
 import { Point, Polygon, PolygonProps, svgTransform } from "components/svg"
 import { colors } from "style/theme"
 import {

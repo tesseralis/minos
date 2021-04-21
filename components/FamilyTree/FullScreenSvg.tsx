@@ -1,16 +1,16 @@
-import React from "react"
+import { ReactNode, useMemo } from "react"
 import { css } from "@emotion/react"
 import { colors } from "style/theme"
 
 interface Props {
   width: number
-  children: React.ReactNode
+  children: ReactNode
 }
 
 // A full screen SVG
 export default function FullScreenSvg({ width, children }: Props) {
   // Only change the viewbox if the prop width changes, not the window ratio
-  const viewBox = React.useMemo(() => {
+  const viewBox = useMemo(() => {
     // const height = (width / window.innerWidth) * window.innerHeight
     // FIXME figure out how to do this based on window
     const height = (width / 16) * 9

@@ -1,5 +1,5 @@
 import tinycolor from "tinycolor2"
-import React from "react"
+import { memo } from "react"
 import MinoSvg from "components/MinoSvg"
 import { getMinoColor } from "components/graph"
 import { Polyomino } from "mino"
@@ -12,11 +12,7 @@ interface Props {
   isSelected: boolean
 }
 
-export default React.memo(function PatternMino({
-  blockSize,
-  mino,
-  coord,
-}: Props) {
+export default memo(function PatternMino({ blockSize, mino, coord }: Props) {
   const { fill } = getMinoColor(mino)
   let baseFill = tinycolor(fill)
   baseFill =

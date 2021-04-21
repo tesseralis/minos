@@ -1,4 +1,3 @@
-import React from "react"
 import { css } from "@emotion/react"
 import { colors } from "style/theme"
 import { Circle, Line } from "components/svg"

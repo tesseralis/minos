@@ -1,12 +1,13 @@
+import { ReactElement } from "react"
 import { css } from "@emotion/react"
 import { useRouter } from "next/router"
 
 interface Props {
-  children?: React.ReactElement
-  topLeft?: React.ReactElement
-  topRight?: React.ReactElement
-  bottomLeft?: React.ReactElement
-  bottomRight?: React.ReactElement
+  children?: ReactElement
+  topLeft?: ReactElement
+  topRight?: ReactElement
+  bottomLeft?: ReactElement
+  bottomRight?: ReactElement
 }
 
 const overlayInfo = [

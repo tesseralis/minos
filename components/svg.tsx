@@ -2,7 +2,7 @@
  * Provides wrappers for SVG elements with Props updated for convenience.
  */
 
-import React from "react"
+import { SVGProps as ReactSVGProps } from "react"
 import type { Instance as Color } from "tinycolor2"
 import Vector from "vector"
 
@@ -43,7 +43,7 @@ interface ExtendedSVGProps {
 }
 
 interface SVGProps<T>
-  extends Omit<React.SVGProps<T>, keyof ExtendedSVGProps>,
+  extends Omit<ReactSVGProps<T>, keyof ExtendedSVGProps>,
     ExtendedSVGProps {}
 
 function getBaseSVGProps<T>({
@@ -52,7 +52,7 @@ function getBaseSVGProps<T>({
   stroke,
   onHover,
   ...props
-}: SVGProps<T>): React.SVGProps<T> {
+}: SVGProps<T>): ReactSVGProps<T> {
   return {
     ...props,
     transform: transform?.toString(),

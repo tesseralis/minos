@@ -1,5 +1,3 @@
-import React from "react"
-
 import { Line, svgTransform } from "components/svg"
 import { colors } from "style/theme"
 import {

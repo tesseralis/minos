@@ -1,4 +1,3 @@
-import React from "react"
 import { Rect } from "components/svg"
 
 import useClickHandler from "components/useClickHandler"

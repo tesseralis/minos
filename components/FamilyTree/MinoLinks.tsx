@@ -1,4 +1,4 @@
-import React, { memo } from "react"
+import { memo, useState, useEffect } from "react"
 import { css, keyframes } from "@emotion/react"
 
 import Vector from "vector"
@@ -68,9 +68,9 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
 export default memo(function MinoLinks() {
   const selected = useSelected()
   const startIndex = links.findIndex(([src]) => src.order >= START_GENS)
-  const [visIndex, setVisIndex] = React.useState(startIndex)
+  const [visIndex, setVisIndex] = useState(startIndex)
   // TODO make this more sophisticated and sync up with the other animation
-  React.useEffect(() => {
+  useEffect(() => {
     const trans = transition({
       duration: 4000,
       onUpdate(val) {

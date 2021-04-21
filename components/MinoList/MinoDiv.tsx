@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import { memo, ReactNode } from "react"
 import MinoSvg, { Props as MinoSvgProps } from "components/MinoSvg"
 import Vector from "vector"
 
@@ -9,7 +9,7 @@ export interface Props extends Omit<MinoSvgProps, "coord" | "onClick"> {
 /**
  * A single mino wrapped in a div aligning with its dimensions.
  */
-export default React.memo(function MinoDiv({
+export default memo(function MinoDiv({
   mino,
   size,
   children,

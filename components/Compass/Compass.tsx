@@ -1,4 +1,4 @@
-import React from "react"
+import { useState } from "react"
 import { css } from "@emotion/react"
 
 import { G } from "components/svg"
@@ -14,8 +14,8 @@ import { RelativeCtx, svgSize } from "./compassHelpers"
  */
 export default function Compass() {
   // true if the inner symmetry ring has hover focus
-  const [showEditable, setShowEditable] = React.useState(false)
-  const [showTransforms, setShowTransforms] = React.useState(false)
+  const [showEditable, setShowEditable] = useState(false)
+  const [showTransforms, setShowTransforms] = useState(false)
 
   // Don't render the compass if there is no mino selected
   const selected = useSelected()

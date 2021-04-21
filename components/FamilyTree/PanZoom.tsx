@@ -1,8 +1,8 @@
-import React, { useRef, useEffect } from "react"
+import { ReactNode, useRef, useEffect } from "react"
 import panzoom, { PanZoomOptions } from "panzoom"
 
 interface Props extends PanZoomOptions {
-  children: React.ReactNode
+  children: ReactNode
 }
 // TODO styles on panning
 export default function PanZoom({ children, ...panzoomOptions }: Props) {

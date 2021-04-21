@@ -1,4 +1,4 @@
-import React from "react"
+import { useCallback } from "react"
 import { scaleLinear } from "d3-scale"
 
 import Vector from "vector"
@@ -45,7 +45,7 @@ function Strand({ link, linkColor, coord, size }: StrandProps) {
   const isSelected = !!selected && selected.mino.transform.equivalent(link.mino)
   const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))
   const { fill, stroke } = getMinoColor(link.mino)
-  const handleHover = React.useCallback(
+  const handleHover = useCallback(
     (mino) => {
       setSelected(mino ? link : null)
     },
