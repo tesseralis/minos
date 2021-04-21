@@ -44,10 +44,9 @@
     "test": "jest",
     "prettier": "prettier '**/*.{json,css}'",
     "eslint": "eslint '**/*.{ts,tsx}'",
-    "typecheck": "tsc --noEmit",
     "lint:other": "yarn prettier --check",
     "lint:code": "yarn eslint",
-    "lint": "yarn lint:other && typecheck && yarn lint:code",
+    "lint": "yarn lint:other && yarn lint:code",
     "format:other": "yarn prettier --write",
     "format:code": "yarn eslint --fix",
     "format": "yarn format:other && yarn format:code"
@@ -63,7 +62,6 @@
       "prettier --write"
     ],
     "*.{ts,tsx}": [
-      "tsc --noEmit",
       "eslint --fix"
     ]
   },
