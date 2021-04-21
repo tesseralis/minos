@@ -6,6 +6,8 @@ export default function Page() {
   const router = useRouter()
   const { mino } = router.query
   return (
-    <TilingPage mino={mino ? Polyomino.fromString(mino as any) : undefined} />
+    <TilingPage
+      mino={typeof mino === "string" ? Polyomino.fromString(mino) : undefined}
+    />
   )
 }
