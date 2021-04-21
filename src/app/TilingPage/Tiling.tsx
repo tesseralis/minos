@@ -1,5 +1,5 @@
 import React from "react"
-import { range } from "lodash-es"
+import { range } from "lodash"
 import { Polyomino } from "mino"
 import MinoSvg from "app/MinoSvg"
 import { Tiling as MinoTiling } from "mino"

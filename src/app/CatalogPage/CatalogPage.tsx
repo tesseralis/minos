@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/css"
-import { capitalize } from "lodash-es"
+import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { Link, useMatch } from "react-router-dom"

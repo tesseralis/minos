@@ -1,6 +1,6 @@
 import React, { useMemo } from "react"
 import { css } from "@emotion/css"
-import { capitalize } from "lodash-es"
+import { capitalize } from "lodash"
 import { getMinoColor } from "app/graph"
 import MinoDiv from "app/MinoList/MinoDiv"
 import { Polyomino, displayClass, MinoClass } from "mino"

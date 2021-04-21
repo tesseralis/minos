@@ -1,5 +1,5 @@
 import tinycolor from "tinycolor2"
-import { uniqBy, sortBy, mapValues } from "lodash-es"
+import { uniqBy, sortBy, mapValues } from "lodash"
 
 import { Polyomino, RelativeLink, Symmetry, MONOMINO } from "mino"
 

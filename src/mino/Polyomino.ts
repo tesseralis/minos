@@ -1,4 +1,4 @@
-import { sortBy, once } from "lodash-es"
+import { sortBy, once } from "lodash"
 import { VectorLike } from "vector"
 import {
   MinoData,

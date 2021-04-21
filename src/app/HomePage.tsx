@@ -51,7 +51,7 @@ export default function HomePage() {
           transform: scale(5);
         `}
       >
-        {/* <Pattern pattern="8-square" /> */}
+        <Pattern pattern="8-square" />
       </div>
       <main
         className={css`
