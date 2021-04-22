@@ -1,4 +1,4 @@
-import Vector from "vector"
+import Vector from "lib/vector"
 
 export interface Circle {
   center: Vector

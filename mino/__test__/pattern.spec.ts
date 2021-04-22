@@ -1,5 +1,5 @@
 import fs from "fs"
-import Vector from "vector"
+import Vector from "lib/vector"
 import { parsePattern, MinoPattern } from "../internal"
 
 const files = [

@@ -1,4 +1,4 @@
-import Vector from "vector"
+import Vector from "lib/vector"
 import { getEdges } from "../outline"
 
 describe("polyomino outline", () => {

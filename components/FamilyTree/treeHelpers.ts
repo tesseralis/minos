@@ -3,7 +3,7 @@ import { scaleLinear } from "d3-scale"
 import { getAngleScale } from "components/utils"
 import { NUM_GENERATIONS, nodes, getIndex } from "components/graph"
 import { Polyomino } from "mino"
-import Vector from "vector"
+import Vector from "lib/vector"
 
 const ringRadiusBase = 400
 

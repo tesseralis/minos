@@ -2,7 +2,7 @@ import { range } from "lodash"
 import { Polyomino } from "mino"
 import MinoSvg from "components/MinoSvg"
 import { Tiling as MinoTiling } from "mino"
-import Vector from "vector"
+import Vector from "lib/vector"
 
 // Mod except it works for negative numbers
 function mod(n: number, d: number) {

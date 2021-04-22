@@ -1,7 +1,7 @@
 import { memo, useState, useEffect } from "react"
 import { css, keyframes } from "@emotion/react"
 
-import Vector from "vector"
+import Vector from "lib/vector"
 import { Polyomino } from "mino"
 import { colors } from "style/theme"
 

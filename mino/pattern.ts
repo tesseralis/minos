@@ -3,8 +3,8 @@
  */
 
 import { once } from "lodash"
-import Vector, { VectorLike } from "vector"
-import PointSet from "PointSet"
+import Vector, { VectorLike } from "lib/vector"
+import PointSet from "lib/PointSet"
 import { MinoLike } from "./Polyomino"
 import {
   Polyomino,

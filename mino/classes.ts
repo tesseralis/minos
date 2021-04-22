@@ -1,6 +1,6 @@
 import { once, range } from "lodash"
-import Vector from "vector"
-import PointSet from "PointSet"
+import Vector from "lib/vector"
+import PointSet from "lib/PointSet"
 import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
 
 const axes = ["row", "column"] as const

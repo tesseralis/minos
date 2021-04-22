@@ -1,5 +1,5 @@
 import { css, SerializedStyles } from "@emotion/react"
-import Vector from "vector"
+import Vector from "lib/vector"
 import { PossibleRelativeLink } from "mino"
 import { Rect } from "components/svg"
 import { getAnchor } from "components/utils"

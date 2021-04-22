@@ -1,7 +1,7 @@
 import { useCallback } from "react"
 import { scaleLinear } from "d3-scale"
 
-import Vector from "vector"
+import Vector from "lib/vector"
 import { Polyomino, RelativeLink } from "mino"
 
 import { colors } from "style/theme"

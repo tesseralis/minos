@@ -8,7 +8,7 @@ import { Circle } from "components/svg"
 import useClickHandler from "./useClickHandler"
 import MinoSvg from "./MinoSvg"
 import { useSetSelected } from "./SelectedContext"
-import Vector from "vector"
+import Vector from "lib/vector"
 
 interface Props {
   mino: Polyomino

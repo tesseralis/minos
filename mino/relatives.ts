@@ -1,7 +1,7 @@
 import { once } from "lodash"
 import { Polyomino } from "./internal"
-import Vector, { VectorLike } from "vector"
-import PointSet from "PointSet"
+import Vector, { VectorLike } from "lib/vector"
+import PointSet from "lib/PointSet"
 import {
   MinoData,
   Coord,

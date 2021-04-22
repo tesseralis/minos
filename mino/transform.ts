@@ -3,7 +3,7 @@
  */
 
 import { once } from "lodash"
-import Vector, { Point } from "vector"
+import Vector, { Point } from "lib/vector"
 import { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"
 

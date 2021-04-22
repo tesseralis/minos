@@ -1,6 +1,6 @@
 import { memo, ReactNode } from "react"
 import MinoSvg, { Props as MinoSvgProps } from "components/MinoSvg"
-import Vector from "vector"
+import Vector from "lib/vector"
 
 export interface Props extends Omit<MinoSvgProps, "coord" | "onClick"> {
   children?: ReactNode

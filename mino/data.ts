@@ -25,7 +25,7 @@
  * bit-shift operations instead of heavier operations on arrays and sets.
  */
 
-import Vector, { VectorLike } from "vector"
+import Vector, { VectorLike } from "lib/vector"
 
 // type for the encoded representation of a mino
 export type MinoData = number

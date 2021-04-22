@@ -1,5 +1,5 @@
-import Vector from "vector"
-import { TAU, equalsToPrecision, getCircleFromPoints } from "math"
+import Vector from "lib/vector"
+import { TAU, equalsToPrecision, getCircleFromPoints } from "lib/math"
 import { path as d3path } from "d3-path"
 import { scaleLinear } from "d3-scale"
 

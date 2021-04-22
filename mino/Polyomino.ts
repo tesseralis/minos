@@ -1,5 +1,5 @@
 import { sortBy, once } from "lodash"
-import { VectorLike } from "vector"
+import { VectorLike } from "lib/vector"
 import {
   MinoData,
   Dims,

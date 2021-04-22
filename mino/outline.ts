@@ -1,6 +1,6 @@
 import { isEqual, minBy } from "lodash"
 
-import PointSet from "PointSet"
+import PointSet from "lib/PointSet"
 
 import { Coord } from "./data"
 import { Edge, Direction, EdgeList, move } from "./edges"

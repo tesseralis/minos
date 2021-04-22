@@ -3,7 +3,7 @@ import { memo } from "react"
 import MinoSvg from "components/MinoSvg"
 import { getMinoColor } from "components/graph"
 import { Polyomino } from "mino"
-import Vector from "vector"
+import Vector from "lib/vector"
 
 interface Props {
   blockSize: number

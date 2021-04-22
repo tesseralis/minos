@@ -2,7 +2,7 @@ import { css } from "@emotion/react"
 
 import { path as d3path } from "d3-path"
 
-import Vector from "vector"
+import Vector from "lib/vector"
 import { Polyomino, O_OCTOMINO } from "mino"
 import { colors } from "style/theme"
 import { getAnchor } from "./utils"
