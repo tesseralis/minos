@@ -39,7 +39,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "start": "next start -p $PORT",
+    "start": "next start",
     "build": "next build",
     "test": "jest",
     "prettier": "prettier '**/*.{json,css}'",
