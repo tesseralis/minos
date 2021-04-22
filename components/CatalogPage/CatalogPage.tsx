@@ -8,7 +8,7 @@ import { getMinoColor, NUM_GENERATIONS } from "components/graph"
 
 import MinoList from "components/MinoList"
 import MinoLink from "components/MinoLink"
-import MinoDiv from "components/MinoList/MinoDiv"
+import MinoDiv from "components/MinoDiv"
 
 interface MinoDatum {
   name: string

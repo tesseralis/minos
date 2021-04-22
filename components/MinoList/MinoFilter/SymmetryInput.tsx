@@ -4,7 +4,7 @@ import { baseColorMap } from "components/graph"
 import { Circle, Line } from "components/svg"
 
 import { Polyomino, Symmetry, printSymmetry } from "mino"
-import MinoDiv from "components/MinoList/MinoDiv"
+import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
 
 function upsert<T>(array: T[], value: T) {

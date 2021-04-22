@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { getMinoColor } from "components/graph"
-import MinoDiv from "components/MinoList/MinoDiv"
+import MinoDiv from "components/MinoDiv"
 import { Polyomino, displayClass, MinoClass } from "mino"
 import { getMinoClasses } from "./classHelpers"
 
