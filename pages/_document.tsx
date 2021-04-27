@@ -19,10 +19,6 @@ export default class MyDocument extends Document {
           <meta charSet="utf-8" />
           <link rel="shortcut icon" href="/favicon.ico" />
           <meta
-            name="viewport"
-            content="width=device-width, initial-scale=1, shrink-to-fit=no, viewport-fit=cover"
-          />
-          <meta
             name="description"
             content="Interactive encyclopedia of polyominoes"
           />
@@ -30,7 +26,6 @@ export default class MyDocument extends Document {
           {/* manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/ */}
           <link rel="manifest" href="/manifest.json" />
-          <title>The Labyrinth of Polyominoes</title>
         </Head>
         <body>
           <Main />
