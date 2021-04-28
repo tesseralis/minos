@@ -136,7 +136,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
               {/* TODO (a11y) tab navigation */}
               <input
                 type="checkbox"
-                css="visually-hidden"
+                className="visually-hidden"
                 checked={checked}
                 onChange={(e) =>
                   onUpdate(

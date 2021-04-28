@@ -81,7 +81,7 @@ function YesNoInput({
           <label key={val}>
             <input
               type="radio"
-              css="visually-hidden"
+              className="visually-hidden"
               name={name}
               value={val}
               checked={checked}
