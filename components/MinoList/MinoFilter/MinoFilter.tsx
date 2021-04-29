@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { css } from "@emotion/react"
+import { FaFilter } from "react-icons/fa"
 
 import { colors } from "style/theme"
 import SymmetryInput from "./SymmetryInput"
@@ -66,7 +67,7 @@ export default function MinoFilter(props: Props) {
         `}
         onClick={() => setShowFilter((filter) => !filter)}
       >
-        {showFilter ? "Hide" : "Show"} filters
+        <FaFilter /> {showFilter ? "Hide" : "Show"} filters
       </button>
       {showFilter && <FilterForm {...props} />}
     </div>
