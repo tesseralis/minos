@@ -72,17 +72,16 @@ function* getTiles(tiling: MinoTiling, size: number): Generator<Tile> {
 
 // How many svg units each square should be
 const squareSize = 20
-// Width/height of the svg
-const svgSize = 500
 
 interface Props {
   mino: Polyomino
+  gridSize: number
+  svgSize: number
 }
-export default function Tiling({ mino }: Props) {
+export default function Tiling({ mino, gridSize, svgSize }: Props) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
   // (for monominoes, this is the size of a checkerboard)
   // Also make sure that the side length is even
-  const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const viewLength = squareSize * gridSize
 
   const tiling = mino.tilings.get()

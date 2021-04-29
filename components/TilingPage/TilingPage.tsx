@@ -17,6 +17,13 @@ function Index() {
   )
 }
 
+// TODO add other information in here
+function TilingView({ mino }: { mino: Polyomino }) {
+  const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
+  const svgSize = 500
+  return <Tiling mino={mino} gridSize={gridSize} svgSize={svgSize} />
+}
+
 export default function TilingPage({ mino }: { mino?: Polyomino }) {
   return (
     <div
@@ -44,7 +51,7 @@ export default function TilingPage({ mino }: { mino?: Polyomino }) {
           to={(mino) => `/tiling/${mino.toString()}`}
         />
       </div>
-      <div>{mino ? <Tiling mino={mino} /> : <Index />}</div>
+      <div>{mino ? <TilingView mino={mino} /> : <Index />}</div>
     </div>
   )
 }
