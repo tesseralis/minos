@@ -48,7 +48,7 @@ export default function HomePage() {
       <div
         css={css`
           grid-area: center;
-          opacity: 25%;
+          opacity: 12.5%;
           display: flex;
           align-items: center;
           justify-content: center;
