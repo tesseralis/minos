@@ -44,7 +44,7 @@ export default function MinoPattern({ pattern: patName }: Props) {
     return () => trans.cancel()
   }, [pattern, skipAnimation])
 
-  if (!patternStr) return <div>Loading...</div>
+  if (!patternStr) return null
 
   const grid = patternStr
     .trim()
