@@ -9,6 +9,7 @@ import { getMinoColor, NUM_GENERATIONS } from "components/graph"
 import MinoList from "components/MinoList"
 import MinoLink from "components/MinoLink"
 import MinoDiv from "components/MinoDiv"
+import Tiling from "components/TilingPage/Tiling"
 
 interface MinoDatum {
   name: string
@@ -69,7 +70,9 @@ const data: MinoDatum[] = [
     display: (m) =>
       m.tilings.has() ? (
         <Link href={`/tiling/${m.toString()}`}>
-          <a>yes</a>
+          <a>
+            <Tiling mino={m} gridSize={8} svgSize={100} />
+          </a>
         </Link>
       ) : (
         "no"
