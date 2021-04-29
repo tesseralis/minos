@@ -32,11 +32,11 @@ export interface Anchor {
 export const symmetries = [
   "all",
   "axis2",
-  "diag2",
   "rot2",
+  "diag2",
   "axis",
-  "diag",
   "rot",
+  "diag",
   "none",
 ] as const
 

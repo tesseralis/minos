@@ -55,7 +55,11 @@ const data: MinoDatum[] = [
   },
   {
     name: "symmetry",
-    display: (m) => printSymmetry(m.transform.symmetry()),
+    display: (m) => (
+      <Link href={`/symmetry#${m.transform.symmetry()}`}>
+        <a>{printSymmetry(m.transform.symmetry())}</a>
+      </Link>
+    ),
   },
   {
     name: "class",

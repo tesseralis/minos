@@ -119,8 +119,8 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
           grid-gap: 0.5rem 1rem;
           grid-template-areas:
             ".    axis axis2 ."
-            "none diag diag2 all"
-            ".    rot  rot2  .";
+            "none rot  rot2  all"
+            ".    diag diag2 .";
         `}
       >
         {symmetryTypes.map(({ type: sym, mino, lines }) => {

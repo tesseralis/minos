@@ -2,7 +2,14 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "components/PackingPage/Pattern"
 
-const links = ["catalog", "packing", "tiling", "classes", "genealogy"]
+const links = [
+  "catalog",
+  "symmetry",
+  "classes",
+  "packing",
+  "tiling",
+  "genealogy",
+]
 function HomePageNav() {
   return (
     <nav

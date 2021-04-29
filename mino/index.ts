@@ -7,6 +7,7 @@ export {
   displayClass,
   orderName,
   printSymmetry,
+  symmetries,
 } from "./internal"
 export type {
   Coord,

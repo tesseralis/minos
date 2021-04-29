@@ -42,30 +42,35 @@ export default function Nav() {
     >
       <Title />
       <ul>
-        {["catalog", "packing", "tiling", "classes", "genealogy"].map(
-          (view) => (
-            <li key={view}>
-              <Link href={`/${view}`} passHref>
-                <a
-                  css={css`
-                    font-size: 1.25rem;
-                    line-height: 1.25;
-                    color: ${router.asPath.startsWith(`/${view}`)
-                      ? colors.highlight
-                      : colors.fg};
+        {[
+          "catalog",
+          "symmetry",
+          "classes",
+          "packing",
+          "tiling",
+          "genealogy",
+        ].map((view) => (
+          <li key={view}>
+            <Link href={`/${view}`} passHref>
+              <a
+                css={css`
+                  font-size: 1.25rem;
+                  line-height: 1.25;
+                  color: ${router.asPath.startsWith(`/${view}`)
+                    ? colors.highlight
+                    : colors.fg};
 
-                    text-decoration: none;
-                    :hover {
-                      text-decoration: underline;
-                    }
-                  `}
-                >
-                  {view}
-                </a>
-              </Link>
-            </li>
-          ),
-        )}
+                  text-decoration: none;
+                  :hover {
+                    text-decoration: underline;
+                  }
+                `}
+              >
+                {view}
+              </a>
+            </Link>
+          </li>
+        ))}
       </ul>
     </nav>
   )
