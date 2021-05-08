@@ -5,6 +5,7 @@ import { getMinoColor } from "components/graph"
 import MinoDiv from "components/MinoDiv"
 import { Polyomino, displayClass, MinoClass } from "mino"
 import { getMinoClasses } from "./classHelpers"
+import InfoContent from "./Info.mdx"
 
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
   return (
@@ -121,19 +122,7 @@ function Info() {
         }
       `}
     >
-      <h1>Special Classes of Polyominoes</h1>
-      <p>
-        Several classes of polyominoes are well-studied. This page shows the
-        hierarchy of some of these special classes.
-      </p>
-      <p>
-        Sections stacked on top of each other have a hierarchial relationship:
-        for example, all stack polyominoes are bar graphs.
-      </p>
-      <p>
-        Additionally, polyominoes with equivalent boundary strings are grouped
-        together.
-      </p>
+      <InfoContent />
     </section>
   )
 }

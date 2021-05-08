@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import React, { ReactNode } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
