@@ -1,4 +1,4 @@
-import { memo, useState, useEffect, useMemo, useCallback } from "react"
+import React, { memo, useState, useEffect, useMemo, useCallback } from "react"
 import { Polyomino } from "mino"
 
 import transition from "components/transition"
