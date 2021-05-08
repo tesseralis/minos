@@ -1,10 +1,11 @@
-import { ReactNode } from "react"
+import React, { ReactNode } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { getMinoColor, NUM_GENERATIONS } from "components/graph"
+import Info from "./Info.mdx"
 
 import MinoList from "components/MinoList"
 import MinoLink from "components/MinoLink"
@@ -149,17 +150,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
         overflow-y: scroll;
       `}
     >
-      {mino ? (
-        <MinoInfo mino={mino} />
-      ) : (
-        <>
-          <h1>Polyomino Catalog</h1>
-          <p>
-            This catalog lists all the polyominoes up to octominoes. Select a
-            polyomino to see an overview of its properties.
-          </p>
-        </>
-      )}
+      {mino ? <MinoInfo mino={mino} /> : <Info />}
     </main>
   )
 }

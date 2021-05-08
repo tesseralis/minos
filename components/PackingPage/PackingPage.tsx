@@ -4,6 +4,7 @@ import Pattern from "./Pattern"
 import { orderName } from "mino"
 import { colors } from "style/theme"
 import { useRouter } from "next/router"
+import Info from "./Info.mdx"
 
 const sizes = ["1_4", 5, 6, 7, 8]
 const shapes = ["rect", "square"]
@@ -74,30 +75,6 @@ function PatternNav() {
   )
 }
 
-function Info() {
-  return (
-    <div
-      css={css`
-        margin: 2rem 4rem;
-      `}
-    >
-      <h1>Packing polyominoes</h1>
-      <p>
-        Given a set of polyominoes, such as the set of all pentominoes, it is
-        natural to ask whether that set can be arranged to form certain
-        patterns, such as squares or rectangles, called <em>packing</em>.
-        Polyomino packing problems are popular and have been the basis of many
-        puzzles and video games.
-      </p>
-
-      <p>
-        This section reprints patterns sourced from various other polyomino
-        sites and publications.
-      </p>
-    </div>
-  )
-}
-
 export default function PackingPage({ pattern }: { pattern?: string }) {
   return (
     <div
@@ -129,7 +106,13 @@ export default function PackingPage({ pattern }: { pattern?: string }) {
             <Pattern pattern={pattern} />
           </div>
         ) : (
-          <Info />
+          <div
+            css={css`
+              margin: 2rem 4rem;
+            `}
+          >
+            <Info />
+          </div>
         )}
       </main>
     </div>

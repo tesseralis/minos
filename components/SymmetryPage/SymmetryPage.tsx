@@ -3,6 +3,7 @@ import { nodes, getMinoColor } from "components/graph"
 import { capitalize, groupBy } from "lodash"
 import { Polyomino, printSymmetry, Symmetry, symmetries } from "mino"
 import MinoLink from "components/MinoLink"
+import InfoContent from "./Info.mdx"
 
 function getMinosBySymmetry() {
   const minos = nodes.flat()
@@ -73,13 +74,7 @@ function Info() {
         }
       `}
     >
-      <h1>Symmetry</h1>
-      <p>
-        Polyominoes can be classified by their <em>symmetries</em>. A polyomino
-        is symmetric if it can be rotated or reflected to yield the same
-        polyomino.
-      </p>
-      <p>This page lists the polyominoes by their symmetry classes.</p>
+      <InfoContent />
     </section>
   )
 }
