@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
-import Pattern from "components/PackingPage/Pattern"
+import Pattern from "components/Pattern"
 
 const links = [
   "catalog",
@@ -10,6 +10,7 @@ const links = [
   "tiling",
   "genealogy",
 ]
+
 function HomePageNav() {
   return (
     <nav

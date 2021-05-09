@@ -3,7 +3,43 @@ import { useState, useEffect, useMemo } from "react"
 import { parsePattern } from "mino"
 import transition from "components/transition"
 import { useSelected } from "components/SelectedContext"
-import PatternMino from "./PatternMino"
+import tinycolor from "tinycolor2"
+import { memo } from "react"
+import MinoSvg from "components/MinoSvg"
+import { getMinoColor } from "components/graph"
+import { Polyomino } from "mino"
+import Vector from "lib/vector"
+
+interface MinoProps {
+  blockSize: number
+  mino: Polyomino
+  coord: Vector
+  isSelected: boolean
+}
+
+const PatternMino = memo(function PatternMino({
+  blockSize,
+  mino,
+  coord,
+}: MinoProps) {
+  const { fill } = getMinoColor(mino)
+  let baseFill = tinycolor(fill)
+  baseFill =
+    mino.transform.symmetry() === "none"
+      ? baseFill.saturate(40)
+      : baseFill.desaturate(20)
+  return (
+    <MinoSvg
+      mino={mino}
+      coord={coord.scale(blockSize)}
+      anchor="top left"
+      size={blockSize}
+      fill={baseFill.toString()}
+      stroke="black"
+      gridStyle="thin"
+    />
+  )
+})
 
 // TODO maybe it's better if we just use /public for this
 async function getPatternStr(patName: string): Promise<string> {

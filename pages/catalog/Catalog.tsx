@@ -10,7 +10,7 @@ import Info from "./Info.mdx"
 import MinoList from "components/MinoList"
 import MinoLink from "components/MinoLink"
 import MinoDiv from "components/MinoDiv"
-import Tiling from "components/TilingPage/Tiling"
+import Tiling from "components/Tiling"
 
 interface MinoDatum {
   name: string

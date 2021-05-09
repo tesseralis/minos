@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
-import Pattern from "./Pattern"
+import Pattern from "components/Pattern"
 import { orderName } from "mino"
 import { colors } from "style/theme"
 import { useRouter } from "next/router"

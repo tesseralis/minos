@@ -1,21 +1,9 @@
 import { css } from "@emotion/react"
 import { Polyomino } from "mino"
 
-import Tiling from "./Tiling"
+import Tiling from "components/Tiling"
 import MinoList from "components/MinoList"
-
-function Index() {
-  return (
-    <div>
-      <h1>Tiling the plane</h1>
-      <p>
-        A polyomino <em>tiles the plane</em> if it is possible to cover an
-        infinite grid with copies of the polyomino such that no holes are left.
-      </p>
-      <p>Select a polyomino to see its tiling.</p>
-    </div>
-  )
-}
+import Info from "./Info.mdx"
 
 // TODO add other information in here
 function TilingView({ mino }: { mino: Polyomino }) {
@@ -51,7 +39,7 @@ export default function TilingPage({ mino }: { mino?: Polyomino }) {
           to={(mino) => `/tiling/${mino.toString()}`}
         />
       </div>
-      <div>{mino ? <TilingView mino={mino} /> : <Index />}</div>
+      <div>{mino ? <TilingView mino={mino} /> : <Info />}</div>
     </div>
   )
 }
