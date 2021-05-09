@@ -146,7 +146,7 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
   return (
     <main
       css={css`
-        padding: 2rem;
+        padding: 2rem 4rem;
         overflow-y: scroll;
       `}
     >
@@ -167,7 +167,7 @@ export default function CatalogPage({ mino }: { mino?: Polyomino }) {
         height: 100vh;
         margin-left: 10rem;
         display: grid;
-        grid-template-columns: 1fr 24rem;
+        grid-template-columns: 1fr 28rem;
       `}
     >
       <div
