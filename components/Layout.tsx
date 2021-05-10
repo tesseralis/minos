@@ -52,8 +52,6 @@ export default function Layout({ children, ...overlays }: Props) {
                 padding: 2rem;
                 /* Overlays should be above the content below */
                 z-index: 100;
-                /* TODO Hack for the Compass */
-                pointer-events: ${name === "topRight" ? "none" : "initial"};
               `}
             >
               {overlays[name]}
