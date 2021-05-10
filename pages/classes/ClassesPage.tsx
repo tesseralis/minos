@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { getMinoColor } from "components/graph"
 import MinoDiv from "components/MinoDiv"
+import Layout from "components/Layout"
 import { Polyomino, displayClass, MinoClass } from "mino"
 import { getMinoClasses } from "./classHelpers"
 import InfoContent from "./Info.mdx"
@@ -130,7 +131,7 @@ function Info() {
 function ClassesChart() {
   const classes = useMemo(() => [...getMinoClasses()], [])
   return (
-    <div
+    <main
       css={css`
         display: grid;
         grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
@@ -148,23 +149,14 @@ function ClassesChart() {
       {classes.map((minoClass, i) => (
         <PolyominoClass key={i} {...minoClass} />
       ))}
-    </div>
+    </main>
   )
 }
 
 export default function ClassesPage() {
   return (
-    <main
-      css={css`
-        width: 100%;
-        max-width: 66rem;
-        height: 100vh;
-        margin-left: 12rem;
-        padding: 1rem 0;
-        overflow-y: scroll;
-      `}
-    >
+    <Layout>
       <ClassesChart />
-    </main>
+    </Layout>
   )
 }

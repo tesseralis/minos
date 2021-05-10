@@ -1,6 +1,7 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
+import Layout from "components/Layout"
 import { orderName } from "mino"
 import { colors } from "style/theme"
 import { useRouter } from "next/router"
@@ -77,44 +78,42 @@ function PatternNav() {
 
 export default function PackingPage({ pattern }: { pattern?: string }) {
   return (
-    <div
-      css={css`
-        width: 100%;
-        max-width: 54rem;
-        height: 100vh;
-        margin-left: 12rem;
-        overflow-y: scroll;
-        display: flex;
-      `}
-    >
-      <PatternNav />
-      <main
+    <Layout>
+      <div
         css={css`
-          margin: 1rem 0;
-          width: 100%;
+          overflow-y: scroll;
+          display: flex;
         `}
       >
-        {pattern ? (
-          <div
-            css={css`
-              margin-top: 2rem;
-              width: 100%;
-              display: flex;
-              justify-content: center;
-            `}
-          >
-            <Pattern pattern={pattern} />
-          </div>
-        ) : (
-          <div
-            css={css`
-              margin: 2rem 4rem;
-            `}
-          >
-            <Info />
-          </div>
-        )}
-      </main>
-    </div>
+        <PatternNav />
+        <main
+          css={css`
+            margin: 1rem 0;
+            width: 100%;
+          `}
+        >
+          {pattern ? (
+            <div
+              css={css`
+                margin-top: 2rem;
+                width: 100%;
+                display: flex;
+                justify-content: center;
+              `}
+            >
+              <Pattern pattern={pattern} />
+            </div>
+          ) : (
+            <div
+              css={css`
+                margin: 2rem 4rem;
+              `}
+            >
+              <Info />
+            </div>
+          )}
+        </main>
+      </div>
+    </Layout>
   )
 }

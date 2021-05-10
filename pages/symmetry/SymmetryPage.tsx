@@ -3,6 +3,7 @@ import { nodes, getMinoColor } from "components/graph"
 import { capitalize, groupBy } from "lodash"
 import { Polyomino, printSymmetry, Symmetry, symmetries } from "mino"
 import MinoLink from "components/MinoLink"
+import Layout from "components/Layout"
 import InfoContent from "./Info.mdx"
 
 function getMinosBySymmetry() {
@@ -82,7 +83,7 @@ function Info() {
 function SymmetryChart() {
   const symClasses = getMinosBySymmetry()
   return (
-    <div
+    <main
       css={css`
         display: grid;
         grid-gap: 1rem;
@@ -97,23 +98,14 @@ function SymmetryChart() {
       {symClasses.map(({ name, minos }, i) => (
         <SymmetryClass key={i} name={name} minos={minos} />
       ))}
-    </div>
+    </main>
   )
 }
 
 export default function SymmetryPage() {
   return (
-    <main
-      css={css`
-        width: 100%;
-        max-width: 64rem;
-        height: 100vh;
-        margin-left: 12rem;
-        padding: 1rem 0;
-        overflow-y: scroll;
-      `}
-    >
+    <Layout>
       <SymmetryChart />
-    </main>
+    </Layout>
   )
 }
