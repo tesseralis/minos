@@ -133,6 +133,7 @@ function ClassesChart() {
   return (
     <main
       css={css`
+        padding: 2rem 0;
         display: grid;
         grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
         grid-template-areas:

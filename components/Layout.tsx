@@ -11,13 +11,13 @@ export default function Layout({ children }: Props) {
     <div
       css={css`
         display: grid;
-        grid-template-columns: 12rem 1fr;
+        grid-template-columns: 10rem 1fr;
         position: fixed;
         width: 100%;
         height: 100%;
+        padding: 0 2rem;
 
         > nav {
-          margin-left: 2rem;
           margin-top: 2rem;
         }
       `}

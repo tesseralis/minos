@@ -85,6 +85,7 @@ function SymmetryChart() {
   return (
     <main
       css={css`
+        padding: 2rem 0;
         display: grid;
         grid-gap: 1rem;
         grid-template-areas:
