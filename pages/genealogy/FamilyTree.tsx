@@ -7,6 +7,7 @@ import GenerationRings from "./GenerationRings"
 import MinoLinks from "./MinoLinks"
 import SelectedContext from "components/SelectedContext"
 import Compass from "components/Compass"
+import Nav from "components/Nav"
 
 /**
  * A graph showing the "family tree" of minos,
@@ -15,7 +16,15 @@ import Compass from "components/Compass"
 export default function FamilyTree() {
   return (
     <SelectedContext.Provider>
-      <div>
+      <div
+        css={css`
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+        `}
+      >
         <FullScreenSvg width={1100}>
           <Background />
           <PanZoom
@@ -28,6 +37,18 @@ export default function FamilyTree() {
             <GenerationRings />
           </PanZoom>
         </FullScreenSvg>
+        <div
+          css={css`
+            position: absolute;
+            top: 0;
+            left: 0;
+
+            margin-left: 2rem;
+            margin-top: 2rem;
+          `}
+        >
+          <Nav />
+        </div>
         <div
           css={css`
             position: absolute;
