@@ -165,6 +165,8 @@ export default function CatalogPage({ mino }: { mino?: Polyomino }) {
     <Layout>
       <div
         css={css`
+          position: fixed;
+          height: 100%;
           display: grid;
           grid-template-columns: 1fr 28rem;
         `}

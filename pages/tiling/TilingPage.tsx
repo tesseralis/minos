@@ -18,6 +18,9 @@ export default function TilingPage({ mino }: { mino?: Polyomino }) {
     <Layout>
       <div
         css={css`
+          position: fixed;
+          height: 100%;
+
           display: grid;
           grid-template-columns: 24rem 1fr;
           grid-gap: 2rem;

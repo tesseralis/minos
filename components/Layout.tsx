@@ -13,10 +13,10 @@ export default function Layout({ children }: Props) {
         display: grid;
         grid-template-columns: 12rem 1fr;
         position: fixed;
-        top: 0;
+        /* top: 0;
         left: 0;
         bottom: 0;
-        right: 0;
+        right: 0; */
         /* Needed to make the content full-height in Safari */
         width: 100%;
         height: 100%;
@@ -30,7 +30,8 @@ export default function Layout({ children }: Props) {
       <Nav />
       <div
         css={css`
-          position: relative;
+          height: 100%;
+          overflow-y: scroll;
         `}
       >
         {children}
