@@ -80,33 +80,27 @@ function Info() {
   )
 }
 
-function SymmetryChart() {
+export default function SymmetryChart() {
   const symClasses = getMinosBySymmetry()
   return (
-    <main
-      css={css`
-        padding: 2rem 0;
-        display: grid;
-        grid-gap: 1rem;
-        grid-template-areas:
-          "info  all  ."
-          "axis2 rot2 diag2"
-          "axis  rot  diag"
-          "none  none none";
-      `}
-    >
-      <Info />
-      {symClasses.map(({ name, minos }, i) => (
-        <SymmetryClass key={i} name={name} minos={minos} />
-      ))}
-    </main>
-  )
-}
-
-export default function SymmetryPage() {
-  return (
     <Layout>
-      <SymmetryChart />
+      <main
+        css={css`
+          padding: 2rem 0;
+          display: grid;
+          grid-gap: 1rem;
+          grid-template-areas:
+            "info  all  ."
+            "axis2 rot2 diag2"
+            "axis  rot  diag"
+            "none  none none";
+        `}
+      >
+        <Info />
+        {symClasses.map(({ name, minos }, i) => (
+          <SymmetryClass key={i} name={name} minos={minos} />
+        ))}
+      </main>
     </Layout>
   )
 }

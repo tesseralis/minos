@@ -128,36 +128,30 @@ function Info() {
   )
 }
 
-function ClassesChart() {
+export default function ClassesChart() {
   const classes = useMemo(() => [...getMinoClasses()], [])
   return (
-    <main
-      css={css`
-        padding: 2rem 0;
-        display: grid;
-        grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
-        grid-template-areas:
-          "info  info  .     rect  rect  rect"
-          "info  info  ferr  ferr  ferr  ferr"
-          "stair stair stair stack stack stack"
-          "dcvx  dcvx  dcvx  dcvx  bar   bar"
-          "cvx   dscvx dscvx dscvx dscvx dscvx"
-          "scvx  scvx  scvx  scvx  scvx  dir"
-          ".     .     .     .     other other";
-      `}
-    >
-      <Info />
-      {classes.map((minoClass, i) => (
-        <PolyominoClass key={i} {...minoClass} />
-      ))}
-    </main>
-  )
-}
-
-export default function ClassesPage() {
-  return (
     <Layout>
-      <ClassesChart />
+      <main
+        css={css`
+          padding: 2rem 0;
+          display: grid;
+          grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
+          grid-template-areas:
+            "info  info  .     rect  rect  rect"
+            "info  info  ferr  ferr  ferr  ferr"
+            "stair stair stair stack stack stack"
+            "dcvx  dcvx  dcvx  dcvx  bar   bar"
+            "cvx   dscvx dscvx dscvx dscvx dscvx"
+            "scvx  scvx  scvx  scvx  scvx  dir"
+            ".     .     .     .     other other";
+        `}
+      >
+        <Info />
+        {classes.map((minoClass, i) => (
+          <PolyominoClass key={i} {...minoClass} />
+        ))}
+      </main>
     </Layout>
   )
 }

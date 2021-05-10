@@ -143,7 +143,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
   )
 }
 
-function Sidebar({ mino }: { mino?: Polyomino }) {
+function Main({ mino }: { mino?: Polyomino }) {
   return (
     <main
       css={css`
@@ -181,7 +181,7 @@ export default function CatalogPage({ mino }: { mino?: Polyomino }) {
             selected={mino}
           />
         </div>
-        <Sidebar mino={mino} />
+        <Main mino={mino} />
       </div>
     </Layout>
   )
