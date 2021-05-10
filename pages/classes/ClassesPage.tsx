@@ -3,6 +3,7 @@ import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { getMinoColor } from "components/graph"
 import MinoDiv from "components/MinoDiv"
+import Layout from "components/Layout"
 import { Polyomino, displayClass, MinoClass } from "mino"
 import { getMinoClasses } from "./classHelpers"
 import InfoContent from "./Info.mdx"
@@ -127,44 +128,30 @@ function Info() {
   )
 }
 
-function ClassesChart() {
+export default function ClassesChart() {
   const classes = useMemo(() => [...getMinoClasses()], [])
   return (
-    <div
-      css={css`
-        display: grid;
-        grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
-        grid-template-areas:
-          "info  info  .     rect  rect  rect"
-          "info  info  ferr  ferr  ferr  ferr"
-          "stair stair stair stack stack stack"
-          "dcvx  dcvx  dcvx  dcvx  bar   bar"
-          "cvx   dscvx dscvx dscvx dscvx dscvx"
-          "scvx  scvx  scvx  scvx  scvx  dir"
-          ".     .     .     .     other other";
-      `}
-    >
-      <Info />
-      {classes.map((minoClass, i) => (
-        <PolyominoClass key={i} {...minoClass} />
-      ))}
-    </div>
-  )
-}
-
-export default function ClassesPage() {
-  return (
-    <main
-      css={css`
-        width: 100%;
-        max-width: 66rem;
-        height: 100vh;
-        margin-left: 12rem;
-        padding: 1rem 0;
-        overflow-y: scroll;
-      `}
-    >
-      <ClassesChart />
-    </main>
+    <Layout>
+      <main
+        css={css`
+          padding: 2rem 0;
+          display: grid;
+          grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem;
+          grid-template-areas:
+            "info  info  .     rect  rect  rect"
+            "info  info  ferr  ferr  ferr  ferr"
+            "stair stair stair stack stack stack"
+            "dcvx  dcvx  dcvx  dcvx  bar   bar"
+            "cvx   dscvx dscvx dscvx dscvx dscvx"
+            "scvx  scvx  scvx  scvx  scvx  dir"
+            ".     .     .     .     other other";
+        `}
+      >
+        <Info />
+        {classes.map((minoClass, i) => (
+          <PolyominoClass key={i} {...minoClass} />
+        ))}
+      </main>
+    </Layout>
   )
 }

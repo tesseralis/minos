@@ -16,7 +16,7 @@ function Header({ gen, count }: HeaderProps) {
         display: grid;
         grid-template-columns: 1fr 2rem;
         justify-content: space-around;
-        padding: 0 2rem;
+        padding: 0 1rem;
         margin-bottom: 0.75rem;
       `}
     >
@@ -58,7 +58,7 @@ export default function GenSection({ gen, count, children, narrow }: Props) {
   return (
     <section
       css={css`
-        padding: 2rem;
+        padding: 2rem 1rem;
         display: flex;
         flex-direction: column;
         align-items: center;

@@ -5,6 +5,7 @@ import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
 import { getMinoColor, NUM_GENERATIONS } from "components/graph"
+import Layout from "components/Layout"
 import Info from "./Info.mdx"
 
 import MinoList from "components/MinoList"
@@ -142,7 +143,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
   )
 }
 
-function Sidebar({ mino }: { mino?: Polyomino }) {
+function Main({ mino }: { mino?: Polyomino }) {
   return (
     <main
       css={css`
@@ -161,26 +162,27 @@ function Sidebar({ mino }: { mino?: Polyomino }) {
  */
 export default function CatalogPage({ mino }: { mino?: Polyomino }) {
   return (
-    <div
-      css={css`
-        width: 100%;
-        height: 100vh;
-        margin-left: 10rem;
-        display: grid;
-        grid-template-columns: 1fr 28rem;
-      `}
-    >
+    <Layout>
       <div
         css={css`
-          overflow-y: scroll;
+          position: fixed;
+          height: 100%;
+          display: grid;
+          grid-template-columns: 1fr 28rem;
         `}
       >
-        <MinoList
-          to={(mino) => `/catalog/${mino.toString()}`}
-          selected={mino}
-        />
+        <div
+          css={css`
+            overflow-y: scroll;
+          `}
+        >
+          <MinoList
+            to={(mino) => `/catalog/${mino.toString()}`}
+            selected={mino}
+          />
+        </div>
+        <Main mino={mino} />
       </div>
-      <Sidebar mino={mino} />
-    </div>
+    </Layout>
   )
 }
