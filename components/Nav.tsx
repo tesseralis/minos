@@ -4,6 +4,15 @@ import { css } from "@emotion/react"
 
 import { colors } from "style/theme"
 
+export const navLinks = [
+  "catalog",
+  "symmetry",
+  "classes",
+  "packing",
+  "tiling",
+  "genealogy",
+]
+
 function Title() {
   return (
     <Link href="/" passHref>
@@ -42,14 +51,7 @@ export default function Nav() {
     >
       <Title />
       <ul>
-        {[
-          "catalog",
-          "symmetry",
-          "classes",
-          "packing",
-          "tiling",
-          "genealogy",
-        ].map((view) => (
+        {navLinks.map((view) => (
           <li key={view}>
             <Link href={`/${view}`} passHref>
               <a

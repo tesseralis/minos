@@ -1,15 +1,7 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
-
-const links = [
-  "catalog",
-  "symmetry",
-  "classes",
-  "packing",
-  "tiling",
-  "genealogy",
-]
+import { navLinks } from "components/Nav"
 
 function HomePageNav() {
   return (
@@ -23,7 +15,7 @@ function HomePageNav() {
         }
       `}
     >
-      {links.map((link) => (
+      {navLinks.map((link) => (
         <Link key={link} href={`/${link}`}>
           <a>{link}</a>
         </Link>
