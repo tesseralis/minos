@@ -27,6 +27,7 @@ export default function TilingPage({ mino }: { mino?: Polyomino }) {
 
           > main {
             margin-top: 2rem;
+            max-width: 36rem;
           }
         `}
       >

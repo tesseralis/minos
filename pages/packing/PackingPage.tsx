@@ -90,6 +90,7 @@ export default function PackingPage({ pattern }: { pattern?: string }) {
           css={css`
             margin: 1rem 0;
             width: 100%;
+            max-width: 36rem;
           `}
         >
           {pattern ? (
