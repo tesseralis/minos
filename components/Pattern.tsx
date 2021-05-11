@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from "react"
+import { useRouter } from "next/router"
 
 import { parsePattern } from "mino"
 import transition from "components/transition"
@@ -22,6 +23,8 @@ const PatternMino = memo(function PatternMino({
   mino,
   coord,
 }: MinoProps) {
+  const router = useRouter()
+  const [hovered, setHovered] = useState(false)
   const { fill } = getMinoColor(mino)
   let baseFill = tinycolor(fill)
   baseFill =
@@ -34,9 +37,13 @@ const PatternMino = memo(function PatternMino({
       coord={coord.scale(blockSize)}
       anchor="top left"
       size={blockSize}
-      fill={baseFill.toString()}
+      fill={hovered ? baseFill.lighten().toString() : baseFill.toString()}
       stroke="black"
       gridStyle="thin"
+      onHover={setHovered}
+      onClick={() =>
+        router.push(`/catalog/${mino.transform.free().toString()}`)
+      }
     />
   )
 })
