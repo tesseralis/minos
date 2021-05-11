@@ -5,12 +5,25 @@ import Tiling from "components/Tiling"
 import MinoList from "components/MinoList"
 import Layout from "components/Layout"
 import Info from "./Info.mdx"
+import Link from "next/link"
 
 // TODO add other information in here
 function TilingView({ mino }: { mino: Polyomino }) {
   const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const svgSize = 500
-  return <Tiling mino={mino} gridSize={gridSize} svgSize={svgSize} />
+  return (
+    <div
+      css={css`
+        display: flex;
+        flex-direction: column;
+      `}
+    >
+      <Link href="/tiling">
+        <a>Close</a>
+      </Link>
+      <Tiling mino={mino} gridSize={gridSize} svgSize={svgSize} />
+    </div>
+  )
 }
 
 export default function TilingPage({ mino }: { mino?: Polyomino }) {
