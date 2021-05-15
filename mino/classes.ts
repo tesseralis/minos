@@ -8,14 +8,14 @@ type Axis = typeof axes[number]
 
 export const minoClasses = [
   "rectangle",
-  "ferrersGraph",
+  "Ferrers graph",
   "staircase",
   "stack",
-  "directedConvex",
-  "barGraph",
+  "directed convex",
+  "bar graph",
   "convex",
-  "directedSemiConvex",
-  "semiConvex",
+  "directed semiconvex",
+  "semiconvex",
   "directed",
   "other",
 ] as const
@@ -202,21 +202,21 @@ export default class MinoClasses {
     if (this.isRectangle()) {
       return "rectangle"
     } else if (this.isFerrers()) {
-      return "ferrersGraph"
+      return "Ferrers graph"
     } else if (this.isStack()) {
       return "stack"
     } else if (this.isStaircase()) {
       return "staircase"
     } else if (this.isDirectedConvex()) {
-      return "directedConvex"
+      return "directed convex"
     } else if (this.isBar()) {
-      return "barGraph"
+      return "bar graph"
     } else if (this.isConvex()) {
       return "convex"
     } else if (this.isSemiConvex() && this.isDirected()) {
-      return "directedSemiConvex"
+      return "directed semiconvex"
     } else if (this.isSemiConvex()) {
-      return "semiConvex"
+      return "semiconvex"
     } else if (this.isDirected()) {
       return "directed"
     } else {
@@ -237,13 +237,4 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   if (anchors.length < 2) return false
   const [first, second] = anchors
   return first.x !== second.x && first.y !== second.y
-}
-
-/** Render display name for the given polyomino class */
-export function displayClass(cls: MinoClass) {
-  return cls
-    .replace(/([A-Z])/g, " $1") // Replace camelCase to spaces
-    .toLowerCase()
-    .replace("semi convex", "semi-convex") // Add hyphen
-    .replace("ferrers", "Ferrers") // Capitalize proper name
 }

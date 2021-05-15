@@ -1,11 +1,12 @@
 import { useMemo } from "react"
+import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { getMinoColor } from "components/graph"
 import MinoDiv from "components/MinoDiv"
 import Layout from "components/Layout"
-import { Polyomino, displayClass, MinoClass } from "mino"
-import { getMinoClasses } from "./classHelpers"
+import { Polyomino, MinoClass } from "mino"
+import { getMinoClasses, escapeClass } from "./classHelpers"
 import InfoContent from "./Info.mdx"
 
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
@@ -57,7 +58,7 @@ function PolyominoClass({
         border: 2px grey solid;
         padding: 1rem;
       `}
-      id={name}
+      id={name /* FIXME */}
     >
       <div
         css={css`
@@ -71,7 +72,9 @@ function PolyominoClass({
             margin: 0;
           `}
         >
-          {capitalize(displayClass(name))}
+          <Link href={`/classes/${escapeClass(name)}`}>
+            <a>{capitalize(name)}</a>
+          </Link>
         </h2>
         {link && (
           <a

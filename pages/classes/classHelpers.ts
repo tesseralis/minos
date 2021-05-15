@@ -20,7 +20,7 @@ const classInfo: ClassInfo[] = [
     display: "Rectangle",
   },
   {
-    name: "ferrersGraph",
+    name: "Ferrers graph",
     area: "ferr",
     display: "Ferrers Graph",
     link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
@@ -38,13 +38,13 @@ const classInfo: ClassInfo[] = [
     link: "https://mathworld.wolfram.com/StackPolyomino.html",
   },
   {
-    name: "directedConvex",
+    name: "directed convex",
     area: "dcvx",
     display: "Directed Convex",
     link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
-    name: "barGraph",
+    name: "bar graph",
     area: "bar",
     display: "Bar Graph",
     link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
@@ -56,14 +56,14 @@ const classInfo: ClassInfo[] = [
     link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
   },
   {
-    name: "directedSemiConvex",
+    name: "directed semiconvex",
     area: "dscvx",
-    display: "Directed Semi-Convex",
+    display: "Directed Semiconvex",
   },
   {
-    name: "semiConvex",
+    name: "semiconvex",
     area: "scvx",
-    display: "Semi-Convex",
+    display: "Semiconvex",
     link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
@@ -167,4 +167,8 @@ export function* getMinoClasses(): Generator<ClassMinos> {
   for (const cls of classInfo) {
     yield { ...cls, minos: getBoundaryFamilies(classes[cls.name]) }
   }
+}
+
+export function escapeClass(cls: string) {
+  return cls.toLowerCase().replace(/ /g, "-")
 }
