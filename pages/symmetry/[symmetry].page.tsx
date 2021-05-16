@@ -1,4 +1,3 @@
-import { capitalize } from "lodash"
 import fs from "fs"
 import type { GetStaticProps } from "next"
 import Link from "next/link"
@@ -36,7 +35,7 @@ const longName: Record<Symmetry, string> = {
   axis: "Reflective symmetry (axis)",
   diag: "Reflective symmetry (diagonal)",
   rot: "Rotational symmetry (2-fold)",
-  none: "Asymmetric",
+  none: "Asymmetry",
 }
 
 export default function SymmetryInfo({ symmetry, source }: any) {
@@ -52,7 +51,7 @@ export default function SymmetryInfo({ symmetry, source }: any) {
           }
         `}
       >
-        <Link href="/classes">
+        <Link href="/symmetry">
           <a>Back</a>
         </Link>
         <h1>{(longName as any)[symmetry]}</h1>

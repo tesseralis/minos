@@ -21,11 +21,11 @@ function ClassLinks() {
     <div>
       <div>Polyomino Classes</div>
       <nav>
-        {classInfo.map((info) => {
+        {minoClasses.map((cls) => {
           return (
-            <div key={info.name}>
-              <Link href={`/classes/${escapeClass(info.name)}`}>
-                <a>{info.name}</a>
+            <div key={cls}>
+              <Link href={`/classes/${escapeClass(cls)}`}>
+                <a>{cls}</a>
               </Link>
             </div>
           )
