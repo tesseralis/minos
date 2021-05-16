@@ -6,8 +6,10 @@ import { MDXRemote } from "next-mdx-remote"
 import { css } from "@emotion/react"
 import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
+import MinoList from "./MinoList"
+import { getMinosForSymmetry } from "./symmetryHelpers"
 
-function SymmetryLinks() {
+function SymmetryNav() {
   // FIXME is this the right markup for a nav header?
   return (
     <div>
@@ -40,7 +42,7 @@ const longName: Record<Symmetry, string> = {
 
 export default function SymmetryInfo({ symmetry, source }: any) {
   return (
-    <Layout subNav={<SymmetryLinks />}>
+    <Layout subNav={<SymmetryNav />}>
       <main
         css={css`
           padding: 2rem 0;
@@ -56,6 +58,7 @@ export default function SymmetryInfo({ symmetry, source }: any) {
         </Link>
         <h1>{(longName as any)[symmetry]}</h1>
         <MDXRemote {...source} />
+        <MinoList minos={getMinosForSymmetry(symmetry)} />
       </main>
     </Layout>
   )
