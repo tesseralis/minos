@@ -10,18 +10,22 @@ import Layout from "components/Layout"
 import { classInfo, escapeClass } from "./classHelpers"
 
 function ClassLinks() {
+  // FIXME is this the right markup for a nav header?
   return (
-    <nav>
-      {classInfo.map((info) => {
-        return (
-          <div key={info.name}>
-            <Link href={`/classes/${escapeClass(info.name)}`}>
-              <a>{info.name}</a>
-            </Link>
-          </div>
-        )
-      })}
-    </nav>
+    <div>
+      <div>Polyomino Classes</div>
+      <nav>
+        {classInfo.map((info) => {
+          return (
+            <div key={info.name}>
+              <Link href={`/classes/${escapeClass(info.name)}`}>
+                <a>{info.name}</a>
+              </Link>
+            </div>
+          )
+        })}
+      </nav>
+    </div>
   )
 }
 
