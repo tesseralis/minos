@@ -1,27 +1,31 @@
-import { useMemo } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import Layout from "components/Layout"
-import { Polyomino, MinoClass } from "mino"
-import { getMinoClasses, escapeClass } from "./classHelpers"
+import { minoClasses, MinoClass } from "mino"
+import { escapeClass, getBoundaryFamilies } from "./classHelpers"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
 
-function PolyominoClass({
-  name,
-  area,
-  minos,
-}: {
-  name: MinoClass
-  area: string
-  minos: Polyomino[][]
-  link?: string
-}) {
+const areas: Record<MinoClass, string> = {
+  rectangle: "rect",
+  "Ferrers graph": "ferr",
+  staircase: "stair",
+  stack: "stack",
+  "directed convex": "dcvx",
+  "bar graph": "bar",
+  convex: "cvx",
+  "directed semiconvex": "dscvx",
+  semiconvex: "scvx",
+  directed: "dir",
+  other: "other",
+}
+
+function PolyominoClass({ name }: { name: MinoClass }) {
   return (
     <section
       css={css`
-        grid-area: ${area};
+        grid-area: ${areas[name]};
         border: 2px grey solid;
         padding: 1rem;
       `}
@@ -36,7 +40,7 @@ function PolyominoClass({
           <a>{capitalize(name)}</a>
         </Link>
       </h2>
-      <ClassList minos={minos} />
+      <ClassList minos={getBoundaryFamilies(name)} />
     </section>
   )
 }
@@ -64,7 +68,6 @@ function Info() {
 }
 
 export default function ClassesChart() {
-  const classes = useMemo(() => [...getMinoClasses()], [])
   return (
     <Layout>
       <main
@@ -84,8 +87,8 @@ export default function ClassesChart() {
         `}
       >
         <Info />
-        {classes.map((minoClass, i) => (
-          <PolyominoClass key={i} {...minoClass} />
+        {minoClasses.map((cls) => (
+          <PolyominoClass key={cls} name={cls} />
         ))}
       </main>
     </Layout>

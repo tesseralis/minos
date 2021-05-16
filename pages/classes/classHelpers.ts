@@ -150,20 +150,8 @@ function groupBoundaryFamilies(minoClass: Polyomino[]) {
  * Return the polyominoes belonging to the given polyomino class
  * grouped by their boundary families.
  */
-export function getBoundaryFamilies(minoClass: MinoClass) {
-  const minos = classes[minoClass]
-  return groupBoundaryFamilies(minos)
-}
-
-/**
- * Sort the list of polyominoes the various classes
- */
-export function* getMinoClasses(): Generator<ClassMinos> {
-  const minos = nodes.flat()
-  const classes = groupBy(minos, (mino) => mino.classes.best())
-  for (const cls of classInfo) {
-    yield { ...cls, minos: groupBoundaryFamilies(classes[cls.name]) }
-  }
+export function getBoundaryFamilies(cls: MinoClass) {
+  return groupBoundaryFamilies(classes[cls])
 }
 
 export function escapeClass(cls: string) {
