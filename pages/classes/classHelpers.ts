@@ -13,7 +13,7 @@ interface ClassMinos extends ClassInfo {
   minos: Polyomino[][]
 }
 
-const classInfo: ClassInfo[] = [
+export const classInfo: ClassInfo[] = [
   {
     name: "rectangle",
     area: "rect",

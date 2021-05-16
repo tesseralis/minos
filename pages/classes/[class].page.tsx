@@ -7,11 +7,27 @@ import { MDXRemote } from "next-mdx-remote"
 import { css } from "@emotion/react"
 import { minoClasses } from "mino"
 import Layout from "components/Layout"
-import { escapeClass } from "./classHelpers"
+import { classInfo, escapeClass } from "./classHelpers"
+
+function ClassLinks() {
+  return (
+    <nav>
+      {classInfo.map((info) => {
+        return (
+          <div key={info.name}>
+            <Link href={`/classes/${escapeClass(info.name)}`}>
+              <a>{info.name}</a>
+            </Link>
+          </div>
+        )
+      })}
+    </nav>
+  )
+}
 
 export default function ClassInfo({ class: cls, source }: any) {
   return (
-    <Layout>
+    <Layout subNav={<ClassLinks />}>
       <main
         css={css`
           padding: 2rem 0;
