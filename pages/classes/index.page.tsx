@@ -30,7 +30,7 @@ function PolyominoClass({
       <h2
         css={css`
           font-size: 1.25rem;
-          margin: 0 0.5rem;
+          margin-top: 0;
         `}
       >
         <Link href={`/classes/${escapeClass(name)}`}>

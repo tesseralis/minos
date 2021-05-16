@@ -41,6 +41,7 @@ export default function ClassList({ minos }: { minos: Polyomino[][] }) {
         display: flex;
         align-items: stretch;
         flex-wrap: wrap;
+        margin: -0.5rem;
 
         > * {
           margin: 0.5rem;

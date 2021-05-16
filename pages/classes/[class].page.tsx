@@ -7,7 +7,13 @@ import { MDXRemote } from "next-mdx-remote"
 import { css } from "@emotion/react"
 import { minoClasses } from "mino"
 import Layout from "components/Layout"
-import { classInfo, escapeClass } from "./classHelpers"
+import {
+  getBoundaryFamilies,
+  classInfo,
+  escapeClass,
+  unescapeClass,
+} from "./classHelpers"
+import ClassList from "./ClassList"
 
 function ClassLinks() {
   // FIXME is this the right markup for a nav header?
@@ -47,6 +53,7 @@ export default function ClassInfo({ class: cls, source }: any) {
         </Link>
         <h1>{capitalize(cls)} polyomino</h1>
         <MDXRemote {...source} />
+        <ClassList minos={getBoundaryFamilies(cls)} />
       </main>
     </Layout>
   )
@@ -69,5 +76,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
   )
   const mdxSource = await serialize(source)
   // FIXME how not to do this escape and unescape
-  return { props: { class: cls.replace(/-/g, " "), source: mdxSource } }
+  return { props: { class: unescapeClass(cls), source: mdxSource } }
 }

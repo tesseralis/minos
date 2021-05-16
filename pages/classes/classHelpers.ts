@@ -142,11 +142,10 @@ function getBoundaryFamily(mino: Polyomino) {
   }
 }
 
-/**
- * For the mino class, group it up into the different boundary classes
- * and sort them in a way that makes sense.
- */
-function getBoundaryFamilies(minoClass: Polyomino[]) {
+const minos = nodes.flat()
+const classes = groupBy(minos, (mino) => mino.classes.best())
+
+function groupBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.values(
     groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.family),
   )
@@ -159,16 +158,29 @@ function getBoundaryFamilies(minoClass: Polyomino[]) {
 }
 
 /**
+ * Return the polyominoes belonging to the given polyomino class
+ * grouped by their boundary families.
+ */
+export function getBoundaryFamilies(minoClass: MinoClass) {
+  const minos = classes[minoClass]
+  return groupBoundaryFamilies(minos)
+}
+
+/**
  * Sort the list of polyominoes the various classes
  */
 export function* getMinoClasses(): Generator<ClassMinos> {
   const minos = nodes.flat()
   const classes = groupBy(minos, (mino) => mino.classes.best())
   for (const cls of classInfo) {
-    yield { ...cls, minos: getBoundaryFamilies(classes[cls.name]) }
+    yield { ...cls, minos: groupBoundaryFamilies(classes[cls.name]) }
   }
 }
 
 export function escapeClass(cls: string) {
   return cls.toLowerCase().replace(/ /g, "-")
+}
+
+export function unescapeClass(cls: string) {
+  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers")
 }
