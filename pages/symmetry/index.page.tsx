@@ -10,7 +10,6 @@ import MinoList from "./MinoList"
 function SymmetryClass({ sym }: { sym: Symmetry }) {
   return (
     <section
-      id={sym}
       css={css`
         grid-area: ${sym};
         border: 1px solid grey;

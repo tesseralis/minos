@@ -25,7 +25,6 @@ function PolyominoClass({
         border: 2px grey solid;
         padding: 1rem;
       `}
-      id={name /* FIXME */}
     >
       <h2
         css={css`
