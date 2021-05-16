@@ -5,7 +5,6 @@ import { Polyomino, MinoClass } from "mino"
 interface ClassInfo {
   name: MinoClass
   area: string
-  display: string
   link?: string
 }
 
@@ -17,61 +16,51 @@ export const classInfo: ClassInfo[] = [
   {
     name: "rectangle",
     area: "rect",
-    display: "Rectangle",
   },
   {
     name: "Ferrers graph",
     area: "ferr",
-    display: "Ferrers Graph",
     link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
   },
   {
     name: "staircase",
     area: "stair",
-    display: "Staircase",
     link: "https://mathworld.wolfram.com/StaircasePolygon.html",
   },
   {
     name: "stack",
     area: "stack",
-    display: "Stack",
     link: "https://mathworld.wolfram.com/StackPolyomino.html",
   },
   {
     name: "directed convex",
     area: "dcvx",
-    display: "Directed Convex",
     link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
     name: "bar graph",
     area: "bar",
-    display: "Bar Graph",
     link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
   },
   {
     name: "convex",
     area: "cvx",
-    display: "Convex",
     link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
   },
   {
     name: "directed semiconvex",
     area: "dscvx",
-    display: "Directed Semiconvex",
   },
   {
     name: "semiconvex",
     area: "scvx",
-    display: "Semiconvex",
     link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
     name: "directed",
     area: "dir",
-    display: "Directed",
   },
-  { name: "other", area: "other", display: "Other" },
+  { name: "other", area: "other" },
 ]
 
 function countLetters(s: string) {
