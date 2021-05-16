@@ -2,49 +2,16 @@ import { useMemo } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
-import { getMinoColor } from "components/graph"
-import MinoDiv from "components/MinoDiv"
 import Layout from "components/Layout"
 import { Polyomino, MinoClass } from "mino"
 import { getMinoClasses, escapeClass } from "./classHelpers"
 import InfoContent from "./Info.mdx"
-
-function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
-  return (
-    <div
-      css={css`
-        display: flex;
-        flex-wrap: wrap;
-        align-items: center;
-        border: 1px grey solid;
-        padding: 0.5rem;
-
-        > * {
-          margin: 0.375rem;
-        }
-      `}
-    >
-      {minos.map((mino) => {
-        const { stroke, fill } = getMinoColor(mino)
-        return (
-          <MinoDiv
-            key={mino.data}
-            mino={mino}
-            size={8}
-            fill={fill}
-            stroke={stroke}
-          />
-        )
-      })}
-    </div>
-  )
-}
+import ClassList from "./ClassList"
 
 function PolyominoClass({
   name,
   area,
   minos,
-  link,
 }: {
   name: MinoClass
   area: string
@@ -60,51 +27,17 @@ function PolyominoClass({
       `}
       id={name /* FIXME */}
     >
-      <div
+      <h2
         css={css`
-          display: flex;
+          font-size: 1.25rem;
           margin: 0 0.5rem;
         `}
       >
-        <h2
-          css={css`
-            font-size: 1.25rem;
-            margin: 0;
-          `}
-        >
-          <Link href={`/classes/${escapeClass(name)}`}>
-            <a>{capitalize(name)}</a>
-          </Link>
-        </h2>
-        {link && (
-          <a
-            href={link}
-            target="_blank"
-            rel="noreferrer"
-            css={css`
-              margin-left: auto;
-              font-size: 1.25rem;
-            `}
-          >
-            ref
-          </a>
-        )}
-      </div>
-      <div
-        css={css`
-          display: flex;
-          align-items: stretch;
-          flex-wrap: wrap;
-
-          > * {
-            margin: 0.5rem;
-          }
-        `}
-      >
-        {minos.map((boundaryClass, key) => {
-          return <BoundaryFamily minos={boundaryClass} key={key} />
-        })}
-      </div>
+        <Link href={`/classes/${escapeClass(name)}`}>
+          <a>{capitalize(name)}</a>
+        </Link>
+      </h2>
+      <ClassList minos={minos} />
     </section>
   )
 }
