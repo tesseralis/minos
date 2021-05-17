@@ -3,7 +3,7 @@ import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { serialize } from "next-mdx-remote/serialize"
-import { MDXRemote } from "next-mdx-remote"
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote"
 import { css } from "@emotion/react"
 import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
@@ -64,7 +64,12 @@ const longName: Record<Symmetry, string> = {
   none: "Asymmetry",
 }
 
-export default function SymmetryInfo({ symmetry, source }: any) {
+interface Props {
+  symmetry: Symmetry
+  source: MDXRemoteSerializeResult
+}
+
+export default function SymmetryInfo({ symmetry, source }: Props) {
   return (
     <Layout subNav={<SymmetryNav />}>
       <main
@@ -80,7 +85,7 @@ export default function SymmetryInfo({ symmetry, source }: any) {
         <Link href="/symmetry">
           <a>Back</a>
         </Link>
-        <h1>{(longName as any)[symmetry]}</h1>
+        <h1>{longName[symmetry]}</h1>
         <MDXRemote {...source} />
         <h2>Polyomino list</h2>
         <MinoList minos={getMinosForSymmetry(symmetry)} />
@@ -96,7 +101,8 @@ export function getStaticPaths() {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  // TODO type this correctly
   const { symmetry } = params as any
   const source = fs.readFileSync(
     `${process.cwd()}/pages/symmetry/subpages/${symmetry}.mdx`,

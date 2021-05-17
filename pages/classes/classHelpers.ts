@@ -158,6 +158,6 @@ export function escapeClass(cls: string) {
   return cls.toLowerCase().replace(/ /g, "-")
 }
 
-export function unescapeClass(cls: string) {
-  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers")
+export function unescapeClass(cls: string): MinoClass {
+  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers") as MinoClass
 }

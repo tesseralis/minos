@@ -4,9 +4,9 @@ import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { serialize } from "next-mdx-remote/serialize"
-import { MDXRemote } from "next-mdx-remote"
+import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote"
 import { css } from "@emotion/react"
-import { minoClasses } from "mino"
+import { MinoClass, minoClasses } from "mino"
 import Layout from "components/Layout"
 import { getBoundaryFamilies, escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
@@ -54,7 +54,12 @@ function ClassNav() {
   )
 }
 
-export default function ClassInfo({ class: cls, source }: any) {
+interface Props {
+  class: MinoClass
+  source: MDXRemoteSerializeResult
+}
+
+export default function ClassInfo({ class: cls, source }: Props) {
   return (
     <Layout subNav={<ClassNav />}>
       <main
@@ -88,7 +93,8 @@ export function getStaticPaths() {
   }
 }
 
-export const getStaticProps: GetStaticProps = async ({ params }) => {
+export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
+  // TODO typecheck
   const { class: cls } = params as any
   const source = fs.readFileSync(
     `${process.cwd()}/pages/classes/subpages/${cls}.mdx`,
