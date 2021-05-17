@@ -1,5 +1,6 @@
 import fs from "fs"
 import type { GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import { serialize } from "next-mdx-remote/serialize"
 import { MDXRemote } from "next-mdx-remote"
@@ -8,24 +9,46 @@ import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
 import MinoList from "./MinoList"
 import { getMinosForSymmetry } from "./symmetryHelpers"
+import { colors } from "style/theme"
 
+// TODO deduplicate with classes nav
 function SymmetryNav() {
-  // FIXME is this the right markup for a nav header?
+  const router = useRouter()
   return (
-    <div>
-      <div>Symmetries</div>
-      <nav>
+    <nav
+      css={css`
+        h2 {
+          font-size: 1.25rem;
+          margin: 0;
+        }
+
+        ul {
+          margin: 0;
+        }
+      `}
+    >
+      <h2>Symmetries</h2>
+      <ul>
         {symmetries.map((symmetry) => {
           return (
-            <div key={symmetry}>
-              <Link href={`/symmetry/${symmetry}`}>
-                <a>{printSymmetry(symmetry)}</a>
+            <li key={symmetry}>
+              <Link href={`/symmetry/${symmetry}`} passHref>
+                <a
+                  css={css`
+                    text-decoration: none;
+                    color: ${router.asPath.startsWith(`/symmetry/${symmetry}`)
+                      ? colors.highlight
+                      : colors.fg};
+                  `}
+                >
+                  {printSymmetry(symmetry)}
+                </a>
               </Link>
-            </div>
+            </li>
           )
         })}
-      </nav>
-    </div>
+      </ul>
+    </nav>
   )
 }
 

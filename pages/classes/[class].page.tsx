@@ -1,43 +1,62 @@
 import { capitalize } from "lodash"
 import fs from "fs"
 import type { GetStaticProps } from "next"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import { serialize } from "next-mdx-remote/serialize"
 import { MDXRemote } from "next-mdx-remote"
 import { css } from "@emotion/react"
 import { minoClasses } from "mino"
 import Layout from "components/Layout"
-import {
-  getBoundaryFamilies,
-  classInfo,
-  escapeClass,
-  unescapeClass,
-} from "./classHelpers"
+import { getBoundaryFamilies, escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
+import { colors } from "style/theme"
 
-function ClassLinks() {
-  // FIXME is this the right markup for a nav header?
+// TODO deduplicate with symmetry nav
+function ClassNav() {
+  const router = useRouter()
   return (
-    <div>
-      <div>Polyomino Classes</div>
-      <nav>
+    <nav
+      css={css`
+        h2 {
+          font-size: 1.25rem;
+          margin: 0;
+        }
+
+        ul {
+          margin: 0;
+        }
+      `}
+    >
+      <h2>Classes</h2>
+      <ul>
         {minoClasses.map((cls) => {
+          const href = `/classes/${escapeClass(cls)}`
           return (
-            <div key={cls}>
-              <Link href={`/classes/${escapeClass(cls)}`}>
-                <a>{cls}</a>
+            <li key={cls}>
+              <Link href={href} passHref>
+                <a
+                  css={css`
+                    text-decoration: none;
+                    color: ${router.asPath.startsWith(href)
+                      ? colors.highlight
+                      : colors.fg};
+                  `}
+                >
+                  {cls}
+                </a>
               </Link>
-            </div>
+            </li>
           )
         })}
-      </nav>
-    </div>
+      </ul>
+    </nav>
   )
 }
 
 export default function ClassInfo({ class: cls, source }: any) {
   return (
-    <Layout subNav={<ClassLinks />}>
+    <Layout subNav={<ClassNav />}>
       <main
         css={css`
           padding: 2rem 0;
