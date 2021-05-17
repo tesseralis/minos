@@ -30,13 +30,14 @@ function SymmetryNav() {
       <h2>Symmetries</h2>
       <ul>
         {symmetries.map((symmetry) => {
+          const href = `/symmetry/${symmetry}`
           return (
             <li key={symmetry}>
-              <Link href={`/symmetry/${symmetry}`} passHref>
+              <Link href={href} passHref>
                 <a
                   css={css`
                     text-decoration: none;
-                    color: ${router.asPath.startsWith(`/symmetry/${symmetry}`)
+                    color: ${router.asPath === href
                       ? colors.highlight
                       : colors.fg};
                   `}
