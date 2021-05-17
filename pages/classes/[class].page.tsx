@@ -94,6 +94,5 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
     "utf-8",
   )
   const mdxSource = await serialize(source)
-  // FIXME how not to do this escape and unescape
   return { props: { class: unescapeClass(cls), source: mdxSource } }
 }
