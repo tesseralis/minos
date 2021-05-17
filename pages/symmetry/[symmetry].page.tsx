@@ -81,6 +81,7 @@ export default function SymmetryInfo({ symmetry, source }: any) {
         </Link>
         <h1>{(longName as any)[symmetry]}</h1>
         <MDXRemote {...source} />
+        <h2>Polyomino list</h2>
         <MinoList minos={getMinosForSymmetry(symmetry)} />
       </main>
     </Layout>

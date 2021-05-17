@@ -72,6 +72,7 @@ export default function ClassInfo({ class: cls, source }: any) {
         </Link>
         <h1>{capitalize(cls)} polyomino</h1>
         <MDXRemote {...source} />
+        <h2>Polyomino list</h2>
         <ClassList minos={getBoundaryFamilies(cls)} />
       </main>
     </Layout>
