@@ -4,10 +4,10 @@ export {
   MONOMINO,
   O_OCTOMINO,
   parsePattern,
-  displayClass,
   orderName,
   printSymmetry,
   symmetries,
+  minoClasses,
 } from "./internal"
 export type {
   Coord,

@@ -3,8 +3,9 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import { scaleLinear } from "d3-scale"
-import { Polyomino, orderName, displayClass, printSymmetry } from "mino"
+import { Polyomino, orderName, printSymmetry } from "mino"
 import { getMinoColor, NUM_GENERATIONS } from "components/graph"
+import { escapeClass } from "pages/classes/classHelpers"
 import Layout from "components/Layout"
 import Info from "./Info.mdx"
 
@@ -58,7 +59,7 @@ const data: MinoDatum[] = [
   {
     name: "symmetry",
     display: (m) => (
-      <Link href={`/symmetry#${m.transform.symmetry()}`}>
+      <Link href={`/symmetry/${m.transform.symmetry()}`}>
         <a>{printSymmetry(m.transform.symmetry())}</a>
       </Link>
     ),
@@ -66,8 +67,8 @@ const data: MinoDatum[] = [
   {
     name: "class",
     display: (m) => (
-      <Link href={`/classes#${m.classes.best()}`}>
-        <a>{displayClass(m.classes.best())}</a>
+      <Link href={`/classes/${escapeClass(m.classes.best())}`}>
+        <a>{m.classes.best()}</a>
       </Link>
     ),
   },

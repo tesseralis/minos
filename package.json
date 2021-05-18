@@ -32,6 +32,7 @@
     "history": "^5.0.0",
     "lodash": "^4.17.21",
     "next": "^10.1.3",
+    "next-mdx-remote": "^3.0.1",
     "panzoom": "^9.2.4",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",

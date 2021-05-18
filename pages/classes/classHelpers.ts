@@ -5,7 +5,6 @@ import { Polyomino, MinoClass } from "mino"
 interface ClassInfo {
   name: MinoClass
   area: string
-  display: string
   link?: string
 }
 
@@ -13,65 +12,55 @@ interface ClassMinos extends ClassInfo {
   minos: Polyomino[][]
 }
 
-const classInfo: ClassInfo[] = [
+export const classInfo: ClassInfo[] = [
   {
     name: "rectangle",
     area: "rect",
-    display: "Rectangle",
   },
   {
-    name: "ferrersGraph",
+    name: "Ferrers graph",
     area: "ferr",
-    display: "Ferrers Graph",
     link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
   },
   {
     name: "staircase",
     area: "stair",
-    display: "Staircase",
     link: "https://mathworld.wolfram.com/StaircasePolygon.html",
   },
   {
     name: "stack",
     area: "stack",
-    display: "Stack",
     link: "https://mathworld.wolfram.com/StackPolyomino.html",
   },
   {
-    name: "directedConvex",
+    name: "directed convex",
     area: "dcvx",
-    display: "Directed Convex",
     link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
   },
   {
-    name: "barGraph",
+    name: "bar graph",
     area: "bar",
-    display: "Bar Graph",
     link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
   },
   {
     name: "convex",
     area: "cvx",
-    display: "Convex",
     link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
   },
   {
-    name: "directedSemiConvex",
+    name: "directed semiconvex",
     area: "dscvx",
-    display: "Directed Semi-Convex",
   },
   {
-    name: "semiConvex",
+    name: "semiconvex",
     area: "scvx",
-    display: "Semi-Convex",
     link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
   },
   {
     name: "directed",
     area: "dir",
-    display: "Directed",
   },
-  { name: "other", area: "other", display: "Other" },
+  { name: "other", area: "other" },
 ]
 
 function countLetters(s: string) {
@@ -142,11 +131,10 @@ function getBoundaryFamily(mino: Polyomino) {
   }
 }
 
-/**
- * For the mino class, group it up into the different boundary classes
- * and sort them in a way that makes sense.
- */
-function getBoundaryFamilies(minoClass: Polyomino[]) {
+const minos = nodes.flat()
+const classes = groupBy(minos, (mino) => mino.classes.best())
+
+function groupBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.values(
     groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.family),
   )
@@ -159,12 +147,17 @@ function getBoundaryFamilies(minoClass: Polyomino[]) {
 }
 
 /**
- * Sort the list of polyominoes the various classes
+ * Return the polyominoes belonging to the given polyomino class
+ * grouped by their boundary families.
  */
-export function* getMinoClasses(): Generator<ClassMinos> {
-  const minos = nodes.flat()
-  const classes = groupBy(minos, (mino) => mino.classes.best())
-  for (const cls of classInfo) {
-    yield { ...cls, minos: getBoundaryFamilies(classes[cls.name]) }
-  }
+export function getBoundaryFamilies(cls: MinoClass) {
+  return groupBoundaryFamilies(classes[cls])
+}
+
+export function escapeClass(cls: string) {
+  return cls.toLowerCase().replace(/ /g, "-")
+}
+
+export function unescapeClass(cls: string): MinoClass {
+  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers") as MinoClass
 }

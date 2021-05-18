@@ -12,8 +12,8 @@ export const baseColorMap: Record<Symmetry, string> = {
   diag: "#66f",
   rot: "limegreen",
   axis2: "gold",
-  diag2: "violet",
-  rot2: "turquoise",
+  diag2: "turquoise",
+  rot2: "violet",
   all: "#dee",
 }
 
