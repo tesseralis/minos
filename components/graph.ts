@@ -7,7 +7,7 @@ import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
 type Color = tinycolor.Instance
 type MinoData = number
 
-const lightScale = scaleLinear().domain([4, 16]).range([-20, 15])
+const lightScale = scaleLinear().domain([4, 16]).range([-15, 15])
 
 export const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
@@ -23,11 +23,11 @@ export const baseColorMap: Record<Symmetry, string> = {
 const classColorMap: Record<MinoClass, string> = {
   rectangle: "#ccc",
   "Ferrers graph": "yellow",
-  staircase: "lime",
+  staircase: "#33cc33",
   stack: "orange",
-  "directed convex": "#00ffaa",
+  "directed convex": "#33ccaa",
   "bar graph": "red",
-  convex: "cyan",
+  convex: "#33cccc",
   "directed semiconvex": "magenta",
   semiconvex: "#0088ff",
   directed: "#8800ff",
@@ -43,7 +43,7 @@ const borderColors = mapValues(baseColorMap, (col) =>
 )
 
 const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
-  tinycolor(col).desaturate(10).lighten(5),
+  tinycolor(col).lighten(5),
 )
 
 // Use different mix percentages for different symmetries
