@@ -4,6 +4,8 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import { serialize } from "next-mdx-remote/serialize"
 import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote"
+import remarkMath from "remark-math"
+import rehypeKatex from "rehype-katex"
 import { css } from "@emotion/react"
 import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
@@ -108,6 +110,11 @@ export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
     `${process.cwd()}/pages/symmetry/subpages/${symmetry}.mdx`,
     "utf-8",
   )
-  const mdxSource = await serialize(source)
+  const mdxSource = await serialize(source, {
+    mdxOptions: {
+      remarkPlugins: [remarkMath],
+      rehypePlugins: [rehypeKatex],
+    },
+  })
   return { props: { symmetry, source: mdxSource } }
 }

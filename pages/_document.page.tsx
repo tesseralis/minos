@@ -26,6 +26,12 @@ export default class MyDocument extends Document {
           {/* manifest.json provides metadata used when your web app is installed on a
       user's mobile device or desktop. See https://developers.google.com/web/fundamentals/web-app-manifest/ */}
           <link rel="manifest" href="/manifest.json" />
+          <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/katex@0.13.11/dist/katex.min.css"
+            integrity="sha384-Um5gpz1odJg5Z4HAmzPtgZKdTBHZdw8S29IecapCSB31ligYPhHQZMIlWLYQGVoc"
+            crossOrigin="anonymous"
+          />
         </Head>
         <body>
           <Main />
