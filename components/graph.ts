@@ -1,10 +1,13 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash"
+import { scaleLinear } from "d3-scale"
 
-import { Polyomino, RelativeLink, Symmetry, MONOMINO } from "mino"
+import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
 
 type Color = tinycolor.Instance
 type MinoData = number
+
+const lightScale = scaleLinear().domain([4, 16]).range([-20, 15])
 
 export const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
@@ -17,6 +20,20 @@ export const baseColorMap: Record<Symmetry, string> = {
   all: "#dee",
 }
 
+const classColorMap: Record<MinoClass, string> = {
+  rectangle: "#ccc",
+  "Ferrers graph": "yellow",
+  staircase: "lime",
+  stack: "orange",
+  "directed convex": "#00ffaa",
+  "bar graph": "red",
+  convex: "cyan",
+  "directed semiconvex": "magenta",
+  semiconvex: "#0088ff",
+  directed: "#8800ff",
+  other: "blue",
+}
+
 export function getSymmetryColor(symmetry: Symmetry): string {
   return baseColorMap[symmetry]
 }
@@ -25,8 +42,8 @@ const borderColors = mapValues(baseColorMap, (col) =>
   tinycolor(col).darken(40).desaturate(40).spin(-30),
 )
 
-const colorMap: Record<Symmetry, Color> = mapValues(baseColorMap, (col) =>
-  tinycolor(col),
+const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
+  tinycolor(col).desaturate(10).lighten(5),
 )
 
 // Use different mix percentages for different symmetries
@@ -107,18 +124,23 @@ export function generateGraph(n: number) {
   const colors: Record<MinoData, Color> = {}
   for (const generation of nodes) {
     for (const mino of generation) {
-      const symmetry = mino.transform.symmetry()
+      // const symmetry = mino.transform.symmetry()
+      const minoClass = mino.classes.best()
       if (mino.equals(MONOMINO)) {
-        colors[mino.data] = colorMap[symmetry]
+        colors[mino.data] = colorMap[minoClass]
         continue
       }
-      const color = mixColors(
+      const inheritedColor = mixColors(
         [...mino.relatives.freeParents()].map((parent) => colors[parent.data]),
       )
-      colors[mino.data] = tinycolor.mix(
-        colorMap[symmetry],
-        color,
-        mixMap[symmetry],
+      const mixedColor = tinycolor.mix(
+        colorMap[minoClass],
+        inheritedColor,
+        50,
+        // mixMap[minoClass],
+      )
+      colors[mino.data] = mixedColor.darken(
+        lightScale(mino.boundary().family().length),
       )
     }
   }
