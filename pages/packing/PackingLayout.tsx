@@ -1,11 +1,10 @@
+import { ReactNode } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
-import Pattern from "components/Pattern"
 import Layout from "components/Layout"
 import { orderName } from "mino"
 import { colors } from "style/theme"
 import { useRouter } from "next/router"
-import Info from "./Info.mdx"
 
 const sizes = ["1_4", 5, 6, 7, 8]
 const shapes = ["rect", "square"]
@@ -76,7 +75,7 @@ function PatternNav() {
   )
 }
 
-export default function PackingPage({ pattern }: { pattern?: string }) {
+export default function PackingLayout({ children }: { children: ReactNode }) {
   return (
     <Layout>
       <div
@@ -93,26 +92,7 @@ export default function PackingPage({ pattern }: { pattern?: string }) {
             max-width: 36rem;
           `}
         >
-          {pattern ? (
-            <div
-              css={css`
-                margin-top: 2rem;
-                width: 100%;
-                display: flex;
-                justify-content: center;
-              `}
-            >
-              <Pattern pattern={pattern} />
-            </div>
-          ) : (
-            <div
-              css={css`
-                margin: 2rem 4rem;
-              `}
-            >
-              <Info />
-            </div>
-          )}
+          {children}
         </main>
       </div>
     </Layout>

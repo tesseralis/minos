@@ -1,3 +1,4 @@
+import fs from "fs"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
@@ -24,7 +25,11 @@ function HomePageNav() {
   )
 }
 
-export default function HomePage() {
+interface Props {
+  pattern: string
+}
+
+export default function HomePage({ pattern }: Props) {
   return (
     <div
       css={css`
@@ -49,7 +54,7 @@ export default function HomePage() {
           transform: scale(5);
         `}
       >
-        <Pattern pattern="8-square" />
+        <Pattern pattern={pattern} />
       </div>
       <main
         css={css`
@@ -106,4 +111,12 @@ export default function HomePage() {
       </main>
     </div>
   )
+}
+
+export async function getStaticProps() {
+  const pattern = fs.readFileSync(
+    `${process.cwd()}/pages/packing/data/8-square.txt`,
+    "utf-8",
+  )
+  return { props: { pattern } }
 }
