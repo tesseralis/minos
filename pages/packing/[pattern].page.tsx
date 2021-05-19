@@ -2,12 +2,15 @@ import fs from "fs"
 import PackingPage from "./PackingLayout"
 import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
+import { getAttribution, patternList } from "./packingHelpers"
 
 interface Props {
   pattern: string
+  patternName: string
 }
 
-export default function PackingPatternPage({ pattern }: Props) {
+export default function PackingPatternPage({ pattern, patternName }: Props) {
+  const attribution = getAttribution(patternName)
   return (
     <PackingPage>
       <div
@@ -15,42 +18,35 @@ export default function PackingPatternPage({ pattern }: Props) {
           margin-top: 2rem;
           width: 100%;
           display: flex;
-          justify-content: center;
+          flex-direction: column;
+          /* align-items: left; */
+
+          > svg {
+            align-self: center;
+          }
         `}
       >
         <Pattern pattern={pattern} />
+        <div>{attribution}</div>
       </div>
     </PackingPage>
   )
 }
 
-const patterns = [
-  "1_4-rect",
-  "1_4-square",
-  "5-rect",
-  "5-square",
-  "6-rect",
-  "6-square",
-  "7-rect",
-  "7-square",
-  "8-rect",
-  "8-square",
-]
-
 export function getStaticPaths() {
   return {
-    paths: patterns.map((pattern) => ({ params: { pattern } })),
+    paths: patternList.map((pattern) => ({ params: { pattern } })),
     fallback: false,
   }
 }
 
 export async function getStaticProps({ params }: any) {
-  const { pattern } = params
-  const patternStr = fs.readFileSync(
-    `${process.cwd()}/pages/packing/data/${pattern}.txt`,
+  const { pattern: patternName } = params
+  const pattern = fs.readFileSync(
+    `${process.cwd()}/pages/packing/data/${patternName}.txt`,
     "utf-8",
   )
   return {
-    props: { pattern: patternStr },
+    props: { pattern, patternName },
   }
 }
