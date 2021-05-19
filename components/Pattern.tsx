@@ -49,10 +49,10 @@ const PatternMino = memo(function PatternMino({
 })
 
 // TODO maybe it's better if we just use /public for this
-async function getPatternStr(patName: string): Promise<string> {
-  const module = await import(`!!raw-loader!data/${patName}.txt`)
-  return module.default
-}
+// async function getPatternStr(patName: string): Promise<string> {
+//   const module = await import(`!!raw-loader!data/${patName}.txt`)
+//   return module.default
+// }
 
 const maxWidth = 500
 
@@ -60,17 +60,11 @@ interface Props {
   pattern: string
 }
 
-export default function MinoPattern({ pattern: patName }: Props) {
-  const [patternStr, setPatternStr] = useState<string | null>(null)
+export default function MinoPattern({ pattern: patternStr }: Props) {
+  // const [patternStr, setPatternStr] = useState<string | null>(null)
   const [visIndex, setVisIndex] = useState(-1)
   const selected = useSelected()
-
-  useEffect(() => {
-    getPatternStr(patName).then((str) => setPatternStr(str))
-  }, [patName])
-  const pattern = useMemo(() => (patternStr ? parsePattern(patternStr) : []), [
-    patternStr,
-  ])
+  const pattern = useMemo(() => parsePattern(patternStr), [patternStr])
 
   // TODO de-duplicate with the other two animations
   const skipAnimation = pattern.length < 100
