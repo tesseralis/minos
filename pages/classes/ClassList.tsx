@@ -10,8 +10,9 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
-        border: 1px grey solid;
+        border: 1px dimgray solid;
         padding: 0.5rem;
+        border-radius: 1rem;
 
         > * {
           margin: 0.375rem;
