@@ -104,15 +104,16 @@ function getBoundaryFamily(mino: Polyomino) {
   }
 
   // Make sure semi-convex minos are in their column-convex state
-  // TODO column and row are reversed
-  if (mino.classes.isSemiConvex()) {
-    filtered = filtered.filter((f) => f.classes.isConvexAtAxis("column"))
+  // and that the concavity is facing to the right
+  if (mino.classes.isSemiConvex() && !mino.classes.isConvex()) {
+    filtered = filtered.filter((f) => f.boundary().family().includes("lur"))
   }
 
   const families = filtered.map((mino) => ({
     mino,
     family: mino.boundary().family(),
   }))
+
   // Choose the boundary word that minimizes the number of "left" and "down"
   // which puts "longer" segments on top
   const family = sortBy(families, (c) => {
