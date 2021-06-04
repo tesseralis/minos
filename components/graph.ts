@@ -7,8 +7,6 @@ import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
 type Color = tinycolor.Instance
 type MinoData = number
 
-const lightScale = scaleLinear().domain([4, 16]).range([-15, 15])
-
 export const baseColorMap: Record<Symmetry, string> = {
   none: "#aaa",
   axis: "#e22",
@@ -22,12 +20,12 @@ export const baseColorMap: Record<Symmetry, string> = {
 
 const classColorMap: Record<MinoClass, string> = {
   rectangle: "#ccc",
-  "Ferrers graph": "cyan",
-  staircase: "#4444ff",
-  stack: "#00ff00",
+  "Ferrers graph": "#33dddd",
+  staircase: "#4488ff",
+  stack: "#4d2",
   "directed convex": "#8844ff",
   "bar graph": "#ffcc33",
-  convex: "magenta",
+  convex: "#d2d",
   "directed semiconvex": "#ff6600",
   semiconvex: "red",
   directed: "brown",
@@ -38,9 +36,11 @@ export function getSymmetryColor(symmetry: Symmetry): string {
   return baseColorMap[symmetry]
 }
 
-// const borderColors = mapValues(baseColorMap, (col) =>
-//   tinycolor(col).darken(40).desaturate(40).spin(-30),
-// )
+function getNoise(mino: Polyomino) {
+  const data = mino.transform.free().data
+  const hex = data.toString(16).padStart(6, "0")
+  return tinycolor(hex)
+}
 
 function getBorderColor(color: Color) {
   return color.darken(50).desaturate(40).spin(-30)
@@ -50,35 +50,12 @@ const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
   tinycolor(col).desaturate(30),
 )
 
-// Use different mix percentages for different symmetries
-// since we want desaturation in nonsymmetric minos to be prominent
-const mixMap = {
-  none: 50,
-  axis: 30,
-  diag: 30,
-  rot: 30,
-  axis2: 20,
-  diag2: 20,
-  rot2: 20,
-  all: 0,
-}
-
 function sum(nums: number[]) {
   return nums.reduce((s, n) => s + n, 0)
 }
 
 function avg(nums: number[]) {
   return sum(nums) / nums.length
-}
-
-function mixColors(colors: Color[]) {
-  const rgbs = colors.map((c) => c.toRgb())
-  return tinycolor({
-    r: avg(rgbs.map((c) => c.r)),
-    g: avg(rgbs.map((c) => c.g)),
-    b: avg(rgbs.map((c) => c.b)),
-    a: avg(rgbs.map((c) => c.a)),
-  })
 }
 
 function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
@@ -128,25 +105,17 @@ export function generateGraph(n: number) {
   const colors: Record<MinoData, Color> = {}
   for (const generation of nodes) {
     for (const mino of generation) {
-      // const symmetry = mino.transform.symmetry()
       const minoClass = mino.classes.best()
       if (mino.equals(MONOMINO)) {
         colors[mino.data] = colorMap[minoClass]
         continue
       }
-      const inheritedColor = mixColors(
-        [...mino.relatives.freeParents()].map((parent) => colors[parent.data]),
-      )
       const mixedColor = tinycolor.mix(
         colorMap[minoClass],
-        inheritedColor,
-        30,
-        // mixMap[minoClass],
+        tinycolor.random(),
+        20,
       )
       colors[mino.data] = mixedColor
-      // colors[mino.data] = mixedColor.darken(
-      //   lightScale(mino.boundary().family().length),
-      // )
     }
   }
 
@@ -210,11 +179,9 @@ export function getIndex(mino: Polyomino) {
  */
 export function getMinoColor(mino: Polyomino) {
   const color = colors[mino.transform.free().data]
-  // const symmetry = mino.transform.symmetry()
   return {
     fill: color!.toString(),
     stroke: getBorderColor(color).toString(),
-    // stroke: borderColors[symmetry].toString(),
   }
 }
 
