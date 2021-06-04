@@ -22,16 +22,16 @@ export const baseColorMap: Record<Symmetry, string> = {
 
 const classColorMap: Record<MinoClass, string> = {
   rectangle: "#ccc",
-  "Ferrers graph": "yellow",
-  staircase: "#33cc33",
-  stack: "orange",
-  "directed convex": "#33ccaa",
-  "bar graph": "#dd2222",
-  convex: "#33cccc",
-  "directed semiconvex": "#dd22dd",
-  semiconvex: "#0088ff",
-  directed: "#8800ff",
-  other: "#6666ff",
+  "Ferrers graph": "cyan",
+  staircase: "#4444ff",
+  stack: "#00ff00",
+  "directed convex": "#8844ff",
+  "bar graph": "#ffcc33",
+  convex: "magenta",
+  "directed semiconvex": "#ff6600",
+  semiconvex: "red",
+  directed: "brown",
+  other: "grey",
 }
 
 export function getSymmetryColor(symmetry: Symmetry): string {
@@ -43,7 +43,7 @@ const borderColors = mapValues(baseColorMap, (col) =>
 )
 
 const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
-  tinycolor(col).desaturate(15),
+  tinycolor(col).desaturate(30),
 )
 
 // Use different mix percentages for different symmetries
@@ -136,12 +136,13 @@ export function generateGraph(n: number) {
       const mixedColor = tinycolor.mix(
         colorMap[minoClass],
         inheritedColor,
-        40,
+        30,
         // mixMap[minoClass],
       )
-      colors[mino.data] = mixedColor.darken(
-        lightScale(mino.boundary().family().length),
-      )
+      colors[mino.data] = mixedColor
+      // colors[mino.data] = mixedColor.darken(
+      //   lightScale(mino.boundary().family().length),
+      // )
     }
   }
 
