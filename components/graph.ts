@@ -38,9 +38,13 @@ export function getSymmetryColor(symmetry: Symmetry): string {
   return baseColorMap[symmetry]
 }
 
-const borderColors = mapValues(baseColorMap, (col) =>
-  tinycolor(col).darken(40).desaturate(40).spin(-30),
-)
+// const borderColors = mapValues(baseColorMap, (col) =>
+//   tinycolor(col).darken(40).desaturate(40).spin(-30),
+// )
+
+function getBorderColor(color: Color) {
+  return color.darken(50).desaturate(40).spin(-30)
+}
 
 const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
   tinycolor(col).desaturate(30),
@@ -206,10 +210,11 @@ export function getIndex(mino: Polyomino) {
  */
 export function getMinoColor(mino: Polyomino) {
   const color = colors[mino.transform.free().data]
-  const symmetry = mino.transform.symmetry()
+  // const symmetry = mino.transform.symmetry()
   return {
     fill: color!.toString(),
-    stroke: borderColors[symmetry].toString(),
+    stroke: getBorderColor(color).toString(),
+    // stroke: borderColors[symmetry].toString(),
   }
 }
 
