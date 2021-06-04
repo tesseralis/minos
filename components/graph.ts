@@ -1,6 +1,5 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash"
-import { scaleLinear } from "d3-scale"
 
 import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
 
@@ -37,9 +36,14 @@ export function getSymmetryColor(symmetry: Symmetry): string {
 }
 
 function getNoise(mino: Polyomino) {
-  const data = mino.transform.free().data
-  const hex = data.toString(16).padStart(6, "0")
-  return tinycolor(hex)
+  let data = mino.transform.free().data
+  let h = 0
+  while (data) {
+    h = h ^ data % (1 << 4)
+    data >>= 4
+  }
+  h = (h / 1) << 4
+  return tinycolor.fromRatio({ h, s: 1, v: 1 })
 }
 
 function getBorderColor(color: Color) {
@@ -110,11 +114,8 @@ export function generateGraph(n: number) {
         colors[mino.data] = colorMap[minoClass]
         continue
       }
-      const mixedColor = tinycolor.mix(
-        colorMap[minoClass],
-        tinycolor.random(),
-        20,
-      )
+      // colors[mino.data] = getNoise(mino)
+      const mixedColor = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
       colors[mino.data] = mixedColor
     }
   }
