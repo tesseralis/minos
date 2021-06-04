@@ -27,7 +27,7 @@ const classColorMap: Record<MinoClass, string> = {
   convex: "#d2d",
   "directed semiconvex": "#ff6600",
   semiconvex: "red",
-  directed: "brown",
+  directed: "#b40",
   other: "grey",
 }
 
@@ -42,7 +42,7 @@ function getNoise(mino: Polyomino) {
     h = h ^ data % (1 << 4)
     data >>= 4
   }
-  h = (h / 1) << 4
+  h = h / (1 << 4)
   return tinycolor.fromRatio({ h, s: 1, v: 1 })
 }
 
@@ -114,9 +114,7 @@ export function generateGraph(n: number) {
         colors[mino.data] = colorMap[minoClass]
         continue
       }
-      // colors[mino.data] = getNoise(mino)
-      const mixedColor = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
-      colors[mino.data] = mixedColor
+      colors[mino.data] = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
     }
   }
 
