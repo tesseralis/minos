@@ -4,6 +4,7 @@ import { capitalize } from "lodash"
 import Layout from "components/Layout"
 import { minoClasses, MinoClass } from "mino"
 import { escapeClass, getBoundaryFamilies } from "./classHelpers"
+import { colors } from "style/theme"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
 
@@ -21,14 +22,33 @@ const areas: Record<MinoClass, string> = {
   other: "other",
 }
 
+// List of arrow grid positions
+const arrowPositions = [
+  { row: 1, column: "4 / span 3" },
+  { row: 2, column: 3 },
+  { row: 2, column: "4 / span 3" },
+  { row: 3, column: "1 / span 3" },
+  { row: 3, column: 4 },
+  { row: 3, column: "5 / span 2" },
+  { row: 4, column: 1 },
+  { row: 4, column: "2 / span 3" },
+  { row: 4, column: "5 / span 2" },
+  { row: 5, column: 1 },
+  { row: 5, column: "2 / span 4" },
+  { row: 5, column: 6 },
+  { row: 6, column: 5 },
+  { row: 6, column: 6 },
+]
+
 function PolyominoClass({ name }: { name: MinoClass }) {
   return (
     <section
       css={css`
         grid-area: ${areas[name]};
         border: 2px grey solid;
-        padding: 1rem;
+        padding: 1.5rem 1rem;
         border-radius: 2px;
+        position: relative;
       `}
     >
       <h2
@@ -68,6 +88,37 @@ function Info() {
   )
 }
 
+interface ArrowProps {
+  row: number | string
+  column: number | string
+}
+
+function Arrow({ row, column }: ArrowProps) {
+  return (
+    <div
+      css={css`
+        grid-row: ${row};
+        grid-column: ${column};
+        align-self: end;
+        justify-self: center;
+        position: relative;
+
+        ::after {
+          position: absolute;
+          top: -15px;
+          left: -15px;
+          content: "";
+          border: solid grey;
+          border-width: 0 2px 2px 0;
+          padding: 13px;
+          transform: rotate(45deg);
+          background: ${colors.bg};
+        }
+      `}
+    />
+  )
+}
+
 export default function ClassesChart() {
   return (
     <Layout>
@@ -90,6 +141,9 @@ export default function ClassesChart() {
         <Info />
         {minoClasses.map((cls) => (
           <PolyominoClass key={cls} name={cls} />
+        ))}
+        {arrowPositions.map((arrow, i) => (
+          <Arrow key={i} {...arrow} />
         ))}
       </main>
     </Layout>
