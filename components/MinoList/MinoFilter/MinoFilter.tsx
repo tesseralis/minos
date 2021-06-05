@@ -21,6 +21,11 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
         margin: 0 4rem;
         display: flex;
         flex-wrap: wrap;
+
+        > *:not(:first-child) {
+          margin-left: ${narrow ? 0 : "2rem"};
+          margin-top: ${narrow ? "2rem" : 0};
+        }
       `}
     >
       <SymmetryInput
@@ -31,17 +36,10 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
         value={value.classes}
         onUpdate={(val) => onUpdate({ ...value, classes: val })}
       />
-      <div
-        css={css`
-          margin-left: ${narrow ? 0 : "2rem"};
-          margin-top: ${narrow ? "2rem" : 0};
-        `}
-      >
-        <YesNoInputs
-          onUpdate={(val) => onUpdate({ ...value, yesNo: val })}
-          value={value.yesNo}
-        />
-      </div>
+      <YesNoInputs
+        onUpdate={(val) => onUpdate({ ...value, yesNo: val })}
+        value={value.yesNo}
+      />
     </form>
   )
 }

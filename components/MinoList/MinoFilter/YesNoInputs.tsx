@@ -95,7 +95,7 @@ interface Props {
  */
 export default function YesNoInputs({ value = {}, onUpdate }: Props) {
   return (
-    <>
+    <div>
       {yesNoItems.map((item) => (
         <YesNoInput
           {...item}
@@ -104,6 +104,6 @@ export default function YesNoInputs({ value = {}, onUpdate }: Props) {
           onUpdate={(val) => onUpdate({ ...value, [item.name]: val })}
         />
       ))}
-    </>
+    </div>
   )
 }
