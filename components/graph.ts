@@ -35,6 +35,9 @@ export function getSymmetryColor(symmetry: Symmetry): string {
   return baseColorMap[symmetry]
 }
 
+/**
+ * Get the unique randomized color ID for the given polyomino.
+ */
 function getNoise(mino: Polyomino) {
   let data = mino.transform.free().data
   let h = 0
@@ -47,7 +50,7 @@ function getNoise(mino: Polyomino) {
 }
 
 function getBorderColor(color: Color) {
-  return color.darken(50).desaturate(40).spin(-30)
+  return color.clone().darken(50).desaturate(40).spin(-30)
 }
 
 const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
@@ -175,7 +178,7 @@ export function getIndex(mino: Polyomino) {
 export function getMinoColor(mino: Polyomino) {
   const color = colors[mino.transform.free().data]
   return {
-    fill: color!.toString(),
+    fill: color!.toHexString(),
     stroke: getBorderColor(color).toString(),
   }
 }

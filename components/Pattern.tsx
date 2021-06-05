@@ -27,10 +27,6 @@ const PatternMino = memo(function PatternMino({
   const [hovered, setHovered] = useState(false)
   const { fill } = getMinoColor(mino)
   const baseFill = tinycolor(fill)
-  // baseFill =
-  //   mino.transform.symmetry() === "none"
-  //     ? baseFill.saturate(40)
-  //     : baseFill.desaturate(20)
   return (
     <MinoSvg
       mino={mino}
