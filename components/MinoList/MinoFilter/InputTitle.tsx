@@ -28,6 +28,8 @@ export default function InputTitle({ display, onClear }: Props) {
           font-size: 1rem;
           font-family: serif;
           margin-left: 1rem;
+          padding: 0;
+          text-align: right;
           color: ${colors.fg};
           background: none;
           border: none;

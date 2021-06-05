@@ -2,67 +2,6 @@ import { groupBy, sortBy } from "lodash"
 import { nodes } from "components/graph"
 import { Polyomino, MinoClass } from "mino"
 
-interface ClassInfo {
-  name: MinoClass
-  area: string
-  link?: string
-}
-
-interface ClassMinos extends ClassInfo {
-  minos: Polyomino[][]
-}
-
-export const classInfo: ClassInfo[] = [
-  {
-    name: "rectangle",
-    area: "rect",
-  },
-  {
-    name: "Ferrers graph",
-    area: "ferr",
-    link: "https://mathworld.wolfram.com/FerrersGraphPolygon.html",
-  },
-  {
-    name: "staircase",
-    area: "stair",
-    link: "https://mathworld.wolfram.com/StaircasePolygon.html",
-  },
-  {
-    name: "stack",
-    area: "stack",
-    link: "https://mathworld.wolfram.com/StackPolyomino.html",
-  },
-  {
-    name: "directed convex",
-    area: "dcvx",
-    link: "https://mathworld.wolfram.com/DirectedConvexPolyomino.html",
-  },
-  {
-    name: "bar graph",
-    area: "bar",
-    link: "https://mathworld.wolfram.com/BarGraphPolygon.html",
-  },
-  {
-    name: "convex",
-    area: "cvx",
-    link: "https://mathworld.wolfram.com/ConvexPolyomino.html",
-  },
-  {
-    name: "directed semiconvex",
-    area: "dscvx",
-  },
-  {
-    name: "semiconvex",
-    area: "scvx",
-    link: "https://mathworld.wolfram.com/Row-ConvexPolyomino.html",
-  },
-  {
-    name: "directed",
-    area: "dir",
-  },
-  { name: "other", area: "other" },
-]
-
 function countLetters(s: string) {
   const count: Record<string, number> = {}
   for (const c of s) {
