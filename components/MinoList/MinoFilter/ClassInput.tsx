@@ -6,29 +6,13 @@ import { Line, Polygon } from "components/svg"
 import { Polyomino, MinoClass } from "mino"
 import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
-
-function upsert<T>(array: T[], value: T) {
-  if (array.includes(value)) {
-    return array
-  }
-  return [...array, value]
-}
-
-function remove<T>(array: T[], value: T) {
-  const index = array.indexOf(value)
-  if (index >= 0) {
-    const result = [...array]
-    result.splice(index, 1)
-    return result
-  }
-  return array
-}
+import { upsert, remove } from "./common"
 
 // Choose a dimmer neutral color
 const outlineColor = "#999"
 
 // Common prop values for the symmetry lines
-const symLinesProps = {
+const markerProps = {
   stroke: outlineColor,
   strokeWidth: 1,
   fill: "none",
@@ -44,7 +28,7 @@ function ConvexMarker() {
         [0, -r],
         [-r, 0],
       ]}
-      {...symLinesProps}
+      {...markerProps}
     />
   )
 }
@@ -59,7 +43,7 @@ function SemiconvexMarker() {
         [r, -r],
         [0, 0],
       ]}
-      {...symLinesProps}
+      {...markerProps}
     />
   )
 }
@@ -80,7 +64,7 @@ function DirectedMarker({
     <Line
       p1={[xSign * x, ySign * y]}
       p2={[xSign * (x - 5), ySign * (y - 5)]}
-      {...symLinesProps}
+      {...markerProps}
     />
   )
 }
@@ -215,7 +199,7 @@ interface Props {
 /**
  * Input to select what symmetries should be filtered out.
  */
-export default function SymmetryInput({ value = [], onUpdate }: Props) {
+export default function ClassInput({ value = [], onUpdate }: Props) {
   return (
     <div>
       <InputTitle display="Classes" onClear={() => onUpdate([])} />

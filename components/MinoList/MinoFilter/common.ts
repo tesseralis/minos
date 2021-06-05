@@ -25,6 +25,23 @@ const yesNoOpts: YesNoOption[] = [
   { name: "hasTiling", predicate: (p) => p.tilings.has() },
 ]
 
+export function upsert<T>(array: T[], value: T) {
+  if (array.includes(value)) {
+    return array
+  }
+  return [...array, value]
+}
+
+export function remove<T>(array: T[], value: T) {
+  const index = array.indexOf(value)
+  if (index >= 0) {
+    const result = [...array]
+    result.splice(index, 1)
+    return result
+  }
+  return array
+}
+
 function applyToMino(
   mino: Polyomino,
   { yesNo = {}, symmetries = [], classes = [] }: FilterOptions,
