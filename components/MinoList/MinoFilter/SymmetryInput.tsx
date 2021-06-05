@@ -23,8 +23,8 @@ interface SymmetryType {
   type: Symmetry
   // The mino to display as the prototype for this symmetry
   mino: Polyomino
-  // The symmetry lines to draw as a guide
-  lines?: ReactNode
+  // The symmetry markers to draw as a guide
+  markers?: ReactNode
 }
 
 // Array of display information for the symmetry classes
@@ -32,7 +32,7 @@ const symmetryTypes: SymmetryType[] = [
   {
     type: "all",
     mino: Polyomino.of("010_111_010"),
-    lines: (
+    markers: (
       <>
         <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
         <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
@@ -44,7 +44,7 @@ const symmetryTypes: SymmetryType[] = [
   {
     type: "axis2",
     mino: Polyomino.of("101_111_101"),
-    lines: (
+    markers: (
       <>
         <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
         <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
@@ -54,7 +54,7 @@ const symmetryTypes: SymmetryType[] = [
   {
     type: "diag2",
     mino: Polyomino.of("110_111_011"),
-    lines: (
+    markers: (
       <>
         <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />
         <Line p1={[-20, -20]} p2={[20, 20]} {...markerProps} />
@@ -64,22 +64,22 @@ const symmetryTypes: SymmetryType[] = [
   {
     type: "rot2",
     mino: Polyomino.of("0010_1110_0111_0100"),
-    lines: <Circle r={10} {...markerProps} />,
+    markers: <Circle r={10} {...markerProps} />,
   },
   {
     type: "axis",
     mino: Polyomino.of("100_111_100"),
-    lines: <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />,
+    markers: <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />,
   },
   {
     type: "diag",
     mino: Polyomino.of("100_110_011"),
-    lines: <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />,
+    markers: <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />,
   },
   {
     type: "rot",
     mino: Polyomino.of("001_111_100"),
-    lines: <Circle r={10} {...markerProps} />,
+    markers: <Circle r={10} {...markerProps} />,
   },
   { type: "none", mino: Polyomino.of("010_110_011") },
 ]
@@ -108,7 +108,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
             ".     none .";
         `}
       >
-        {symmetryTypes.map(({ type: sym, mino, lines }) => {
+        {symmetryTypes.map(({ type: sym, mino, markers }) => {
           const checked = value.includes(sym)
           return (
             <label
@@ -136,7 +136,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
                 size={30 / mino.height}
                 gridStyle="none"
               >
-                {lines}
+                {markers}
               </MinoDiv>
             </label>
           )

@@ -3,7 +3,7 @@ import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
 import { Line, Polygon } from "components/svg"
 
-import { Polyomino, MinoClass } from "mino"
+import { Polyomino, MinoClass, getClassCode } from "mino"
 import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
@@ -11,7 +11,7 @@ import { upsert, remove } from "./common"
 // Choose a dimmer neutral color
 const outlineColor = "#999"
 
-// Common prop values for the symmetry lines
+// Common prop values for the markers
 const markerProps = {
   stroke: outlineColor,
   strokeWidth: 1,
@@ -75,7 +75,7 @@ interface ClassType {
   // The mino to display as the prototype for this symmetry
   mino: Polyomino
   // The symmetry lines to draw as a guide
-  lines?: ReactNode
+  markers?: ReactNode
 }
 
 // Array of display information for the symmetry classes
@@ -83,7 +83,7 @@ const classTypes: ClassType[] = [
   {
     type: "rectangle",
     mino: Polyomino.of("111_111"),
-    lines: (
+    markers: (
       <>
         <ConvexMarker />
         <DirectedMarker anchor="bottom left" x={10} />
@@ -96,7 +96,7 @@ const classTypes: ClassType[] = [
   {
     type: "Ferrers graph",
     mino: Polyomino.of("001_011_111"),
-    lines: (
+    markers: (
       <>
         <ConvexMarker />
         <DirectedMarker anchor="bottom left" />
@@ -108,7 +108,7 @@ const classTypes: ClassType[] = [
   {
     type: "staircase",
     mino: Polyomino.of("001_011_110"),
-    lines: (
+    markers: (
       <>
         <ConvexMarker />
         <DirectedMarker anchor="bottom left" />
@@ -119,7 +119,7 @@ const classTypes: ClassType[] = [
   {
     type: "stack",
     mino: Polyomino.of("010_011_111"),
-    lines: (
+    markers: (
       <>
         <ConvexMarker />
         <DirectedMarker anchor="bottom left" />
@@ -130,7 +130,7 @@ const classTypes: ClassType[] = [
   {
     type: "directed convex",
     mino: Polyomino.of("010_011_110"),
-    lines: (
+    markers: (
       <>
         <ConvexMarker />
         <DirectedMarker />
@@ -140,7 +140,7 @@ const classTypes: ClassType[] = [
   {
     type: "bar graph",
     mino: Polyomino.of("001_101_111"),
-    lines: (
+    markers: (
       <>
         <SemiconvexMarker />
         <DirectedMarker anchor="bottom left" />
@@ -151,12 +151,12 @@ const classTypes: ClassType[] = [
   {
     type: "convex",
     mino: Polyomino.of("010_111_010"),
-    lines: <ConvexMarker />,
+    markers: <ConvexMarker />,
   },
   {
     type: "directed semiconvex",
     mino: Polyomino.of("101_111_100"),
-    lines: (
+    markers: (
       <>
         <SemiconvexMarker />
         <DirectedMarker />
@@ -166,30 +166,15 @@ const classTypes: ClassType[] = [
   {
     type: "semiconvex",
     mino: Polyomino.of("101_111_010"),
-    lines: <SemiconvexMarker />,
+    markers: <SemiconvexMarker />,
   },
   {
     type: "directed",
     mino: Polyomino.of("110_101_111"),
-    lines: <DirectedMarker />,
+    markers: <DirectedMarker />,
   },
   { type: "other", mino: Polyomino.of("0011_1110_1011") },
 ]
-
-// FIXME dedupe with classHelpers
-const shortnames: Record<MinoClass, string> = {
-  rectangle: "rect",
-  "Ferrers graph": "ferr",
-  staircase: "stair",
-  stack: "stack",
-  "directed convex": "dcvx",
-  "bar graph": "bar",
-  convex: "cvx",
-  "directed semiconvex": "dscvx",
-  semiconvex: "scvx",
-  directed: "dir",
-  other: "other",
-}
 
 interface Props {
   value?: MinoClass[]
@@ -217,14 +202,14 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
           justify-items: center;
         `}
       >
-        {classTypes.map(({ type: cls, mino, lines }) => {
+        {classTypes.map(({ type: cls, mino, markers }) => {
           const checked = value.includes(cls)
           return (
             <label
               key={cls}
               title={cls}
               css={css`
-                grid-area: ${shortnames[cls]};
+                grid-area: ${getClassCode(cls)};
               `}
             >
               {/* TODO (a11y) tab navigation */}
@@ -245,7 +230,7 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
                 size={30 / mino.height}
                 gridStyle="none"
               >
-                {lines}
+                {markers}
               </MinoDiv>
             </label>
           )

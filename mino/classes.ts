@@ -238,3 +238,25 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   const [first, second] = anchors
   return first.x !== second.x && first.y !== second.y
 }
+
+const codes: Record<MinoClass, string> = {
+  rectangle: "rect",
+  "Ferrers graph": "ferr",
+  staircase: "stair",
+  stack: "stack",
+  "directed convex": "dcvx",
+  "bar graph": "bar",
+  convex: "cvx",
+  "directed semiconvex": "dscvx",
+  semiconvex: "scvx",
+  directed: "dir",
+  other: "other",
+}
+
+/**
+ * Get a short code for the class that can be used in more restrictive
+ * string settings (like setting grid areas)
+ */
+export function getClassCode(cls: MinoClass) {
+  return codes[cls]
+}

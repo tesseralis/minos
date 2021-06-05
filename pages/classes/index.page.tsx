@@ -2,25 +2,11 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import Layout from "components/Layout"
-import { minoClasses, MinoClass } from "mino"
+import { minoClasses, MinoClass, getClassCode } from "mino"
 import { escapeClass, getBoundaryFamilies } from "./classHelpers"
 import { colors } from "style/theme"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
-
-const areas: Record<MinoClass, string> = {
-  rectangle: "rect",
-  "Ferrers graph": "ferr",
-  staircase: "stair",
-  stack: "stack",
-  "directed convex": "dcvx",
-  "bar graph": "bar",
-  convex: "cvx",
-  "directed semiconvex": "dscvx",
-  semiconvex: "scvx",
-  directed: "dir",
-  other: "other",
-}
 
 // List of arrow grid positions
 const arrowPositions = [
@@ -44,7 +30,7 @@ function PolyominoClass({ name }: { name: MinoClass }) {
   return (
     <section
       css={css`
-        grid-area: ${areas[name]};
+        grid-area: ${getClassCode(name)};
         border: 2px grey solid;
         padding: 1.5rem 1rem;
         border-radius: 2px;
