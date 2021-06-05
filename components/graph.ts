@@ -6,7 +6,9 @@ import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
 type Color = tinycolor.Instance
 type MinoData = number
 
-export const baseColorMap: Record<Symmetry, string> = {
+// TODO now that we don't parent/child colors any more, we can move color-related stuff
+// to a different location
+const symmetryColorMap: Record<Symmetry, string> = {
   none: "#aaa",
   axis: "#e22",
   diag: "#66f",
@@ -17,22 +19,25 @@ export const baseColorMap: Record<Symmetry, string> = {
   all: "#dee",
 }
 
-const classColorMap: Record<MinoClass, string> = {
-  rectangle: "#ccc",
-  "Ferrers graph": "#33dddd",
-  staircase: "#4488ff",
-  stack: "#4d2",
-  "directed convex": "#8844ff",
-  "bar graph": "#ffcc33",
-  convex: "#d2d",
-  "directed semiconvex": "#ff6600",
-  semiconvex: "red",
-  directed: "#b40",
-  other: "grey",
+/**
+ * Get the color associated with the given symmetry
+ */
+export function getSymmetryColor(symmetry: Symmetry): string {
+  return symmetryColorMap[symmetry]
 }
 
-export function getSymmetryColor(symmetry: Symmetry): string {
-  return baseColorMap[symmetry]
+const classColorMap: Record<MinoClass, string> = {
+  rectangle: "#ccc", // white
+  "Ferrers graph": "#3dd", // cyan
+  staircase: "#48f", // blue
+  stack: "#4d2", // green
+  "directed convex": "#84f", // purple
+  "bar graph": "#fc3", // yellow
+  convex: "#d2d", // magenta
+  "directed semiconvex": "#f60", // orange
+  semiconvex: "#f15", // red
+  directed: "#d20", // brown
+  other: "#888", // grey
 }
 
 /**

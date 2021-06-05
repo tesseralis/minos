@@ -1,6 +1,6 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
-import { baseColorMap } from "components/graph"
+import { getSymmetryColor } from "components/graph"
 import { Circle, Line } from "components/svg"
 
 import { Polyomino, Symmetry, printSymmetry } from "mino"
@@ -146,7 +146,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
               />
               <MinoDiv
                 mino={mino}
-                fill={checked ? baseColorMap[sym] : "none"}
+                fill={checked ? getSymmetryColor(sym) : "none"}
                 stroke={outlineColor}
                 size={30 / mino.width}
                 gridStyle="none"
