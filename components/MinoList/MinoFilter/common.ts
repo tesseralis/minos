@@ -26,7 +26,6 @@ interface YesNoOption {
 
 const yesNoOpts: YesNoOption[] = [
   { name: "isDirected", predicate: (p) => p.classes.isDirected() },
-  { name: "isBarChart", predicate: (p) => p.classes.isBar() },
   { name: "isConvex", predicate: (p) => p.classes.isConvex() },
   { name: "hasHole", predicate: (p) => p.classes.hasHole() },
   { name: "hasTiling", predicate: (p) => p.tilings.has() },
