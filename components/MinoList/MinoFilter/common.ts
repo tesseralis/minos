@@ -2,12 +2,7 @@ import { Polyomino, Symmetry } from "mino"
 
 export type YesNo = "yes" | "no"
 
-export type YesNoName =
-  | "isDirected"
-  | "isBarChart"
-  | "isConvex"
-  | "hasHole"
-  | "hasTiling"
+export type YesNoName = "isDirected" | "isConvex" | "hasHole" | "hasTiling"
 export type YesNoOptions = { [Name in YesNoName]?: YesNo }
 
 /**
