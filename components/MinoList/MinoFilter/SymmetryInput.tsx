@@ -45,21 +45,17 @@ interface SymmetryType {
 
 // Array of display information for the symmetry classes
 const symmetryTypes: SymmetryType[] = [
-  { type: "none", mino: Polyomino.of("010_110_011") },
   {
-    type: "axis",
-    mino: Polyomino.of("100_111_100"),
-    lines: <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />,
-  },
-  {
-    type: "diag",
-    mino: Polyomino.of("100_110_011"),
-    lines: <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />,
-  },
-  {
-    type: "rot",
-    mino: Polyomino.of("001_111_100"),
-    lines: <Circle r={10} {...symLinesProps} />,
+    type: "all",
+    mino: Polyomino.of("010_111_010"),
+    lines: (
+      <>
+        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
+        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
+        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
+        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
+      </>
+    ),
   },
   {
     type: "axis2",
@@ -87,17 +83,21 @@ const symmetryTypes: SymmetryType[] = [
     lines: <Circle r={10} {...symLinesProps} />,
   },
   {
-    type: "all",
-    mino: Polyomino.of("010_111_010"),
-    lines: (
-      <>
-        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
-        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
-        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
-        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
-      </>
-    ),
+    type: "axis",
+    mino: Polyomino.of("100_111_100"),
+    lines: <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />,
   },
+  {
+    type: "diag",
+    mino: Polyomino.of("100_110_011"),
+    lines: <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />,
+  },
+  {
+    type: "rot",
+    mino: Polyomino.of("001_111_100"),
+    lines: <Circle r={10} {...symLinesProps} />,
+  },
+  { type: "none", mino: Polyomino.of("010_110_011") },
 ]
 
 interface Props {
@@ -118,9 +118,10 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
           display: grid;
           grid-gap: 0.5rem 1rem;
           grid-template-areas:
-            ".    axis axis2 ."
-            "none rot  rot2  all"
-            ".    diag diag2 .";
+            ".     all  ."
+            "axis2 rot2 diag2"
+            "axis  rot  diag"
+            ".     none .";
         `}
       >
         {symmetryTypes.map(({ type: sym, mino, lines }) => {
