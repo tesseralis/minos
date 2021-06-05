@@ -1,4 +1,4 @@
-import { sortBy, once } from "lodash"
+import { partition, sortBy, once } from "lodash"
 import { VectorLike } from "lib/vector"
 import {
   MinoData,
@@ -125,6 +125,24 @@ export default class Polyomino {
 
   /** Return the edge list for this mino */
   boundary = once(() => getEdges(this.coords()))
+
+  /**
+   * Return whether the polyomino is "balanced".
+   * That is, when doing a checkerboard coloring of the mino,
+   * there are an equal number of white and black squares
+   * (or for odd order polyominoes, if the difference is minimized).
+   */
+  isBalanced() {
+    const [white, black] = partition(
+      this.coords(),
+      (c) => (c.x + c.y) % 2 === 0,
+    )
+    if (this.order % 2 === 0) {
+      return white.length === black.length
+    } else {
+      return Math.abs(white.length - black.length) === 1
+    }
+  }
 
   // Formatting
   // ==========

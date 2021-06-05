@@ -30,6 +30,14 @@ const yesNoItems: YesNoItem[] = [
       no: "no tiling",
     },
   },
+  {
+    name: "isBalanced",
+    display: "Balance",
+    optDisplays: {
+      yes: "balanced",
+      no: "unbalanced",
+    },
+  },
 ]
 
 interface YesNoProps extends YesNoItem {

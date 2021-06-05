@@ -2,7 +2,7 @@ import { Polyomino, Symmetry, MinoClass } from "mino"
 
 export type YesNo = "yes" | "no"
 
-export type YesNoName = "hasHole" | "hasTiling"
+export type YesNoName = "hasHole" | "hasTiling" | "isBalanced"
 export type YesNoOptions = { [Name in YesNoName]?: YesNo }
 
 /**
@@ -23,6 +23,7 @@ interface YesNoOption {
 const yesNoOpts: YesNoOption[] = [
   { name: "hasHole", predicate: (p) => p.classes.hasHole() },
   { name: "hasTiling", predicate: (p) => p.tilings.has() },
+  { name: "isBalanced", predicate: (p) => p.isBalanced() },
 ]
 
 export function upsert<T>(array: T[], value: T) {
