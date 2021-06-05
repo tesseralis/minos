@@ -4,6 +4,7 @@ import { FaFilter } from "react-icons/fa"
 
 import { colors } from "style/theme"
 import SymmetryInput from "./SymmetryInput"
+import ClassInput from "./ClassInput"
 import YesNoInputs from "./YesNoInputs"
 import { FilterOptions } from "./common"
 
@@ -25,6 +26,10 @@ function FilterForm({ narrow, value, onUpdate }: Props) {
       <SymmetryInput
         value={value.symmetries}
         onUpdate={(val) => onUpdate({ ...value, symmetries: val })}
+      />
+      <ClassInput
+        value={value.classes}
+        onUpdate={(val) => onUpdate({ ...value, classes: val })}
       />
       <div
         css={css`

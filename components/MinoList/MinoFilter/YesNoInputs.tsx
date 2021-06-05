@@ -15,26 +15,6 @@ interface YesNoItem {
 
 const yesNoItems: YesNoItem[] = [
   {
-    name: "isDirected",
-    display: "Directedness",
-    optDisplays: {
-      yes: "directed",
-      no: "undirected",
-    },
-  },
-  // {
-  //   name: "isBarChart",
-  //   display: "Bar Chart",
-  // },
-  {
-    name: "isConvex",
-    display: "Convexity",
-    optDisplays: {
-      yes: "convex",
-      no: "concave",
-    },
-  },
-  {
     name: "hasHole",
     display: "Holes",
     optDisplays: {
