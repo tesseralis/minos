@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
-import { Circle, Line } from "components/svg"
+import { Circle, Line, Polygon } from "components/svg"
 
 import { Polyomino, MinoClass } from "mino"
 import MinoDiv from "components/MinoDiv"
@@ -34,6 +34,57 @@ const symLinesProps = {
   fill: "none",
 }
 
+function ConvexMarker() {
+  const r = 3
+  return (
+    <Polygon
+      points={[
+        [0, r],
+        [r, 0],
+        [0, -r],
+        [-r, 0],
+      ]}
+      {...symLinesProps}
+    />
+  )
+}
+
+function SemiconvexMarker() {
+  const r = 3
+  return (
+    <Polygon
+      points={[
+        [r, r],
+        [-r, 0],
+        [r, -r],
+        [0, 0],
+      ]}
+      {...symLinesProps}
+    />
+  )
+}
+
+function DirectedMarker({
+  anchor = "bottom left",
+  x = 15,
+  y = 15,
+}: {
+  anchor?: string
+  x?: number
+  y?: number
+}) {
+  const [vert, horiz] = anchor.split(" ")
+  const ySign = vert === "top" ? -1 : 1
+  const xSign = horiz === "left" ? -1 : 1
+  return (
+    <Line
+      p1={[xSign * x, ySign * y]}
+      p2={[xSign * (x - 5), ySign * (y - 5)]}
+      {...symLinesProps}
+    />
+  )
+}
+
 interface ClassType {
   // The type of symmetry
   type: MinoClass
@@ -45,16 +96,99 @@ interface ClassType {
 
 // Array of display information for the symmetry classes
 const classTypes: ClassType[] = [
-  { type: "rectangle", mino: Polyomino.of("111_111") },
-  { type: "Ferrers graph", mino: Polyomino.of("001_011_111") },
-  { type: "staircase", mino: Polyomino.of("001_011_110") },
-  { type: "stack", mino: Polyomino.of("010_011_111") },
-  { type: "directed convex", mino: Polyomino.of("010_011_110") },
-  { type: "bar graph", mino: Polyomino.of("001_101_111") },
-  { type: "convex", mino: Polyomino.of("010_111_010") },
-  { type: "directed semiconvex", mino: Polyomino.of("101_111_100") },
-  { type: "semiconvex", mino: Polyomino.of("101_111_010") },
-  { type: "directed", mino: Polyomino.of("110_101_111") },
+  {
+    type: "rectangle",
+    mino: Polyomino.of("111_111"),
+    lines: (
+      <>
+        <ConvexMarker />
+        <DirectedMarker anchor="bottom left" x={10} />
+        <DirectedMarker anchor="top left" x={10} />
+        <DirectedMarker anchor="top right" x={10} />
+        <DirectedMarker anchor="bottom right" x={10} />
+      </>
+    ),
+  },
+  {
+    type: "Ferrers graph",
+    mino: Polyomino.of("001_011_111"),
+    lines: (
+      <>
+        <ConvexMarker />
+        <DirectedMarker anchor="bottom left" />
+        <DirectedMarker anchor="top left" />
+        <DirectedMarker anchor="top right" />
+      </>
+    ),
+  },
+  {
+    type: "staircase",
+    mino: Polyomino.of("001_011_110"),
+    lines: (
+      <>
+        <ConvexMarker />
+        <DirectedMarker anchor="bottom left" />
+        <DirectedMarker anchor="top right" />
+      </>
+    ),
+  },
+  {
+    type: "stack",
+    mino: Polyomino.of("010_011_111"),
+    lines: (
+      <>
+        <ConvexMarker />
+        <DirectedMarker anchor="bottom left" />
+        <DirectedMarker anchor="top left" />
+      </>
+    ),
+  },
+  {
+    type: "directed convex",
+    mino: Polyomino.of("010_011_110"),
+    lines: (
+      <>
+        <ConvexMarker />
+        <DirectedMarker />
+      </>
+    ),
+  },
+  {
+    type: "bar graph",
+    mino: Polyomino.of("001_101_111"),
+    lines: (
+      <>
+        <SemiconvexMarker />
+        <DirectedMarker anchor="bottom left" />
+        <DirectedMarker anchor="top left" />
+      </>
+    ),
+  },
+  {
+    type: "convex",
+    mino: Polyomino.of("010_111_010"),
+    lines: <ConvexMarker />,
+  },
+  {
+    type: "directed semiconvex",
+    mino: Polyomino.of("101_111_100"),
+    lines: (
+      <>
+        <SemiconvexMarker />
+        <DirectedMarker />
+      </>
+    ),
+  },
+  {
+    type: "semiconvex",
+    mino: Polyomino.of("101_111_010"),
+    lines: <SemiconvexMarker />,
+  },
+  {
+    type: "directed",
+    mino: Polyomino.of("110_101_111"),
+    lines: <DirectedMarker />,
+  },
   { type: "other", mino: Polyomino.of("0011_1110_1011") },
 ]
 
