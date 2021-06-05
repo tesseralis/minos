@@ -15,26 +15,6 @@ interface YesNoItem {
 
 const yesNoItems: YesNoItem[] = [
   {
-    name: "isDirected",
-    display: "Directedness",
-    optDisplays: {
-      yes: "directed",
-      no: "undirected",
-    },
-  },
-  // {
-  //   name: "isBarChart",
-  //   display: "Bar Chart",
-  // },
-  {
-    name: "isConvex",
-    display: "Convexity",
-    optDisplays: {
-      yes: "convex",
-      no: "concave",
-    },
-  },
-  {
     name: "hasHole",
     display: "Holes",
     optDisplays: {
@@ -115,7 +95,7 @@ interface Props {
  */
 export default function YesNoInputs({ value = {}, onUpdate }: Props) {
   return (
-    <>
+    <div>
       {yesNoItems.map((item) => (
         <YesNoInput
           {...item}
@@ -124,6 +104,6 @@ export default function YesNoInputs({ value = {}, onUpdate }: Props) {
           onUpdate={(val) => onUpdate({ ...value, [item.name]: val })}
         />
       ))}
-    </>
+    </div>
   )
 }

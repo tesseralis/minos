@@ -1,13 +1,8 @@
-import { Polyomino, Symmetry } from "mino"
+import { Polyomino, Symmetry, MinoClass } from "mino"
 
 export type YesNo = "yes" | "no"
 
-export type YesNoName =
-  | "isDirected"
-  | "isBarChart"
-  | "isConvex"
-  | "hasHole"
-  | "hasTiling"
+export type YesNoName = "hasHole" | "hasTiling"
 export type YesNoOptions = { [Name in YesNoName]?: YesNo }
 
 /**
@@ -15,6 +10,7 @@ export type YesNoOptions = { [Name in YesNoName]?: YesNo }
  */
 export interface FilterOptions {
   symmetries?: Symmetry[]
+  classes?: MinoClass[]
   // boolean properties
   yesNo?: YesNoOptions
 }
@@ -25,15 +21,30 @@ interface YesNoOption {
 }
 
 const yesNoOpts: YesNoOption[] = [
-  { name: "isDirected", predicate: (p) => p.classes.isDirected() },
-  { name: "isConvex", predicate: (p) => p.classes.isConvex() },
   { name: "hasHole", predicate: (p) => p.classes.hasHole() },
   { name: "hasTiling", predicate: (p) => p.tilings.has() },
 ]
 
+export function upsert<T>(array: T[], value: T) {
+  if (array.includes(value)) {
+    return array
+  }
+  return [...array, value]
+}
+
+export function remove<T>(array: T[], value: T) {
+  const index = array.indexOf(value)
+  if (index >= 0) {
+    const result = [...array]
+    result.splice(index, 1)
+    return result
+  }
+  return array
+}
+
 function applyToMino(
   mino: Polyomino,
-  { yesNo = {}, symmetries = [] }: FilterOptions,
+  { yesNo = {}, symmetries = [], classes = [] }: FilterOptions,
 ): boolean {
   for (const { name, predicate } of yesNoOpts) {
     if (yesNo[name] && (yesNo[name] === "yes") !== predicate(mino)) {
@@ -44,6 +55,9 @@ function applyToMino(
     symmetries.length > 0 &&
     !symmetries.includes(mino.transform.symmetry())
   ) {
+    return false
+  }
+  if (classes.length > 0 && !classes.includes(mino.classes.best())) {
     return false
   }
   return true

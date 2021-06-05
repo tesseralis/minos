@@ -62,6 +62,10 @@ const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
   tinycolor(col).desaturate(30),
 )
 
+export function getClassColor(cls: MinoClass) {
+  return classColorMap[cls]
+}
+
 function sum(nums: number[]) {
   return nums.reduce((s, n) => s + n, 0)
 }
