@@ -87,7 +87,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
       <InputTitle display="Classes" onClear={() => onUpdate([])} />
       <div
         css={css`
-          margin-top: 1rem;
+          margin-top: 0.5rem;
           display: grid;
           grid-gap: 0.5rem 1rem;
           grid-template-areas:
