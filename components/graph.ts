@@ -110,10 +110,6 @@ export function generateGraph(n: number) {
   for (const generation of nodes) {
     for (const mino of generation) {
       const minoClass = mino.classes.best()
-      if (mino.equals(MONOMINO)) {
-        colors[mino.data] = colorMap[minoClass]
-        continue
-      }
       colors[mino.data] = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
     }
   }
