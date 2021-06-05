@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
-import { Circle, Line, Polygon } from "components/svg"
+import { Line, Polygon } from "components/svg"
 
 import { Polyomino, MinoClass } from "mino"
 import MinoDiv from "components/MinoDiv"
