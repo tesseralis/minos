@@ -15,7 +15,6 @@ function mod2(n: number) {
   return mod(n, 2)
 }
 
-const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#d1c9b4"]
 function getColor(domLength: number, i: number, j: number, patIdx: number) {
   switch (domLength) {
     // If the domain has only one mino,
