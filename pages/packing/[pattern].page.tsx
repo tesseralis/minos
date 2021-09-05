@@ -27,7 +27,14 @@ export default function PackingPatternPage({ pattern, patternName }: Props) {
         `}
       >
         <Pattern pattern={pattern} />
-        <div>{attribution}</div>
+        <div
+          css={css`
+            margin: 1rem;
+            text-align: center;
+          `}
+        >
+          {attribution}
+        </div>
       </div>
     </PackingPage>
   )
