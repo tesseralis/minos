@@ -163,7 +163,7 @@ function Main({ mino }: { mino?: Polyomino }) {
   return (
     <main
       css={css`
-        padding: 2rem 4rem;
+        padding: 2rem;
         overflow-y: scroll;
       `}
     >
@@ -184,7 +184,7 @@ export default function CatalogPage({ mino }: { mino?: Polyomino }) {
           position: fixed;
           height: 100%;
           display: grid;
-          grid-template-columns: 1fr 28rem;
+          grid-template-columns: 1fr 24rem;
         `}
       >
         <div
