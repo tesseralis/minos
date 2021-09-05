@@ -8,6 +8,7 @@ export {
   printSymmetry,
   symmetries,
   minoClasses,
+  getClassCode,
 } from "./internal"
 export type {
   Coord,

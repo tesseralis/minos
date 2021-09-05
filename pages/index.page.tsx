@@ -3,12 +3,37 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
 import { navLinks } from "components/Nav"
+import { colors } from "style/theme"
+
+function EnterLink() {
+  return (
+    <Link href="/intro" passHref>
+      <a
+        css={css`
+          border: 1px solid ${colors.fg};
+          padding: 0.5rem 2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 1.5rem;
+          text-decoration: none;
+
+          :hover {
+            background-color: #333;
+          }
+        `}
+      >
+        Enter
+      </a>
+    </Link>
+  )
+}
 
 function HomePageNav() {
   return (
     <nav
       css={css`
-        margin-top: 2rem;
+        margin-top: 1rem;
 
         a {
           margin: 1rem;
@@ -107,6 +132,7 @@ export default function HomePage({ pattern }: Props) {
             </a>
           </p>
         </div>
+        <EnterLink />
         <HomePageNav />
       </main>
     </div>

@@ -1,34 +1,18 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
-import { baseColorMap } from "components/graph"
+import { getSymmetryColor } from "components/graph"
 import { Circle, Line } from "components/svg"
 
 import { Polyomino, Symmetry, printSymmetry } from "mino"
 import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
-
-function upsert<T>(array: T[], value: T) {
-  if (array.includes(value)) {
-    return array
-  }
-  return [...array, value]
-}
-
-function remove<T>(array: T[], value: T) {
-  const index = array.indexOf(value)
-  if (index >= 0) {
-    const result = [...array]
-    result.splice(index, 1)
-    return result
-  }
-  return array
-}
+import { upsert, remove } from "./common"
 
 // Choose a dimmer neutral color
 const outlineColor = "#999"
 
 // Common prop values for the symmetry lines
-const symLinesProps = {
+const markerProps = {
   stroke: outlineColor,
   strokeWidth: 1,
   fill: "none",
@@ -39,65 +23,65 @@ interface SymmetryType {
   type: Symmetry
   // The mino to display as the prototype for this symmetry
   mino: Polyomino
-  // The symmetry lines to draw as a guide
-  lines?: ReactNode
+  // The symmetry markers to draw as a guide
+  markers?: ReactNode
 }
 
 // Array of display information for the symmetry classes
 const symmetryTypes: SymmetryType[] = [
-  { type: "none", mino: Polyomino.of("010_110_011") },
   {
-    type: "axis",
-    mino: Polyomino.of("100_111_100"),
-    lines: <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />,
-  },
-  {
-    type: "diag",
-    mino: Polyomino.of("100_110_011"),
-    lines: <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />,
-  },
-  {
-    type: "rot",
-    mino: Polyomino.of("001_111_100"),
-    lines: <Circle r={10} {...symLinesProps} />,
+    type: "all",
+    mino: Polyomino.of("010_111_010"),
+    markers: (
+      <>
+        <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
+        <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
+        <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />
+        <Line p1={[-20, -20]} p2={[20, 20]} {...markerProps} />
+      </>
+    ),
   },
   {
     type: "axis2",
     mino: Polyomino.of("101_111_101"),
-    lines: (
+    markers: (
       <>
-        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
-        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
+        <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
+        <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
       </>
     ),
   },
   {
     type: "diag2",
     mino: Polyomino.of("110_111_011"),
-    lines: (
+    markers: (
       <>
-        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
-        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
+        <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />
+        <Line p1={[-20, -20]} p2={[20, 20]} {...markerProps} />
       </>
     ),
   },
   {
     type: "rot2",
     mino: Polyomino.of("0010_1110_0111_0100"),
-    lines: <Circle r={10} {...symLinesProps} />,
+    markers: <Circle r={10} {...markerProps} />,
   },
   {
-    type: "all",
-    mino: Polyomino.of("010_111_010"),
-    lines: (
-      <>
-        <Line p1={[0, 20]} p2={[0, -20]} {...symLinesProps} />
-        <Line p1={[20, 0]} p2={[-20, 0]} {...symLinesProps} />
-        <Line p1={[-20, 20]} p2={[20, -20]} {...symLinesProps} />
-        <Line p1={[-20, -20]} p2={[20, 20]} {...symLinesProps} />
-      </>
-    ),
+    type: "axis",
+    mino: Polyomino.of("100_111_100"),
+    markers: <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />,
   },
+  {
+    type: "diag",
+    mino: Polyomino.of("100_110_011"),
+    markers: <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />,
+  },
+  {
+    type: "rot",
+    mino: Polyomino.of("001_111_100"),
+    markers: <Circle r={10} {...markerProps} />,
+  },
+  { type: "none", mino: Polyomino.of("010_110_011") },
 ]
 
 interface Props {
@@ -114,16 +98,17 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
       <InputTitle display="Symmetries" onClear={() => onUpdate([])} />
       <div
         css={css`
-          margin-top: 1rem;
+          margin-top: 0.5rem;
           display: grid;
           grid-gap: 0.5rem 1rem;
           grid-template-areas:
-            ".    axis axis2 ."
-            "none rot  rot2  all"
-            ".    diag diag2 .";
+            ".     all  ."
+            "axis2 rot2 diag2"
+            "axis  rot  diag"
+            ".     none .";
         `}
       >
-        {symmetryTypes.map(({ type: sym, mino, lines }) => {
+        {symmetryTypes.map(({ type: sym, mino, markers }) => {
           const checked = value.includes(sym)
           return (
             <label
@@ -146,12 +131,12 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
               />
               <MinoDiv
                 mino={mino}
-                fill={checked ? baseColorMap[sym] : "none"}
+                fill={checked ? getSymmetryColor(sym) : "none"}
                 stroke={outlineColor}
-                size={30 / mino.width}
+                size={30 / mino.height}
                 gridStyle="none"
               >
-                {lines}
+                {markers}
               </MinoDiv>
             </label>
           )

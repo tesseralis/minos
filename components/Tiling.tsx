@@ -1,7 +1,8 @@
+import tinycolor from "tinycolor2"
 import { range } from "lodash"
-import { Polyomino } from "mino"
 import MinoSvg from "components/MinoSvg"
-import { Tiling as MinoTiling } from "mino"
+import { Polyomino, Tiling as MinoTiling } from "mino"
+import { getMinoColor } from "components/graph"
 import Vector from "lib/vector"
 
 // Mod except it works for negative numbers
@@ -14,7 +15,6 @@ function mod2(n: number) {
   return mod(n, 2)
 }
 
-const colors = ["#eb4f3b", "#ebbc21", "#378ee6", "#d1c9b4"]
 function getColor(domLength: number, i: number, j: number, patIdx: number) {
   switch (domLength) {
     // If the domain has only one mino,
@@ -90,6 +90,8 @@ export default function Tiling({ mino, gridSize, svgSize }: Props) {
     return <div>This polyomino does not tile the plane.</div>
   }
   const tiles = [...getTiles(tiling, gridSize)]
+  const { fill, stroke } = getMinoColor(mino)
+  const colors = tinycolor(fill).tetrad()
 
   return (
     <svg
@@ -106,9 +108,9 @@ export default function Tiling({ mino, gridSize, svgSize }: Props) {
             mino={mino}
             coord={coord.scale(squareSize)}
             size={squareSize}
-            fill={colors[color]}
+            fill={colors[color].toHexString()}
             gridStyle="thin"
-            stroke="black"
+            stroke={stroke}
             anchor="top left"
           />
         )

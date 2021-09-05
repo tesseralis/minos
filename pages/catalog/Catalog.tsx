@@ -49,7 +49,7 @@ function List({ minos }: { minos: Polyomino[] }) {
 
 const data: MinoDatum[] = [
   {
-    name: "order",
+    name: "size",
     display: (m) => `${m.order} (${orderName(m.order)})`,
   },
   {
@@ -119,9 +119,24 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
       >
         <MinoDiv mino={mino} size={96 / mino.order} {...getMinoColor(mino)} />
       </div>
-      <dl>
+      <dl
+        css={css`
+          display: grid;
+          grid-template-areas:
+            "size dimensions"
+            "symmetry class"
+            "tiling tiling"
+            "parents parents"
+            "children children";
+        `}
+      >
         {data.map(({ name, display }) => (
-          <>
+          <div
+            key={name}
+            css={css`
+              grid-area: ${name};
+            `}
+          >
             <dt
               css={css`
                 font-size: 1.125rem;
@@ -137,7 +152,7 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
             >
               {display(mino)}
             </dd>
-          </>
+          </div>
         ))}
       </dl>
     </>
