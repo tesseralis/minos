@@ -1,4 +1,4 @@
-import { isEqual, minBy } from "lodash"
+import { isEqual, minBy } from "lodash-es"
 
 import PointSet from "lib/PointSet"
 

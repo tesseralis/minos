@@ -2,7 +2,7 @@
  * Utility functions for parsing and handling patterns/tilings of polyominoes.
  */
 
-import { once } from "lodash"
+import { once } from "lodash-es"
 import Vector, { VectorLike } from "lib/vector"
 import PointSet from "lib/PointSet"
 import { MinoLike } from "./Polyomino"

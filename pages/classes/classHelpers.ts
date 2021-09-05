@@ -1,4 +1,4 @@
-import { groupBy, sortBy } from "lodash"
+import { groupBy, sortBy } from "lodash-es"
 import { nodes } from "components/graph"
 import { Polyomino, MinoClass } from "mino"
 

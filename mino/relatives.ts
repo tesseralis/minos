@@ -1,4 +1,4 @@
-import { once } from "lodash"
+import { once } from "lodash-es"
 import { Polyomino } from "./internal"
 import Vector, { VectorLike } from "lib/vector"
 import PointSet from "lib/PointSet"

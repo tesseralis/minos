@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
-import { capitalize } from "lodash"
+import { capitalize } from "lodash-es"
 import Layout from "components/Layout"
 import { minoClasses, MinoClass, getClassCode } from "mino"
 import { escapeClass, getBoundaryFamilies } from "./classHelpers"

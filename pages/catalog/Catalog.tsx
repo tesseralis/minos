@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
-import { capitalize } from "lodash"
+import { capitalize } from "lodash-es"
 import { scaleLinear } from "d3-scale"
 import { Polyomino, orderName, printSymmetry } from "mino"
 import { getMinoColor, NUM_GENERATIONS } from "components/graph"

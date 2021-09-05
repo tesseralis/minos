@@ -1,6 +1,6 @@
 import Link from "next/link"
 import { css } from "@emotion/react"
-import { capitalize } from "lodash"
+import { capitalize } from "lodash-es"
 import { printSymmetry, Symmetry, symmetries } from "mino"
 import Layout from "components/Layout"
 import InfoContent from "./Info.mdx"
