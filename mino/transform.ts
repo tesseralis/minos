@@ -2,7 +2,7 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import { once } from "lodash-es"
+import { once } from "lodash"
 import Vector, { Point } from "lib/vector"
 import { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"

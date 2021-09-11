@@ -1,5 +1,5 @@
 import tinycolor from "tinycolor2"
-import { range } from "lodash-es"
+import { range } from "lodash"
 import MinoSvg from "components/MinoSvg"
 import { Polyomino, Tiling as MinoTiling } from "mino"
 import { getMinoColor } from "components/graph"

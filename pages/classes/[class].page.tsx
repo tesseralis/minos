@@ -1,4 +1,4 @@
-import { capitalize } from "lodash-es"
+import { capitalize } from "lodash"
 import fs from "fs"
 import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"

@@ -1,4 +1,4 @@
-import { groupBy } from "lodash-es"
+import { groupBy } from "lodash"
 import { nodes } from "components/graph"
 import { Symmetry } from "mino"
 

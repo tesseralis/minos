@@ -1,4 +1,4 @@
-import { once, range } from "lodash-es"
+import { once, range } from "lodash"
 import Vector from "lib/vector"
 import PointSet from "lib/PointSet"
 import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"

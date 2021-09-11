@@ -1,4 +1,4 @@
-import { once, range, zip, maxBy } from "lodash-es"
+import { once, range, zip, maxBy } from "lodash"
 import Vector from "lib/vector"
 import { Coord } from "./data"
 import { EdgeList } from "./edges"

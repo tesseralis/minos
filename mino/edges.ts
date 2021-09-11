@@ -1,4 +1,4 @@
-import { once, range } from "lodash-es"
+import { once, range } from "lodash"
 import Vector, { VectorLike } from "lib/vector"
 import { Coord } from "./data"
 
