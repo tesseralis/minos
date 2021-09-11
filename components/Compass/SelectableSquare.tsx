@@ -1,3 +1,4 @@
+import { useAtom } from "jotai"
 import { css, SerializedStyles } from "@emotion/react"
 import Vector from "lib/vector"
 import { PossibleRelativeLink } from "mino"
@@ -5,7 +6,7 @@ import { Rect } from "components/svg"
 import { getAnchor } from "components/utils"
 import { useSetSelected } from "components/SelectedContext"
 import { colors } from "style/theme"
-import { RelativeCtx, useSelected } from "./compassHelpers"
+import { relativeAtom, useSelected } from "./compassHelpers"
 
 function getBlockSize(gen: number) {
   return 125 / (gen + 4)
@@ -38,10 +39,9 @@ export default function SelectableSquare({
   link,
 }: SquareProps) {
   const { mino, coord } = link
+  const [selected, setRelative] = useAtom(relativeAtom)
   const setSelected = useSetSelected()
-  const setRelative = RelativeCtx.useSetValue()
   const { size, transform } = useMinoTransform()
-  const selected = RelativeCtx.useValue()
   const isSelected = selected?.coord?.equals?.(coord)
 
   const selectableStyle = css`

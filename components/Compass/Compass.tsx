@@ -7,7 +7,7 @@ import CompassLinks from "./CompassLinks"
 import Background from "./CompassBackground"
 import AlterableMino from "./AlterableMino"
 import SymmetryRing from "./SymmetryRing"
-import { RelativeCtx, svgSize } from "./compassHelpers"
+import { svgSize } from "./compassHelpers"
 
 /**
  * Displays a mino and its direct children and parents.
@@ -22,24 +22,22 @@ export default function Compass() {
   if (!selected) return null
 
   return (
-    <RelativeCtx.Provider>
-      <svg
-        viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
-        css={css`
-          width: 22rem;
-          height: 22rem;
-          pointer-events: none;
-        `}
-      >
-        <G onHover={setShowTransforms}>
-          <Background />
-          <CompassLinks />
-          <G onHover={setShowEditable}>
-            <SymmetryRing showTransforms={showTransforms} />
-            <AlterableMino highlight={showEditable} />
-          </G>
+    <svg
+      viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
+      css={css`
+        width: 22rem;
+        height: 22rem;
+        pointer-events: none;
+      `}
+    >
+      <G onHover={setShowTransforms}>
+        <Background />
+        <CompassLinks />
+        <G onHover={setShowEditable}>
+          <SymmetryRing showTransforms={showTransforms} />
+          <AlterableMino highlight={showEditable} />
         </G>
-      </svg>
-    </RelativeCtx.Provider>
+      </G>
+    </svg>
   )
 }

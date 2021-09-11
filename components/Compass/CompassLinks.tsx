@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 import { scaleLinear } from "d3-scale"
+import { useAtom } from "jotai"
 
 import Vector from "lib/vector"
 import { Polyomino, RelativeLink } from "mino"
@@ -16,7 +17,7 @@ import {
 } from "components/graph"
 
 import SelectableMino from "components/SelectableMino"
-import { RelativeCtx, linkRadius, useSelected } from "./compassHelpers"
+import { relativeAtom, linkRadius, useSelected } from "./compassHelpers"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -41,7 +42,7 @@ interface StrandProps {
  * A link to a parent or child mino
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
-  const [selected, setSelected] = RelativeCtx.useState()
+  const [selected, setSelected] = useAtom(relativeAtom)
   const isSelected = !!selected && selected.mino.transform.equivalent(link.mino)
   const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))
   const { fill, stroke } = getMinoColor(link.mino)

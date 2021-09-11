@@ -1,6 +1,6 @@
+import { atom } from "jotai"
 import { Transform, RelativeLink } from "mino"
 import { getSymmetryColor } from "components/graph"
-import createStateContext from "components/createStateContext"
 import { useSelected as useSelectedNullable } from "components/SelectedContext"
 
 // Radii for various components of the compass
@@ -31,11 +31,11 @@ export function useSelectedColor() {
 }
 
 /**
- * Context for the currently selected relative link
+ * The currently selected relative link.
  */
-export const RelativeCtx = createStateContext<RelativeLink | null>(null)
+export const relativeAtom = atom<RelativeLink | null>(null)
 
 /**
- * Context for the currently selected transform
+ * The currently selected transform
  */
-export const TransformCtx = createStateContext<Transform | null>(null)
+export const transformAtom = atom<Transform | null>(null)

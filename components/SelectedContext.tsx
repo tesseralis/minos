@@ -1,18 +1,15 @@
-import createStateContext from "./createStateContext"
 import { Polyomino } from "mino"
+import { atom } from "jotai"
+import { useAtomValue, useUpdateAtom } from "jotai/utils"
 
 type SelectedState = Polyomino | null
 
-const SelectedContext = createStateContext<SelectedState>(null)
-
-export default SelectedContext
+export const selectedAtom = atom<SelectedState>(null)
 
 export function useSelected() {
-  return SelectedContext.useValue()
+  return useAtomValue(selectedAtom)
 }
 
 export function useSetSelected() {
-  return SelectedContext.useSetValue()
+  return useUpdateAtom(selectedAtom)
 }
-
-// TODO define more selectors

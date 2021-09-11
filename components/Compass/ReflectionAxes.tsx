@@ -1,7 +1,8 @@
+import { useAtomValue } from "jotai/utils"
 import { Line, svgTransform } from "components/svg"
 import { colors } from "style/theme"
 import {
-  TransformCtx,
+  transformAtom,
   innerRingRadius as radius,
   useSelected,
   useSelectedColor,
@@ -20,7 +21,7 @@ export const reflectionOrder = [
 export default function ReflectionAxes() {
   const mino = useSelected()
   const color = useSelectedColor()
-  const selectedTrans = TransformCtx.useValue()
+  const selectedTrans = useAtomValue(transformAtom)
   return (
     <g opacity={2 / 3}>
       {reflectionOrder.map((reflection, i) => {

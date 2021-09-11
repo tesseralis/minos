@@ -1,11 +1,12 @@
 import { css } from "@emotion/react"
+import { useUpdateAtom } from "jotai/utils"
 
 import { Transform } from "mino"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform, Text } from "components/svg"
 import { useSetSelected } from "components/SelectedContext"
 import {
-  TransformCtx,
+  transformAtom,
   innerRingRadius,
   useSelected,
   useSelectedColor,
@@ -32,7 +33,7 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
   const mino = useSelected()
   const color = useSelectedColor()
   const setSelected = useSetSelected()
-  const setTransform = TransformCtx.useSetValue()
+  const setTransform = useUpdateAtom(transformAtom)
 
   return (
     <Text

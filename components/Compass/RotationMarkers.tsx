@@ -1,7 +1,8 @@
+import { useAtomValue } from "jotai/utils"
 import { Point, Polygon, PolygonProps, svgTransform } from "components/svg"
 import { colors } from "style/theme"
 import {
-  TransformCtx,
+  transformAtom,
   innerRingRadius as radius,
   useSelected,
   useSelectedColor,
@@ -35,7 +36,7 @@ const rotationHover = new Map<string, number>(
 export default function RotationMarkers() {
   const mino = useSelected()
   const color = useSelectedColor()
-  const transform = TransformCtx.useValue()
+  const transform = useAtomValue(transformAtom)
   const order = rotationList.filter((t) => mino.transform.hasSymmetry(t)).length
   // TODO display properly for diagonally reflective minos
   const hoverIndex = transform ? rotationHover.get(transform)! : 0
