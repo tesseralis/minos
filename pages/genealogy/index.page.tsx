@@ -7,12 +7,15 @@ import GenerationRings from "./GenerationRings"
 import MinoLinks from "./MinoLinks"
 import Compass from "components/Compass"
 import Nav from "components/Nav"
+import { useSelected, useSetSelected } from "components/SelectedContext"
 
 /**
  * A graph showing the "family tree" of minos,
  * with edges connecting parent and child minos.
  */
 export default function FamilyTree() {
+  const selected = useSelected()
+  const setSelected = useSetSelected()
   return (
     <div
       css={css`
@@ -55,7 +58,7 @@ export default function FamilyTree() {
           pointer-events: none;
         `}
       >
-        <Compass />
+        {selected && <Compass selected={selected} onSelect={setSelected} />}
       </div>
     </div>
   )

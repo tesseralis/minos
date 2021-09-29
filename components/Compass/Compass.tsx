@@ -1,43 +1,46 @@
 import { useState } from "react"
 import { css } from "@emotion/react"
 
+import { Polyomino } from "mino"
 import { G } from "components/svg"
-import { useSelected } from "components/SelectedContext"
 import CompassLinks from "./CompassLinks"
 import Background from "./CompassBackground"
 import AlterableMino from "./AlterableMino"
 import SymmetryRing from "./SymmetryRing"
-import { svgSize } from "./compassHelpers"
+import { SelectedContextProvider, svgSize } from "./compassHelpers"
+
+interface Props {
+  selected: Polyomino
+  onSelect(mino: Polyomino): void
+}
 
 /**
  * Displays a mino and its direct children and parents.
  */
-export default function Compass() {
+export default function Compass({ selected, onSelect }: Props) {
   // true if the inner symmetry ring has hover focus
   const [showEditable, setShowEditable] = useState(false)
   const [showTransforms, setShowTransforms] = useState(false)
 
-  // Don't render the compass if there is no mino selected
-  const selected = useSelected()
-  if (!selected) return null
-
   return (
-    <svg
-      viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
-      css={css`
-        width: 22rem;
-        height: 22rem;
-        pointer-events: none;
-      `}
-    >
-      <G onHover={setShowTransforms}>
-        <Background />
-        <CompassLinks />
-        <G onHover={setShowEditable}>
-          <SymmetryRing showTransforms={showTransforms} />
-          <AlterableMino highlight={showEditable} />
+    <SelectedContextProvider selected={selected} setSelected={onSelect}>
+      <svg
+        viewBox={`${-svgSize} ${-svgSize} ${svgSize * 2} ${svgSize * 2}`}
+        css={css`
+          width: 22rem;
+          height: 22rem;
+          pointer-events: none;
+        `}
+      >
+        <G onHover={setShowTransforms}>
+          <Background />
+          <CompassLinks />
+          <G onHover={setShowEditable}>
+            <SymmetryRing showTransforms={showTransforms} />
+            <AlterableMino highlight={showEditable} />
+          </G>
         </G>
-      </G>
-    </svg>
+      </svg>
+    </SelectedContextProvider>
   )
 }

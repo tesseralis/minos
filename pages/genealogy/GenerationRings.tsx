@@ -3,7 +3,7 @@ import { Polyomino } from "mino"
 
 import transition from "components/transition"
 import { NUM_GENERATIONS, nodes, getMinoColor } from "components/graph"
-import { useSelected } from "components/SelectedContext"
+import { useSelected, useSetSelected } from "components/SelectedContext"
 import SelectableMino from "components/SelectableMino"
 
 import { START_GENS, getCoords } from "./treeHelpers"
@@ -28,6 +28,7 @@ interface MinoProps {
  */
 const RingMino = memo(function ({ mino, gen, selected, onHover }: MinoProps) {
   const coord = useMemo(() => getCoords(mino), [mino])
+  const setSelected = useSetSelected()
   return (
     <SelectableMino
       mino={mino}
@@ -35,6 +36,7 @@ const RingMino = memo(function ({ mino, gen, selected, onHover }: MinoProps) {
       size={getBlockSize(gen)}
       selected={!!selected?.has(mino)}
       onHover={onHover}
+      onSelect={setSelected}
       {...getMinoColor(mino)}
     />
   )

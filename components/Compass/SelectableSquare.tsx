@@ -4,9 +4,8 @@ import Vector from "lib/vector"
 import { PossibleRelativeLink } from "mino"
 import { Rect } from "components/svg"
 import { getAnchor } from "components/utils"
-import { useSetSelected } from "components/SelectedContext"
 import { colors } from "style/theme"
-import { relativeAtom, useSelected } from "./compassHelpers"
+import { relativeAtom, useSelected, useSetSelected } from "./compassHelpers"
 
 function getBlockSize(gen: number) {
   return 125 / (gen + 4)

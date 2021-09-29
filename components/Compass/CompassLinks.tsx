@@ -17,7 +17,12 @@ import {
 } from "components/graph"
 
 import SelectableMino from "components/SelectableMino"
-import { relativeAtom, linkRadius, useSelected } from "./compassHelpers"
+import {
+  relativeAtom,
+  linkRadius,
+  useSelected,
+  useSetSelected,
+} from "./compassHelpers"
 
 function getSpread(maxSpread: number, count: number) {
   return maxSpread * ((count - 1) / count)
@@ -42,15 +47,16 @@ interface StrandProps {
  * A link to a parent or child mino
  */
 function Strand({ link, linkColor, coord, size }: StrandProps) {
-  const [selected, setSelected] = useAtom(relativeAtom)
-  const isSelected = !!selected && selected.mino.transform.equivalent(link.mino)
+  const [hovered, setHovered] = useAtom(relativeAtom)
+  const isSelected = !!hovered && hovered.mino.transform.equivalent(link.mino)
+  const setSelected = useSetSelected()
   const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))
   const { fill, stroke } = getMinoColor(link.mino)
   const handleHover = useCallback(
     (mino) => {
-      setSelected(mino ? link : null)
+      setHovered(mino ? link : null)
     },
-    [setSelected, link],
+    [setHovered, link],
   )
   return (
     <g>
@@ -62,7 +68,8 @@ function Strand({ link, linkColor, coord, size }: StrandProps) {
         opacity={0.5}
       />
       <SelectableMino
-        mino={isSelected ? selected!.mino : link.mino}
+        mino={isSelected ? hovered!.mino : link.mino}
+        onSelect={setSelected}
         onHover={handleHover}
         stroke={isSelected ? colors.highlight : stroke}
         coord={coord}

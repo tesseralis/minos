@@ -4,12 +4,12 @@ import { useUpdateAtom } from "jotai/utils"
 import { Transform } from "mino"
 import { colors } from "style/theme"
 import { SVGTransform, svgTransform, Text } from "components/svg"
-import { useSetSelected } from "components/SelectedContext"
 import {
   transformAtom,
   innerRingRadius,
   useSelected,
   useSelectedColor,
+  useSetSelected,
 } from "./compassHelpers"
 
 import { reflectionOrder } from "./ReflectionAxes"
