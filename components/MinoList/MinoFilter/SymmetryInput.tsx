@@ -7,6 +7,8 @@ import { Polyomino, Symmetry, printSymmetry } from "mino"
 import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
+import * as Tooltip from "@radix-ui/react-tooltip"
+import { colors } from "style/theme"
 
 // Choose a dimmer neutral color
 const outlineColor = "#999"
@@ -111,34 +113,50 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
         {symmetryTypes.map(({ type: sym, mino, markers }) => {
           const checked = value.includes(sym)
           return (
-            <label
-              key={sym}
-              title={printSymmetry(sym)}
-              css={css`
-                grid-area: ${sym};
-              `}
-            >
-              {/* TODO (a11y) tab navigation */}
-              <input
-                type="checkbox"
-                className="visually-hidden"
-                checked={checked}
-                onChange={(e) =>
-                  onUpdate(
-                    e.target.checked ? upsert(value, sym) : remove(value, sym),
-                  )
-                }
-              />
-              <MinoDiv
-                mino={mino}
-                fill={checked ? getSymmetryColor(sym) : "none"}
-                stroke={outlineColor}
-                size={30 / mino.height}
-                gridStyle="none"
-              >
-                {markers}
-              </MinoDiv>
-            </label>
+            <Tooltip.Root key={sym}>
+              <Tooltip.Trigger asChild>
+                <label
+                  css={css`
+                    grid-area: ${sym};
+                  `}
+                >
+                  {/* TODO (a11y) tab navigation */}
+                  <input
+                    type="checkbox"
+                    className="visually-hidden"
+                    checked={checked}
+                    onChange={(e) =>
+                      onUpdate(
+                        e.target.checked
+                          ? upsert(value, sym)
+                          : remove(value, sym),
+                      )
+                    }
+                  />
+                  <MinoDiv
+                    mino={mino}
+                    fill={checked ? getSymmetryColor(sym) : "none"}
+                    stroke={outlineColor}
+                    size={30 / mino.height}
+                    gridStyle="none"
+                  >
+                    {markers}
+                  </MinoDiv>
+                </label>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  css={css`
+                    background: ${colors.bg};
+                    border: 1px solid ${outlineColor};
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.5rem;
+                  `}
+                >
+                  {printSymmetry(sym)}
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
           )
         })}
       </div>

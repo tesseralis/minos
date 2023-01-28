@@ -7,6 +7,8 @@ import { Polyomino, MinoClass, getClassCode } from "mino"
 import MinoDiv from "components/MinoDiv"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
+import * as Tooltip from "@radix-ui/react-tooltip"
+import { colors } from "style/theme"
 
 // Choose a dimmer neutral color
 const outlineColor = "#999"
@@ -205,34 +207,50 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
         {classTypes.map(({ type: cls, mino, markers }) => {
           const checked = value.includes(cls)
           return (
-            <label
-              key={cls}
-              title={cls}
-              css={css`
-                grid-area: ${getClassCode(cls)};
-              `}
-            >
-              {/* TODO (a11y) tab navigation */}
-              <input
-                type="checkbox"
-                className="visually-hidden"
-                checked={checked}
-                onChange={(e) =>
-                  onUpdate(
-                    e.target.checked ? upsert(value, cls) : remove(value, cls),
-                  )
-                }
-              />
-              <MinoDiv
-                mino={mino}
-                fill={checked ? getClassColor(cls) : "none"}
-                stroke={outlineColor}
-                size={30 / mino.height}
-                gridStyle="none"
-              >
-                {markers}
-              </MinoDiv>
-            </label>
+            <Tooltip.Root key={cls}>
+              <Tooltip.Trigger asChild>
+                <label
+                  css={css`
+                    grid-area: ${getClassCode(cls)};
+                  `}
+                >
+                  {/* TODO maybe use the Radix toggle group instead? */}
+                  <input
+                    type="checkbox"
+                    className="visually-hidden"
+                    checked={checked}
+                    onChange={(e) =>
+                      onUpdate(
+                        e.target.checked
+                          ? upsert(value, cls)
+                          : remove(value, cls),
+                      )
+                    }
+                  />
+                  <MinoDiv
+                    mino={mino}
+                    fill={checked ? getClassColor(cls) : "none"}
+                    stroke={outlineColor}
+                    size={30 / mino.height}
+                    gridStyle="none"
+                  >
+                    {markers}
+                  </MinoDiv>
+                </label>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  css={css`
+                    background: ${colors.bg};
+                    border: 1px solid ${outlineColor};
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.5rem;
+                  `}
+                >
+                  {cls}
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
           )
         })}
       </div>
