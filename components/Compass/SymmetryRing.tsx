@@ -32,7 +32,7 @@ export default function SymmetryRing({ showTransforms }: Props) {
       />
       <ReflectionAxes />
       <RotationMarkers />
-      <TransformButtons visible={showTransforms} />
+      <TransformButtons visible={true || showTransforms} />
       <Circle r={radius} fill="none" stroke={color} strokeWidth={3} />
     </g>
   )

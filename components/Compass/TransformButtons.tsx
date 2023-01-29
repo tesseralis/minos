@@ -13,7 +13,7 @@ import {
 } from "./compassHelpers"
 
 import { reflectionOrder } from "./ReflectionAxes"
-const radius = innerRingRadius + 5
+const radius = innerRingRadius + 7.5
 
 // TODO replace these icons with actual SVG
 const rotationSymbols = {
@@ -40,6 +40,7 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
       css={css`
         cursor: pointer;
         fill: ${color};
+        text-anchor: middle;
         pointer-events: initial;
         user-select: none;
         dominant-baseline: middle;
@@ -90,7 +91,6 @@ export default function TransformButtons({ visible }: Props) {
             trans={trans}
             css={css`
               font-size: 20px;
-              text-anchor: middle;
               dominant-baseline: ${trans === "rotateHalf"
                 ? "initial"
                 : "middle"};
