@@ -87,9 +87,12 @@ const data: MinoDatum[] = [
   },
   {
     name: "parents",
-    display: (m) => (
-      <List minos={Polyomino.sort([...m.relatives.freeParents()])} />
-    ),
+    display: (m) =>
+      m.order > 1 ? (
+        <List minos={Polyomino.sort([...m.relatives.freeParents()])} />
+      ) : (
+        "——"
+      ),
   },
   {
     name: "children",
