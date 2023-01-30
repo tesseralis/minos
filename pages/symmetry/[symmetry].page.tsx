@@ -35,17 +35,17 @@ function SymmetryNav() {
           const href = `/symmetry/${symmetry}`
           return (
             <li key={symmetry}>
-              <Link href={href} passHref>
-                <a
-                  css={css`
-                    text-decoration: none;
-                    color: ${router.asPath === href
-                      ? colors.highlight
-                      : colors.fg};
-                  `}
-                >
-                  {printSymmetry(symmetry)}
-                </a>
+              <Link
+                href={href}
+                passHref
+                css={css`
+                  text-decoration: none;
+                  color: ${router.asPath === href
+                    ? colors.highlight
+                    : colors.fg};
+                `}
+              >
+                {printSymmetry(symmetry)}
               </Link>
             </li>
           )
@@ -84,9 +84,7 @@ export default function SymmetryInfo({ symmetry, source }: Props) {
           }
         `}
       >
-        <Link href="/symmetry">
-          <a>Back</a>
-        </Link>
+        <Link href="/symmetry">Back</Link>
         <h1>{longName[symmetry]}</h1>
         <MDXRemote {...source} />
         <h2>Polyomino list</h2>

@@ -11,9 +11,7 @@ interface Props extends Omit<MinoDivProps, "onClick" | "children"> {
 export default function MinoLink({ to, ...props }: Props) {
   return (
     <Link href={to}>
-      <a>
-        <MinoDiv {...props} />
-      </a>
+      <MinoDiv {...props} />
     </Link>
   )
 }

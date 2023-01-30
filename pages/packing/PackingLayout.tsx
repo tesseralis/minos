@@ -54,17 +54,18 @@ function PatternNav() {
               const route = `/packing/${size}-${shape}`
               const isActive = router.asPath.startsWith(route)
               return (
-                <Link key={shape} href={route} passHref>
-                  <a
-                    css={css`
-                      font-size: 1.125rem;
-                      margin-right: 0.5rem;
-                      color: ${isActive ? colors.highlight : colors.fg};
-                      text-decoration: ${isActive ? "underline" : "none"};
-                    `}
-                  >
-                    {getShapeText(shape)}
-                  </a>
+                <Link
+                  key={shape}
+                  href={route}
+                  passHref
+                  css={css`
+                    font-size: 1.125rem;
+                    margin-right: 0.5rem;
+                    color: ${isActive ? colors.highlight : colors.fg};
+                    text-decoration: ${isActive ? "underline" : "none"};
+                  `}
+                >
+                  {getShapeText(shape)}
                 </Link>
               )
             })}

@@ -18,9 +18,7 @@ function TilingView({ mino }: { mino: Polyomino }) {
         flex-direction: column;
       `}
     >
-      <Link href="/tiling">
-        <a>Close</a>
-      </Link>
+      <Link href="/tiling">Close</Link>
       <Tiling mino={mino} gridSize={gridSize} svgSize={svgSize} />
     </div>
   )

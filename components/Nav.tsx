@@ -15,28 +15,27 @@ export const navLinks = [
 
 function Title() {
   return (
-    <Link href="/" passHref>
-      <a
-        css={css`
-          display: flex;
-          flex-direction: column;
-          font-weight: normal;
-          margin-top: 0;
-          margin-bottom: 1rem;
-          color: ${colors.highlight};
-          line-height: 1;
-          font-size: 1.5rem;
-          text-decoration: none;
+    <Link
+      href="/"
+      passHref
+      css={css`
+        display: flex;
+        flex-direction: column;
+        font-weight: normal;
+        margin-top: 0;
+        margin-bottom: 1rem;
+        color: ${colors.highlight};
+        line-height: 1;
+        font-size: 1.5rem;
+        text-decoration: none;
 
-          span {
-            margin-left: 0.0625rem;
-            font-size: 1rem;
-          }
-        `}
-      >
-        <span>The labyrinth of</span>
-        polyominoes
-      </a>
+        span {
+          margin-left: 0.0625rem;
+          font-size: 1rem;
+        }
+      `}
+    >
+      <span>The labyrinth of</span>polyominoes
     </Link>
   )
 }
@@ -53,23 +52,23 @@ export default function Nav() {
       <ul>
         {navLinks.map((view) => (
           <li key={view}>
-            <Link href={`/${view}`} passHref>
-              <a
-                css={css`
-                  font-size: 1.25rem;
-                  line-height: 1.25;
-                  color: ${router.asPath.startsWith(`/${view}`)
-                    ? colors.highlight
-                    : colors.fg};
+            <Link
+              href={`/${view}`}
+              passHref
+              css={css`
+                font-size: 1.25rem;
+                line-height: 1.25;
+                color: ${router.asPath.startsWith(`/${view}`)
+                  ? colors.highlight
+                  : colors.fg};
 
-                  text-decoration: none;
-                  :hover {
-                    text-decoration: underline;
-                  }
-                `}
-              >
-                {view}
-              </a>
+                text-decoration: none;
+                :hover {
+                  text-decoration: underline;
+                }
+              `}
+            >
+              {view}
             </Link>
           </li>
         ))}

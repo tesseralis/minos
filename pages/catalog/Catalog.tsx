@@ -60,7 +60,7 @@ const data: MinoDatum[] = [
     name: "symmetry",
     display: (m) => (
       <Link href={`/symmetry/${m.transform.symmetry()}`}>
-        <a>{printSymmetry(m.transform.symmetry())}</a>
+        {printSymmetry(m.transform.symmetry())}
       </Link>
     ),
   },
@@ -68,7 +68,7 @@ const data: MinoDatum[] = [
     name: "class",
     display: (m) => (
       <Link href={`/classes/${escapeClass(m.classes.best())}`}>
-        <a>{m.classes.best()}</a>
+        {m.classes.best()}
       </Link>
     ),
   },
@@ -77,9 +77,7 @@ const data: MinoDatum[] = [
     display: (m) =>
       m.tilings.has() ? (
         <Link href={`/tiling/${m.toString()}`}>
-          <a>
-            <Tiling mino={m} gridSize={8} svgSize={100} />
-          </a>
+          <Tiling mino={m} gridSize={8} svgSize={100} />
         </Link>
       ) : (
         "no"
@@ -108,9 +106,7 @@ const data: MinoDatum[] = [
 function MinoInfo({ mino }: { mino: Polyomino }) {
   return (
     <>
-      <Link href="/catalog">
-        <a>close</a>
-      </Link>
+      <Link href="/catalog">close</Link>
       <div
         css={css`
           display: flex;

@@ -11,5 +11,5 @@ const withMDX = require("@next/mdx")({
 
 module.exports = withMDX({
   pageExtensions: ["page.ts", "page.tsx"],
-  target: "serverless",
+  // target: "serverless",
 })

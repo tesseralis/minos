@@ -43,9 +43,7 @@ function PolyominoClass({ name }: { name: MinoClass }) {
           margin-top: 0;
         `}
       >
-        <Link href={`/classes/${escapeClass(name)}`}>
-          <a>{capitalize(name)}</a>
-        </Link>
+        <Link href={`/classes/${escapeClass(name)}`}>{capitalize(name)}</Link>
       </h2>
       <ClassList minos={getBoundaryFamilies(name)} />
     </section>

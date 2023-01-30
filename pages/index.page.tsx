@@ -7,24 +7,24 @@ import { colors } from "style/theme"
 
 function EnterLink() {
   return (
-    <Link href="/intro" passHref>
-      <a
-        css={css`
-          border: 1px solid ${colors.fg};
-          padding: 0.5rem 2rem;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          font-size: 1.5rem;
-          text-decoration: none;
+    <Link
+      href="/intro"
+      passHref
+      css={css`
+        border: 1px solid ${colors.fg};
+        padding: 0.5rem 2rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        text-decoration: none;
 
-          :hover {
-            background-color: #333;
-          }
-        `}
-      >
-        Enter
-      </a>
+        :hover {
+          background-color: #333;
+        }
+      `}
+    >
+      Enter
     </Link>
   )
 }
@@ -43,7 +43,7 @@ function HomePageNav() {
     >
       {navLinks.map((link) => (
         <Link key={link} href={`/${link}`}>
-          <a>{link}</a>
+          {link}
         </Link>
       ))}
     </nav>

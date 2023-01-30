@@ -22,9 +22,7 @@ function SymmetryClass({ sym }: { sym: Symmetry }) {
       `}
     >
       <h2>
-        <Link href={`/symmetry/${sym}`}>
-          <a>{capitalize(printSymmetry(sym))}</a>
-        </Link>
+        <Link href={`/symmetry/${sym}`}>{capitalize(printSymmetry(sym))}</Link>
       </h2>
       <MinoList minos={getMinosForSymmetry(sym)} />
     </section>

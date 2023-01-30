@@ -36,17 +36,17 @@ function ClassNav() {
           const href = `/classes/${escapeClass(cls)}`
           return (
             <li key={cls}>
-              <Link href={href} passHref>
-                <a
-                  css={css`
-                    text-decoration: none;
-                    color: ${router.asPath.startsWith(href)
-                      ? colors.highlight
-                      : colors.fg};
-                  `}
-                >
-                  {cls}
-                </a>
+              <Link
+                href={href}
+                passHref
+                css={css`
+                  text-decoration: none;
+                  color: ${router.asPath.startsWith(href)
+                    ? colors.highlight
+                    : colors.fg};
+                `}
+              >
+                {cls}
               </Link>
             </li>
           )
@@ -74,9 +74,7 @@ export default function ClassInfo({ class: cls, source }: Props) {
           }
         `}
       >
-        <Link href="/classes">
-          <a>Back</a>
-        </Link>
+        <Link href="/classes">Back</Link>
         <h1>{capitalize(cls)} polyomino</h1>
         <MDXRemote {...source} />
         <h2>Polyomino list</h2>
