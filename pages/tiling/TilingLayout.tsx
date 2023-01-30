@@ -6,9 +6,11 @@ import MinoList from "components/MinoList"
 import Layout from "components/Layout"
 import Info from "./Info.mdx"
 import Link from "next/link"
+import { ReactElement } from "react"
+import { useRouter } from "next/router"
 
 // TODO add other information in here
-function TilingView({ mino }: { mino: Polyomino }) {
+export function TilingView({ mino }: { mino: Polyomino }) {
   const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
   const svgSize = 500
   return (
@@ -24,7 +26,9 @@ function TilingView({ mino }: { mino: Polyomino }) {
   )
 }
 
-export default function TilingPage({ mino }: { mino?: Polyomino }) {
+export default function TilingLayout({ children }: { children: ReactElement }) {
+  const router = useRouter()
+  const { mino } = router.query
   return (
     <Layout>
       <div
@@ -51,11 +55,11 @@ export default function TilingPage({ mino }: { mino?: Polyomino }) {
           <MinoList
             narrow
             initFilter={{ yesNo: { hasTiling: "yes" } }}
-            selected={mino}
+            selected={mino ? Polyomino.fromString(mino as any) : null}
             to={(mino) => `/tiling/${mino.toString()}`}
           />
         </div>
-        <main>{mino ? <TilingView mino={mino} /> : <Info />}</main>
+        <main>{children}</main>
       </div>
     </Layout>
   )
