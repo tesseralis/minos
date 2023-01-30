@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react"
+import React, { ReactElement, ReactNode } from "react"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
@@ -7,12 +7,12 @@ import { Polyomino, orderName, printSymmetry } from "mino"
 import { getMinoColor, NUM_GENERATIONS } from "components/graph"
 import { escapeClass } from "pages/classes/classHelpers"
 import Layout from "components/Layout"
-import Info from "./Info.mdx"
 
 import MinoList from "components/MinoList"
 import MinoLink from "components/MinoLink"
 import MinoDiv from "components/MinoDiv"
 import Tiling from "components/Tiling"
+import { useRouter } from "next/router"
 
 interface MinoDatum {
   name: string
@@ -103,7 +103,7 @@ const data: MinoDatum[] = [
   },
 ]
 
-function MinoInfo({ mino }: { mino: Polyomino }) {
+export function MinoInfo({ mino }: { mino: Polyomino }) {
   return (
     <>
       <Link href="/catalog">close</Link>
@@ -158,24 +158,18 @@ function MinoInfo({ mino }: { mino: Polyomino }) {
   )
 }
 
-function Main({ mino }: { mino?: Polyomino }) {
-  return (
-    <main
-      css={css`
-        padding: 2rem;
-        overflow-y: scroll;
-      `}
-    >
-      {mino ? <MinoInfo mino={mino} /> : <Info />}
-    </main>
-  )
-}
-
 /**
  * Displays the minos of each generation and allows the user to select
  * one and open a list of information about it.
  */
-export default function CatalogPage({ mino }: { mino?: Polyomino }) {
+export default function CatalogLayout({
+  children,
+}: {
+  children?: ReactElement
+}) {
+  const router = useRouter()
+  const { mino } = router.query
+  const polyomino = mino ? Polyomino.fromString(mino as any) : null
   return (
     <Layout>
       <div
@@ -193,10 +187,17 @@ export default function CatalogPage({ mino }: { mino?: Polyomino }) {
         >
           <MinoList
             to={(mino) => `/catalog/${mino.toString()}`}
-            selected={mino}
+            selected={polyomino}
           />
         </div>
-        <Main mino={mino} />
+        <main
+          css={css`
+            padding: 2rem;
+            overflow-y: scroll;
+          `}
+        >
+          {children}
+        </main>
       </div>
     </Layout>
   )

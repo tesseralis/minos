@@ -5,8 +5,20 @@ import "sanitize.css"
 import "style/a11y.css"
 import "style/theme.css"
 
+import type { ReactElement, ReactNode } from "react"
+import type { NextPage } from "next"
+
+export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
+  getLayout?: (page: ReactElement) => ReactNode
+}
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout
+}
+
 // the default app
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
+  const getLayout = Component.getLayout ?? ((page) => page)
   return (
     <>
       <Head>
@@ -16,7 +28,7 @@ export default function App({ Component, pageProps }: AppProps) {
         />
         <title>The Labyrinth of Polyominoes</title>
       </Head>
-      <Component {...pageProps} />
+      {getLayout(<Component {...pageProps} />)}
     </>
   )
 }
