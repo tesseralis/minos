@@ -6,7 +6,7 @@ import { ReactElement } from "react"
 
 const Page: NextPageWithLayout = () => {
   const router = useRouter()
-  const { mino } = router.query
+  const { mino = "1" } = router.query
   const polyomino = Polyomino.fromString(mino as any)
   return <TilingView mino={polyomino} />
 }
