@@ -1,6 +1,6 @@
 import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
-import MinoDiv from "components/MinoDiv"
+import MinoLink from "components/MinoLink"
 import { Polyomino } from "mino"
 
 function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
@@ -22,8 +22,9 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
       {minos.map((mino) => {
         const { stroke, fill } = getMinoColor(mino)
         return (
-          <MinoDiv
+          <MinoLink
             key={mino.data}
+            to={`/catalog/${mino.toString()}`}
             mino={mino}
             size={8}
             fill={fill}
