@@ -185,7 +185,15 @@ export function getIndex(mino: Polyomino) {
  * <MinoSvg {...getMinoColor(mino)} />
  */
 export function getMinoColor(mino: Polyomino) {
-  const color = colors[mino.transform.free().data]
+  let color
+  // TODO deduplicate this with when the colors are cached for n <= 8
+  // (why do we do this again?)
+  if (mino.order <= 8) {
+    color = colors[mino.transform.free().data]
+  } else {
+    const minoClass = mino.classes.best()
+    color = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
+  }
   return {
     fill: color!.toHexString(),
     stroke: getBorderColor(color).toString(),

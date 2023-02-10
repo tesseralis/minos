@@ -168,6 +168,10 @@ const orderPrefixes = [
   "hexo",
   "hepto",
   "octo",
+  "nono",
+  "deco",
+  "undeco",
+  "dodeco",
 ]
 
 export function orderName(order: number, plural = false) {
