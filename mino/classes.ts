@@ -1,7 +1,13 @@
 import { once, range } from "lodash"
 import Vector from "lib/vector"
 import PointSet from "lib/PointSet"
-import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
+import {
+  Polyomino,
+  Anchor,
+  getAnchors,
+  getNeighbors,
+  O_OCTOMINO,
+} from "./internal"
 
 const axes = ["row", "column"] as const
 type Axis = typeof axes[number]
@@ -10,6 +16,7 @@ type Side = typeof sides[number]
 
 export const minoClasses = [
   "rectangle",
+  "punctured rectangle",
   "Ferrers graph",
   "staircase",
   "stack",
@@ -279,6 +286,10 @@ export default class MinoClasses {
 
   /** Get the highest class in the class hierarchy that this mino is in */
   best(): MinoClass {
+    // specially handle mino with a hole
+    if (this.mino.equals(O_OCTOMINO)) {
+      return "punctured rectangle"
+    }
     if (this.isRectangle()) {
       return "rectangle"
     } else if (this.isFerrers()) {
@@ -327,6 +338,7 @@ function hasOppositeAnchors(anchors: Anchor[]) {
 
 // Short codes for computing tables
 const codes: Record<MinoClass, string> = {
+  "punctured rectangle": "prect",
   rectangle: "rect",
   "Ferrers graph": "ferr",
   staircase: "stair",
