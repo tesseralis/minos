@@ -129,9 +129,11 @@ export default function ClassesChart() {
         `}
       >
         <Info />
-        {minoClasses.map((cls) => (
-          <PolyominoClass key={cls} name={cls} />
-        ))}
+        {minoClasses
+          .filter((cls) => cls !== "punctured rectangle")
+          .map((cls) => (
+            <PolyominoClass key={cls} name={cls} />
+          ))}
         {arrowPositions.map((arrow, i) => (
           <Arrow key={i} {...arrow} />
         ))}
