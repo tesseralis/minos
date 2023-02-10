@@ -77,7 +77,6 @@ const minos = nodes
     Polyomino.fromString("011_101_111_101"),
     Polyomino.fromString("110_101_111_101_011"),
   ])
-  .filter((mino) => !mino.equals(O_OCTOMINO))
 const classes = groupBy(minos, (mino) => mino.classes.best())
 
 function groupBoundaryFamilies(minoClass: Polyomino[]) {
