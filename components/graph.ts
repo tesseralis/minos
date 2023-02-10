@@ -28,18 +28,20 @@ export function getSymmetryColor(symmetry: Symmetry): string {
 
 const classColorMap: Record<MinoClass, string> = {
   rectangle: "#ccc", // white
-  "Ferrers graph": "#3dd", // cyan
-  staircase: "#48f", // blue
-  stack: "#4d2", // green
-  "directed convex": "#84f", // purple
-  "bar graph": "#fc3", // yellow
-  convex: "#d2d", // magenta
-  "directed semiconvex": "#f60", // orange
-  semiconvex: "#f15", // red
-  directed: "#d20", // brown
-  other: "#888", // grey
+  "Ferrers graph": "#f4f", // magenta
+  staircase: "#62f", // violet
+  stack: "#f28", // rose
+  "directed convex": "#03f", // blue
+  "bar graph": "#f20", // red
+  convex: "#08f", // azure
+  "directed semiconvex": "#f80", // orange
+  crescent: "#0cf", // cyan
+  directed: "#fc3", // yellow
+  semiconvex: "#0fb", // teal
+  predirected: "#ad0", // lime
+  semidirected: "#2a2", // green
+  other: "#484", // grey
 }
-
 /**
  * Get the unique randomized color ID for the given polyomino.
  */
@@ -122,7 +124,7 @@ export function generateGraph(n: number) {
   for (const generation of nodes) {
     for (const mino of generation) {
       const minoClass = mino.classes.best()
-      colors[mino.data] = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
+      colors[mino.data] = tinycolor.mix(colorMap[minoClass], getNoise(mino), 5)
     }
   }
 
@@ -192,7 +194,7 @@ export function getMinoColor(mino: Polyomino) {
     color = colors[mino.transform.free().data]
   } else {
     const minoClass = mino.classes.best()
-    color = tinycolor.mix(colorMap[minoClass], getNoise(mino), 10)
+    color = tinycolor.mix(colorMap[minoClass], getNoise(mino), 5)
   }
   return {
     fill: color!.toHexString(),

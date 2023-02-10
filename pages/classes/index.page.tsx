@@ -22,8 +22,12 @@ const arrowPositions = [
   { row: 5, column: 1 },
   { row: 5, column: "2 / span 4" },
   { row: 5, column: 6 },
+  { row: 6, column: "1 / span 3" },
   { row: 6, column: 5 },
   { row: 6, column: 6 },
+  { row: 7, column: 3 },
+  { row: 7, column: 4 },
+  { row: 8, column: "3 / span 2" },
 ]
 
 function PolyominoClass({ name }: { name: MinoClass }) {
@@ -118,8 +122,10 @@ export default function ClassesChart() {
             "stair stair stair stack stack stack"
             "dcvx  dcvx  dcvx  dcvx  bar   bar"
             "cvx   dscvx dscvx dscvx dscvx dscvx"
-            "scvx  scvx  scvx  scvx  scvx  dir"
-            ".     .     .     .     other other";
+            "cres  cres  cres  cres  cres  dir"
+            "scvx  scvx  scvx  pdir  pdir  pdir"
+            ".     .     sdir  sdir  .     ."
+            ".     .     other other .     .";
         `}
       >
         <Info />

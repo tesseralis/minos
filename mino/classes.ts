@@ -5,6 +5,8 @@ import { Polyomino, Anchor, getAnchors, getNeighbors } from "./internal"
 
 const axes = ["row", "column"] as const
 type Axis = typeof axes[number]
+const sides = ["top", "left", "bottom", "right"] as const
+type Side = typeof sides[number]
 
 export const minoClasses = [
   "rectangle",
@@ -15,8 +17,11 @@ export const minoClasses = [
   "bar graph",
   "convex",
   "directed semiconvex",
-  "semiconvex",
+  "crescent",
   "directed",
+  "semiconvex",
+  "predirected",
+  "semidirected",
   "other",
 ] as const
 
@@ -39,6 +44,27 @@ export default class MinoClasses {
     const xCoord = x === "start" ? 0 : w - 1
     const yCoord = y === "start" ? 0 : h - 1
     return new Vector(xCoord, yCoord)
+  }
+
+  // Get an arbitrary point on the given side
+  private pointAtSide(side: Side): Vector {
+    const [w, h] = this.mino.dims
+    switch (side) {
+      case "right":
+      case "left": {
+        const xCoord = side === "left" ? 0 : w - 1
+        return range(w)
+          .map((j) => new Vector(xCoord, j))
+          .find((p) => this.mino.contains(p))!
+      }
+      case "top":
+      case "bottom": {
+        const yCoord = side === "top" ? 0 : h - 1
+        return range(w)
+          .map((i) => new Vector(i, yCoord))
+          .find((p) => this.mino.contains(p))!
+      }
+    }
   }
 
   /** Return whether the polyomino has the given anchor */
@@ -77,6 +103,14 @@ export default class MinoClasses {
    */
   isSemiConvex = once(() => {
     return axes.some((axis) => this.isConvexAtAxis(axis))
+  })
+
+  /**
+   * Return true if this polyomino is a "crescent"
+   * (i.e. has a concavity in at most one direction)
+   */
+  isCrescent = once(() => {
+    return sides.filter((side) => this.isSemiDirectedAtSide(side)).length >= 3
   })
 
   /**
@@ -127,6 +161,31 @@ export default class MinoClasses {
   })
 
   /** Returns whether the polyomino is directed at the given anchor */
+  isSemiDirectedAtSide(side: Side) {
+    // Get the two directions of that corner
+    // const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
+    // const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
+    const directions = getDirectionsForSide(side)
+    const start = this.pointAtSide(side)
+    // Do BFS in three orthogonal directions
+    const visited = new PointSet()
+    visited.add(start)
+    const queue = [start]
+    while (queue.length > 0) {
+      const current = queue.pop()!
+      for (const nbrDir of directions) {
+        const nbr = current.add(nbrDir)
+        if (this.mino.contains(nbr) && !visited.has(nbr)) {
+          visited.add(nbr)
+          queue.push(nbr)
+        }
+      }
+    }
+    // If at the end, we visited all cells, it's semi-directed
+    return visited.size === this.mino.order
+  }
+
+  /** Returns whether the polyomino is directed at the given anchor */
   isDirectedAtAnchor(anchor: Anchor) {
     if (!this.hasAnchor(anchor)) {
       return false
@@ -156,6 +215,27 @@ export default class MinoClasses {
   /** Return all the anchors that this polyomino is directed at */
   directedAnchors = once(() => {
     return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
+  })
+
+  /**
+   * Returns whether the mino is semi-directed (aka orthogonally directed),
+   * that is, there is some square in the mino such that all the other squares
+   * can be reached from that mino in going three directions but not the fourth
+   */
+  isSemiDirected = once(() => {
+    return sides.some((side) => this.isSemiDirectedAtSide(side))
+  })
+
+  /**
+   * Return whether the mino is pre-directed, that is,
+   * if it is semi-directed with respect to two adjacent directions.
+   */
+  isPreDirected = once(() => {
+    const semiDirSides = sides.filter((side) => this.isSemiDirectedAtSide(side))
+    if (semiDirSides.length < 2) return false
+    if (semiDirSides.length >= 3) return true
+    const [side1, side2] = semiDirSides
+    return isAdjacentSides(side1, side2)
   })
 
   /**
@@ -215,10 +295,16 @@ export default class MinoClasses {
       return "convex"
     } else if (this.isSemiConvex() && this.isDirected()) {
       return "directed semiconvex"
-    } else if (this.isSemiConvex()) {
-      return "semiconvex"
+    } else if (this.isCrescent()) {
+      return "crescent"
     } else if (this.isDirected()) {
       return "directed"
+    } else if (this.isSemiConvex()) {
+      return "semiconvex"
+    } else if (this.isPreDirected()) {
+      return "predirected"
+    } else if (this.isSemiDirected()) {
+      return "semidirected"
     } else {
       return "other"
     }
@@ -239,6 +325,7 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   return first.x !== second.x && first.y !== second.y
 }
 
+// Short codes for computing tables
 const codes: Record<MinoClass, string> = {
   rectangle: "rect",
   "Ferrers graph": "ferr",
@@ -248,8 +335,11 @@ const codes: Record<MinoClass, string> = {
   "bar graph": "bar",
   convex: "cvx",
   "directed semiconvex": "dscvx",
-  semiconvex: "scvx",
+  crescent: "cres",
   directed: "dir",
+  semiconvex: "scvx",
+  predirected: "pdir",
+  semidirected: "sdir",
   other: "other",
 }
 
@@ -259,4 +349,34 @@ const codes: Record<MinoClass, string> = {
  */
 export function getClassCode(cls: MinoClass) {
   return codes[cls]
+}
+
+function getDirectionsForSide(side: Side) {
+  const vecs = [Vector.UP, Vector.DOWN, Vector.LEFT, Vector.RIGHT]
+  const sideVecs = {
+    left: Vector.LEFT,
+    right: Vector.RIGHT,
+    top: Vector.UP,
+    bottom: Vector.DOWN,
+  }
+  return vecs.filter((v) => !v.equals(sideVecs[side]))
+}
+
+function getAxis(side: Side): Axis {
+  switch (side) {
+    case "top":
+    case "bottom":
+      return "column"
+    case "left":
+    case "right":
+      return "row"
+  }
+}
+
+function isOppositeSides(side1: Side, side2: Side) {
+  return getAxis(side1) === getAxis(side2)
+}
+
+function isAdjacentSides(side1: Side, side2: Side) {
+  return !isOppositeSides(side1, side2)
 }
