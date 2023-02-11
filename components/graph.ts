@@ -29,13 +29,13 @@ export function getSymmetryColor(symmetry: Symmetry): string {
 const classColorMap: Record<MinoClass, string> = {
   "punctured rectangle": "#ddd",
   rectangle: "#ccc", // white
-  "Ferrers graph": "#f4f", // magenta
+  "Ferrers graph": "#f5f", // magenta
   staircase: "#62f", // violet
   stack: "#f28", // rose
-  "directed convex": "#03f", // blue
-  "bar graph": "#f20", // red
+  "directed convex": "#05f", // blue
+  "bar graph": "#f22", // red
   convex: "#08f", // azure
-  "directed semiconvex": "#f80", // orange
+  "directed semiconvex": "#f60", // orange
   crescent: "#0cf", // cyan
   directed: "#fc3", // yellow
   semiconvex: "#0fb", // teal
