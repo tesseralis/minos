@@ -30,9 +30,9 @@ const classColorMap: Record<MinoClass, string> = {
   "punctured rectangle": "#ddd",
   rectangle: "#ccc", // white
   "Ferrers graph": "#f5f", // magenta
-  staircase: "#62f", // violet
+  staircase: "#82f", // violet
   stack: "#f28", // rose
-  "directed convex": "#05f", // blue
+  "directed convex": "#42f", // blue
   "bar graph": "#f22", // red
   convex: "#08f", // azure
   "directed semiconvex": "#f60", // orange
@@ -125,7 +125,7 @@ export function generateGraph(n: number) {
   for (const generation of nodes) {
     for (const mino of generation) {
       const minoClass = mino.classes.best()
-      colors[mino.data] = tinycolor.mix(colorMap[minoClass], getNoise(mino), 5)
+      colors[mino.data] = colorMap[minoClass]
     }
   }
 
@@ -195,7 +195,7 @@ export function getMinoColor(mino: Polyomino) {
     color = colors[mino.transform.free().data]
   } else {
     const minoClass = mino.classes.best()
-    color = tinycolor.mix(colorMap[minoClass], getNoise(mino), 5)
+    color = colorMap[minoClass]
   }
   return {
     fill: color!.toHexString(),
