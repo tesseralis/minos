@@ -28,7 +28,7 @@ export function getSymmetryColor(symmetry: Symmetry): string {
 
 const classColorMap: Record<MinoClass, string> = {
   "punctured rectangle": "#ddd",
-  rectangle: "#ccc", // white
+  rectangle: "#dbd", // white
   "Ferrers graph": "#f5f", // magenta
   staircase: "#82f", // violet
   stack: "#f28", // rose
