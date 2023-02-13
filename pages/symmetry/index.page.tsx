@@ -6,6 +6,7 @@ import Layout from "components/Layout"
 import InfoContent from "./Info.mdx"
 import { getMinosForSymmetry } from "./symmetryHelpers"
 import MinoList from "./MinoList"
+import { media } from "style/media"
 
 function SymmetryClass({ sym }: { sym: Symmetry }) {
   return (
@@ -54,12 +55,16 @@ export default function SymmetryChart() {
         css={css`
           padding: 2rem 0;
           display: grid;
-          grid-gap: 1rem;
+          gap: 1rem;
           grid-template-areas:
             "info  all  ."
             "axis2 rot2 diag2"
             "axis  rot  diag"
             "none  none none";
+          ${media.sm} {
+            display: flex;
+            flex-direction: column;
+          }
         `}
       >
         <Info />
