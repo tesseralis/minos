@@ -61,7 +61,7 @@ export default function SymmetryChart() {
             "axis2 rot2 diag2"
             "axis  rot  diag"
             "none  none none";
-          ${media.sm} {
+          @media ${media.sm} {
             display: flex;
             flex-direction: column;
           }

@@ -21,7 +21,7 @@ export default function Layout({ subNav, children }: Props) {
           height: 100%;
           padding: 0 2rem;
 
-          ${media.lg} {
+          @media ${media.lg} {
             grid-template-columns: 10rem 1fr;
           }
         `}
