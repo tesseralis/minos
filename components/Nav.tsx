@@ -4,18 +4,27 @@ import { css } from "@emotion/react"
 
 import { colors } from "style/theme"
 import { media } from "style/media"
-import { useEffect, useState } from "react"
+import { useCallback, useEffect, useState } from "react"
 import * as NavMenu from "@radix-ui/react-navigation-menu"
 
 export default function Nav() {
   const [showSidebar, setShowSidebar] = useState(false)
 
+  const updateSidebar = useCallback((e: any) => {
+    return setShowSidebar(e.matches)
+  }, [])
+
   // https://stackoverflow.com/a/70219419
   useEffect(() => {
     if (typeof window !== "undefined") {
-      setShowSidebar(window.matchMedia(media.lg).matches)
+      const sidebarWatcher = window.matchMedia(media.lg)
+      sidebarWatcher.addEventListener("change", updateSidebar)
+      if (sidebarWatcher.matches) {
+        setShowSidebar(true)
+      }
+      return () => sidebarWatcher.removeEventListener("change", updateSidebar)
     }
-  })
+  }, [updateSidebar])
 
   return showSidebar ? <DesktopNav /> : <MobileNav />
 }
