@@ -15,11 +15,11 @@ export default function Layout({ subNav, children }: Props) {
       <div
         css={css`
           display: grid;
-          grid-template-columns: 0 1fr;
+          grid-template-columns: 1fr;
           position: fixed;
           width: 100%;
           height: 100%;
-          padding: 0 2rem;
+          /* padding: 0 2rem; */
 
           @media ${media.lg} {
             grid-template-columns: 10rem 1fr;
@@ -28,12 +28,8 @@ export default function Layout({ subNav, children }: Props) {
       >
         <div
           css={css`
-            /* opacity: 0; */
-            overflow: hidden;
-            margin-top: 2rem;
-
-            ${media.lg} {
-              /* opacity: 100%; */
+            @media ${media.lg} {
+              margin-top: 2rem;
             }
           `}
         >

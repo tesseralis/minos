@@ -20,6 +20,7 @@
     "@emotion/react": "^11.4.0",
     "@mdx-js/loader": "^1.6.22",
     "@next/mdx": "^10.2.0",
+    "@radix-ui/react-navigation-menu": "^1.1.1",
     "@radix-ui/react-tooltip": "^1.0.3",
     "@types/d3-path": "^2.0.0",
     "@types/d3-scale": "^3.2.2",
