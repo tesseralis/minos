@@ -3,4 +3,5 @@ export const colors = {
   fg: "#ccc",
   bg: "#202020",
   bg2: "#333",
+  border: "grey",
 }

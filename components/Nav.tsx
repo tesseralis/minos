@@ -114,7 +114,7 @@ function MobileNav() {
         height: 3rem;
         width: 100vw;
         z-index: 1;
-        border-bottom: 1px solid ${colors.fg};
+        border-bottom: 1px solid ${colors.border};
       `}
     >
       <NavMenu.List
@@ -123,12 +123,21 @@ function MobileNav() {
           padding: 4px;
           border-radius: 6px;
           list-style: none;
-          box-shadow: 0 2px 10px var(--blackA7);
           margin: 0;
         `}
       >
         <NavMenu.Item>
-          <NavMenu.Trigger>Nav</NavMenu.Trigger>
+          <NavMenu.Trigger
+            css={css`
+              background: none;
+              border: none;
+              color: ${colors.fg};
+              font-family: serif;
+              font-size: 1.25rem;
+            `}
+          >
+            Nav
+          </NavMenu.Trigger>
           <NavMenu.Content
             css={css`
               position: absolute;
@@ -183,7 +192,7 @@ function MobileNav() {
             width: 8rem;
             border-radius: 6px;
             overflow: hidden;
-            border: 1px solid ${colors.fg};
+            border: 1px solid ${colors.border};
             background-color: ${colors.bg};
             height: var(--radix-navigation-menu-viewport-height);
           `}
