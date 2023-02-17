@@ -185,6 +185,7 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
           margin-top: 0.5rem;
           display: grid;
           grid-gap: 1rem 0.75rem;
+          align-items: center;
           grid-template-areas:
             ".     .    rect  ."
             ".     ferr rect  ."

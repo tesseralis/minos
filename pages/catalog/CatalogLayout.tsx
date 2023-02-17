@@ -177,7 +177,8 @@ export default function CatalogLayout({
           position: fixed;
           height: 100%;
           display: grid;
-          grid-template-columns: 1fr 24rem;
+          grid-template-columns: 1fr 28rem;
+          gap: 2rem;
         `}
       >
         <div
