@@ -17,18 +17,18 @@ type Side = typeof sides[number]
 export const minoClasses = [
   "rectangle",
   "punctured rectangle",
-  "Ferrers graph",
+  "Ferrers diagram",
   "staircase",
   "stack",
-  "directed convex",
-  "bar graph",
-  "convex",
-  "directed semiconvex",
+  "fork",
+  "bar chart",
+  "cross",
+  "wing",
   "crescent",
-  "directed",
-  "semiconvex",
-  "predirected",
-  "semidirected",
+  "antler",
+  "range chart",
+  "bent tree",
+  "tree",
   "other",
 ] as const
 
@@ -293,29 +293,29 @@ export default class MinoClasses {
     if (this.isRectangle()) {
       return "rectangle"
     } else if (this.isFerrers()) {
-      return "Ferrers graph"
+      return "Ferrers diagram"
     } else if (this.isStack()) {
       return "stack"
     } else if (this.isStaircase()) {
       return "staircase"
     } else if (this.isDirectedConvex()) {
-      return "directed convex"
+      return "fork"
     } else if (this.isBar()) {
-      return "bar graph"
+      return "bar chart"
     } else if (this.isConvex()) {
-      return "convex"
+      return "cross"
     } else if (this.isSemiConvex() && this.isDirected()) {
-      return "directed semiconvex"
+      return "wing"
     } else if (this.isCrescent()) {
       return "crescent"
     } else if (this.isDirected()) {
-      return "directed"
+      return "antler"
     } else if (this.isSemiConvex()) {
-      return "semiconvex"
+      return "range chart"
     } else if (this.isPreDirected()) {
-      return "predirected"
+      return "bent tree"
     } else if (this.isSemiDirected()) {
-      return "semidirected"
+      return "tree"
     } else {
       return "other"
     }
@@ -340,18 +340,18 @@ function hasOppositeAnchors(anchors: Anchor[]) {
 const codes: Record<MinoClass, string> = {
   "punctured rectangle": "prect",
   rectangle: "rect",
-  "Ferrers graph": "ferr",
+  "Ferrers diagram": "ferr",
   staircase: "stair",
   stack: "stack",
-  "directed convex": "dcvx",
-  "bar graph": "bar",
-  convex: "cvx",
-  "directed semiconvex": "dscvx",
+  fork: "fork",
+  "bar chart": "bar",
+  cross: "cross",
+  wing: "wing",
   crescent: "cres",
-  directed: "dir",
-  semiconvex: "scvx",
-  predirected: "pdir",
-  semidirected: "sdir",
+  antler: "ant",
+  "range chart": "range",
+  "bent tree": "btree",
+  tree: "tree",
   other: "other",
 }
 

@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
-import { Circle, Line, Polygon } from "components/svg"
+import { Circle, Line } from "components/svg"
 
 import { Polyomino, MinoClass, getClassCode } from "mino"
 import MinoDiv from "components/MinoDiv"
@@ -45,7 +45,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "Ferrers graph",
+    type: "Ferrers diagram",
     mino: Polyomino.of("001_011_111"),
     markers: (
       <>
@@ -79,7 +79,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "directed convex",
+    type: "fork",
     mino: Polyomino.of("010_011_110"),
     markers: (
       <>
@@ -89,7 +89,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "bar graph",
+    type: "bar chart",
     mino: Polyomino.of("001_101_111"),
     markers: (
       <>
@@ -102,12 +102,12 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "convex",
+    type: "cross",
     mino: Polyomino.of("010_111_010"),
     markers: <ConvexMarker />,
   },
   {
-    type: "directed semiconvex",
+    type: "wing",
     mino: Polyomino.of("101_111_100"),
     markers: (
       <>
@@ -130,7 +130,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "directed",
+    type: "antler",
     mino: Polyomino.of("110_101_111"),
     markers: (
       <>
@@ -141,7 +141,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "predirected",
+    type: "bent tree",
     mino: Polyomino.of("110_101_111_010"),
     markers: (
       <>
@@ -151,7 +151,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "semiconvex",
+    type: "range chart",
     mino: Polyomino.of("101_111_101"),
     markers: (
       <>
@@ -161,7 +161,7 @@ const classTypes: ClassType[] = [
     ),
   },
   {
-    type: "semidirected",
+    type: "tree",
     mino: Polyomino.of("110_101_111_101"),
     markers: <SemiDirectedMarker xOffset={-3.5} />,
   },

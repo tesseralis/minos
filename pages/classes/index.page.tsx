@@ -120,11 +120,11 @@ export default function ClassesChart() {
             "info  info  .     rect  rect  rect"
             "info  info  ferr  ferr  ferr  ferr"
             "stair stair stair stack stack stack"
-            "dcvx  dcvx  dcvx  dcvx  bar   bar"
-            "cvx   dscvx dscvx dscvx dscvx dscvx"
-            "cres  cres  cres  cres  cres  dir"
-            "scvx  scvx  scvx  pdir  pdir  pdir"
-            ".     .     sdir  sdir  .     ."
+            "fork  fork  fork  fork  bar   bar"
+            "cross wing  wing  wing  wing  wing"
+            "cres  cres  cres  cres  cres  ant"
+            "range range range btree btree btree"
+            ".     .     tree  tree  .     ."
             ".     .     other other .     .";
         `}
       >
