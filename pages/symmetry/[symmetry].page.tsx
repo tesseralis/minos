@@ -1,3 +1,4 @@
+import React from "react"
 import fs from "fs"
 import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
@@ -11,50 +12,9 @@ import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
 import MinoList from "./MinoList"
 import { getMinosForSymmetry } from "./symmetryHelpers"
-import { colors } from "style/theme"
-
-// TODO deduplicate with classes nav
-function SymmetryNav() {
-  const router = useRouter()
-  return (
-    <nav
-      css={css`
-        h2 {
-          font-size: 1.25rem;
-          margin: 0;
-        }
-
-        ul {
-          margin: 0;
-        }
-      `}
-    >
-      <h2>Symmetries</h2>
-      <ul>
-        {symmetries.map((symmetry) => {
-          const href = `/symmetry/${symmetry}`
-          return (
-            <li key={symmetry}>
-              <Link
-                href={href}
-                passHref
-                css={css`
-                  text-decoration: none;
-                  color: ${router.asPath === href
-                    ? colors.highlight
-                    : colors.fg};
-                `}
-              >
-                {printSymmetry(symmetry)}
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
-    </nav>
-  )
-}
-
+import SymmetryIcon from "components/SymmetryIcon"
+import { getSymmetryColor } from "components/graph"
+import { capitalize } from "lodash"
 const longName: Record<Symmetry, string> = {
   all: "Full symmetry",
   axis2: "Reflective symmetry (2 axes)",
@@ -72,24 +32,88 @@ interface Props {
 }
 
 export default function SymmetryInfo({ symmetry, source }: Props) {
+  const router = useRouter()
   return (
-    <Layout subNav={<SymmetryNav />}>
-      <main
+    <Layout>
+      <div
         css={css`
-          padding: 2rem 0;
-          max-width: 36rem;
-
-          h1 {
-            margin: 0;
-          }
+          position: absolute;
+          display: grid;
+          grid-template-columns: 24rem 1fr;
+          gap: 2rem;
+          height: 100%;
         `}
       >
-        <Link href="/symmetry">Back</Link>
-        <h1>{longName[symmetry]}</h1>
-        <MDXRemote {...source} />
-        <h2>Polyomino list</h2>
-        <MinoList minos={getMinosForSymmetry(symmetry)} />
-      </main>
+        <nav
+          css={css`
+            display: grid;
+            padding-top: 2rem;
+            gap: 1rem 0.75rem;
+            align-content: start;
+            grid-template-areas:
+              ".     all  ."
+              "axis2 rot2 diag2"
+              "axis  rot  diag"
+              ".     none .";
+          `}
+        >
+          {symmetries.map((symmetry) => {
+            const route = `/symmetry/${symmetry}`
+            const isActive = router.asPath === route
+            const name = capitalize(printSymmetry(symmetry))
+            // split into two lines based on where the first space is
+            // https://stackoverflow.com/a/4607799 (why is JS so bad)
+            const [first, last] = name.split(/ (.*)/)
+            return (
+              <Link
+                key={symmetry}
+                href={route}
+                css={css`
+                  grid-area: ${symmetry};
+                  display: flex;
+                  flex-direction: column;
+                  align-items: center;
+                  text-align: center;
+                  gap: 0.5rem;
+                  text-decoration: ${isActive ? "underline" : "none"};
+                `}
+              >
+                <SymmetryIcon
+                  symmetry={symmetry}
+                  size={50}
+                  fill="none"
+                  stroke={getSymmetryColor(symmetry)}
+                />
+                {last ? (
+                  <>
+                    {first}
+                    <br />
+                    {last}
+                  </>
+                ) : (
+                  first
+                )}
+              </Link>
+            )
+          })}
+        </nav>
+        <main
+          css={css`
+            max-height: 100%;
+            padding: 2rem 0;
+            overflow-y: scroll;
+            h1 {
+              margin: 0;
+            }
+          `}
+        >
+          <Link href="/symmetry">Back</Link>
+          <h1>{longName[symmetry]}</h1>
+          <MDXRemote {...source} />
+          <h2>Polyomino list</h2>
+          <MinoList minos={getMinosForSymmetry(symmetry)} />
+        </main>
+      </div>
     </Layout>
   )
 }

@@ -62,6 +62,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
                     symmetry={sym}
                     fill={checked ? getSymmetryColor(sym) : "none"}
                     stroke={outlineColor}
+                    size={30}
                   />
                 </label>
               </Tooltip.Trigger>
