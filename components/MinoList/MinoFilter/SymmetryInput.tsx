@@ -3,88 +3,15 @@ import { css } from "@emotion/react"
 import { getSymmetryColor } from "components/graph"
 import { Circle, Line } from "components/svg"
 
-import { Polyomino, Symmetry, printSymmetry } from "mino"
-import MinoDiv from "components/MinoDiv"
+import { Polyomino, Symmetry, printSymmetry, symmetries } from "mino"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
 import * as Tooltip from "@radix-ui/react-tooltip"
 import { colors } from "style/theme"
+import SymmetryIcon from "components/SymmetryIcon"
 
 // Choose a dimmer neutral color
 const outlineColor = "#999"
-
-// Common prop values for the symmetry lines
-const markerProps = {
-  stroke: outlineColor,
-  strokeWidth: 1,
-  fill: "none",
-}
-
-interface SymmetryType {
-  // The type of symmetry
-  type: Symmetry
-  // The mino to display as the prototype for this symmetry
-  mino: Polyomino
-  // The symmetry markers to draw as a guide
-  markers?: ReactNode
-}
-
-// Array of display information for the symmetry classes
-const symmetryTypes: SymmetryType[] = [
-  {
-    type: "all",
-    mino: Polyomino.of("010_111_010"),
-    markers: (
-      <>
-        <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
-        <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
-        <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />
-        <Line p1={[-20, -20]} p2={[20, 20]} {...markerProps} />
-      </>
-    ),
-  },
-  {
-    type: "axis2",
-    mino: Polyomino.of("101_111_101"),
-    markers: (
-      <>
-        <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />
-        <Line p1={[20, 0]} p2={[-20, 0]} {...markerProps} />
-      </>
-    ),
-  },
-  {
-    type: "diag2",
-    mino: Polyomino.of("110_111_011"),
-    markers: (
-      <>
-        <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />
-        <Line p1={[-20, -20]} p2={[20, 20]} {...markerProps} />
-      </>
-    ),
-  },
-  {
-    type: "rot2",
-    mino: Polyomino.of("0010_1110_0111_0100"),
-    markers: <Circle r={10} {...markerProps} />,
-  },
-  {
-    type: "axis",
-    mino: Polyomino.of("100_111_100"),
-    markers: <Line p1={[0, 20]} p2={[0, -20]} {...markerProps} />,
-  },
-  {
-    type: "diag",
-    mino: Polyomino.of("100_110_011"),
-    markers: <Line p1={[-20, 20]} p2={[20, -20]} {...markerProps} />,
-  },
-  {
-    type: "rot",
-    mino: Polyomino.of("001_111_100"),
-    markers: <Circle r={10} {...markerProps} />,
-  },
-  { type: "none", mino: Polyomino.of("010_110_011") },
-]
 
 interface Props {
   value?: Symmetry[]
@@ -110,7 +37,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
             ".     none .";
         `}
       >
-        {symmetryTypes.map(({ type: sym, mino, markers }) => {
+        {symmetries.map((sym) => {
           const checked = value.includes(sym)
           return (
             <Tooltip.Root key={sym}>
@@ -133,15 +60,11 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
                       )
                     }
                   />
-                  <MinoDiv
-                    mino={mino}
+                  <SymmetryIcon
+                    symmetry={sym}
                     fill={checked ? getSymmetryColor(sym) : "none"}
                     stroke={outlineColor}
-                    size={30 / mino.height}
-                    gridStyle="none"
-                  >
-                    {markers}
-                  </MinoDiv>
+                  />
                 </label>
               </Tooltip.Trigger>
               <Tooltip.Portal>
