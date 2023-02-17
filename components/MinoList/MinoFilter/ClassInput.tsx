@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
-import { Line, Polygon } from "components/svg"
+import { Circle, Line, Polygon } from "components/svg"
 
 import { Polyomino, MinoClass, getClassCode } from "mino"
 import MinoDiv from "components/MinoDiv"
@@ -108,7 +108,7 @@ const classTypes: ClassType[] = [
   },
   {
     type: "directed semiconvex",
-    mino: Polyomino.of("101_111_110"),
+    mino: Polyomino.of("101_111_100"),
     markers: (
       <>
         <DirectedMarker />
@@ -145,8 +145,8 @@ const classTypes: ClassType[] = [
     mino: Polyomino.of("110_101_111_010"),
     markers: (
       <>
-        <SemiDirectedMarker anchor="bottom" y={12} />
-        <SemiDirectedMarker anchor="left" />
+        <SemiDirectedMarker anchor="bottom" xOffset={-3.5} />
+        <SemiDirectedMarker anchor="left" xOffset={-3.5} />
       </>
     ),
   },
@@ -163,7 +163,7 @@ const classTypes: ClassType[] = [
   {
     type: "semidirected",
     mino: Polyomino.of("110_101_111_101"),
-    markers: <SemiDirectedMarker y={12} />,
+    markers: <SemiDirectedMarker xOffset={-3.5} />,
   },
   { type: "other", mino: Polyomino.of("01111_10101_11110") },
 ]
@@ -279,30 +279,50 @@ function ConvexMarker() {
   const r = 3
   return (
     <>
-      <Line p1={[0, r]} p2={[0, -r]} {...markerProps} />
-      <Line p1={[r, 0]} p2={[-r, 0]} {...markerProps} />
+      <SemiDirectedMarker anchor="bottom" />
+      <SemiDirectedMarker anchor="left" />
+      <SemiDirectedMarker anchor="right" />
+      <SemiDirectedMarker anchor="top" />
     </>
   )
 }
 
 function SemiDirectedMarker({
   anchor = "bottom",
-  x = 15,
-  y = 15,
+  xOffset = 0,
 }: {
   anchor?: string
-  x?: number
-  y?: number
+  xOffset?: number
 }) {
   if (anchor === "top" || anchor === "bottom") {
-    const ySign = anchor === "top" ? -1 : 1
+    const ySign = anchor === "top" ? 1 : -1
     return (
-      <Line p1={[0, ySign * y]} p2={[0, ySign * (y - 5)]} {...markerProps} />
+      <>
+        <Circle
+          center={[xOffset, 0]}
+          r={1}
+          {...markerProps}
+          fill={outlineColor}
+        />
+        <Line p1={[xOffset, 0]} p2={[xOffset, ySign * 7]} {...markerProps} />
+      </>
     )
   } else {
-    const xSign = anchor === "left" ? -1 : 1
+    const xSign = anchor === "left" ? 1 : -1
     return (
-      <Line p1={[xSign * x, 0]} p2={[xSign * (x - 5), 0]} {...markerProps} />
+      <>
+        <Circle
+          center={[xOffset, 0]}
+          r={1}
+          {...markerProps}
+          fill={outlineColor}
+        />
+        <Line
+          p1={[xOffset, 0]}
+          p2={[xOffset + xSign * 7, 0]}
+          {...markerProps}
+        />
+      </>
     )
   }
 }
