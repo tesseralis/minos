@@ -20,57 +20,6 @@ const markerProps = {
   fill: "none",
 }
 
-function ConvexMarker() {
-  const r = 3
-  return (
-    <Polygon
-      points={[
-        [0, r],
-        [r, 0],
-        [0, -r],
-        [-r, 0],
-      ]}
-      {...markerProps}
-    />
-  )
-}
-
-function SemiconvexMarker() {
-  const r = 3
-  return (
-    <Polygon
-      points={[
-        [r, r],
-        [-r, 0],
-        [r, -r],
-        [0, 0],
-      ]}
-      {...markerProps}
-    />
-  )
-}
-
-function DirectedMarker({
-  anchor = "bottom left",
-  x = 15,
-  y = 15,
-}: {
-  anchor?: string
-  x?: number
-  y?: number
-}) {
-  const [vert, horiz] = anchor.split(" ")
-  const ySign = vert === "top" ? -1 : 1
-  const xSign = horiz === "left" ? -1 : 1
-  return (
-    <Line
-      p1={[xSign * x, ySign * y]}
-      p2={[xSign * (x - 5), ySign * (y - 5)]}
-      {...markerProps}
-    />
-  )
-}
-
 interface ClassType {
   // The type of symmetry
   type: MinoClass
@@ -144,7 +93,9 @@ const classTypes: ClassType[] = [
     mino: Polyomino.of("001_101_111"),
     markers: (
       <>
-        <SemiconvexMarker />
+        <SemiDirectedMarker anchor="bottom" />
+        <SemiDirectedMarker anchor="top" />
+        <SemiDirectedMarker anchor="left" />
         <DirectedMarker anchor="bottom left" />
         <DirectedMarker anchor="top left" />
       </>
@@ -157,25 +108,64 @@ const classTypes: ClassType[] = [
   },
   {
     type: "directed semiconvex",
-    mino: Polyomino.of("101_111_100"),
+    mino: Polyomino.of("101_111_110"),
     markers: (
       <>
-        <SemiconvexMarker />
         <DirectedMarker />
+        <SemiDirectedMarker anchor="bottom" />
+        <SemiDirectedMarker anchor="top" />
+        <SemiDirectedMarker anchor="left" />
+      </>
+    ),
+  },
+  {
+    type: "crescent",
+    mino: Polyomino.of("101_111_010"),
+    markers: (
+      <>
+        <SemiDirectedMarker anchor="bottom" />
+        <SemiDirectedMarker anchor="top" />
+        <SemiDirectedMarker anchor="left" />
+      </>
+    ),
+  },
+  {
+    type: "directed",
+    mino: Polyomino.of("110_101_111"),
+    markers: (
+      <>
+        <DirectedMarker />
+        <SemiDirectedMarker anchor="bottom" />
+        <SemiDirectedMarker anchor="left" />
+      </>
+    ),
+  },
+  {
+    type: "predirected",
+    mino: Polyomino.of("110_101_111_010"),
+    markers: (
+      <>
+        <SemiDirectedMarker anchor="bottom" y={12} />
+        <SemiDirectedMarker anchor="left" />
       </>
     ),
   },
   {
     type: "semiconvex",
-    mino: Polyomino.of("101_111_010"),
-    markers: <SemiconvexMarker />,
+    mino: Polyomino.of("101_111_101"),
+    markers: (
+      <>
+        <SemiDirectedMarker anchor="bottom" />
+        <SemiDirectedMarker anchor="top" />
+      </>
+    ),
   },
   {
-    type: "directed",
-    mino: Polyomino.of("110_101_111"),
-    markers: <DirectedMarker />,
+    type: "semidirected",
+    mino: Polyomino.of("110_101_111_101"),
+    markers: <SemiDirectedMarker y={12} />,
   },
-  { type: "other", mino: Polyomino.of("0011_1110_1011") },
+  { type: "other", mino: Polyomino.of("01111_10101_11110") },
 ]
 
 interface Props {
@@ -194,13 +184,18 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
         css={css`
           margin-top: 0.5rem;
           display: grid;
-          grid-gap: 0.5rem 1rem;
+          grid-gap: 1rem 0.75rem;
           grid-template-areas:
-            ".     .     rect"
-            ".     stair ferr"
-            "cvx   dcvx  stack"
-            "scvx  dscvx bar"
-            "other dir   .";
+            ".     .    rect  ."
+            ".     ferr rect  ."
+            "stair ferr stack ."
+            "stair dcvx stack bar"
+            "cvx   dcvx dscvx bar"
+            "cvx   cres dscvx dir"
+            "scvx  cres pdir  dir"
+            "scvx  sdir pdir  ."
+            ".     sdir other ."
+            ".     .    other .";
           justify-items: center;
         `}
       >
@@ -231,7 +226,7 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
                     mino={mino}
                     fill={checked ? getClassColor(cls) : "none"}
                     stroke={outlineColor}
-                    size={30 / mino.height}
+                    size={30 / Math.max(mino.height, mino.width)}
                     gridStyle="none"
                   >
                     {markers}
@@ -256,4 +251,57 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
       </div>
     </div>
   )
+}
+
+function DirectedMarker({
+  anchor = "bottom left",
+  x = 15,
+  y = 15,
+}: {
+  anchor?: string
+  x?: number
+  y?: number
+}) {
+  const [vert, horiz] = anchor.split(" ")
+  const ySign = vert === "top" ? -1 : 1
+  const xSign = horiz === "left" ? -1 : 1
+  return (
+    <Line
+      p1={[xSign * x, ySign * y]}
+      p2={[xSign * (x - 5), ySign * (y - 5)]}
+      {...markerProps}
+    />
+  )
+}
+
+function ConvexMarker() {
+  const r = 3
+  return (
+    <>
+      <Line p1={[0, r]} p2={[0, -r]} {...markerProps} />
+      <Line p1={[r, 0]} p2={[-r, 0]} {...markerProps} />
+    </>
+  )
+}
+
+function SemiDirectedMarker({
+  anchor = "bottom",
+  x = 15,
+  y = 15,
+}: {
+  anchor?: string
+  x?: number
+  y?: number
+}) {
+  if (anchor === "top" || anchor === "bottom") {
+    const ySign = anchor === "top" ? -1 : 1
+    return (
+      <Line p1={[0, ySign * y]} p2={[0, ySign * (y - 5)]} {...markerProps} />
+    )
+  } else {
+    const xSign = anchor === "left" ? -1 : 1
+    return (
+      <Line p1={[xSign * x, 0]} p2={[xSign * (x - 5), 0]} {...markerProps} />
+    )
+  }
 }
