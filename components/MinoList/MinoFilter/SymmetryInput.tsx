@@ -1,9 +1,7 @@
-import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getSymmetryColor } from "components/graph"
-import { Circle, Line } from "components/svg"
 
-import { Polyomino, Symmetry, printSymmetry, symmetries } from "mino"
+import { Symmetry, printSymmetry, symmetries } from "mino"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
 import * as Tooltip from "@radix-ui/react-tooltip"
