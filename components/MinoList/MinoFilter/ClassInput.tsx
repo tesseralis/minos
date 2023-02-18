@@ -190,12 +190,12 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
             ".     .    rect  ."
             ".     ferr rect  ."
             "stair ferr stack ."
-            "stair dcvx stack bar"
-            "cvx   dcvx dscvx bar"
-            "cvx   cres dscvx dir"
-            "scvx  cres pdir  dir"
-            "scvx  sdir pdir  ."
-            ".     sdir other ."
+            "stair fork stack bar"
+            "cross fork wing  bar"
+            "cross cres wing  ant"
+            "range cres btree ant"
+            "range tree btree ."
+            ".     tree other ."
             ".     .    other .";
           justify-items: center;
         `}
