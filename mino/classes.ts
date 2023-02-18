@@ -170,8 +170,6 @@ export default class MinoClasses {
   /** Returns whether the polyomino is directed at the given anchor */
   isSemiDirectedAtSide(side: Side) {
     // Get the two directions of that corner
-    // const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
-    // const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
     const directions = getDirectionsForSide(side)
     const start = this.pointAtSide(side)
     // Do BFS in three orthogonal directions

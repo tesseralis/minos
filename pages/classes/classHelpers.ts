@@ -48,6 +48,29 @@ function getBoundaryFamily(mino: Polyomino) {
     filtered = filtered.filter((f) => f.boundary().family().includes("lur"))
   }
 
+  // TODO these extra conditionals have to be in because there's a bug
+  // in `isPreDirected` affecting higher-classed minos
+  // Predirected (bent tree) minos should go from the bottom left
+  if (
+    !mino.classes.isDirected() &&
+    !mino.classes.isSemiConvex() &&
+    mino.classes.isPreDirected()
+  ) {
+    filtered = filtered.filter(
+      (f) =>
+        f.classes.isSemiDirectedAtSide("bottom") &&
+        f.classes.isSemiDirectedAtSide("left"),
+    )
+  }
+
+  if (
+    !mino.classes.isDirected() &&
+    !mino.classes.isSemiConvex() &&
+    mino.classes.isSemiDirected()
+  ) {
+    filtered = filtered.filter((f) => f.classes.isSemiDirectedAtSide("bottom"))
+  }
+
   const families = filtered.map((mino) => ({
     mino,
     family: mino.boundary().family(),
