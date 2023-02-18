@@ -1,3 +1,7 @@
-A polyomino is _semidirected_ from a side if every cell in the polyomino can be reached from an anchor cell without going towards the side. For example, a polyomino is semidirected from the bottom if every cell can be reached from an anchor cell by going up, left, or right, but not down.
+A polyomino is "orthogonally directed" in a direction if every cell in the polyomino can be reached from an anchor cell without going in the opposite direction. For example, it is up-directed if all cells can be reached from an anchor cell without going down. An orthogonally directed polyomino in any direction is called a _tree_.
 
-All other special classes can be built off this one.
+Note that the anchor cells are not necessarily unique. Also, trees can have "thick roots" (aka cycles) unlike graph theoretical trees.
+
+When a tree has an internal hole, it is called a "punctured tree". Trees without internal holes, and can be represented as a single boundary string, are atomic trees. Note that polyominoes with holes made when cells touch at a corner are still atomic.
+
+All other special classes can be built off this one, by restricting to polyominoes that are trees in two or more directions, or restricting the number of directions a polyomino can go in.
