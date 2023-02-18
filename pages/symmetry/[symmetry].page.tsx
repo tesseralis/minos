@@ -99,8 +99,8 @@ export default function SymmetryInfo({ symmetry, source }: Props) {
         </nav>
         <main
           css={css`
-            max-height: 100%;
-            padding: 2rem 0;
+            height: 100%;
+            padding: 2rem;
             overflow-y: scroll;
             h1 {
               margin: 0;

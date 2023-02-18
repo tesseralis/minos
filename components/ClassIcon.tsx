@@ -32,10 +32,10 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       markers: (
         <>
           <ConvexMarker />
-          <DirectedMarker anchor="bottom left" x={10} />
-          <DirectedMarker anchor="top left" x={10} />
-          <DirectedMarker anchor="top right" x={10} />
-          <DirectedMarker anchor="bottom right" x={10} />
+          <DirectedMarker anchor="bottom left" x={size / 3} />
+          <DirectedMarker anchor="top left" x={size / 3} />
+          <DirectedMarker anchor="top right" x={size / 3} />
+          <DirectedMarker anchor="bottom right" x={size / 3} />
         </>
       ),
     },
@@ -140,8 +140,8 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       mino: Polyomino.of("110_101_111_010"),
       markers: (
         <>
-          <SemiDirectedMarker anchor="bottom" xOffset={-3.5} />
-          <SemiDirectedMarker anchor="left" xOffset={-3.5} />
+          <SemiDirectedMarker anchor="bottom" xOffset={-size / 8} />
+          <SemiDirectedMarker anchor="left" xOffset={-size / 8} />
         </>
       ),
     },
@@ -158,34 +158,34 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     {
       type: "tree",
       mino: Polyomino.of("110_101_111_101"),
-      markers: <SemiDirectedMarker xOffset={-3.5} />,
+      markers: <SemiDirectedMarker xOffset={-size / 8} />,
     },
     { type: "other", mino: Polyomino.of("01111_10101_11110") },
   ]
 
   function DirectedMarker({
     anchor = "bottom left",
-    x = 15,
-    y = 15,
+    x = size / 2,
+    y = size / 2,
   }: {
     anchor?: string
     x?: number
     y?: number
   }) {
+    const offset = size / 6
     const [vert, horiz] = anchor.split(" ")
     const ySign = vert === "top" ? -1 : 1
     const xSign = horiz === "left" ? -1 : 1
     return (
       <Line
         p1={[xSign * x, ySign * y]}
-        p2={[xSign * (x - 5), ySign * (y - 5)]}
+        p2={[xSign * (x - offset), ySign * (y - offset)]}
         {...markerProps}
       />
     )
   }
 
   function ConvexMarker() {
-    const r = 3
     return (
       <>
         <SemiDirectedMarker anchor="bottom" />
@@ -203,12 +203,23 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     anchor?: string
     xOffset?: number
   }) {
+    const offset = size / 4
     if (anchor === "top" || anchor === "bottom") {
       const ySign = anchor === "top" ? 1 : -1
+      const radius = size / 15
       return (
         <>
-          <Circle center={[xOffset, 0]} r={1} {...markerProps} fill={stroke} />
-          <Line p1={[xOffset, 0]} p2={[xOffset, ySign * 7]} {...markerProps} />
+          <Circle
+            center={[xOffset, 0]}
+            r={radius}
+            {...markerProps}
+            fill={stroke}
+          />
+          <Line
+            p1={[xOffset, 0]}
+            p2={[xOffset, ySign * offset]}
+            {...markerProps}
+          />
         </>
       )
     } else {
@@ -218,7 +229,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
           <Circle center={[xOffset, 0]} r={1} {...markerProps} fill={stroke} />
           <Line
             p1={[xOffset, 0]}
-            p2={[xOffset + xSign * 7, 0]}
+            p2={[xOffset + xSign * offset, 0]}
             {...markerProps}
           />
         </>
@@ -233,7 +244,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       mino={mino}
       fill={fill}
       stroke={stroke}
-      size={30 / Math.max(mino.height, mino.width)}
+      size={size / Math.max(mino.height, mino.width)}
       gridStyle="none"
     >
       {markers}
