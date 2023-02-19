@@ -32,6 +32,7 @@ export default function NavAndContent({ nav, children, columns }: Props) {
       </nav>
       <main
         css={css`
+          width: 100%;
           height: 100%;
           padding: 2rem;
           overflow-y: scroll;
