@@ -4,32 +4,17 @@ import { css } from "@emotion/react"
 
 import { colors } from "style/theme"
 import { media } from "style/media"
-import { useCallback, useEffect, useLayoutEffect, useState } from "react"
 import * as NavMenu from "@radix-ui/react-navigation-menu"
+import Responsive from "./Responsive"
 
 export default function Nav() {
-  const [showSidebar, setShowSidebar] = useState(true)
-
-  const updateSidebar = useCallback((e: any) => {
-    return setShowSidebar(e.matches)
-  }, [])
-
-  // FIXME are you supposed to use `useLayoutEffect here?`
-  // There's still a FOUC on initial page load
-  // https://stackoverflow.com/a/70219419
-  useLayoutEffect(() => {
-    if (typeof window !== "undefined") {
-      const sidebarWatcher = window.matchMedia(media.lg)
-      sidebarWatcher.addEventListener("change", updateSidebar)
-      setShowSidebar(sidebarWatcher.matches)
-      // if (sidebarWatcher.matches) {
-      //   setShowSidebar(true)
-      // }
-      return () => sidebarWatcher.removeEventListener("change", updateSidebar)
-    }
-  }, [updateSidebar])
-
-  return showSidebar ? <DesktopNav /> : <MobileNav />
+  return (
+    <Responsive
+      query={media.lg}
+      match={<DesktopNav />}
+      default={<MobileNav />}
+    />
+  )
 }
 
 function DesktopNav() {
