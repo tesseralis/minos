@@ -15,6 +15,7 @@ import ClassList from "./ClassList"
 import { colors } from "style/theme"
 import ClassIcon from "components/ClassIcon"
 import { getClassColor } from "components/graph"
+import NavAndContent from "components/NavAndContent"
 
 // TODO deduplicate with symmetry nav
 function ClassNav() {
@@ -67,84 +68,73 @@ export default function ClassInfo({ class: cls, source }: Props) {
   const router = useRouter()
   return (
     <Layout>
-      <div
-        css={css`
-          position: absolute;
-          height: 100%;
-          display: grid;
-          grid-template-columns: 24rem 1fr;
-          gap: 2rem;
-        `}
+      <NavAndContent
+        columns="24rem 1fr"
+        nav={
+          <div
+            css={css`
+              padding-top: 2rem;
+              display: grid;
+              align-content: start;
+              gap: 2rem 1rem;
+              grid-template-columns: repeat(4, 1fr);
+              grid-template-areas:
+                ".     .    rect  ."
+                ".     ferr rect  ."
+                "stair ferr stack ."
+                "stair fork stack bar"
+                "cross fork wing  bar"
+                "cross cres wing  ant"
+                "range cres btree ant"
+                "range tree btree ."
+                ".     tree other ."
+                ".     .    other .";
+            `}
+          >
+            {minoClasses
+              .filter((x) => x !== "punctured rectangle")
+              .map((cls) => {
+                const route = `/classes/${escapeClass(cls)}`
+                const isActive = router.asPath === route
+                return (
+                  <Link
+                    key={cls}
+                    href={route}
+                    css={css`
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      text-align: center;
+                      gap: 0.5rem;
+                      grid-area: ${getClassCode(cls)};
+                      text-decoration: ${isActive ? "underline" : "none"};
+                    `}
+                  >
+                    <ClassIcon
+                      class={cls}
+                      fill={"none"}
+                      stroke={getClassColor(cls)}
+                      size={60}
+                    />
+                    {capitalize(cls)}
+                  </Link>
+                )
+              })}
+          </div>
+        }
       >
-        <nav
+        <Link href="/classes">Back</Link>
+        <h1
           css={css`
-            padding-top: 2rem;
-            display: grid;
-            align-content: start;
-            gap: 2rem 1rem;
-            grid-template-columns: repeat(4, 1fr);
-            grid-template-areas:
-              ".     .    rect  ."
-              ".     ferr rect  ."
-              "stair ferr stack ."
-              "stair fork stack bar"
-              "cross fork wing  bar"
-              "cross cres wing  ant"
-              "range cres btree ant"
-              "range tree btree ."
-              ".     tree other ."
-              ".     .    other .";
+            margin: 0;
           `}
         >
-          {minoClasses
-            .filter((x) => x !== "punctured rectangle")
-            .map((cls) => {
-              const route = `/classes/${escapeClass(cls)}`
-              const isActive = router.asPath === route
-              return (
-                <Link
-                  key={cls}
-                  href={route}
-                  css={css`
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    gap: 0.5rem;
-                    grid-area: ${getClassCode(cls)};
-                    text-decoration: ${isActive ? "underline" : "none"};
-                  `}
-                >
-                  <ClassIcon
-                    class={cls}
-                    fill={"none"}
-                    stroke={getClassColor(cls)}
-                    size={60}
-                  />
-                  {capitalize(cls)}
-                </Link>
-              )
-            })}
-        </nav>
-        <main
-          css={css`
-            padding: 2rem;
-            max-height: 100%;
-            max-width: 100%;
-            overflow-y: scroll;
-
-            h1 {
-              margin: 0;
-            }
-          `}
-        >
-          <Link href="/classes">Back</Link>
-          <h1>{capitalize(cls)} polyomino</h1>
-          <MDXRemote {...source} />
-          <h2>Polyomino list</h2>
-          <ClassList minos={getBoundaryFamilies(cls)} />
-        </main>
-      </div>
+          {capitalize(cls)} polyomino
+        </h1>
+        <MDXRemote {...source} />
+        <h2>Polyomino list</h2>
+        <ClassList minos={getBoundaryFamilies(cls)} />
+      </NavAndContent>
     </Layout>
   )
 }

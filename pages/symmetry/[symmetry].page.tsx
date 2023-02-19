@@ -15,6 +15,7 @@ import { getMinosForSymmetry } from "./symmetryHelpers"
 import SymmetryIcon from "components/SymmetryIcon"
 import { getSymmetryColor } from "components/graph"
 import { capitalize } from "lodash"
+import NavAndContent from "components/NavAndContent"
 const longName: Record<Symmetry, string> = {
   all: "Full symmetry",
   axis2: "Reflective symmetry (2 axes)",
@@ -35,85 +36,76 @@ export default function SymmetryInfo({ symmetry, source }: Props) {
   const router = useRouter()
   return (
     <Layout>
-      <div
-        css={css`
-          position: absolute;
-          display: grid;
-          grid-template-columns: 24rem 1fr;
-          gap: 2rem;
-          height: 100%;
-        `}
+      <NavAndContent
+        columns="24rem 1fr"
+        nav={
+          <div
+            css={css`
+              display: grid;
+              padding-top: 2rem;
+              gap: 1rem 0.75rem;
+              align-content: start;
+              grid-template-areas:
+                ".     all  ."
+                "axis2 rot2 diag2"
+                "axis  rot  diag"
+                ".     none .";
+            `}
+          >
+            {symmetries.map((symmetry) => {
+              const route = `/symmetry/${symmetry}`
+              const isActive = router.asPath === route
+              const name = capitalize(printSymmetry(symmetry))
+              // split into two lines based on where the first space is
+              // https://stackoverflow.com/a/4607799 (why is JS so bad)
+              const [first, last] = name.split(/ (.*)/)
+              return (
+                <Link
+                  key={symmetry}
+                  href={route}
+                  css={css`
+                    grid-area: ${symmetry};
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    gap: 0.5rem;
+                    text-decoration: ${isActive ? "underline" : "none"};
+                  `}
+                >
+                  <SymmetryIcon
+                    symmetry={symmetry}
+                    size={50}
+                    fill="none"
+                    stroke={getSymmetryColor(symmetry)}
+                  />
+                  {last ? (
+                    <>
+                      {first}
+                      <br />
+                      {last}
+                    </>
+                  ) : (
+                    first
+                  )}
+                </Link>
+              )
+            })}
+          </div>
+        }
       >
-        <nav
+        <Link href="/symmetry">Back</Link>
+        <h1
           css={css`
-            display: grid;
-            padding-top: 2rem;
-            gap: 1rem 0.75rem;
-            align-content: start;
-            grid-template-areas:
-              ".     all  ."
-              "axis2 rot2 diag2"
-              "axis  rot  diag"
-              ".     none .";
+            margin: 0;
           `}
         >
-          {symmetries.map((symmetry) => {
-            const route = `/symmetry/${symmetry}`
-            const isActive = router.asPath === route
-            const name = capitalize(printSymmetry(symmetry))
-            // split into two lines based on where the first space is
-            // https://stackoverflow.com/a/4607799 (why is JS so bad)
-            const [first, last] = name.split(/ (.*)/)
-            return (
-              <Link
-                key={symmetry}
-                href={route}
-                css={css`
-                  grid-area: ${symmetry};
-                  display: flex;
-                  flex-direction: column;
-                  align-items: center;
-                  text-align: center;
-                  gap: 0.5rem;
-                  text-decoration: ${isActive ? "underline" : "none"};
-                `}
-              >
-                <SymmetryIcon
-                  symmetry={symmetry}
-                  size={50}
-                  fill="none"
-                  stroke={getSymmetryColor(symmetry)}
-                />
-                {last ? (
-                  <>
-                    {first}
-                    <br />
-                    {last}
-                  </>
-                ) : (
-                  first
-                )}
-              </Link>
-            )
-          })}
-        </nav>
-        <main
-          css={css`
-            height: 100%;
-            padding: 2rem;
-            overflow-y: scroll;
-            h1 {
-              margin: 0;
-            }
-          `}
-        >
-          <Link href="/symmetry">Back</Link>
-          <h1>{longName[symmetry]}</h1>
-          <MDXRemote {...source} />
-          <h2>Polyomino list</h2>
-          <MinoList minos={getMinosForSymmetry(symmetry)} />
-        </main>
-      </div>
+          {longName[symmetry]}
+        </h1>
+        <MDXRemote {...source} />
+        <h2>Polyomino list</h2>
+        <MinoList minos={getMinosForSymmetry(symmetry)} />
+      </NavAndContent>
     </Layout>
   )
 }

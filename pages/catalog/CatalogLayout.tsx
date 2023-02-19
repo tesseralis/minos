@@ -13,6 +13,7 @@ import MinoLink from "components/MinoLink"
 import MinoDiv from "components/MinoDiv"
 import Tiling from "components/Tiling"
 import { useRouter } from "next/router"
+import NavAndContent from "components/NavAndContent"
 
 interface MinoDatum {
   name: string
@@ -172,34 +173,17 @@ export default function CatalogLayout({
   const polyomino = mino ? Polyomino.fromString(mino as any) : null
   return (
     <Layout>
-      <div
-        css={css`
-          position: fixed;
-          height: 100%;
-          display: grid;
-          grid-template-columns: 1fr 28rem;
-          gap: 2rem;
-        `}
-      >
-        <div
-          css={css`
-            overflow-y: scroll;
-          `}
-        >
+      <NavAndContent
+        columns="1fr 28rem"
+        nav={
           <MinoList
             to={(mino) => `/catalog/${mino.toString()}`}
             selected={polyomino}
           />
-        </div>
-        <main
-          css={css`
-            padding: 2rem;
-            overflow-y: scroll;
-          `}
-        >
-          {children}
-        </main>
-      </div>
+        }
+      >
+        {children}
+      </NavAndContent>
     </Layout>
   )
 }

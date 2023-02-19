@@ -4,10 +4,10 @@ import { Polyomino } from "mino"
 import Tiling from "components/Tiling"
 import MinoList from "components/MinoList"
 import Layout from "components/Layout"
-import Info from "./Info.mdx"
 import Link from "next/link"
 import { ReactElement } from "react"
 import { useRouter } from "next/router"
+import NavAndContent from "components/NavAndContent"
 
 // TODO add other information in here
 export function TilingView({ mino }: { mino: Polyomino }) {
@@ -31,36 +31,19 @@ export default function TilingLayout({ children }: { children: ReactElement }) {
   const { mino } = router.query
   return (
     <Layout>
-      <div
-        css={css`
-          position: fixed;
-          height: 100%;
-
-          display: grid;
-          grid-template-columns: 24rem 1fr;
-          grid-gap: 2rem;
-
-          > main {
-            margin-top: 2rem;
-            max-width: 36rem;
-          }
-        `}
-      >
-        <div
-          css={css`
-            overflow-y: scroll;
-          `}
-        >
-          {/* TODO (perf): starting with an initial filter makes this really slow */}
+      <NavAndContent
+        columns="24rem 1fr"
+        nav={
           <MinoList
             narrow
             initFilter={{ yesNo: { hasTiling: "yes" } }}
             selected={mino ? Polyomino.fromString(mino as any) : null}
             to={(mino) => `/tiling/${mino.toString()}`}
           />
-        </div>
-        <main>{children}</main>
-      </div>
+        }
+      >
+        {children}
+      </NavAndContent>
     </Layout>
   )
 }

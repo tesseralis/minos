@@ -5,6 +5,7 @@ import Layout from "components/Layout"
 import { orderName } from "mino"
 import { colors } from "style/theme"
 import { useRouter } from "next/router"
+import NavAndContent from "components/NavAndContent"
 
 const sizes = ["1_4", 5, 6, 7, 8]
 const shapes = ["rect", "square"]
@@ -24,10 +25,9 @@ function getShapeText(shape: string) {
 function PatternNav() {
   const router = useRouter()
   return (
-    <nav
+    <div
       css={css`
         margin-top: 2rem;
-        width: 18rem;
       `}
     >
       {sizes.map((size) => (
@@ -72,30 +72,16 @@ function PatternNav() {
           </div>
         </section>
       ))}
-    </nav>
+    </div>
   )
 }
 
 export default function PackingLayout({ children }: { children: ReactNode }) {
   return (
     <Layout>
-      <div
-        css={css`
-          overflow-y: scroll;
-          display: flex;
-        `}
-      >
-        <PatternNav />
-        <main
-          css={css`
-            margin: 1rem 0;
-            width: 100%;
-            max-width: 36rem;
-          `}
-        >
-          {children}
-        </main>
-      </div>
+      <NavAndContent columns="18rem 1fr" nav={<PatternNav />}>
+        {children}
+      </NavAndContent>
     </Layout>
   )
 }
