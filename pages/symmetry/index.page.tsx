@@ -54,16 +54,16 @@ export default function SymmetryChart() {
       <main
         css={css`
           padding: 2rem 0;
-          display: grid;
+          display: flex;
+          flex-direction: column;
           gap: 1rem;
-          grid-template-areas:
-            "info  all  ."
-            "axis2 rot2 diag2"
-            "axis  rot  diag"
-            "none  none none";
           @media ${media.sm} {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-areas:
+              "info  all  ."
+              "axis2 rot2 diag2"
+              "axis  rot  diag"
+              "none  none none";
           }
         `}
       >
