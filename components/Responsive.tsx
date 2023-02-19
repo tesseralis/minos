@@ -1,4 +1,4 @@
-import { css } from "@emotion/css"
+import { css } from "@emotion/react"
 import React, { ReactNode, useCallback, useEffect, useState } from "react"
 
 interface Props {
@@ -13,6 +13,7 @@ interface Props {
  * another thing if it doesn't.
  */
 export default function Responsive({ query, match, default: def }: Props) {
+  // TODO fix this; setting it to "initial" doesn't actually work
   const [isMatch, setIsMatch] = useState<"initial" | boolean>("initial")
   const shouldShowMatch = isMatch === "initial" || !!isMatch
   const shouldShowDefault = isMatch === "initial" || !isMatch
@@ -25,7 +26,7 @@ export default function Responsive({ query, match, default: def }: Props) {
     if (typeof window !== "undefined") {
       const watcher = window.matchMedia(query)
       watcher.addEventListener("change", updateMatch)
-      setIsMatch(watcher.matches)
+      // setIsMatch(watcher.matches)
       return () => watcher.removeEventListener("change", updateMatch)
     }
   }, [updateMatch])

@@ -22,13 +22,8 @@ function DesktopNav() {
   return (
     <nav
       css={css`
-        display: none;
         font-family: serif;
         margin-left: 2rem;
-
-        @media ${media.lg} {
-          display: block;
-        }
       `}
     >
       <Title />
