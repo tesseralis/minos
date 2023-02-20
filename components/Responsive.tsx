@@ -36,6 +36,7 @@ export default function Responsive({ query, match, default: def }: Props) {
     <>
       {shouldShowMatch && (
         <div
+          data-matches="true"
           css={css`
             @media not ${query} {
               display: none;
@@ -47,6 +48,7 @@ export default function Responsive({ query, match, default: def }: Props) {
       )}
       {shouldShowDefault && (
         <div
+          data-matches="false"
           css={css`
             @media ${query} {
               display: none;

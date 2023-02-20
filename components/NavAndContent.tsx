@@ -1,5 +1,7 @@
 import { ReactNode } from "react"
 import { css } from "@emotion/react"
+import Responsive from "./Responsive"
+import { media } from "style/media"
 
 interface Props {
   nav: ReactNode
@@ -17,19 +19,31 @@ export default function NavAndContent({ nav, children, columns }: Props) {
       css={css`
         position: absolute;
         display: grid;
-        grid-template-columns: ${columns};
         gap: 2rem;
         height: 100%;
+        @media ${media.sm} {
+          grid-template-columns: ${columns};
+        }
+
+        [data-matches="true"] {
+          overflow-y: hidden;
+        }
       `}
     >
-      <nav
-        css={css`
-          height: 100%;
-          overflow-y: scroll;
-        `}
-      >
-        {nav}
-      </nav>
+      <Responsive
+        query={media.sm}
+        match={
+          <nav
+            css={css`
+              height: 100%;
+              overflow-y: scroll;
+            `}
+          >
+            {nav}
+          </nav>
+        }
+        default={null}
+      />
       <main
         css={css`
           width: 100%;
