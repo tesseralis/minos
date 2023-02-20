@@ -2,6 +2,9 @@ import { ReactNode } from "react"
 import { css } from "@emotion/react"
 import Responsive from "./Responsive"
 import { media } from "style/media"
+import * as Dialog from "@radix-ui/react-dialog"
+import { colors } from "style/theme"
+import { Cross1Icon, RowsIcon } from "@radix-ui/react-icons"
 
 interface Props {
   nav: ReactNode
@@ -41,7 +44,7 @@ export default function NavAndContent({ nav, children, columns }: Props) {
             {nav}
           </nav>
         }
-        default={null}
+        default={<MobileNavDialog content={nav} />}
       />
       <main
         css={css`
@@ -54,5 +57,67 @@ export default function NavAndContent({ nav, children, columns }: Props) {
         {children}
       </main>
     </div>
+  )
+}
+
+interface DialogProps {
+  content: ReactNode
+}
+
+function MobileNavDialog({ content }: DialogProps) {
+  return (
+    <Dialog.Root>
+      <Dialog.Trigger
+        css={css`
+          position: fixed;
+          left: 0;
+          bottom: 10%;
+          background: ${colors.bg};
+
+          color: ${colors.fg};
+          padding: 1rem;
+          padding-right: 1.25rem;
+
+          border: 1px solid ${colors.border};
+          border-left: none;
+          border-top-right-radius: 9999px;
+          border-bottom-right-radius: 9999px;
+        `}
+      >
+        <RowsIcon width={40} height={40} />
+      </Dialog.Trigger>
+      <Dialog.Portal>
+        <Dialog.Overlay
+          css={css`
+            background-color: black;
+            opacity: 25%;
+          `}
+        />
+        <Dialog.Content
+          css={css`
+            background-color: ${colors.bg};
+            position: fixed;
+            height: 100vh;
+            width: calc(100vw - 2rem);
+            border-right: 1px solid ${colors.border};
+            box-shadow: 2px 2px 8px #111;
+          `}
+        >
+          {content}
+          <Dialog.Close
+            css={css`
+              position: absolute;
+              right: 1rem;
+              top: 1rem;
+              background: none;
+              border: none;
+              color: ${colors.fg};
+            `}
+          >
+            <Cross1Icon />
+          </Dialog.Close>
+        </Dialog.Content>
+      </Dialog.Portal>
+    </Dialog.Root>
   )
 }
