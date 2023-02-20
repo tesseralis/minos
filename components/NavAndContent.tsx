@@ -17,11 +17,10 @@ export default function NavAndContent({ nav, children, columns }: Props) {
   return (
     <div
       css={css`
-        position: absolute;
-        display: grid;
-        gap: 2rem;
         height: 100%;
         @media ${media.sm} {
+          display: grid;
+          gap: 2rem;
           grid-template-columns: ${columns};
         }
 

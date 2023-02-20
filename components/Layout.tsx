@@ -18,7 +18,6 @@ export default function Layout({ subNav, children }: Props) {
           position: fixed;
           width: 100vw;
           height: 100vh;
-          /* padding: 0 2rem; */
 
           @media ${media.lg} {
             display: grid;
@@ -41,7 +40,6 @@ export default function Layout({ subNav, children }: Props) {
             width: 100%;
             height: 100%;
             overflow-y: scroll;
-            padding: 0 2rem;
           `}
         >
           {children}
