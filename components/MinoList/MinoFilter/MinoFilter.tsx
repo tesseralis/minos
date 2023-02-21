@@ -11,21 +11,16 @@ import { FilterOptions } from "./common"
 interface Props {
   value: FilterOptions
   onUpdate(value: FilterOptions): void
-  narrow?: boolean
 }
 
-function FilterForm({ narrow, value, onUpdate }: Props) {
+function FilterForm({ value, onUpdate }: Props) {
   return (
     <form
       css={css`
         margin: 0 4rem;
         display: flex;
         flex-wrap: wrap;
-
-        > *:not(:first-child) {
-          margin-left: ${narrow ? 0 : "2rem"};
-          margin-top: ${narrow ? "2rem" : 0};
-        }
+        gap: 3rem;
       `}
     >
       <SymmetryInput

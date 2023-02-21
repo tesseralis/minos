@@ -9,7 +9,6 @@ import Filter, { FilterOptions, applyFilter } from "./MinoFilter"
 const START_GENS = 6
 
 interface Props {
-  narrow?: boolean
   selected?: Polyomino | null
   initFilter?: FilterOptions
   to(mino: Polyomino): string
@@ -35,7 +34,6 @@ function NoMatches() {
 export default function MinoList({
   selected = null,
   to,
-  narrow,
   initFilter = {},
 }: Props) {
   const [filter, setFilter] = useState<FilterOptions>(initFilter)
@@ -44,12 +42,13 @@ export default function MinoList({
 
   return (
     <div>
-      <Filter value={filter} onUpdate={setFilter} narrow={narrow} />
+      <Filter value={filter} onUpdate={setFilter} />
       <div
         css={css`
           display: flex;
           flex-wrap: wrap;
           justify-content: space-around;
+          gap: 2rem;
         `}
       >
         {minoSets.every((set) => set.length === 0) ? (
@@ -60,7 +59,6 @@ export default function MinoList({
             const hasSelected = !!selected && selected.order === gen
             return (
               <GenerationList
-                narrow={narrow}
                 minos={minos}
                 gen={gen}
                 key={gen}

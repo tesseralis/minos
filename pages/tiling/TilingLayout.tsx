@@ -35,7 +35,6 @@ export default function TilingLayout({ children }: { children: ReactElement }) {
         columns="24rem 1fr"
         nav={
           <MinoList
-            narrow
             initFilter={{ yesNo: { hasTiling: "yes" } }}
             selected={mino ? Polyomino.fromString(mino as any) : null}
             to={(mino) => `/tiling/${mino.toString()}`}

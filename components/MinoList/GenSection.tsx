@@ -48,13 +48,12 @@ interface Props {
   gen: number
   count: number
   children: ReactNode
-  narrow?: boolean
 }
 
 /**
  * A wrapper for a generation section that includes a title
  */
-export default function GenSection({ gen, count, children, narrow }: Props) {
+export default function GenSection({ gen, count, children }: Props) {
   return (
     <section
       css={css`
@@ -62,7 +61,8 @@ export default function GenSection({ gen, count, children, narrow }: Props) {
         display: flex;
         flex-direction: column;
         align-items: center;
-        width: ${!narrow && gen <= 4 ? 50 : 100}%;
+        width: max-content;
+        flex-grow: 1;
         :not(:last-child) {
           border-bottom: 1px ${colors.fg} solid;
         }

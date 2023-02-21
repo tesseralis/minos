@@ -18,7 +18,6 @@ interface Props {
   selected: Polyomino | null
   to(mino: Polyomino): string
   skipAnimation: boolean
-  narrow?: boolean
 }
 
 /**
@@ -30,7 +29,6 @@ export default memo(function GenerationList({
   skipAnimation,
   to,
   selected,
-  narrow,
 }: Props) {
   const [visIndex, setVisIndex] = useState(0)
   useEffect(() => {
@@ -47,7 +45,7 @@ export default memo(function GenerationList({
   }, [minos, skipAnimation])
 
   return (
-    <GenSection gen={gen} narrow={narrow} count={minos.length}>
+    <GenSection gen={gen} count={minos.length}>
       <div
         css={css`
           display: flex;
