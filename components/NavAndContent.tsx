@@ -44,7 +44,20 @@ export default function NavAndContent({ nav, children, columns }: Props) {
             {nav}
           </nav>
         }
-        default={<MobileNavDialog content={nav} />}
+        default={
+          <MobileNavDialog
+            content={
+              <nav
+                css={css`
+                  height: 100%;
+                  overflow-y: scroll;
+                `}
+              >
+                {nav}
+              </nav>
+            }
+          />
+        }
       />
       <main
         css={css`
@@ -71,7 +84,7 @@ function MobileNavDialog({ content }: DialogProps) {
         css={css`
           position: fixed;
           left: 0;
-          bottom: 10%;
+          bottom: 2rem;
           background: ${colors.bg};
 
           color: ${colors.fg};
