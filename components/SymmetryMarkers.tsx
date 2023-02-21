@@ -13,7 +13,7 @@ interface Props extends SVGProps<any> {
  */
 export default function SymmetryMarkers({ mino, size, ...svgProps }: Props) {
   const [width, height] = mino.dims.map((dim) => dim * size)
-  const overflow = size / 2
+  const overflow = size / 4
   const left = -width / 2 - overflow
   const right = width / 2 + overflow
   const top = -height / 2 - overflow
