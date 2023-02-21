@@ -2,6 +2,8 @@ import { Polyomino, Symmetry } from "mino"
 import React, { ReactNode } from "react"
 import { Circle, Line } from "components/svg"
 import MinoDiv from "./MinoDiv"
+import { css } from "@emotion/react"
+import tinycolor from "tinycolor2"
 
 interface Props {
   symmetry: Symmetry
@@ -12,15 +14,18 @@ interface Props {
 
 // Icon representing a particular symmetry class
 export default function SymmetryIcon({ symmetry, fill, stroke, size }: Props) {
+  const minoStroke = tinycolor(stroke).setAlpha(0.5).toString()
   // Common prop values for the symmetry lines
   const markerProps = {
     stroke,
-    strokeWidth: 1,
+    strokeWidth: size / 25,
     fill: "none",
   }
 
-  const linePos = size / 2
-  const radius = size / 3
+  const linePos = size / 2 + size / 10
+  const radius = size / 2 - size / 10
+
+  const circumference = 2 * Math.PI * radius
 
   const symmetryTypes: SymmetryType[] = [
     {
@@ -74,7 +79,13 @@ export default function SymmetryIcon({ symmetry, fill, stroke, size }: Props) {
     {
       type: "rot2",
       mino: Polyomino.of("0010_1110_0111_0100"),
-      markers: <Circle r={radius} {...markerProps} />,
+      markers: (
+        <Circle
+          r={radius}
+          strokeDasharray={`${0.125 * circumference} ${0.125 * circumference}`}
+          {...markerProps}
+        />
+      ),
     },
     {
       type: "axis",
@@ -95,22 +106,36 @@ export default function SymmetryIcon({ symmetry, fill, stroke, size }: Props) {
     {
       type: "rot",
       mino: Polyomino.of("001_111_100"),
-      markers: <Circle r={radius} {...markerProps} />,
+      markers: (
+        <Circle
+          r={radius}
+          strokeDasharray={`${0.25 * circumference} ${0.25 * circumference}`}
+          {...markerProps}
+        />
+      ),
     },
     { type: "none", mino: Polyomino.of("010_110_011") },
   ]
   const { mino, markers } = symmetryTypes.find((s) => s.type === symmetry)!
 
   return (
-    <MinoDiv
-      mino={mino}
-      fill={fill}
-      stroke={stroke}
-      size={size / mino.height}
-      gridStyle="none"
+    <div
+      css={css`
+        > svg {
+          overflow: visible;
+        }
+      `}
     >
-      {markers}
-    </MinoDiv>
+      <MinoDiv
+        mino={mino}
+        fill={fill}
+        stroke={minoStroke}
+        size={size / mino.height}
+        gridStyle="none"
+      >
+        {markers}
+      </MinoDiv>
+    </div>
   )
 }
 
