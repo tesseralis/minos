@@ -42,7 +42,7 @@ interface ExtendedSVGProps {
   onHover?(hovered: boolean): void
 }
 
-interface SVGProps<T>
+export interface SVGProps<T>
   extends Omit<ReactSVGProps<T>, keyof ExtendedSVGProps>,
     ExtendedSVGProps {}
 

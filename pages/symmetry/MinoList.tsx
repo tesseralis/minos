@@ -1,8 +1,9 @@
 import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
-import { Polyomino, Symmetry } from "mino"
+import { Symmetry } from "mino"
 import MinoLink from "components/MinoLink"
 import { getMinosForSymmetry } from "./symmetryHelpers"
+import SymmetryMarkers from "components/SymmetryMarkers"
 
 export default function MinoList({ symmetry }: { symmetry: Symmetry }) {
   const minos = getMinosForSymmetry(symmetry)
@@ -49,7 +50,17 @@ export default function MinoList({ symmetry }: { symmetry: Symmetry }) {
                     size={minoSize}
                     fill={fill}
                     stroke={stroke}
-                  />
+                    gridStyle="thin"
+                  >
+                    {
+                      <SymmetryMarkers
+                        mino={mino}
+                        size={minoSize}
+                        strokeWidth={2}
+                        stroke={"white"}
+                      />
+                    }
+                  </MinoLink>
                 )
               })}
             </div>

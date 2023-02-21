@@ -1,7 +1,7 @@
 import Link from "next/link"
 import MinoDiv, { Props as MinoDivProps } from "components/MinoDiv"
 
-interface Props extends Omit<MinoDivProps, "onClick" | "children"> {
+interface Props extends Omit<MinoDivProps, "onClick"> {
   to: string
 }
 
