@@ -1,4 +1,4 @@
-import { ReactNode } from "react"
+import { ReactNode, useCallback, useState } from "react"
 import { css } from "@emotion/react"
 import Responsive from "./Responsive"
 import { media } from "style/media"
@@ -78,8 +78,17 @@ interface DialogProps {
 }
 
 function MobileNavDialog({ content }: DialogProps) {
+  const [state, setState] = useState<"open" | "pending" | "closed">("closed")
+  const timeoutMs = 200
+  const isOpen = state !== "closed"
+  const onOpenChange = useCallback((open: boolean) => {
+    setState("pending")
+    setTimeout(() => {
+      setState(open ? "open" : "closed")
+    }, timeoutMs)
+  }, [])
   return (
-    <Dialog.Root>
+    <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Trigger
         css={css`
           position: fixed;
@@ -107,6 +116,7 @@ function MobileNavDialog({ content }: DialogProps) {
           `}
         />
         <Dialog.Content
+          data-state={state}
           css={css`
             background-color: ${colors.bg};
             position: fixed;
@@ -114,6 +124,16 @@ function MobileNavDialog({ content }: DialogProps) {
             width: calc(100vw - 2rem);
             border-right: 1px solid ${colors.border};
             box-shadow: 2px 2px 8px #111;
+
+            transition: transform ${timeoutMs}ms ease-in;
+
+            &[data-state="pending"] {
+              transform: translate(-100%);
+            }
+
+            &[data-state="open"] {
+              transform: initial;
+            }
           `}
         >
           {content}
