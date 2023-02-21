@@ -104,7 +104,7 @@ export default function SymmetryInfo({ symmetry, source }: Props) {
         </h1>
         <MDXRemote {...source} />
         <h2>Polyomino list</h2>
-        <MinoList minos={getMinosForSymmetry(symmetry)} />
+        <MinoList symmetry={symmetry} />
       </NavAndContent>
     </Layout>
   )

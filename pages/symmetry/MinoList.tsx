@@ -1,9 +1,12 @@
 import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
-import { Polyomino } from "mino"
+import { Polyomino, Symmetry } from "mino"
 import MinoLink from "components/MinoLink"
+import { getMinosForSymmetry } from "./symmetryHelpers"
 
-export default function MinoList({ minos }: { minos: Polyomino[][] }) {
+export default function MinoList({ symmetry }: { symmetry: Symmetry }) {
+  const minos = getMinosForSymmetry(symmetry)
+  const minoSize = getMinoSize(symmetry)
   return (
     <div
       css={css`
@@ -43,7 +46,7 @@ export default function MinoList({ minos }: { minos: Polyomino[][] }) {
                     to={`/catalog/${mino.toString()}`}
                     key={mino.data}
                     mino={mino}
-                    size={8}
+                    size={minoSize}
                     fill={fill}
                     stroke={stroke}
                   />
@@ -55,4 +58,21 @@ export default function MinoList({ minos }: { minos: Polyomino[][] }) {
       })}
     </div>
   )
+}
+
+function getMinoSize(symmetry: Symmetry) {
+  switch (symmetry) {
+    case "all":
+    case "rot2":
+    case "diag2":
+      return 13
+    case "axis2":
+    case "rot":
+    case "diag":
+      return 9
+    case "axis":
+      return 8
+    case "none":
+      return 7
+  }
 }

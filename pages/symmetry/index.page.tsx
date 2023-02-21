@@ -18,6 +18,7 @@ function SymmetryClass({ sym }: { sym: Symmetry }) {
 
         h2 {
           margin: 0;
+          margin-bottom: 0.75rem;
           font-size: 1.25rem;
         }
       `}
@@ -25,7 +26,7 @@ function SymmetryClass({ sym }: { sym: Symmetry }) {
       <h2>
         <Link href={`/symmetry/${sym}`}>{capitalize(printSymmetry(sym))}</Link>
       </h2>
-      <MinoList minos={getMinosForSymmetry(sym)} />
+      <MinoList symmetry={sym} />
     </section>
   )
 }
