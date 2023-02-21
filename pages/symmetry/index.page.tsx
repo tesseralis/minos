@@ -53,7 +53,7 @@ export default function SymmetryChart() {
     <Layout>
       <main
         css={css`
-          padding: 2rem 0;
+          padding: 2rem;
           display: flex;
           flex-direction: column;
           gap: 1rem;
