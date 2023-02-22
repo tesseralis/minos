@@ -184,6 +184,7 @@ function MobileNav() {
 
 export const navLinks = [
   "catalog",
+  "glossary",
   "symmetry",
   "classes",
   "packing",
