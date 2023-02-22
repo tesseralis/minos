@@ -9,7 +9,7 @@ import type { ReactElement, ReactNode } from "react"
 import type { NextPage } from "next"
 
 export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
-  getLayout?: (page: ReactElement) => ReactNode
+  getLayout?: (page: ReactElement, pageProps: P) => ReactNode
 }
 
 type AppPropsWithLayout = AppProps & {
@@ -28,7 +28,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         />
         <title>The Labyrinth of Polyominoes</title>
       </Head>
-      {getLayout(<Component {...pageProps} />)}
+      {getLayout(<Component {...pageProps} />, pageProps)}
     </>
   )
 }
