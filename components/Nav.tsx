@@ -184,10 +184,10 @@ function MobileNav() {
 
 export const navLinks = [
   "catalog",
-  "glossary",
   "symmetry",
   "classes",
   "packing",
   "tiling",
   "genealogy",
+  "glossary",
 ]
