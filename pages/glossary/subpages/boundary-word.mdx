@@ -1,0 +1,17 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+The word formed by starting on a point of the perimeter of a polyomino and tracking the heading, adding a new letter each time the polyomino turns (for example, North, East, South, West).
+
+By convention, the boundary word starts at the left-most point on the bottom row of the polyomino and proceeds counter-clockwise.
+
+For example, the following polyomino:
+
+<MinoDiv
+  mino={Polyomino.of("110_101_111_101_011")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+has the boundary word `ENWSWNENWSENESWS`.
