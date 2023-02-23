@@ -1,71 +1,57 @@
 import { capitalize } from "lodash"
-import fs from "fs"
 import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { serialize } from "next-mdx-remote/serialize"
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote"
-import remarkMath from "remark-math"
-import rehypeKatex from "rehype-katex"
 import { css } from "@emotion/react"
 import { getClassCode, MinoClass, minoClasses } from "mino"
 import Layout from "components/Layout"
 import { getBoundaryFamilies, escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
-import { colors } from "style/theme"
 import ClassIcon from "components/ClassIcon"
 import { getClassColor } from "components/graph"
 import NavAndContent from "components/NavAndContent"
 
-// TODO deduplicate with symmetry nav
-function ClassNav() {
-  const router = useRouter()
-  return (
-    <nav
-      css={css`
-        h2 {
-          font-size: 1.25rem;
-          margin: 0;
-        }
+import antler from "./subpages/antler.mdx"
+import barChart from "./subpages/bar-chart.mdx"
+import bentTree from "./subpages/bent-tree.mdx"
+import crescent from "./subpages/crescent.mdx"
+import cross from "./subpages/cross.mdx"
+import ferrersDiagram from "./subpages/ferrers-diagram.mdx"
+import fork from "./subpages/fork.mdx"
+import other from "./subpages/other.mdx"
+import puncturedRectangle from "./subpages/punctured-rectangle.mdx"
+import rangeChart from "./subpages/range-chart.mdx"
+import rectangle from "./subpages/rectangle.mdx"
+import stack from "./subpages/stack.mdx"
+import staircase from "./subpages/staircase.mdx"
+import tree from "./subpages/tree.mdx"
+import wing from "./subpages/wing.mdx"
 
-        ul {
-          margin: 0;
-        }
-      `}
-    >
-      <h2>Classes</h2>
-      <ul>
-        {minoClasses.map((cls) => {
-          const href = `/classes/${escapeClass(cls)}`
-          return (
-            <li key={cls}>
-              <Link
-                href={href}
-                passHref
-                css={css`
-                  text-decoration: none;
-                  color: ${router.asPath.startsWith(href)
-                    ? colors.highlight
-                    : colors.fg};
-                `}
-              >
-                {cls}
-              </Link>
-            </li>
-          )
-        })}
-      </ul>
-    </nav>
-  )
+const pages = {
+  antler,
+  "bar chart": barChart,
+  "bent tree": bentTree,
+  crescent,
+  cross,
+  "Ferrers diagram": ferrersDiagram,
+  fork,
+  other,
+  "punctured rectangle": puncturedRectangle,
+  "range chart": rangeChart,
+  rectangle,
+  stack,
+  staircase,
+  tree,
+  wing,
 }
 
 interface Props {
   class: MinoClass
-  source: MDXRemoteSerializeResult
 }
 
-export default function ClassInfo({ class: cls, source }: Props) {
+export default function ClassInfo({ class: cls }: Props) {
   const router = useRouter()
+  const Text = (pages as any)[cls]
   return (
     <Layout>
       <NavAndContent
@@ -131,7 +117,7 @@ export default function ClassInfo({ class: cls, source }: Props) {
         >
           {capitalize(cls)} polyomino
         </h1>
-        <MDXRemote {...source} />
+        <Text />
         <h2>Polyomino list</h2>
         <ClassList minos={getBoundaryFamilies(cls)} />
       </NavAndContent>
@@ -151,15 +137,5 @@ export function getStaticPaths() {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   // TODO typecheck
   const { class: cls } = params as any
-  const source = fs.readFileSync(
-    `${process.cwd()}/pages/classes/subpages/${cls}.mdx`,
-    "utf-8",
-  )
-  const mdxSource = await serialize(source, {
-    mdxOptions: {
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    },
-  })
-  return { props: { class: unescapeClass(cls), source: mdxSource } }
+  return { props: { class: unescapeClass(cls) } }
 }

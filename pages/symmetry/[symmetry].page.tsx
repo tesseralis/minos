@@ -1,21 +1,27 @@
 import React from "react"
-import fs from "fs"
 import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
-import { serialize } from "next-mdx-remote/serialize"
-import { MDXRemote, MDXRemoteSerializeResult } from "next-mdx-remote"
-import remarkMath from "remark-math"
-import rehypeKatex from "rehype-katex"
 import { css } from "@emotion/react"
 import { printSymmetry, symmetries, Symmetry } from "mino"
 import Layout from "components/Layout"
 import MinoList from "./MinoList"
-import { getMinosForSymmetry } from "./symmetryHelpers"
 import SymmetryIcon from "components/SymmetryIcon"
 import { getSymmetryColor } from "components/graph"
 import { capitalize } from "lodash"
 import NavAndContent from "components/NavAndContent"
+
+import all from "./subpages/all.mdx"
+import rot2 from "./subpages/rot2.mdx"
+import axis2 from "./subpages/axis2.mdx"
+import diag2 from "./subpages/diag2.mdx"
+import rot from "./subpages/rot.mdx"
+import axis from "./subpages/axis.mdx"
+import diag from "./subpages/diag.mdx"
+import none from "./subpages/none.mdx"
+
+const pages = { all, rot2, axis2, diag2, rot, axis, diag, none }
+
 const longName: Record<Symmetry, string> = {
   all: "Full symmetry",
   axis2: "Reflective symmetry (2 axes)",
@@ -29,10 +35,10 @@ const longName: Record<Symmetry, string> = {
 
 interface Props {
   symmetry: Symmetry
-  source: MDXRemoteSerializeResult
 }
 
-export default function SymmetryInfo({ symmetry, source }: Props) {
+export default function SymmetryInfo({ symmetry }: Props) {
+  const Text = pages[symmetry]
   const router = useRouter()
   return (
     <Layout>
@@ -102,7 +108,7 @@ export default function SymmetryInfo({ symmetry, source }: Props) {
         >
           {longName[symmetry]}
         </h1>
-        <MDXRemote {...source} />
+        <Text />
         <h2>Polyomino list</h2>
         <MinoList symmetry={symmetry} />
       </NavAndContent>
@@ -120,15 +126,5 @@ export function getStaticPaths() {
 export const getStaticProps: GetStaticProps<Props> = async ({ params }) => {
   // TODO type this correctly
   const { symmetry } = params as any
-  const source = fs.readFileSync(
-    `${process.cwd()}/pages/symmetry/subpages/${symmetry}.mdx`,
-    "utf-8",
-  )
-  const mdxSource = await serialize(source, {
-    mdxOptions: {
-      remarkPlugins: [remarkMath],
-      rehypePlugins: [rehypeKatex],
-    },
-  })
-  return { props: { symmetry, source: mdxSource } }
+  return { props: { symmetry } }
 }
