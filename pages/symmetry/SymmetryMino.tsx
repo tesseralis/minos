@@ -35,7 +35,7 @@ export default function SymmetryMino({ mino, size }: Props) {
             mino={mino}
             size={size}
             strokeWidth={2}
-            stroke={"white"}
+            stroke={"#ffffffaa"}
           />
         }
       </MinoLink>
