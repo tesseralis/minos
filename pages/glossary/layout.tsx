@@ -13,7 +13,7 @@ interface Props {
 export default function GlossaryLayout({ children, terms }: Props) {
   return (
     <Layout>
-      <NavAndContent columns="24rem 1fr" nav={<GlossaryNav terms={terms} />}>
+      <NavAndContent columns="18rem 1fr" nav={<GlossaryNav terms={terms} />}>
         {children}
       </NavAndContent>
     </Layout>
@@ -38,6 +38,7 @@ function GlossaryNav({ terms }: { terms: string[] }) {
                 href={path}
                 css={css`
                   text-decoration: ${isActive ? "underline" : "none"};
+                  font-size: 1.25rem;
                 `}
               >
                 {term.replace("-", " ")}

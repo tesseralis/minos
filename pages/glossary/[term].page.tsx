@@ -8,11 +8,13 @@ import { getTerms } from "./glossaryHelpers"
 import fixedPolyomino from "./subpages/fixed-polyomino.mdx"
 import freePolyomino from "./subpages/free-polyomino.mdx"
 import boundaryWord from "./subpages/boundary-word.mdx"
+import puncture from "./subpages/puncture.mdx"
 
 const pages: Record<string, any> = {
   "fixed-polyomino": fixedPolyomino,
   "free-polyomino": freePolyomino,
   "boundary-word": boundaryWord,
+  puncture,
 }
 
 const Page: NextPageWithLayout<Props> = (({ term }: Props) => {

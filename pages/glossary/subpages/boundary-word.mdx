@@ -8,10 +8,14 @@ By convention, the boundary word starts at the left-most point on the bottom row
 For example, the following polyomino:
 
 <MinoDiv
-  mino={Polyomino.of("110_101_111_101_011")}
+  mino={Polyomino.of("111_100_100")}
   stroke="black"
   fill="grey"
   size={20}
 />
 
-has the boundary word `ENWSWNENWSENESWS`.
+has the boundary word `ENWSWS`.
+
+Polyominoes with without [punctures](/glossary/puncture) have only one boundary word, but punctured polyominoes have additional boundary words for each puncture.
+
+Polyominoes that share the same boundary word belong in the same [class](/classes).

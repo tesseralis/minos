@@ -1,0 +1,22 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+A hole in a polyomino that is completely enclosed and that you can draw a loop around by traversing cells of a polyomino.
+
+For example, the "O" octomino has a puncture:
+
+<MinoDiv
+  mino={Polyomino.of("111_101_111")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+while its parent has a hole but is not punctured:
+
+<MinoDiv
+  mino={Polyomino.of("111_101_110")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
