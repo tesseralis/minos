@@ -1,0 +1,30 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+import { Rect } from "components/svg"
+
+A polyomino whose perimeter is equal to that of its bounding box.
+
+For example, the F pentomino is convex because it has a perimeter of 12, which is equal to its bounding box perimeter.
+
+<Example mino="100_111_010" />
+
+The U pentomino, on the other hand, is not convex because it has a perimeter of 12 but has a bounding box of perimeter 10.
+
+<Example mino="111_101" />
+
+export function Example({ mino }) {
+  const cellSize = 15
+  const _mino = Polyomino.of(mino)
+  const [width, height] = _mino.dims.map((dim) => cellSize * dim)
+  return (
+    <MinoDiv mino={_mino} stroke="black" fill="grey" size={cellSize}>
+      <Rect
+        coord={[-width / 2, -height / 2]}
+        width={width}
+        height={height}
+        fill="none"
+        stroke="#ffffff88"
+      />
+    </MinoDiv>
+  )
+}

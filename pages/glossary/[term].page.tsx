@@ -8,8 +8,10 @@ import { getTerms } from "./glossaryHelpers"
 import fixed from "./subpages/fixed.mdx"
 import free from "./subpages/free.mdx"
 import oneSided from "./subpages/one-sided.mdx"
+import convex from "./subpages/convex.mdx"
 import boundaryWord from "./subpages/boundary-word.mdx"
 import puncture from "./subpages/puncture.mdx"
+import hole from "./subpages/hole.mdx"
 import orthogonallyDirected from "./subpages/orthogonally-directed.mdx"
 import diagonallyDirected from "./subpages/diagonally-directed.mdx"
 
@@ -17,7 +19,9 @@ const pages: Record<string, any> = {
   fixed,
   free,
   "one-sided": oneSided,
+  convex,
   "boundary-word": boundaryWord,
+  hole,
   puncture,
   "orthogonally-directed": orthogonallyDirected,
   "diagonally-directed": diagonallyDirected,

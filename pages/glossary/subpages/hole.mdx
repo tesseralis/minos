@@ -1,0 +1,15 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+A space not in a polyomino that is enclosed by cells of the polyomino.
+
+This heptomino is the smallest polyomino that contains a hole:
+
+<MinoDiv
+  mino={Polyomino.of("111_101_110")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+Polyominoes with holes cannot [tile the plane](/tiling).
