@@ -1,0 +1,17 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+For a diagonal direction $d$ (e.g., up and right), we say a polyomino is "$d$-directed" if every cell of the polyomino can be reached from an anchor cell by going only in one of the orthogonal components of $d$.
+
+For example, the following polyomino is up-right-directed with the bottom-left cell as an anchor, since every cell in it can be reached from that cell by going up and right, and not down or left:
+
+<MinoDiv
+  mino={Polyomino.of("110_101_111")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+Unlike [orthogonal directedness](/glossary/orthogonally-directed), the anchor cell for for a diagonally directed polyomino is uniquely one of the corner cells of the polyomino. Furthermore, a diagonally directed polyomino must be orthogonally directed in each of the orthogonal components of its direction (e.g. the polyomino above is both up-directed and right-directed).
+
+In most other sources, "diagonally directed" is usually just called "directed".

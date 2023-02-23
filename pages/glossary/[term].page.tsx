@@ -9,12 +9,16 @@ import fixedPolyomino from "./subpages/fixed-polyomino.mdx"
 import freePolyomino from "./subpages/free-polyomino.mdx"
 import boundaryWord from "./subpages/boundary-word.mdx"
 import puncture from "./subpages/puncture.mdx"
+import orthogonallyDirected from "./subpages/orthogonally-directed.mdx"
+import diagonallyDirected from "./subpages/diagonally-directed.mdx"
 
 const pages: Record<string, any> = {
   "fixed-polyomino": fixedPolyomino,
   "free-polyomino": freePolyomino,
   "boundary-word": boundaryWord,
   puncture,
+  "orthogonally-directed": orthogonallyDirected,
+  "diagonally-directed": diagonallyDirected,
 }
 
 const Page: NextPageWithLayout<Props> = (({ term }: Props) => {

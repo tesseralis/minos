@@ -1,0 +1,15 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+For an orthogonal direction $d$, we say a polyomino is "$d$-directed" if every cell of the polyomino can be reached from an anchor cell without going opposite that direction.
+
+For example, the following polyomino is up-directed with the bottom-left cell as an anchor, since every cell in it can be reached from that cell without going down:
+
+<MinoDiv
+  mino={Polyomino.of("110_101_111_101")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+Note that the anchor cell is not necessarily unique, as any cell on the bottom row can be used as an anchor cell.
