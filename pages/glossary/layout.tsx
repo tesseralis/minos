@@ -28,7 +28,13 @@ function GlossaryNav({ terms }: { terms: string[] }) {
         padding: 2rem;
       `}
     >
-      <ul>
+      <ul
+        css={css`
+          margin: 0;
+          line-height: 1.5;
+          list-style: square;
+        `}
+      >
         {terms.map((term) => {
           const path = `/glossary/${term}`
           const isActive = path === router.asPath

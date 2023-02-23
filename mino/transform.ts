@@ -62,6 +62,10 @@ export default class MinoTransform {
     )
   }
 
+  rotations = once(() =>
+    ["identity" as const, ...rotations].map((t) => this.apply(t)),
+  )
+
   /** Return the list of all transforms of this mino */
   // TODO make this unique
   all = once(() => transforms.map((t) => this.apply(t)))

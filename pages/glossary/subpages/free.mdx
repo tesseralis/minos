@@ -1,0 +1,19 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+A polyomino that can be flipped or rotated in any direction.
+
+For example, the following transformations of the L tetromino represent the same free polyomino.
+
+<Example />
+
+export function Example() {
+  const mino = Polyomino.of("100_111")
+  return (
+    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      {mino.transform.all().map((transform) => (
+        <MinoDiv mino={transform} stroke="black" fill="grey" size={15} />
+      ))}
+    </div>
+  )
+}

@@ -5,16 +5,18 @@ import GlossaryLayout from "./layout"
 import { capitalize } from "lodash"
 import { getTerms } from "./glossaryHelpers"
 
-import fixedPolyomino from "./subpages/fixed-polyomino.mdx"
-import freePolyomino from "./subpages/free-polyomino.mdx"
+import fixed from "./subpages/fixed.mdx"
+import free from "./subpages/free.mdx"
+import oneSided from "./subpages/one-sided.mdx"
 import boundaryWord from "./subpages/boundary-word.mdx"
 import puncture from "./subpages/puncture.mdx"
 import orthogonallyDirected from "./subpages/orthogonally-directed.mdx"
 import diagonallyDirected from "./subpages/diagonally-directed.mdx"
 
 const pages: Record<string, any> = {
-  "fixed-polyomino": fixedPolyomino,
-  "free-polyomino": freePolyomino,
+  fixed,
+  free,
+  "one-sided": oneSided,
   "boundary-word": boundaryWord,
   puncture,
   "orthogonally-directed": orthogonallyDirected,

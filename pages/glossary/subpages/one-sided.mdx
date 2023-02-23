@@ -1,0 +1,19 @@
+import MinoDiv from "components/MinoDiv"
+import Polyomino from "mino/Polyomino"
+
+A polyomino that can be rotated but not flipped across an axis.
+
+For example, the following translations of the L tetromino count as the same one-sided polyomino:
+
+<Example />
+
+export function Example() {
+  const mino = Polyomino.of("100_111")
+  return (
+    <div style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+      {mino.transform.rotations().map((transform) => (
+        <MinoDiv mino={transform} stroke="black" fill="grey" size={15} />
+      ))}
+    </div>
+  )
+}
