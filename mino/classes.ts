@@ -8,6 +8,7 @@ import {
   getNeighbors,
   O_OCTOMINO,
   getKingwiseNeighbors,
+  DirClass,
 } from "./internal"
 
 const axes = ["row", "column"] as const
@@ -45,6 +46,27 @@ export default class MinoClasses {
   constructor(mino: Polyomino) {
     this.mino = mino
   }
+
+  /**
+   * Get this polyomino's directedness class
+   */
+  get = once(() => {
+    const dirSides = sides.filter((side) => this.isSemiDirectedAtSide(side))
+    const dirDiags = this.anchors().filter((anchor) =>
+      this.isDirectedAtAnchor(anchor),
+    )
+    let ortho: any = dirSides.length
+    if (ortho === 2) {
+      const [first, second] = dirSides
+      ortho = `2-${isOppositeSides(first, second) ? "para" : "meta"}`
+    }
+    let diag: any = dirDiags.length
+    if (diag === 2) {
+      diag = `2-${hasOppositeAnchors(dirDiags) ? "para" : "meta"}`
+    }
+
+    return new DirClass(ortho, diag)
+  })
 
   // Get the point of this polyomino's bounding box at the given corner anchor
   private pointAtAnchor({ x, y }: Anchor) {
