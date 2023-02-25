@@ -21,8 +21,7 @@ export {
   getKingwiseNeighbors,
 } from "./relatives"
 export { default as DirClass } from "./DirClass"
-export { default as MinoClasses, minoClasses, getClassCode } from "./classes"
-export type { MinoClass } from "./classes"
+export { default as MinoClasses } from "./classes"
 export { MONOMINO, O_OCTOMINO } from "./constants"
 export { MinoPattern, parsePattern } from "./pattern"
 export type { MinoPlacement } from "./pattern"

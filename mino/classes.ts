@@ -6,7 +6,6 @@ import {
   Anchor,
   getAnchors,
   getNeighbors,
-  O_OCTOMINO,
   getKingwiseNeighbors,
   DirClass,
 } from "./internal"
@@ -15,26 +14,6 @@ const axes = ["row", "column"] as const
 type Axis = typeof axes[number]
 const sides = ["top", "left", "bottom", "right"] as const
 type Side = typeof sides[number]
-
-export const minoClasses = [
-  "rectangle",
-  "punctured rectangle",
-  "Ferrers diagram",
-  "staircase",
-  "stack",
-  "fork",
-  "bar chart",
-  "cross",
-  "wing",
-  "crescent",
-  "antler",
-  "range chart",
-  "bent tree",
-  "tree",
-  "other",
-] as const
-
-export type MinoClass = typeof minoClasses[number]
 
 /**
  * Predicates for testing whether a mino belongs into one of the
@@ -83,7 +62,7 @@ export default class MinoClasses {
       case "right":
       case "left": {
         const xCoord = side === "left" ? 0 : w - 1
-        return range(w)
+        return range(h)
           .map((j) => new Vector(xCoord, j))
           .find((p) => this.mino.contains(p))!
       }
@@ -240,7 +219,7 @@ export default class MinoClasses {
 
   /** Returns whether the polyomino is directed at the given anchor */
   isSemiDirectedAtSide(side: Side) {
-    // Get the two directions of that corner
+    // Get the three dimensions for the side
     const directions = getDirectionsForSide(side)
     const start = this.pointAtSide(side)
     // Do BFS in three orthogonal directions
@@ -248,7 +227,7 @@ export default class MinoClasses {
     visited.add(start)
     const queue = [start]
     while (queue.length > 0) {
-      const current = queue.pop()!
+      const current = queue.shift()!
       for (const nbrDir of directions) {
         const nbr = current.add(nbrDir)
         if (this.mino.contains(nbr) && !visited.has(nbr)) {
@@ -352,43 +331,6 @@ export default class MinoClasses {
   isRectangle() {
     return this.isConvex() && this.anchors().length === 4
   }
-
-  /** Get the highest class in the class hierarchy that this mino is in */
-  best(): MinoClass {
-    // specially handle mino with a hole
-    if (this.mino.equals(O_OCTOMINO)) {
-      return "punctured rectangle"
-    }
-    if (this.isRectangle()) {
-      return "rectangle"
-    } else if (this.isFerrers()) {
-      return "Ferrers diagram"
-    } else if (this.isStack()) {
-      return "stack"
-    } else if (this.isStaircase()) {
-      return "staircase"
-    } else if (this.isDirectedConvex()) {
-      return "fork"
-    } else if (this.isBar()) {
-      return "bar chart"
-    } else if (this.isConvex()) {
-      return "cross"
-    } else if (this.isSemiConvex() && this.isDirected()) {
-      return "wing"
-    } else if (this.isCrescent()) {
-      return "crescent"
-    } else if (this.isDirected()) {
-      return "antler"
-    } else if (this.isSemiConvex()) {
-      return "range chart"
-    } else if (this.isPreDirected()) {
-      return "bent tree"
-    } else if (this.isSemiDirected()) {
-      return "tree"
-    } else {
-      return "other"
-    }
-  }
 }
 
 function hasAdjacentAnchors(anchors: Anchor[]) {
@@ -403,33 +345,6 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   if (anchors.length < 2) return false
   const [first, second] = anchors
   return first.x !== second.x && first.y !== second.y
-}
-
-// Short codes for computing tables
-const codes: Record<MinoClass, string> = {
-  "punctured rectangle": "prect",
-  rectangle: "rect",
-  "Ferrers diagram": "ferr",
-  staircase: "stair",
-  stack: "stack",
-  fork: "fork",
-  "bar chart": "bar",
-  cross: "cross",
-  wing: "wing",
-  crescent: "cres",
-  antler: "ant",
-  "range chart": "range",
-  "bent tree": "btree",
-  tree: "tree",
-  other: "other",
-}
-
-/**
- * Get a short code for the class that can be used in more restrictive
- * string settings (like setting grid areas)
- */
-export function getClassCode(cls: MinoClass) {
-  return codes[cls]
 }
 
 function getDirectionsForSide(side: Side) {

@@ -7,8 +7,7 @@ export {
   orderName,
   printSymmetry,
   symmetries,
-  minoClasses,
-  getClassCode,
+  DirClass,
 } from "./internal"
 export type {
   Coord,
@@ -18,6 +17,5 @@ export type {
   RelativeLink,
   MinoRelatives,
   MinoPattern,
-  MinoClass,
   Tiling,
 } from "./internal"

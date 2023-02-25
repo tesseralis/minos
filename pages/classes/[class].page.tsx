@@ -3,7 +3,6 @@ import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { css } from "@emotion/react"
-import { getClassCode, MinoClass, minoClasses } from "mino"
 import Layout from "components/Layout"
 import { getBoundaryFamilies, escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
@@ -26,6 +25,7 @@ import stack from "./subpages/stack.mdx"
 import staircase from "./subpages/staircase.mdx"
 import tree from "./subpages/tree.mdx"
 import wing from "./subpages/wing.mdx"
+import { DirClass } from "mino"
 
 const pages = {
   antler,
@@ -46,7 +46,7 @@ const pages = {
 }
 
 interface Props {
-  class: MinoClass
+  class: string
 }
 
 export default function ClassInfo({ class: cls }: Props) {
@@ -77,35 +77,33 @@ export default function ClassInfo({ class: cls }: Props) {
                 ".     .    other .";
             `}
           >
-            {minoClasses
-              .filter((x) => x !== "punctured rectangle")
-              .map((cls) => {
-                const route = `/classes/${escapeClass(cls)}`
-                const isActive = router.asPath === route
-                return (
-                  <Link
-                    key={cls}
-                    href={route}
-                    css={css`
-                      display: flex;
-                      flex-direction: column;
-                      align-items: center;
-                      text-align: center;
-                      gap: 0.5rem;
-                      grid-area: ${getClassCode(cls)};
-                      text-decoration: ${isActive ? "underline" : "none"};
-                    `}
-                  >
-                    <ClassIcon
-                      class={cls}
-                      fill={"none"}
-                      stroke={getClassColor(cls)}
-                      size={60}
-                    />
-                    {capitalize(cls)}
-                  </Link>
-                )
-              })}
+            {DirClass.all().map((cls) => {
+              const route = `/classes/${escapeClass(cls.name())}`
+              const isActive = router.asPath === route
+              return (
+                <Link
+                  key={cls.code()}
+                  href={route}
+                  css={css`
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    text-align: center;
+                    gap: 0.5rem;
+                    grid-area: ${cls.code()};
+                    text-decoration: ${isActive ? "underline" : "none"};
+                  `}
+                >
+                  <ClassIcon
+                    class={cls}
+                    fill={"none"}
+                    stroke={getClassColor(cls)}
+                    size={60}
+                  />
+                  {capitalize(cls.name())}
+                </Link>
+              )
+            })}
           </div>
         }
       >
@@ -127,9 +125,9 @@ export default function ClassInfo({ class: cls }: Props) {
 
 export function getStaticPaths() {
   return {
-    paths: minoClasses
-      .map(escapeClass)
-      .map((cls) => ({ params: { class: cls } })),
+    paths: DirClass.all().map((cls) => ({
+      params: { class: escapeClass(cls.name()) },
+    })),
     fallback: false,
   }
 }

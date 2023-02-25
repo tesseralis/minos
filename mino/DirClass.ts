@@ -25,6 +25,14 @@ export default class DirClass {
     )
   }
 
+  code() {
+    return codes[this.name()]
+  }
+
+  static all() {
+    return Object.values(classNamesMap)
+  }
+
   // symbol
   // subclasses/superclasses
   // regex
@@ -41,8 +49,25 @@ const classNamesMap: Record<string, DirClass> = {
   wing: new DirClass(3, 1),
   crescent: new DirClass(3, 0),
   antler: new DirClass("2-para", 1),
-  "range-chart": new DirClass("2-para", 0),
+  "range chart": new DirClass("2-para", 0),
   "bent tree": new DirClass("2-meta", 0),
   tree: new DirClass(1, 0),
   other: new DirClass(0, 0),
+}
+
+const codes: Record<string, string> = {
+  rectangle: "rect",
+  "Ferrers diagram": "ferr",
+  staircase: "stair",
+  stack: "stack",
+  fork: "fork",
+  "bar chart": "bar",
+  cross: "cross",
+  wing: "wing",
+  crescent: "cres",
+  antler: "ant",
+  "range chart": "range",
+  "bent tree": "btree",
+  tree: "tree",
+  other: "other",
 }

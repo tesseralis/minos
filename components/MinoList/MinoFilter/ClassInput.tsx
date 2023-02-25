@@ -1,7 +1,7 @@
 import { css } from "@emotion/react"
 import { getClassColor } from "components/graph"
 
-import { MinoClass, getClassCode, minoClasses } from "mino"
+import { DirClass } from "mino"
 import InputTitle from "./InputTitle"
 import { upsert, remove } from "./common"
 import * as Tooltip from "@radix-ui/react-tooltip"
@@ -12,8 +12,8 @@ import ClassIcon from "components/ClassIcon"
 const outlineColor = "#999"
 
 interface Props {
-  value?: MinoClass[]
-  onUpdate(value: MinoClass[]): void
+  value?: DirClass[]
+  onUpdate(value: DirClass[]): void
 }
 
 /**
@@ -43,54 +43,52 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
           justify-items: center;
         `}
       >
-        {minoClasses
-          .filter((x) => x !== "punctured rectangle")
-          .map((cls) => {
-            const checked = value.includes(cls)
-            return (
-              <Tooltip.Root key={cls}>
-                <Tooltip.Trigger asChild>
-                  <label
-                    css={css`
-                      grid-area: ${getClassCode(cls)};
-                    `}
-                  >
-                    {/* TODO maybe use the Radix toggle group instead? */}
-                    <input
-                      type="checkbox"
-                      className="visually-hidden"
-                      checked={checked}
-                      onChange={(e) =>
-                        onUpdate(
-                          e.target.checked
-                            ? upsert(value, cls)
-                            : remove(value, cls),
-                        )
-                      }
-                    />
-                    <ClassIcon
-                      class={cls}
-                      fill={checked ? getClassColor(cls) : "none"}
-                      stroke={outlineColor}
-                      size={30}
-                    />
-                  </label>
-                </Tooltip.Trigger>
-                <Tooltip.Portal>
-                  <Tooltip.Content
-                    css={css`
-                      background: ${colors.bg};
-                      border: 1px solid ${outlineColor};
-                      padding: 0.25rem 0.5rem;
-                      border-radius: 0.5rem;
-                    `}
-                  >
-                    {cls}
-                  </Tooltip.Content>
-                </Tooltip.Portal>
-              </Tooltip.Root>
-            )
-          })}
+        {DirClass.all().map((cls) => {
+          const checked = value.includes(cls)
+          return (
+            <Tooltip.Root key={cls.name()}>
+              <Tooltip.Trigger asChild>
+                <label
+                  css={css`
+                    grid-area: ${cls.code()};
+                  `}
+                >
+                  {/* TODO maybe use the Radix toggle group instead? */}
+                  <input
+                    type="checkbox"
+                    className="visually-hidden"
+                    checked={checked}
+                    onChange={(e) =>
+                      onUpdate(
+                        e.target.checked
+                          ? upsert(value, cls)
+                          : remove(value, cls),
+                      )
+                    }
+                  />
+                  <ClassIcon
+                    class={cls}
+                    fill={checked ? getClassColor(cls) : "none"}
+                    stroke={outlineColor}
+                    size={30}
+                  />
+                </label>
+              </Tooltip.Trigger>
+              <Tooltip.Portal>
+                <Tooltip.Content
+                  css={css`
+                    background: ${colors.bg};
+                    border: 1px solid ${outlineColor};
+                    padding: 0.25rem 0.5rem;
+                    border-radius: 0.5rem;
+                  `}
+                >
+                  {cls}
+                </Tooltip.Content>
+              </Tooltip.Portal>
+            </Tooltip.Root>
+          )
+        })}
       </div>
     </div>
   )

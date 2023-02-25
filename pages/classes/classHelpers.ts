@@ -1,6 +1,6 @@
 import { groupBy, sortBy } from "lodash"
 import { nodes } from "components/graph"
-import { Polyomino, MinoClass, O_OCTOMINO } from "mino"
+import { Polyomino, O_OCTOMINO } from "mino"
 
 function countLetters(s: string) {
   const count: Record<string, number> = {}
@@ -100,7 +100,7 @@ const minos = nodes
     Polyomino.fromString("011_101_111_101"),
     Polyomino.fromString("110_101_111_101_011"),
   ])
-const classes = groupBy(minos, (mino) => mino.classes.best())
+const classes = groupBy(minos, (mino) => mino.classes.get().name())
 
 function groupBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.values(
@@ -118,7 +118,7 @@ function groupBoundaryFamilies(minoClass: Polyomino[]) {
  * Return the polyominoes belonging to the given polyomino class
  * grouped by their boundary families.
  */
-export function getBoundaryFamilies(cls: MinoClass) {
+export function getBoundaryFamilies(cls: string) {
   return groupBoundaryFamilies(classes[cls] ?? [])
 }
 
@@ -126,6 +126,6 @@ export function escapeClass(cls: string) {
   return cls.toLowerCase().replace(/ /g, "-")
 }
 
-export function unescapeClass(cls: string): MinoClass {
-  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers") as MinoClass
+export function unescapeClass(cls: string): string {
+  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers") as string
 }

@@ -1,7 +1,7 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash"
 
-import { Polyomino, RelativeLink, MinoClass, Symmetry, MONOMINO } from "mino"
+import { Polyomino, RelativeLink, Symmetry, MONOMINO } from "mino"
 
 type Color = tinycolor.Instance
 type MinoData = number
@@ -26,8 +26,7 @@ export function getSymmetryColor(symmetry: Symmetry): string {
   return symmetryColorMap[symmetry]
 }
 
-const classColorMap: Record<MinoClass, string> = {
-  "punctured rectangle": "#ddd",
+const classColorMap: Record<string, string> = {
   rectangle: "#dbd", // white
   "Ferrers diagram": "#f5f", // magenta
   staircase: "#82f", // violet
@@ -61,11 +60,11 @@ function getBorderColor(color: Color) {
   return color.clone().darken(50).desaturate(40).spin(-30)
 }
 
-const colorMap: Record<MinoClass, Color> = mapValues(classColorMap, (col) =>
+const colorMap: Record<string, Color> = mapValues(classColorMap, (col) =>
   tinycolor(col).desaturate(30),
 )
 
-export function getClassColor(cls: MinoClass) {
+export function getClassColor(cls: string) {
   return classColorMap[cls]
 }
 
@@ -124,7 +123,7 @@ export function generateGraph(n: number) {
   const colors: Record<MinoData, Color> = {}
   for (const generation of nodes) {
     for (const mino of generation) {
-      const minoClass = mino.classes.best()
+      const minoClass = mino.classes.get().name()
       colors[mino.data] = colorMap[minoClass]
     }
   }
@@ -194,7 +193,7 @@ export function getMinoColor(mino: Polyomino) {
   if (mino.order <= 8) {
     color = colors[mino.transform.free().data]
   } else {
-    const minoClass = mino.classes.best()
+    const minoClass = mino.classes.get().name()
     color = colorMap[minoClass]
   }
   return {

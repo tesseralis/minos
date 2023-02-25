@@ -68,8 +68,8 @@ const data: MinoDatum[] = [
   {
     name: "class",
     display: (m) => (
-      <Link href={`/classes/${escapeClass(m.classes.best())}`}>
-        {m.classes.best()}
+      <Link href={`/classes/${escapeClass(m.classes.get().name())}`}>
+        {m.classes.get().name()}
       </Link>
     ),
   },

@@ -2,11 +2,11 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import Layout from "components/Layout"
-import { minoClasses, MinoClass, getClassCode } from "mino"
 import { escapeClass, getBoundaryFamilies } from "./classHelpers"
 import { colors } from "style/theme"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
+import { DirClass } from "mino"
 
 // List of arrow grid positions
 const arrowPositions = [
@@ -30,11 +30,11 @@ const arrowPositions = [
   { row: 8, column: "3 / span 2" },
 ]
 
-function PolyominoClass({ name }: { name: MinoClass }) {
+function PolyominoClass({ class: cls }: { class: DirClass }) {
   return (
     <section
       css={css`
-        grid-area: ${getClassCode(name)};
+        grid-area: ${cls.code()};
         border: 2px grey solid;
         padding: 1.5rem 1rem;
         border-radius: 2px;
@@ -47,9 +47,11 @@ function PolyominoClass({ name }: { name: MinoClass }) {
           margin-top: 0;
         `}
       >
-        <Link href={`/classes/${escapeClass(name)}`}>{capitalize(name)}</Link>
+        <Link href={`/classes/${escapeClass(cls.name())}`}>
+          {capitalize(cls.name())}
+        </Link>
       </h2>
-      <ClassList minos={getBoundaryFamilies(name)} />
+      <ClassList minos={getBoundaryFamilies(cls.name())} />
     </section>
   )
 }
@@ -129,11 +131,9 @@ export default function ClassesChart() {
         `}
       >
         <Info />
-        {minoClasses
-          .filter((cls) => cls !== "punctured rectangle")
-          .map((cls) => (
-            <PolyominoClass key={cls} name={cls} />
-          ))}
+        {DirClass.all().map((cls) => (
+          <PolyominoClass key={cls.code()} class={cls} />
+        ))}
         {arrowPositions.map((arrow, i) => (
           <Arrow key={i} {...arrow} />
         ))}
