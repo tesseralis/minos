@@ -98,7 +98,13 @@ const minos = nodes
   .flat()
   .concat([
     Polyomino.fromString("011_101_111_101"),
+    Polyomino.fromString("101_111_010_111"),
     Polyomino.fromString("110_101_111_101_011"),
+    Polyomino.fromString("101_111_010_111_101"),
+    Polyomino.fromString("0101_1111_1010_0111"),
+    Polyomino.fromString("0111_1010_1111_1010"),
+    Polyomino.fromString("0111_1010_1111_1001"),
+    Polyomino.fromString("0111_1010_1111_0101"),
   ])
 const classes = groupBy(minos, (mino) => mino.classes.get().name())
 
