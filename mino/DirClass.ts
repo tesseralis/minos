@@ -71,3 +71,15 @@ const codes: Record<string, string> = {
   tree: "tree",
   other: "other",
 }
+
+const regexes: Record<string, string> = {
+  rectangle: "ruld",
+  "Ferrers diagram": "(ru)*ld",
+  staircase: "(ru)*(ld)*",
+  stack: "(ru)*(lu)*ld",
+  fork: "(ru)*(lu)*(ld)*",
+  "bar chart": "(ru|lu)*ld",
+  cross: "(ru)*(lu)*(ld)*(rd)*",
+  wing: "(ru|lu)*(ld)*",
+  crescent: "(ru|lu)*(ld)*(rd)*",
+}
