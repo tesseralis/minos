@@ -146,7 +146,7 @@ export default class MinoClasses {
           const queue = [cell]
           const current = new PointSet()
           let connectedToEdge = false
-          while (queue) {
+          while (queue.length) {
             const currentCell = queue.shift()!
             current.add(currentCell)
             visited.add(currentCell)
@@ -159,7 +159,12 @@ export default class MinoClasses {
               connectedToEdge = true
             }
             for (const nbr of getKingwiseNeighbors(currentCell)) {
-              if (!this.mino.contains(nbr)) {
+              const inRange =
+                nbr.x >= 0 &&
+                nbr.x < this.mino.width &&
+                nbr.y >= 0 &&
+                nbr.y < this.mino.height
+              if (inRange && !current.has(nbr) && !this.mino.contains(nbr)) {
                 queue.push(nbr)
               }
             }
@@ -170,6 +175,7 @@ export default class MinoClasses {
         }
       }
     }
+    return punctures
   })
 
   /** Return whether the polyomino contains a hole */
