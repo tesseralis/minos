@@ -1,4 +1,4 @@
-import { Polyomino, Symmetry } from "mino"
+import { DirClass, Polyomino, Symmetry } from "mino"
 
 export type YesNo = "yes" | "no"
 
@@ -10,7 +10,7 @@ export type YesNoOptions = { [Name in YesNoName]?: YesNo }
  */
 export interface FilterOptions {
   symmetries?: Symmetry[]
-  classes?: string[]
+  classes?: DirClass[]
   // boolean properties
   yesNo?: YesNoOptions
 }
@@ -58,7 +58,10 @@ function applyToMino(
   ) {
     return false
   }
-  if (classes.length > 0 && !classes.includes(mino.classes.get().name())) {
+  if (
+    classes.length > 0 &&
+    !classes.some((cls) => cls.equals(mino.classes.get()))
+  ) {
     return false
   }
   return true

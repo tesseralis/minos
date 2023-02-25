@@ -83,7 +83,7 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
                     border-radius: 0.5rem;
                   `}
                 >
-                  {cls}
+                  {cls.name()}
                 </Tooltip.Content>
               </Tooltip.Portal>
             </Tooltip.Root>
