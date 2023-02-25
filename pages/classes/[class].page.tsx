@@ -18,7 +18,6 @@ import cross from "./subpages/cross.mdx"
 import ferrersDiagram from "./subpages/ferrers-diagram.mdx"
 import fork from "./subpages/fork.mdx"
 import other from "./subpages/other.mdx"
-import puncturedRectangle from "./subpages/punctured-rectangle.mdx"
 import rangeChart from "./subpages/range-chart.mdx"
 import rectangle from "./subpages/rectangle.mdx"
 import stack from "./subpages/stack.mdx"
@@ -36,7 +35,6 @@ const pages = {
   "Ferrers diagram": ferrersDiagram,
   fork,
   other,
-  "punctured rectangle": puncturedRectangle,
   "range chart": rangeChart,
   rectangle,
   stack,
