@@ -97,7 +97,7 @@ export default function ClassInfo({ class: cls }: Props) {
                   <ClassIcon
                     class={cls}
                     fill={"none"}
-                    stroke={getClassColor(cls)}
+                    stroke={getClassColor(cls.name())}
                     size={60}
                   />
                   {capitalize(cls.name())}

@@ -1,10 +1,10 @@
-import { MinoClass, Polyomino } from "mino"
+import { DirClass, Polyomino } from "mino"
 import React, { ReactNode } from "react"
 import MinoDiv from "./MinoDiv"
 import { Circle, Line } from "./svg"
 
 interface Props {
-  class: MinoClass
+  class: DirClass
   size: number
   fill: string
   stroke: string
@@ -12,7 +12,7 @@ interface Props {
 export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
   interface ClassType {
     // The type of symmetry
-    type: MinoClass
+    type: string
     // The mino to display as the prototype for this symmetry
     mino: Polyomino
     // The symmetry lines to draw as a guide
@@ -237,7 +237,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     }
   }
 
-  const { mino, markers } = classTypes.find((c) => c.type === cls)!
+  const { mino, markers } = classTypes.find((c) => c.type === cls.name())!
 
   return (
     <MinoDiv

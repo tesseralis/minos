@@ -68,7 +68,7 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
                   />
                   <ClassIcon
                     class={cls}
-                    fill={checked ? getClassColor(cls) : "none"}
+                    fill={checked ? getClassColor(cls.name()) : "none"}
                     stroke={outlineColor}
                     size={30}
                   />
