@@ -3,7 +3,14 @@ import { getMinoColor } from "components/graph"
 import MinoLink from "components/MinoLink"
 import { Polyomino } from "mino"
 
-function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
+function BoundaryFamily({
+  family,
+  minos,
+}: {
+  family: string
+  minos: Polyomino[]
+}) {
+  // TODO include boundary families
   return (
     <div
       css={css`
@@ -36,7 +43,11 @@ function BoundaryFamily({ minos }: { minos: Polyomino[] }) {
   )
 }
 
-export default function ClassList({ minos }: { minos: Polyomino[][] }) {
+export default function ClassList({
+  families,
+}: {
+  families: { family: string; minos: Polyomino[] }[]
+}) {
   return (
     <div
       css={css`
@@ -50,8 +61,8 @@ export default function ClassList({ minos }: { minos: Polyomino[][] }) {
         }
       `}
     >
-      {minos.map((boundaryClass, key) => {
-        return <BoundaryFamily minos={boundaryClass} key={key} />
+      {families.map(({ family, minos }, key) => {
+        return <BoundaryFamily family={family} minos={minos} key={key} />
       })}
     </div>
   )

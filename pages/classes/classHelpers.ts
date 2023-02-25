@@ -109,14 +109,19 @@ const minos = nodes
 const classes = groupBy(minos, (mino) => mino.classes.get().name())
 
 function groupBoundaryFamilies(minoClass: Polyomino[]) {
-  const groups = Object.values(
+  const groups = Object.entries(
     groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.family),
-  )
-  return sortBy(groups, (group) => -group.length).map((group) =>
-    sortBy(
-      group.map((item) => item.mino),
-      (mino) => [mino.order, -mino.height, -mino.width],
-    ),
+  ).map(([family, minos]) => ({ family, minos }))
+  return sortBy(groups, ({ family, minos }) => -minos.length).map(
+    ({ family, minos }) => {
+      return {
+        family,
+        minos: sortBy(
+          minos.map((item) => item.mino),
+          (mino) => [mino.order, -mino.height, -mino.width],
+        ),
+      }
+    },
   )
 }
 

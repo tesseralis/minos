@@ -51,7 +51,7 @@ function PolyominoClass({ class: cls }: { class: DirClass }) {
           {capitalize(cls.name())}
         </Link>
       </h2>
-      <ClassList minos={getBoundaryFamilies(cls.name())} />
+      <ClassList families={getBoundaryFamilies(cls.name())} />
     </section>
   )
 }
