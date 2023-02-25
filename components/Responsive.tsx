@@ -28,7 +28,7 @@ export default function Responsive({ query, match, default: def }: Props) {
       setIsMatch(watcher.matches)
       return () => watcher.removeEventListener("change", updateMatch)
     }
-  }, [updateMatch])
+  }, [query, updateMatch])
 
   // By default, render both but place one under `display: none` depending on the query.
   // The effect should toggle which one renders in the DOM tree
