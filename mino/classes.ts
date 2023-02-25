@@ -7,6 +7,7 @@ import {
   getAnchors,
   getNeighbors,
   O_OCTOMINO,
+  getKingwiseNeighbors,
 } from "./internal"
 
 const axes = ["row", "column"] as const
@@ -127,6 +128,48 @@ export default class MinoClasses {
    */
   isConvex = once(() => {
     return axes.every((axis) => this.isConvexAtAxis(axis))
+  })
+
+  /**
+   * Return true if the polyomino has a puncture.
+   */
+  punctures = once(() => {
+    // Iterate over all internal cells and see what's not in the mino
+    // If one is found, do BFS and traverse until queue runs out or we get to the edge
+    // If we get to the edge, it's not a puncture.
+    const visited = new PointSet()
+    const punctures = []
+    for (let i = 1; i < this.mino.width - 1; i++) {
+      for (let j = 1; j < this.mino.height - 1; j++) {
+        const cell = Vector.of([i, j])
+        if (!this.mino.contains(cell) && !visited.has(cell)) {
+          const queue = [cell]
+          const current = new PointSet()
+          let connectedToEdge = false
+          while (queue) {
+            const currentCell = queue.shift()!
+            current.add(currentCell)
+            visited.add(currentCell)
+            if (
+              currentCell.x === 0 ||
+              currentCell.x === this.mino.width - 1 ||
+              currentCell.y === 0 ||
+              currentCell.y === this.mino.height - 1
+            ) {
+              connectedToEdge = true
+            }
+            for (const nbr of getKingwiseNeighbors(currentCell)) {
+              if (!this.mino.contains(nbr)) {
+                queue.push(nbr)
+              }
+            }
+          }
+          if (!connectedToEdge) {
+            punctures.push(current)
+          }
+        }
+      }
+    }
   })
 
   /** Return whether the polyomino contains a hole */

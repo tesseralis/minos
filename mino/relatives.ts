@@ -198,6 +198,14 @@ export function* getNeighbors(p: Coord): Generator<Coord> {
   yield p.add(Vector.LEFT)
 }
 
+export function* getKingwiseNeighbors(p: Coord): Generator<Coord> {
+  yield* getNeighbors(p)
+  yield p.add([1, 1])
+  yield p.add([1, -1])
+  yield p.add([-1, -1])
+  yield p.add([-1, 1])
+}
+
 export function isValid(mino: MinoData): boolean {
   const p0 = [...getCoords(mino)][0]
   // the null-omino is not a valid polyomino

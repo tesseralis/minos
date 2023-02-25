@@ -18,6 +18,7 @@ export {
   addSquare,
   removeSquare,
   getNeighbors,
+  getKingwiseNeighbors,
 } from "./relatives"
 export { default as MinoClasses, minoClasses, getClassCode } from "./classes"
 export type { MinoClass } from "./classes"
