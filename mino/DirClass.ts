@@ -85,6 +85,6 @@ const regexes: Record<string, string> = {
   antler: "ru(ru|lu|ld(ld)*lu)*ld(ld)*",
   "range chart": "ru(ru|lu)*ld(ld|rd)*",
   "bent tree": "ru(ru|lu|ld(ld)*lu)ld(ld)*(rd)*",
-  tree: "ru(ru|lu|ld(ld|rd)lu)*ld(ld|rd)*",
+  tree: "ru(ru|lu|ld(ld|rd)*lu)*ld(ld|rd)*",
   other: "",
 }
