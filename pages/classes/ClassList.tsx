@@ -1,7 +1,8 @@
 import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
 import MinoLink from "components/MinoLink"
-import { Polyomino } from "mino"
+import { DirClass, Polyomino } from "mino"
+import { getBoundaryFamilies } from "./classHelpers"
 
 function BoundaryFamily({
   family,
@@ -43,11 +44,8 @@ function BoundaryFamily({
   )
 }
 
-export default function ClassList({
-  families,
-}: {
-  families: { family: string; minos: Polyomino[] }[]
-}) {
+export default function ClassList({ dirClass }: { dirClass: DirClass }) {
+  const families = getBoundaryFamilies(dirClass.name())
   return (
     <div
       css={css`

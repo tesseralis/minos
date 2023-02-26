@@ -2,7 +2,7 @@ import Link from "next/link"
 import { css } from "@emotion/react"
 import { capitalize } from "lodash"
 import Layout from "components/Layout"
-import { escapeClass, getBoundaryFamilies } from "./classHelpers"
+import { escapeClass } from "./classHelpers"
 import { colors } from "style/theme"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
@@ -30,11 +30,11 @@ const arrowPositions = [
   { row: 8, column: "3 / span 2" },
 ]
 
-function PolyominoClass({ class: cls }: { class: DirClass }) {
+function PolyominoClass({ dirClass }: { dirClass: DirClass }) {
   return (
     <section
       css={css`
-        grid-area: ${cls.code()};
+        grid-area: ${dirClass.code()};
         border: 2px grey solid;
         padding: 1.5rem 1rem;
         border-radius: 2px;
@@ -44,16 +44,51 @@ function PolyominoClass({ class: cls }: { class: DirClass }) {
       <h2
         css={css`
           font-size: 1.25rem;
-          margin-top: 0;
+          margin: 0;
         `}
       >
-        <Link href={`/classes/${escapeClass(cls.name())}`}>
-          {capitalize(cls.name())}
+        <Link href={`/classes/${escapeClass(dirClass.name())}`}>
+          {capitalize(dirClass.name())}
         </Link>
       </h2>
-      <ClassList families={getBoundaryFamilies(cls.name())} />
+      <ClassRegex dirClass={dirClass} />
+      <ClassList dirClass={dirClass} />
     </section>
   )
+}
+
+function ClassRegex({ dirClass }: { dirClass: DirClass }) {
+  const regex = dirClass.regex()
+  const parts = regex.match(/ru|lu|ld|rd|\(|\)|\||\*/g) ?? []
+  return (
+    <div
+      css={css`
+        font-family: monospace;
+        font-weight: bold;
+        font-size: 1rem;
+      `}
+    >
+      {parts.map((part, index) => {
+        return (
+          <span
+            key={index}
+            css={css`
+              color: ${colorMap[part] ?? colors.fg};
+            `}
+          >
+            {part}
+          </span>
+        )
+      })}
+    </div>
+  )
+}
+
+const colorMap: Record<string, string> = {
+  ru: colors.palette[1],
+  lu: colors.palette[2],
+  ld: colors.palette[3],
+  rd: colors.palette[0],
 }
 
 function Info() {
@@ -131,8 +166,8 @@ export default function ClassesChart() {
         `}
       >
         <Info />
-        {DirClass.all().map((cls) => (
-          <PolyominoClass key={cls.code()} class={cls} />
+        {DirClass.all().map((dirClass) => (
+          <PolyominoClass key={dirClass.code()} dirClass={dirClass} />
         ))}
         {arrowPositions.map((arrow, i) => (
           <Arrow key={i} {...arrow} />

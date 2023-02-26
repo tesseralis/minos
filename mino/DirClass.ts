@@ -29,13 +29,13 @@ export default class DirClass {
     return codes[this.name()]
   }
 
+  regex() {
+    return regexes[this.name()]
+  }
+
   static all() {
     return Object.values(classNamesMap)
   }
-
-  // symbol
-  // subclasses/superclasses
-  // regex
 }
 
 const classNamesMap: Record<string, DirClass> = {
@@ -82,4 +82,9 @@ const regexes: Record<string, string> = {
   cross: "(ru)*(lu)*(ld)*(rd)*",
   wing: "(ru|lu)*(ld)*",
   crescent: "(ru|lu)*(ld)*(rd)*",
+  antler: "ru(ru|lu|ld(ld)*lu)*ld(ld)*",
+  "range chart": "ru(ru|lu)*ld(ld|rd)*",
+  "bent tree": "ru(ru|lu|ld(ld)*lu)ld(ld)*(rd)*",
+  tree: "ru(ru|lu|ld(ld|rd)lu)*ld(ld|rd)*",
+  other: "",
 }

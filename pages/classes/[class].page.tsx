@@ -115,7 +115,7 @@ export default function ClassInfo({ class: cls }: Props) {
         </h1>
         <Text />
         <h2>Polyomino list</h2>
-        <ClassList families={getBoundaryFamilies(cls)} />
+        <ClassList dirClass={DirClass.fromName(cls)} />
       </NavAndContent>
     </Layout>
   )
