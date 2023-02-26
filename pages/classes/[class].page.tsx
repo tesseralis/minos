@@ -25,6 +25,7 @@ import staircase from "./subpages/staircase.mdx"
 import tree from "./subpages/tree.mdx"
 import wing from "./subpages/wing.mdx"
 import { DirClass } from "mino"
+import { ClassRegex } from "./words"
 
 const pages = {
   antler,
@@ -114,6 +115,8 @@ export default function ClassInfo({ class: cls }: Props) {
           {capitalize(cls)} polyomino
         </h1>
         <Text />
+        <h2>Regex</h2>
+        <ClassRegex dirClass={DirClass.fromName(cls)} />
         <h2>Polyomino list</h2>
         <ClassList dirClass={DirClass.fromName(cls)} />
       </NavAndContent>

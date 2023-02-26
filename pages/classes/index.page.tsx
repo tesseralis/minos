@@ -7,6 +7,7 @@ import { colors } from "style/theme"
 import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
 import { DirClass } from "mino"
+import { ClassRegex } from "./words"
 
 // List of arrow grid positions
 const arrowPositions = [
@@ -55,40 +56,6 @@ function PolyominoClass({ dirClass }: { dirClass: DirClass }) {
       <ClassList dirClass={dirClass} />
     </section>
   )
-}
-
-function ClassRegex({ dirClass }: { dirClass: DirClass }) {
-  const regex = dirClass.regex()
-  const parts = regex.match(/ru|lu|ld|rd|\(|\)|\||\*/g) ?? []
-  return (
-    <div
-      css={css`
-        font-family: monospace;
-        font-weight: bold;
-        font-size: 1rem;
-      `}
-    >
-      {parts.map((part, index) => {
-        return (
-          <span
-            key={index}
-            css={css`
-              color: ${colorMap[part] ?? colors.fg};
-            `}
-          >
-            {part}
-          </span>
-        )
-      })}
-    </div>
-  )
-}
-
-const colorMap: Record<string, string> = {
-  ru: colors.palette[1],
-  lu: colors.palette[2],
-  ld: colors.palette[3],
-  rd: colors.palette[0],
 }
 
 function Info() {

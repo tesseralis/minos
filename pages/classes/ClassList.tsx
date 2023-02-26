@@ -1,10 +1,9 @@
 import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
 import MinoLink from "components/MinoLink"
-import { chunk } from "lodash"
 import { DirClass, Polyomino } from "mino"
-import { colors } from "style/theme"
 import { getBoundaryFamilies } from "./classHelpers"
+import { BoundaryWord } from "./words"
 
 function BoundaryFamily({
   family,
@@ -46,40 +45,6 @@ function BoundaryFamily({
       </div>
     </div>
   )
-}
-
-function BoundaryWord({ word }: { word: string }) {
-  // reconfigure the word so that it starts with "ru"
-  const startIndex = word.indexOf("ru")
-  const cycled = word.substring(startIndex) + word.substring(0, startIndex)
-  const segments = chunk(cycled, 2).map((segment) => segment.join(""))
-  return (
-    <div
-      css={css`
-        font-family: monospace;
-        display: flex;
-        gap: 0.25rem;
-      `}
-    >
-      {segments.map((segment, index) => (
-        <span
-          key={index}
-          css={css`
-            color: ${colorMap[segment] ?? colors.fg};
-          `}
-        >
-          {segment}
-        </span>
-      ))}
-    </div>
-  )
-}
-
-const colorMap: Record<string, string> = {
-  ru: colors.palette[1],
-  lu: colors.palette[2],
-  ld: colors.palette[3],
-  rd: colors.palette[0],
 }
 
 export default function ClassList({ dirClass }: { dirClass: DirClass }) {
