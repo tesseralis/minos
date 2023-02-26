@@ -14,7 +14,7 @@ interface Props {
 
 export default function ClassMino({ mino, size }: Props) {
   const { stroke, fill } = getMinoColor(mino)
-  const segments = getPathSegments(mino)
+  const segments = getPathSegments(mino, size)
   return (
     <div>
       <MinoLink
@@ -23,19 +23,17 @@ export default function ClassMino({ mino, size }: Props) {
         size={size}
         fill={fill}
         stroke={stroke}
+        strokeWidth={4}
+        gridStyle="thin"
       >
         {segments.map(({ dir, points }, index) => {
-          const scale = (v: Vector) => v.scale(size)
-          const scaledOutline = points.map(scale)
-          const anchorPoint = getAnchor(scaledOutline, "center center")
-
-          const translate = (v: Vector) => v.sub(anchorPoint)
-          const outlinePoints = scaledOutline.map(translate)
           return (
             <Polyline
               key={index}
-              points={outlinePoints}
+              points={points}
               stroke={getDirColor(dir)}
+              strokeWidth={2}
+              strokeLinecap="round"
               fill="none"
             />
           )
@@ -45,16 +43,24 @@ export default function ClassMino({ mino, size }: Props) {
   )
 }
 
-function getPathSegments(mino: Polyomino) {
+function getPathSegments(mino: Polyomino, size: number) {
   const outline = mino.boundary().outline()
+  const scale = (v: Vector) => v.scale(size)
+  const scaledOutline = outline.map(scale)
+  const anchorPoint = getAnchor(scaledOutline, "center center")
+
+  const translate = (v: Vector) => v.sub(anchorPoint)
+  const outlinePoints = scaledOutline.map(translate)
   // get the bottom-right point of the outline
-  const bottomRow = outline.filter(
-    (point) => point.y === Math.max(...outline.map((p) => p.y)),
+  const bottomRow = outlinePoints.filter(
+    (point) => point.y === Math.max(...outlinePoints.map((p) => p.y)),
   )
   const startPoint = minBy(bottomRow, (p) => p.x)!
   // shift so we start with the bottom right
-  const index = outline.findIndex((p) => p.equals(startPoint))
-  const cycledOutline = outline.slice(index).concat(outline.slice(0, index))
+  const index = outlinePoints.findIndex((p) => p.equals(startPoint))
+  const cycledOutline = outlinePoints
+    .slice(index)
+    .concat(outlinePoints.slice(0, index))
 
   // group the segments together
   const groups = []
@@ -77,7 +83,7 @@ function getPathSegments(mino: Polyomino) {
       vertDir = getDirection(vertVec)
       current = {
         dir: horizDir[0] + vertDir[0],
-        points: [],
+        points: [p0, p1],
       }
     } else {
       current.points.push(p0)

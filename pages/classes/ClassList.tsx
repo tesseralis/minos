@@ -53,7 +53,7 @@ function BoundaryFamily({
         `}
       >
         {minos.map((mino) => {
-          return <ClassMino key={mino.data} mino={mino} size={8} />
+          return <ClassMino key={mino.data} mino={mino} size={12} />
         })}
       </div>
     </div>

@@ -12,6 +12,7 @@ export interface Props {
   mino: Polyomino
   coord: Vector
   size: number
+  strokeWidth?: number
   fill: string
   stroke: string
   anchor?: string
@@ -37,8 +38,8 @@ export default function MinoSvg({
   gridStyle = "thick",
   onClick,
   onHover,
+  strokeWidth = size / 8,
 }: Props) {
-  const strokeWidth = size / 8
   const outline = mino.boundary().outline()
   const scale = (v: Vector) => v.scale(size)
   const scaledOutline = outline.map(scale)
