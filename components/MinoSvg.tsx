@@ -13,9 +13,11 @@ export interface Props {
   coord: Vector
   size: number
   strokeWidth?: number
+  gridStrokeWidth?: number
   fill: string
   stroke: string
   anchor?: string
+  // (misnamed) whether the grid lines should be shown, clear, or not
   gridStyle?: "thick" | "thin" | "none"
   onClick?(): void
   onHover?(hovered: boolean): void
@@ -39,6 +41,7 @@ export default function MinoSvg({
   onClick,
   onHover,
   strokeWidth = size / 8,
+  gridStrokeWidth = strokeWidth / 2,
 }: Props) {
   const outline = mino.boundary().outline()
   const scale = (v: Vector) => v.scale(size)
@@ -90,7 +93,7 @@ export default function MinoSvg({
           style={{ stroke }}
           fill="none"
           opacity={gridStyle === "thick" ? 1 : 0.25}
-          strokeWidth={strokeWidth * 0.5}
+          strokeWidth={gridStrokeWidth}
         />
       )}
     </G>

@@ -5,6 +5,7 @@ import { getAnchor } from "components/utils"
 import Vector from "lib/vector"
 import { minBy } from "lodash"
 import { Polyomino } from "mino"
+import tinycolor from "tinycolor2"
 import { getDirColor } from "./words"
 
 interface Props {
@@ -24,14 +25,15 @@ export default function ClassMino({ mino, size }: Props) {
         fill={fill}
         stroke={stroke}
         strokeWidth={4}
-        gridStyle="none"
+        gridStrokeWidth={1}
+        gridStyle="thin"
       >
         {segments.map(({ dir, points }, index) => {
           return (
             <Polyline
               key={index}
               points={points}
-              stroke={getDirColor(dir)}
+              stroke={tinycolor(getDirColor(dir)).darken(15).toString()}
               strokeWidth={2}
               strokeLinecap="round"
               fill="none"
