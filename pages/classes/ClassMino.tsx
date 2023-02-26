@@ -24,7 +24,7 @@ export default function ClassMino({ mino, size }: Props) {
         fill={fill}
         stroke={stroke}
         strokeWidth={4}
-        gridStyle="thin"
+        gridStyle="none"
       >
         {segments.map(({ dir, points }, index) => {
           return (

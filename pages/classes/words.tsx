@@ -5,6 +5,7 @@ import { colors } from "style/theme"
 
 export function BoundaryWord({ word }: { word: string }) {
   // reconfigure the word so that it starts with "ru"
+  // FIXME this doesn't work for directed
   const startIndex = word.indexOf("ru")
   const cycled = word.substring(startIndex) + word.substring(0, startIndex)
   const segments = chunk(cycled, 2).map((segment) => segment.join(""))
