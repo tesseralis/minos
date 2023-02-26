@@ -3,7 +3,30 @@ import { getMinoColor } from "components/graph"
 import MinoLink from "components/MinoLink"
 import { DirClass, Polyomino } from "mino"
 import { getBoundaryFamilies } from "./classHelpers"
+import ClassMino from "./ClassMino"
 import { BoundaryWord } from "./words"
+
+export default function ClassList({ dirClass }: { dirClass: DirClass }) {
+  const families = getBoundaryFamilies(dirClass.name())
+  return (
+    <div
+      css={css`
+        display: flex;
+        align-items: stretch;
+        flex-wrap: wrap;
+        margin: -0.5rem;
+
+        > * {
+          margin: 0.5rem;
+        }
+      `}
+    >
+      {families.map(({ family, minos }, key) => {
+        return <BoundaryFamily family={family} minos={minos} key={key} />
+      })}
+    </div>
+  )
+}
 
 function BoundaryFamily({
   family,
@@ -30,41 +53,9 @@ function BoundaryFamily({
         `}
       >
         {minos.map((mino) => {
-          const { stroke, fill } = getMinoColor(mino)
-          return (
-            <MinoLink
-              key={mino.data}
-              to={`/catalog/${mino.toString()}`}
-              mino={mino}
-              size={8}
-              fill={fill}
-              stroke={stroke}
-            />
-          )
+          return <ClassMino key={mino.data} mino={mino} size={8} />
         })}
       </div>
-    </div>
-  )
-}
-
-export default function ClassList({ dirClass }: { dirClass: DirClass }) {
-  const families = getBoundaryFamilies(dirClass.name())
-  return (
-    <div
-      css={css`
-        display: flex;
-        align-items: stretch;
-        flex-wrap: wrap;
-        margin: -0.5rem;
-
-        > * {
-          margin: 0.5rem;
-        }
-      `}
-    >
-      {families.map(({ family, minos }, key) => {
-        return <BoundaryFamily family={family} minos={minos} key={key} />
-      })}
     </div>
   )
 }

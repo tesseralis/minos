@@ -15,7 +15,7 @@ export default function SymmetryMino({ mino, size }: Props) {
       css={css`
         svg {
           overflow: visible;
-          /* transform: rotate(0);
+          /* transform: rotate(0)
           :hover {
             transform: rotate(-180deg);
             transition: transform 350ms ease-in-out;

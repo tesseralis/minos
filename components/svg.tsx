@@ -91,6 +91,15 @@ export function Polygon({ points, ...svgProps }: PolygonProps) {
   )
 }
 
+export function Polyline({ points, ...svgProps }: PolygonProps) {
+  return (
+    <polyline
+      {...getBaseSVGProps(svgProps)}
+      points={points.map(([x, y]) => `${x},${y}`).join(" ")}
+    />
+  )
+}
+
 export interface CircleProps
   extends Omit<SVGProps<SVGCircleElement>, "cx" | "cy"> {
   center?: Point

@@ -20,7 +20,7 @@ export function BoundaryWord({ word }: { word: string }) {
         <span
           key={index}
           css={css`
-            color: ${colorMap[segment] ?? colors.fg};
+            color: ${getDirColor(segment)};
           `}
         >
           {segment}
@@ -46,7 +46,7 @@ export function ClassRegex({ dirClass }: { dirClass: DirClass }) {
           <span
             key={index}
             css={css`
-              color: ${colorMap[part] ?? colors.fg};
+              color: ${getDirColor(part)};
             `}
           >
             {part}
@@ -55,6 +55,10 @@ export function ClassRegex({ dirClass }: { dirClass: DirClass }) {
       })}
     </div>
   )
+}
+
+export function getDirColor(dir: string) {
+  return colorMap[dir] ?? colors.fg
 }
 
 const colorMap: Record<string, string> = {
