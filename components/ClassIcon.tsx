@@ -1,5 +1,6 @@
 import { DirClass, Polyomino } from "mino"
 import React, { ReactNode } from "react"
+import tinycolor from "tinycolor2"
 import MinoDiv from "./MinoDiv"
 import { Circle, Line } from "./svg"
 
@@ -20,7 +21,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
   }
   const markerProps = {
     stroke,
-    strokeWidth: 1,
+    strokeWidth: 2,
     fill: "none",
   }
 
@@ -137,11 +138,11 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     },
     {
       type: "bent tree",
-      mino: Polyomino.of("110_101_111_010"),
+      mino: Polyomino.of("1011_1110_0011"),
       markers: (
         <>
-          <SemiDirectedMarker anchor="bottom" xOffset={-size / 8} />
-          <SemiDirectedMarker anchor="left" xOffset={-size / 8} />
+          <SemiDirectedMarker anchor="bottom" yOffset={7.5} />
+          <SemiDirectedMarker anchor="left" yOffset={7.5} />
         </>
       ),
     },
@@ -157,10 +158,10 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     },
     {
       type: "tree",
-      mino: Polyomino.of("110_101_111_101"),
-      markers: <SemiDirectedMarker xOffset={-size / 8} />,
+      mino: Polyomino.of("1011_1110_1011"),
+      markers: <SemiDirectedMarker yOffset={7.5} />,
     },
-    { type: "other", mino: Polyomino.of("01111_10101_11110") },
+    { type: "other", mino: Polyomino.of("11011_01110_11011") },
   ]
 
   function DirectedMarker({
@@ -199,9 +200,11 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
   function SemiDirectedMarker({
     anchor = "bottom",
     xOffset = 0,
+    yOffset = 0,
   }: {
     anchor?: string
     xOffset?: number
+    yOffset?: number
   }) {
     const offset = size / 4
     if (anchor === "top" || anchor === "bottom") {
@@ -210,14 +213,14 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       return (
         <>
           <Circle
-            center={[xOffset, 0]}
+            center={[xOffset, yOffset]}
             r={radius}
             {...markerProps}
             fill={stroke}
           />
           <Line
-            p1={[xOffset, 0]}
-            p2={[xOffset, ySign * offset]}
+            p1={[xOffset, yOffset]}
+            p2={[xOffset, yOffset + ySign * offset]}
             {...markerProps}
           />
         </>
@@ -226,10 +229,15 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       const xSign = anchor === "left" ? 1 : -1
       return (
         <>
-          <Circle center={[xOffset, 0]} r={1} {...markerProps} fill={stroke} />
+          <Circle
+            center={[xOffset, yOffset]}
+            r={1}
+            {...markerProps}
+            fill={stroke}
+          />
           <Line
-            p1={[xOffset, 0]}
-            p2={[xOffset + xSign * offset, 0]}
+            p1={[xOffset, yOffset]}
+            p2={[xOffset + xSign * offset, yOffset]}
             {...markerProps}
           />
         </>
@@ -243,7 +251,8 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     <MinoDiv
       mino={mino}
       fill={fill}
-      stroke={stroke}
+      stroke={tinycolor(stroke).setAlpha(0.75).toString()}
+      strokeWidth={1}
       size={size / Math.max(mino.height, mino.width)}
       gridStyle="none"
     >

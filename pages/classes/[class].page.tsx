@@ -4,7 +4,7 @@ import { useRouter } from "next/router"
 import Link from "next/link"
 import { css } from "@emotion/react"
 import Layout from "components/Layout"
-import { getBoundaryFamilies, escapeClass, unescapeClass } from "./classHelpers"
+import { escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
 import ClassIcon from "components/ClassIcon"
 import { getClassColor } from "components/graph"
@@ -64,7 +64,7 @@ export default function ClassInfo({ class: cls }: Props) {
               padding-top: 2rem;
               display: grid;
               align-content: start;
-              gap: 2rem 1rem;
+              gap: 1.5rem 0.75rem;
               grid-template-columns: repeat(4, 1fr);
               grid-template-areas:
                 ".     .    rect  ."
@@ -91,7 +91,7 @@ export default function ClassInfo({ class: cls }: Props) {
                     flex-direction: column;
                     align-items: center;
                     text-align: center;
-                    gap: 0.5rem;
+                    gap: 0.25rem;
                     grid-area: ${cls.code()};
                     text-decoration: ${isActive ? "underline" : "none"};
                   `}
@@ -135,7 +135,7 @@ export default function ClassInfo({ class: cls }: Props) {
           </div>
           <div>
             <h2>Regex</h2>
-            <ClassRegex dirClass={dirClass} />
+            {dirClass.regex() ? <ClassRegex dirClass={dirClass} /> : "--"}
           </div>
         </div>
         {/* <h2>State Machine</h2> */}

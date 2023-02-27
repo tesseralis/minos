@@ -31,7 +31,7 @@ const classColorMap: Record<string, string> = {
   "Ferrers diagram": "#f5f", // magenta
   staircase: "#82f", // violet
   stack: "#f28", // rose
-  fork: "#42f", // blue
+  fork: "#63f", // blue
   "bar chart": "#f22", // red
   cross: "#08f", // azure
   wing: "#f60", // orange
@@ -40,7 +40,7 @@ const classColorMap: Record<string, string> = {
   "range chart": "#0fb", // teal
   "bent tree": "#ad0", // lime
   tree: "#2a2", // green
-  other: "#484", // grey
+  other: "#686", // grey
 }
 /**
  * Get the unique randomized color ID for the given polyomino.
