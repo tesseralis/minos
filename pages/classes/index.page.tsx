@@ -8,6 +8,7 @@ import InfoContent from "./Info.mdx"
 import ClassList from "./ClassList"
 import { DirClass } from "mino"
 import { ClassRegex } from "./words"
+import ClassSymbol from "./ClassSymbol"
 
 // List of arrow grid positions
 const arrowPositions = [
@@ -46,11 +47,13 @@ function PolyominoClass({ dirClass }: { dirClass: DirClass }) {
         css={css`
           font-size: 1.25rem;
           margin: 0;
+          margin-bottom: 0.5rem;
         `}
       >
         <Link href={`/classes/${escapeClass(dirClass.name())}`}>
           {capitalize(dirClass.name())}
-        </Link>
+        </Link>{" "}
+        (<ClassSymbol dirClass={dirClass} />)
       </h2>
       <ClassRegex dirClass={dirClass} />
       <ClassList dirClass={dirClass} />

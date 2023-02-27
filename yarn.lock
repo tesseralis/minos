@@ -2529,6 +2529,22 @@
   dependencies:
     "@types/react" "^16"
 
+"@types/react-katex@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@types/react-katex/-/react-katex-3.0.0.tgz#119a902bff10eb52f449fac744aaed8c4909391f"
+  integrity sha512-AiHHXh71a2M7Z6z1wj6iA23SkiRF9r0neHUdu8zjU/cT3MyLxDefYHbcceKhV/gjDEZgF3YaiNHyPNtoGUjPvg==
+  dependencies:
+    "@types/react" "*"
+
+"@types/react@*":
+  version "18.0.28"
+  resolved "https://registry.yarnpkg.com/@types/react/-/react-18.0.28.tgz#accaeb8b86f4908057ad629a26635fe641480065"
+  integrity sha512-RD0ivG1kEztNBdoAK7lekI9M+azSnitIn85h4iOiaLjaTrMjzslhaqCGaI4IyCJ1RljWiLCEu4jyrLLgqxBTew==
+  dependencies:
+    "@types/prop-types" "*"
+    "@types/scheduler" "*"
+    csstype "^3.0.2"
+
 "@types/react@^16", "@types/react@^16.9.35":
   version "16.14.5"
   resolved "https://registry.yarnpkg.com/@types/react/-/react-16.14.5.tgz#2c39b5cadefaf4829818f9219e5e093325979f4d"
@@ -4360,6 +4376,11 @@ commander@^7.2.0:
   version "7.2.0"
   resolved "https://registry.yarnpkg.com/commander/-/commander-7.2.0.tgz#a36cb57d0b501ce108e4d20559a150a391d97ab7"
   integrity sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==
+
+commander@^8.0.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
 
 common-tags@^1.8.0:
   version "1.8.0"
@@ -8632,6 +8653,13 @@ katex@^0.13.0:
   dependencies:
     commander "^6.0.0"
 
+katex@^0.16.0:
+  version "0.16.4"
+  resolved "https://registry.yarnpkg.com/katex/-/katex-0.16.4.tgz#87021bc3bbd80586ef715aeb476794cba6a49ad4"
+  integrity sha512-WudRKUj8yyBeVDI4aYMNxhx5Vhh2PjpzQw1GRu/LVGqL4m1AxwD1GcUp0IMbdJaf5zsjtj8ghP0DOQRYhroNkw==
+  dependencies:
+    commander "^8.0.0"
+
 killable@^1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/killable/-/killable-1.0.1.tgz#4c8ce441187a061c7474fb87ca08e2a638194892"
@@ -11186,6 +11214,13 @@ react-is@^17.0.1:
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-katex@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/react-katex/-/react-katex-3.0.1.tgz#262b44f49c5fa727f1d13cbab595f791318e5083"
+  integrity sha512-wIUW1fU5dHlkKvq4POfDkHruQsYp3fM8xNb/jnc8dnQ+nNCnaj0sx5pw7E6UyuEdLRyFKK0HZjmXBo+AtXXy0A==
+  dependencies:
+    katex "^0.16.0"
 
 react-refresh@^0.8.3:
   version "0.8.3"

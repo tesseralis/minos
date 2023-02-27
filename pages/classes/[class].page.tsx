@@ -27,6 +27,7 @@ import wing from "./subpages/wing.mdx"
 import { DirClass } from "mino"
 import { ClassRegex } from "./words"
 import Automaton from "./Automaton"
+import ClassSymbol from "./ClassSymbol"
 
 const pages = {
   antler,
@@ -52,6 +53,7 @@ interface Props {
 export default function ClassInfo({ class: cls }: Props) {
   const router = useRouter()
   const Text = (pages as any)[cls]
+  const dirClass = DirClass.fromName(cls)
   return (
     <Layout>
       <NavAndContent
@@ -116,12 +118,30 @@ export default function ClassInfo({ class: cls }: Props) {
           {capitalize(cls)} polyomino
         </h1>
         <Text />
-        <h2>Regex</h2>
-        <ClassRegex dirClass={DirClass.fromName(cls)} />
+        <div
+          css={css`
+            display: flex;
+            gap: 2rem;
+
+            h2 {
+              font-size: 1.125rem;
+              margin: 0;
+            }
+          `}
+        >
+          <div>
+            <h2>Symbol</h2>
+            <ClassSymbol dirClass={dirClass} />
+          </div>
+          <div>
+            <h2>Regex</h2>
+            <ClassRegex dirClass={dirClass} />
+          </div>
+        </div>
         {/* <h2>State Machine</h2> */}
         {/* <Automaton dirClass={DirClass.fromName(cls)} /> */}
         <h2>Polyomino list</h2>
-        <ClassList dirClass={DirClass.fromName(cls)} />
+        <ClassList dirClass={dirClass} />
       </NavAndContent>
     </Layout>
   )
