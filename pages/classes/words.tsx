@@ -3,7 +3,14 @@ import { chunk } from "lodash"
 import { DirClass } from "mino"
 import { colors } from "style/theme"
 
-export function BoundaryWord({ word }: { word: string }) {
+interface WordProps {
+  word: string
+  currentIndex: number
+  onChangeIndex(index: number): void
+}
+
+// TODO have similar behavior for touch devices
+export function BoundaryWord({ word, currentIndex, onChangeIndex }: WordProps) {
   const segments = getWordSegments(word)
   return (
     <div
@@ -11,14 +18,27 @@ export function BoundaryWord({ word }: { word: string }) {
         font-family: monospace;
         display: flex;
         gap: 0.25rem;
+        align-items: baseline;
       `}
     >
       {segments.map(({ dir, count }, index) => (
         <span
           key={index}
           css={css`
-            color: ${getDirColor(dir)};
+            color: ${index === currentIndex ? "white" : getDirColor(dir)};
           `}
+          onMouseOver={() => {
+            onChangeIndex(index)
+          }}
+          onFocus={() => {
+            onChangeIndex(index)
+          }}
+          onMouseOut={() => {
+            onChangeIndex(-1)
+          }}
+          onBlur={() => {
+            onChangeIndex(-1)
+          }}
         >
           {dir}
           {count > 1 && <sup>{count}</sup>}

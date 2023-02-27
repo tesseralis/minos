@@ -11,9 +11,10 @@ import { getDirColor } from "./words"
 interface Props {
   mino: Polyomino
   size: number
+  currentIndex: number
 }
 
-export default function ClassMino({ mino, size }: Props) {
+export default function ClassMino({ mino, size, currentIndex }: Props) {
   const { stroke, fill } = getMinoColor(mino)
   const segments = getPathSegments(mino, size)
   return (
@@ -33,7 +34,11 @@ export default function ClassMino({ mino, size }: Props) {
             <Polyline
               key={index}
               points={points}
-              stroke={tinycolor(getDirColor(dir)).darken(15).toString()}
+              stroke={
+                currentIndex === index
+                  ? "white"
+                  : tinycolor(getDirColor(dir)).darken(15).toString()
+              }
               strokeWidth={2}
               strokeLinecap="round"
               fill="none"

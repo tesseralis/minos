@@ -2,6 +2,7 @@ import { css } from "@emotion/react"
 import { getMinoColor } from "components/graph"
 import MinoLink from "components/MinoLink"
 import { DirClass, Polyomino } from "mino"
+import { useState } from "react"
 import { getBoundaryFamilies } from "./classHelpers"
 import ClassMino from "./ClassMino"
 import { BoundaryWord } from "./words"
@@ -35,6 +36,7 @@ function BoundaryFamily({
   family: string
   minos: Polyomino[]
 }) {
+  const [currentIndex, setCurrentIndex] = useState(-1)
   return (
     <div
       css={css`
@@ -43,7 +45,11 @@ function BoundaryFamily({
         border-radius: 1rem;
       `}
     >
-      <BoundaryWord word={family} />
+      <BoundaryWord
+        word={family}
+        currentIndex={currentIndex}
+        onChangeIndex={setCurrentIndex}
+      />
       <div
         css={css`
           display: flex;
@@ -53,7 +59,14 @@ function BoundaryFamily({
         `}
       >
         {minos.map((mino) => {
-          return <ClassMino key={mino.data} mino={mino} size={12} />
+          return (
+            <ClassMino
+              key={mino.data}
+              mino={mino}
+              size={12}
+              currentIndex={currentIndex}
+            />
+          )
         })}
       </div>
     </div>
