@@ -4,6 +4,7 @@ import MinoSvg from "components/MinoSvg"
 import { Polyomino, Tiling as MinoTiling } from "mino"
 import { getMinoColor } from "components/graph"
 import Vector from "lib/vector"
+import { colors } from "style/theme"
 
 // Mod except it works for negative numbers
 function mod(n: number, d: number) {
@@ -91,7 +92,8 @@ export default function Tiling({ mino, gridSize, svgSize }: Props) {
   }
   const tiles = [...getTiles(tiling, gridSize)]
   const { fill, stroke } = getMinoColor(mino)
-  const colors = tinycolor(fill).tetrad()
+  // const colors = tinycolor(fill).tetrad()
+  const tilingColors = colors.palette
 
   return (
     <svg
@@ -108,7 +110,7 @@ export default function Tiling({ mino, gridSize, svgSize }: Props) {
             mino={mino}
             coord={coord.scale(squareSize)}
             size={squareSize}
-            fill={colors[color].toHexString()}
+            fill={tilingColors[color]}
             gridStyle="thin"
             stroke={stroke}
             anchor="top left"

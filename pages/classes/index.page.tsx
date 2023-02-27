@@ -26,9 +26,9 @@ const arrowPositions = [
   { row: 6, column: "1 / span 3" },
   { row: 6, column: "4 / span 2" },
   { row: 6, column: 6 },
-  { row: 7, column: 3 },
-  { row: 7, column: 4 },
-  { row: 8, column: "3 / span 2" },
+  { row: 7, column: "2 / span 2" },
+  { row: 7, column: "4 / span 2" },
+  { row: 8, column: "2 / span 4" },
 ]
 
 function PolyominoClass({ dirClass }: { dirClass: DirClass }) {
