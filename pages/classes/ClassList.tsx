@@ -84,7 +84,7 @@ function BoundaryFamily({
                     <ClassMino
                       key={mino.data}
                       mino={mino}
-                      size={12}
+                      size={10}
                       currentIndex={currentIndex}
                     />
                   )
