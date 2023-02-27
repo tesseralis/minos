@@ -35,8 +35,8 @@ function BoundaryFamily({
     <div
       css={css`
         border: 1px dimgray solid;
-        padding: 1.5rem;
-        padding-right: 2rem;
+        padding: 1rem;
+        padding-right: 1.5rem;
         border-radius: 1rem;
         flex-grow: 1;
       `}

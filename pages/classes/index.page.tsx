@@ -122,7 +122,6 @@ export default function ClassesChart() {
           padding: 2rem;
           display: grid;
           grid-gap: 1.5rem;
-          /* grid-template-columns: 18rem 1fr 1fr 4rem 8rem 10rem; */
           grid-template-areas:
             "info  info  .     rect  rect  rect"
             "info  info  ferr  ferr  ferr  ferr"
