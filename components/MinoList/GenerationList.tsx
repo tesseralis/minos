@@ -1,8 +1,7 @@
-import { memo, useState, useEffect } from "react"
+import { memo } from "react"
 import { css } from "@emotion/react"
 
 import { Polyomino } from "mino"
-import transition from "components/transition"
 import { getMinoColor } from "components/graph"
 import { colors } from "style/theme"
 import { scaleLinear } from "d3-scale"
@@ -17,7 +16,6 @@ interface Props {
   gen: number
   selected: Polyomino | null
   to(mino: Polyomino): string
-  skipAnimation: boolean
 }
 
 /**
@@ -26,24 +24,9 @@ interface Props {
 export default memo(function GenerationList({
   minos,
   gen,
-  skipAnimation,
   to,
   selected,
 }: Props) {
-  const [visIndex, setVisIndex] = useState(0)
-  useEffect(() => {
-    if (skipAnimation) {
-      return
-    }
-    const trans = transition({
-      duration: minos.length * 5,
-      onUpdate(val) {
-        setVisIndex(val * minos.length)
-      },
-    })
-    return () => trans.cancel()
-  }, [minos, skipAnimation])
-
   return (
     <GenSection gen={gen} count={minos.length}>
       <div
@@ -61,7 +44,6 @@ export default memo(function GenerationList({
         {minos.length === 0
           ? "——"
           : minos.map((mino, i) => {
-              if (!skipAnimation && i > visIndex) return null
               const isSelected =
                 !!selected && mino.transform.equivalent(selected)
               const { stroke, fill } = getMinoColor(mino)

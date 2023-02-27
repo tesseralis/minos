@@ -62,7 +62,6 @@ export default function MinoList({
                 minos={minos}
                 gen={gen}
                 key={gen}
-                skipAnimation={gen <= START_GENS}
                 selected={hasSelected ? selected : null}
                 to={to}
               />
