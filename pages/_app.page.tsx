@@ -13,12 +13,12 @@ export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
 }
 
 type AppPropsWithLayout = AppProps & {
-  Component: NextPageWithLayout
+  Component: NextPageWithLayout & any
 }
 
 // the default app
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
-  const getLayout = Component.getLayout ?? ((page) => page)
+  const getLayout = Component.getLayout ?? ((page: any) => page)
   return (
     <>
       <Head>
