@@ -4,10 +4,7 @@ import { DirClass } from "mino"
 import { colors } from "style/theme"
 
 export function BoundaryWord({ word }: { word: string }) {
-  // reconfigure the word so that it starts with "ru"
-  const startIndex = word.indexOf("dru") + 1
-  const cycled = word.substring(startIndex) + word.substring(0, startIndex)
-  const segments = chunk(cycled, 2).map((segment) => segment.join(""))
+  const segments = getWordSegments(word)
   return (
     <div
       css={css`
@@ -16,14 +13,15 @@ export function BoundaryWord({ word }: { word: string }) {
         gap: 0.25rem;
       `}
     >
-      {segments.map((segment, index) => (
+      {segments.map(({ dir, count }, index) => (
         <span
           key={index}
           css={css`
-            color: ${getDirColor(segment)};
+            color: ${getDirColor(dir)};
           `}
         >
-          {segment}
+          {dir}
+          {count > 1 && <sup>{count}</sup>}
         </span>
       ))}
     </div>
@@ -59,6 +57,28 @@ export function ClassRegex({ dirClass }: { dirClass: DirClass }) {
 
 export function getDirColor(dir: string) {
   return colorMap[dir] ?? colors.fg
+}
+
+function getWordSegments(word: string) {
+  // reconfigure the word so that it starts with the first "ru" after a "d" (ie, the bottom-left)
+  const startIndex = word.indexOf("dru") + 1
+  const cycled = word.substring(startIndex) + word.substring(0, startIndex)
+  const segments = chunk(cycled, 2).map((segment) => segment.join(""))
+  const groupedSegments = []
+  let current = { dir: segments[0], count: 0 }
+  for (const segment of segments) {
+    if (segment !== current.dir) {
+      groupedSegments.push(current)
+      current = {
+        dir: segment,
+        count: 1,
+      }
+    } else {
+      current.count++
+    }
+  }
+  groupedSegments.push(current)
+  return groupedSegments
 }
 
 const colorMap: Record<string, string> = {
