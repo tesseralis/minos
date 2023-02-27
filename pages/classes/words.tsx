@@ -19,6 +19,7 @@ export function BoundaryWord({ word, currentIndex, onChangeIndex }: WordProps) {
         display: flex;
         gap: 0.25rem;
         align-items: baseline;
+        margin-bottom: 0.5rem;
       `}
     >
       {segments.map(({ dir, count }, index) => (
@@ -57,6 +58,7 @@ export function ClassRegex({ dirClass }: { dirClass: DirClass }) {
         font-family: monospace;
         font-weight: bold;
         font-size: 1rem;
+        margin-bottom: 0.5rem;
       `}
     >
       {parts.map((part, index) => {

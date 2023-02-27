@@ -1,6 +1,4 @@
 import { css } from "@emotion/react"
-import { getMinoColor } from "components/graph"
-import MinoLink from "components/MinoLink"
 import { DirClass, Polyomino } from "mino"
 import { useState } from "react"
 import { getBoundaryFamilies } from "./classHelpers"
@@ -15,11 +13,7 @@ export default function ClassList({ dirClass }: { dirClass: DirClass }) {
         display: flex;
         align-items: stretch;
         flex-wrap: wrap;
-        margin: -0.5rem;
-
-        > * {
-          margin: 0.5rem;
-        }
+        gap: 1rem;
       `}
     >
       {families.map(({ family, minos }, key) => {
@@ -34,15 +28,17 @@ function BoundaryFamily({
   minos,
 }: {
   family: string
-  minos: Polyomino[]
+  minos: Polyomino[][]
 }) {
   const [currentIndex, setCurrentIndex] = useState(-1)
   return (
     <div
       css={css`
         border: 1px dimgray solid;
-        padding: 1rem;
+        padding: 1.5rem;
+        padding-right: 2rem;
         border-radius: 1rem;
+        flex-grow: 1;
       `}
     >
       <BoundaryWord
@@ -54,18 +50,46 @@ function BoundaryFamily({
         css={css`
           display: flex;
           flex-wrap: wrap;
-          align-items: center;
-          gap: 0.75rem;
+          gap: 2.5rem 1.5rem;
         `}
       >
-        {minos.map((mino) => {
+        {minos.map((gen, index) => {
           return (
-            <ClassMino
-              key={mino.data}
-              mino={mino}
-              size={12}
-              currentIndex={currentIndex}
-            />
+            <div
+              key={index}
+              css={css`
+                display: flex;
+                gap: 0.75rem;
+              `}
+            >
+              <div>{index}</div>
+              <div
+                css={css`
+                  display: flex;
+                  flex-wrap: wrap;
+                  align-items: center;
+                  gap: 1.25rem;
+
+                  justify-content: space-between;
+
+                  ::after {
+                    content: "";
+                    flex: auto;
+                  }
+                `}
+              >
+                {gen.map((mino) => {
+                  return (
+                    <ClassMino
+                      key={mino.data}
+                      mino={mino}
+                      size={12}
+                      currentIndex={currentIndex}
+                    />
+                  )
+                })}
+              </div>
+            </div>
           )
         })}
       </div>

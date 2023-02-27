@@ -116,13 +116,20 @@ function groupBoundaryFamilies(minoClass: Polyomino[]) {
     ({ family, minos }) => {
       return {
         family,
-        minos: sortBy(
-          minos.map((item) => item.mino),
-          (mino) => [mino.order, -mino.height, -mino.width],
-        ),
+        minos: groupAndSortFamily(minos.map((item) => item.mino)),
       }
     },
   )
+}
+
+// Group family by size and sort by width and height
+function groupAndSortFamily(family: Polyomino[]) {
+  const byGen = groupBy(family, (mino) => mino.order)
+  const genList: Polyomino[][] = []
+  for (const [gen, minos] of Object.entries(byGen)) {
+    genList[+gen] = sortBy(minos, (mino) => [-mino.height, -mino.width])
+  }
+  return genList
 }
 
 /**

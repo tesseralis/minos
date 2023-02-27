@@ -17,14 +17,14 @@ const arrowPositions = [
   { row: 3, column: "1 / span 3" },
   { row: 3, column: 4 },
   { row: 3, column: "5 / span 2" },
-  { row: 4, column: 1 },
-  { row: 4, column: "2 / span 3" },
+  { row: 4, column: "1 / span 2" },
+  { row: 4, column: "3 / span 2" },
   { row: 4, column: "5 / span 2" },
-  { row: 5, column: 1 },
-  { row: 5, column: "2 / span 4" },
+  { row: 5, column: "1 / span 2" },
+  { row: 5, column: "3 / span 3" },
   { row: 5, column: 6 },
   { row: 6, column: "1 / span 3" },
-  { row: 6, column: 5 },
+  { row: 6, column: "4 / span 2" },
   { row: 6, column: 6 },
   { row: 7, column: 3 },
   { row: 7, column: 4 },
@@ -125,11 +125,11 @@ export default function ClassesChart() {
             "info  info  ferr  ferr  ferr  ferr"
             "stair stair stair stack stack stack"
             "fork  fork  fork  fork  bar   bar"
-            "cross wing  wing  wing  wing  wing"
+            "cross cross wing  wing  wing  wing"
             "cres  cres  cres  cres  cres  ant"
             "range range range btree btree btree"
-            ".     .     tree  tree  .     ."
-            ".     .     other other .     .";
+            ".     tree  tree  tree  tree  ."
+            ".     other other other other .";
         `}
       >
         <Info />
