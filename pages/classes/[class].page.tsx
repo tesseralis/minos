@@ -26,6 +26,7 @@ import tree from "./subpages/tree.mdx"
 import wing from "./subpages/wing.mdx"
 import { DirClass } from "mino"
 import { ClassRegex } from "./words"
+import Automaton from "./Automaton"
 
 const pages = {
   antler,
@@ -117,6 +118,8 @@ export default function ClassInfo({ class: cls }: Props) {
         <Text />
         <h2>Regex</h2>
         <ClassRegex dirClass={DirClass.fromName(cls)} />
+        {/* <h2>State Machine</h2> */}
+        {/* <Automaton dirClass={DirClass.fromName(cls)} /> */}
         <h2>Polyomino list</h2>
         <ClassList dirClass={DirClass.fromName(cls)} />
       </NavAndContent>
