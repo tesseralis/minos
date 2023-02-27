@@ -58,6 +58,7 @@ function BoundaryFamily({
             <div
               key={index}
               css={css`
+                flex-grow: 1;
                 display: flex;
                 gap: 0.75rem;
               `}
