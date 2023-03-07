@@ -4,7 +4,7 @@ import { getSymmetryColor } from "components/graph"
 import Layout from "components/Layout"
 import NavAndContent from "components/NavAndContent"
 import SymmetryIcon from "components/SymmetryIcon"
-import { capitalize } from "lodash"
+import { capitalize, range } from "lodash"
 import { printSymmetry, symmetries } from "mino"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -34,7 +34,7 @@ export default function SymmetryLayout({
           >
             <SubsectionLinks />
             <Link
-              href={`/symmetry/board`}
+              href={`/symmetry/table`}
               css={css`
                 font-size: 1.5rem;
                 text-decoration: none;
@@ -61,6 +61,7 @@ function SubsectionLinks() {
         display: grid;
         gap: 1rem 0.75rem;
         align-content: start;
+        grid-template-columns: repeat(3, 1fr);
         grid-template-areas:
           ".     all  ."
           "axis2 rot2 diag2"
