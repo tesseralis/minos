@@ -28,6 +28,9 @@ import { DirClass } from "mino"
 import { ClassRegex } from "./words"
 import Automaton from "./Automaton"
 import ClassSymbol from "./ClassSymbol"
+import ClassLayout from "./Layout"
+import { ReactNode } from "react"
+import Breadcrumbs from "components/Breadcrumbs"
 
 const pages = {
   antler,
@@ -50,101 +53,56 @@ interface Props {
   class: string
 }
 
-export default function ClassInfo({ class: cls }: Props) {
+export default function Page({ class: cls }: Props) {
   const router = useRouter()
   const Text = (pages as any)[cls]
   const dirClass = DirClass.fromName(cls)
   return (
-    <Layout>
-      <NavAndContent
-        columns="24rem 1fr"
-        nav={
-          <div
-            css={css`
-              padding-top: 2rem;
-              display: grid;
-              align-content: start;
-              gap: 1.5rem 0.75rem;
-              grid-template-columns: repeat(4, 1fr);
-              grid-template-areas:
-                ".     .    rect  ."
-                ".     ferr rect  ."
-                "stair ferr stack ."
-                "stair fork stack bar"
-                "cross fork wing  bar"
-                "cross cres wing  ant"
-                "range cres btree ant"
-                "range tree btree ."
-                ".     tree other ."
-                ".     .    other .";
-            `}
-          >
-            {DirClass.all().map((cls) => {
-              const route = `/classes/${escapeClass(cls.name())}`
-              const isActive = router.asPath === route
-              return (
-                <Link
-                  key={cls.code()}
-                  href={route}
-                  css={css`
-                    display: flex;
-                    flex-direction: column;
-                    align-items: center;
-                    text-align: center;
-                    gap: 0.25rem;
-                    grid-area: ${cls.code()};
-                    text-decoration: ${isActive ? "underline" : "none"};
-                  `}
-                >
-                  <ClassIcon
-                    class={cls}
-                    fill={"none"}
-                    stroke={getClassColor(cls.name())}
-                    size={60}
-                  />
-                  {capitalize(cls.name())}
-                </Link>
-              )
-            })}
-          </div>
-        }
+    <div>
+      <Breadcrumbs
+        paths={[
+          ["Classes", "/classes"],
+          [capitalize(cls), `/classes/${cls}`],
+        ]}
+      />
+      <h1
+        css={css`
+          margin: 0;
+        `}
       >
-        <Link href="/classes">Back</Link>
-        <h1
-          css={css`
-            margin: 0;
-          `}
-        >
-          {capitalize(cls)} polyomino
-        </h1>
-        <Text />
-        <div
-          css={css`
-            display: flex;
-            gap: 2rem;
+        {capitalize(cls)} polyomino
+      </h1>
+      <Text />
+      <div
+        css={css`
+          display: flex;
+          gap: 2rem;
 
-            h2 {
-              font-size: 1.125rem;
-              margin: 0;
-            }
-          `}
-        >
-          <div>
-            <h2>Symbol</h2>
-            <ClassSymbol dirClass={dirClass} />
-          </div>
-          <div>
-            <h2>Regex</h2>
-            {dirClass.regex() ? <ClassRegex dirClass={dirClass} /> : "--"}
-          </div>
+          h2 {
+            font-size: 1.125rem;
+            margin: 0;
+          }
+        `}
+      >
+        <div>
+          <h2>Symbol</h2>
+          <ClassSymbol dirClass={dirClass} />
         </div>
-        {/* <h2>State Machine</h2> */}
-        {/* <Automaton dirClass={DirClass.fromName(cls)} /> */}
-        <h2>Polyomino list</h2>
-        <ClassList dirClass={dirClass} />
-      </NavAndContent>
-    </Layout>
+        <div>
+          <h2>Regex</h2>
+          {dirClass.regex() ? <ClassRegex dirClass={dirClass} /> : "--"}
+        </div>
+      </div>
+      {/* <h2>State Machine</h2> */}
+      {/* <Automaton dirClass={DirClass.fromName(cls)} /> */}
+      <h2>Polyomino list</h2>
+      <ClassList dirClass={dirClass} />
+    </div>
   )
+}
+
+Page.getLayout = function getLayout(page: ReactNode) {
+  return <ClassLayout>{page}</ClassLayout>
 }
 
 export function getStaticPaths() {
