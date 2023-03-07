@@ -13,6 +13,7 @@ export default function Breadcrumbs({ paths }: Props) {
   return (
     <nav
       css={css`
+        margin-bottom: 1rem;
         display: flex;
         gap: 0.5rem;
         align-items: center;

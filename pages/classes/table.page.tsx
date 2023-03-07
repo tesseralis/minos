@@ -9,6 +9,7 @@ import ClassList from "./ClassList"
 import { DirClass } from "mino"
 import { ClassRegex } from "./words"
 import ClassSymbol from "./ClassSymbol"
+import Breadcrumbs from "components/Breadcrumbs"
 
 // List of arrow grid positions
 const arrowPositions = [
@@ -66,7 +67,7 @@ function Info() {
     <section
       css={css`
         grid-area: info;
-        padding: 1rem 2rem;
+        justify-self: start;
 
         h1 {
           font-size: 1.75rem;
@@ -117,31 +118,42 @@ function Arrow({ row, column }: ArrowProps) {
 export default function ClassesChart() {
   return (
     <Layout>
-      <main
+      <div
         css={css`
           padding: 2rem;
-          display: grid;
-          grid-gap: 1.5rem;
-          grid-template-areas:
-            "info  info  .     rect  rect  rect"
-            "info  info  ferr  ferr  ferr  ferr"
-            "stair stair stair stack stack stack"
-            "fork  fork  fork  fork  bar   bar"
-            "cross cross wing  wing  wing  wing"
-            "cres  cres  cres  cres  cres  ant"
-            "range range range btree btree btree"
-            ".     tree  tree  tree  tree  ."
-            ".     other other other other .";
         `}
       >
-        <Info />
-        {DirClass.all().map((dirClass) => (
-          <PolyominoClass key={dirClass.code()} dirClass={dirClass} />
-        ))}
-        {arrowPositions.map((arrow, i) => (
-          <Arrow key={i} {...arrow} />
-        ))}
-      </main>
+        <Breadcrumbs
+          paths={[
+            ["Classes", "/classes"],
+            ["Table", "/classes/table"],
+          ]}
+        />
+        <main
+          css={css`
+            display: grid;
+            grid-gap: 1.5rem;
+            grid-template-areas:
+              "info  info  .     rect  rect  rect"
+              "info  info  ferr  ferr  ferr  ferr"
+              "stair stair stair stack stack stack"
+              "fork  fork  fork  fork  bar   bar"
+              "cross cross wing  wing  wing  wing"
+              "cres  cres  cres  cres  cres  ant"
+              "range range range btree btree btree"
+              ".     tree  tree  tree  tree  ."
+              ".     other other other other .";
+          `}
+        >
+          <Info />
+          {DirClass.all().map((dirClass) => (
+            <PolyominoClass key={dirClass.code()} dirClass={dirClass} />
+          ))}
+          {arrowPositions.map((arrow, i) => (
+            <Arrow key={i} {...arrow} />
+          ))}
+        </main>
+      </div>
     </Layout>
   )
 }
