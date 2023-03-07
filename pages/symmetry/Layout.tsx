@@ -1,21 +1,16 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import { css } from "@emotion/react"
 import { getSymmetryColor } from "components/graph"
 import Layout from "components/Layout"
 import NavAndContent from "components/NavAndContent"
 import SymmetryIcon from "components/SymmetryIcon"
-import { capitalize, range } from "lodash"
+import { capitalize } from "lodash"
 import { printSymmetry, symmetries } from "mino"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { ReactElement } from "react"
 import { colors } from "style/theme"
 
-export default function SymmetryLayout({
-  children,
-}: {
-  children?: ReactElement
-}) {
+export default function SymmetryLayout({ children }: { children?: ReactNode }) {
   return (
     <Layout>
       <NavAndContent

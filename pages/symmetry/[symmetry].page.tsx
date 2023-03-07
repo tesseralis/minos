@@ -1,8 +1,7 @@
 import React, { ReactElement } from "react"
 import type { GetStaticProps } from "next"
-import Link from "next/link"
 import { css } from "@emotion/react"
-import { symmetries, Symmetry } from "mino"
+import { printSymmetry, symmetries, Symmetry } from "mino"
 import MinoList from "./MinoList"
 
 import all from "./subpages/all.mdx"
@@ -14,6 +13,8 @@ import axis from "./subpages/axis.mdx"
 import diag from "./subpages/diag.mdx"
 import none from "./subpages/none.mdx"
 import SymmetryLayout from "./Layout"
+import Breadcrumbs from "components/Breadcrumbs"
+import { capitalize } from "lodash"
 
 const pages = { all, rot2, axis2, diag2, rot, axis, diag, none }
 
@@ -36,7 +37,12 @@ export default function Page({ symmetry }: Props) {
   const Text = pages[symmetry]
   return (
     <div>
-      <Link href="/symmetry">Back</Link>
+      <Breadcrumbs
+        paths={[
+          ["Symmetry", "/symmetry"],
+          [capitalize(printSymmetry(symmetry)), `/symmetry/${symmetry}`],
+        ]}
+      />
       <h1
         css={css`
           margin: 0;

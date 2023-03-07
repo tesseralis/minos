@@ -5,6 +5,7 @@ import { printSymmetry, Symmetry, symmetries } from "mino"
 import Layout from "components/Layout"
 import MinoList from "./MinoList"
 import { media } from "style/media"
+import Breadcrumbs from "components/Breadcrumbs"
 
 function SymmetryClass({ sym }: { sym: Symmetry }) {
   return (
@@ -32,26 +33,37 @@ function SymmetryClass({ sym }: { sym: Symmetry }) {
 export default function SymmetryChart() {
   return (
     <Layout>
-      <main
+      <div
         css={css`
           padding: 2rem;
-          display: flex;
-          flex-direction: column;
-          gap: 1rem;
-          @media ${media.sm} {
-            display: grid;
-            grid-template-areas:
-              ".     all  ."
-              "axis2 rot2 diag2"
-              "axis  rot  diag"
-              "none  none none";
-          }
         `}
       >
-        {symmetries.map((symmetry) => (
-          <SymmetryClass key={symmetry} sym={symmetry} />
-        ))}
-      </main>
+        <Breadcrumbs
+          paths={[
+            ["Symmetry", "/symmetry"],
+            ["Table", "/symmetry/table"],
+          ]}
+        />
+        <main
+          css={css`
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            @media ${media.sm} {
+              display: grid;
+              grid-template-areas:
+                ".     all  ."
+                "axis2 rot2 diag2"
+                "axis  rot  diag"
+                "none  none none";
+            }
+          `}
+        >
+          {symmetries.map((symmetry) => (
+            <SymmetryClass key={symmetry} sym={symmetry} />
+          ))}
+        </main>
+      </div>
     </Layout>
   )
 }
