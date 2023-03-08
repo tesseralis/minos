@@ -1,5 +1,14 @@
 # Symmetries and Transformations
 
-A polyomino can be _transformed_, by flipping it across an axis or diagonal, or rotating it a multiple of 90°. When a transformation returns an identical polyomino to what we started with, we say that the polyomino is _symmetric_. This section describes the possible types of symmetries that a polyomino can have.
+A polyomino can be _transformed_, by flipping it across an axis or diagonal, or rotating it a multiple of 90°. When a transformation returns an identical polyomino to what we started with, we say that the polyomino is _symmetric_. Polyominoes can be divided into symmetry classes based on the types of symmetries they have:
 
-Polyominoes whose symmetries are considered seperately, they are called [fixed polyominoes](/glossary/fixed). When rotations are considered the same polyomino, but not reflections, they are called [one-sided polyominoes](/glossary/one-sided). When all transformations are counted as the same polyomino, they are called [free polyominoes](/glossary/free). We usually want to deal with free polyominoes, but fixed polyominoes are easier to count. Understanding symmetries helps us convert from fixed to free polyominoes.
+- [Asymmetry](/symmetry/none): when no transformation returns an identical image.
+- [Reflective over an axis](/symmetry/axis): when reflection over one of the axes yields the same image.
+- [Reflective over a diagonal](/symmetry/diag): when reflection over a diagonal yields the same image.
+- [180° rotational](/symmetry/rot): when a 180° rotation yields the same image.
+- [Reflective over both axes](/symmetry/axis2): when reflection over both axes yields the same image.
+- [Reflective over both diagonals](/symmetry/diag2): when reflection over both diagonals yields the same image.
+- [90° rotational](/symmetry/rot): when a 90° rotation yields the same image.
+- [Full symmetry](/symmetry/all): when all the above transformations yield the same image.
+
+Polyominoes whose symmetries are considered seperately are called [fixed polyominoes](/glossary/fixed). When rotations are considered the same polyomino, but not reflections, they are called [one-sided polyominoes](/glossary/one-sided). When all transformations are counted as the same polyomino, they are called [free polyominoes](/glossary/free). We usually want to deal with free polyominoes, but fixed polyominoes are easier to count. Understanding symmetries helps us convert from fixed to free polyominoes.
