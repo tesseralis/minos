@@ -1,4 +1,4 @@
-import MinoDiv from "components/MinoDiv"
+import MinoLink from "components/MinoLink"
 import Polyomino from "mino/Polyomino"
 import { getSymmetryColor } from "components/graph"
 import SymmetryMarkers from "components/SymmetryMarkers"
@@ -53,14 +53,20 @@ export function OctominoSymmetries() {
           .toHexString()
         const size = 15
         return (
-          <MinoDiv mino={mino} stroke="black" fill={color} size={size}>
+          <MinoLink
+            mino={mino}
+            to={`/catalog/${minoStr}`}
+            stroke="black"
+            fill={color}
+            size={size}
+          >
             <SymmetryMarkers
               mino={mino}
               size={size}
               stroke="white"
               strokeWidth={2}
             />
-          </MinoDiv>
+          </MinoLink>
         )
       })}
     </div>
