@@ -2,6 +2,7 @@ import MinoDiv from "components/MinoDiv"
 import Polyomino from "mino/Polyomino"
 import { getSymmetryColor } from "components/graph"
 import SymmetryMarkers from "components/SymmetryMarkers"
+import tinycolor from "tinycolor2"
 
 # Symmetries and Transformations
 
@@ -39,7 +40,9 @@ export function OctominoSymmetries() {
     <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
       {minos.map(([symmetry, minoStr]) => {
         const mino = Polyomino.of(minoStr)
-        const color = getSymmetryColor(symmetry)
+        const color = tinycolor(getSymmetryColor(symmetry))
+          .desaturate(40)
+          .toHexString()
         const size = 15
         return (
           <MinoDiv mino={mino} stroke="black" fill={color} size={size}>
