@@ -1,7 +1,17 @@
-# Special Classes of Polyominoes
+# Directedness Classes
 
-While there is no known formula or [generating function] for counting the number of $n$-ominoes, there are several [restricted subclasses](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) of polyominoes that we _do_ have generating functions for. This section explains the hierarchy of these special classes and normalizes them through a system of orthogonal and diagonal directedness.
+What are the ways that we can categorize and group polyominoes together? We could do it by [symmetry](/symmetry), but for larger sizes of polyominoes, most of them just end up being [asymmetric](/symmetry/none). We could try to classify polyominoes with similar "shapes", like "in the shape of an L". But how do we say this formally? We can classify polyominoes that are [convex](/glossary/convex) or have [holes](/glossary/hole), or are already well-studied in mathematics such as [Ferrers diagrams]. But can we find some sort of unifying thing to group them by?
 
-These classes and boundary words roughly identify polyominoes of similar shape (for example, "polyominoes shaped like an L"), and polyominoes within the same class share the same color on this site. They've been given descriptive names based on shapes, rather than more technical mathematical ones.
+There _is_ a property that gives us such a hierarchy, called _directedness_:
 
+- [orthogonally directed](/glossary/orthogonally-directed): when all the cells of a polyomino can be reached from a root cell by going in all but one direction.
+- [diagonally directed](/glossary/diagonally-directed): when all the cells of a polyomino can be reached from an anchor by going in only two orthogonal directions.
+
+A polyomino can be directed in more than one direction, and so we can build a hierarchy based on which directions a polyomino is directed in. We use the notation $\textrm{Dir}_m^n$ if a polyomino is orthogonally directed in $m$ directions and diagonally directed in $n$ directions. If $m$ or $n = 2$, we use $^{2\textrm{t}}$ if those two directions are opposite of each other and $^{2\textrm{c}}$ if the directions are adjacent (abbreviations for "cis" and "trans" from [cis-trans isomerism]).
+
+Diagonally directed and convex polyominoes [have been studied] extensively, but the work of creating a hierarchy of classes is my own. In particular, while we don't have a general formula or [generating function] for all the polyominoes, we have generating functions for some of these restricted classes, and I hope that my classification aids that effort.
+
+[have been studied]: https://www.sciencedirect.com/science/article/pii/0012365X9500003F
 [generating function]: https://en.wikipedia.org/wiki/Generating_function
+[ferrers diagrams]: https://en.wikipedia.org/wiki/Partition_(number_theory)#Ferrers_diagram
+[cis-trans isomerism]: https://en.wikipedia.org/wiki/Cis%E2%80%93trans_isomerism

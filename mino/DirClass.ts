@@ -1,4 +1,4 @@
-type Level = 0 | 1 | "2-meta" | "2-para" | 3 | 4
+type Level = 0 | 1 | "2-cis" | "2-trans" | 3 | 4
 
 export default class DirClass {
   ortho: Level
@@ -41,16 +41,16 @@ export default class DirClass {
 const classNamesMap: Record<string, DirClass> = {
   rectangle: new DirClass(4, 4),
   wedge: new DirClass(4, 3),
-  staircase: new DirClass(4, "2-para"),
-  stack: new DirClass(4, "2-meta"),
+  staircase: new DirClass(4, "2-trans"),
+  stack: new DirClass(4, "2-cis"),
   fork: new DirClass(4, 1),
-  "bar chart": new DirClass(3, "2-meta"),
+  "bar chart": new DirClass(3, "2-cis"),
   diamond: new DirClass(4, 0),
   wing: new DirClass(3, 1),
   crescent: new DirClass(3, 0),
-  antler: new DirClass("2-meta", 1),
-  "range chart": new DirClass("2-para", 0),
-  "bent tree": new DirClass("2-meta", 0),
+  antler: new DirClass("2-cis", 1),
+  "range chart": new DirClass("2-trans", 0),
+  "bent tree": new DirClass("2-cis", 0),
   tree: new DirClass(1, 0),
   other: new DirClass(0, 0),
 }

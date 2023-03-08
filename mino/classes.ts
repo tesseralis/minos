@@ -37,11 +37,11 @@ export default class MinoClasses {
     let ortho: any = dirSides.length
     if (ortho === 2) {
       const [first, second] = dirSides
-      ortho = `2-${isOppositeSides(first, second) ? "para" : "meta"}`
+      ortho = `2-${isOppositeSides(first, second) ? "trans" : "cis"}`
     }
     let diag: any = dirDiags.length
     if (diag === 2) {
-      diag = `2-${hasOppositeAnchors(dirDiags) ? "para" : "meta"}`
+      diag = `2-${hasOppositeAnchors(dirDiags) ? "trans" : "cis"}`
     }
 
     return new DirClass(ortho, diag)

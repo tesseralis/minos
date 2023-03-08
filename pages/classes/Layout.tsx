@@ -11,6 +11,7 @@ import NavAndContent from "components/NavAndContent"
 import { DirClass } from "mino"
 import { ReactNode } from "react"
 import { colors } from "style/theme"
+import ClassSymbol from "./ClassSymbol"
 
 export default function ClassLayout({ children }: { children: ReactNode }) {
   const router = useRouter()
@@ -56,7 +57,7 @@ function SubpageNav() {
       css={css`
         display: grid;
         align-content: start;
-        gap: 0.5rem 1rem;
+        gap: 0.125rem 1rem;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(10, 1fr);
         grid-template-areas:
@@ -88,6 +89,7 @@ function SubpageNav() {
               gap: 0.25rem;
               grid-area: ${cls.code()};
               text-decoration: ${isActive ? "underline" : "none"};
+              line-height: 1;
             `}
           >
             <ClassIcon
@@ -97,6 +99,14 @@ function SubpageNav() {
               size={50}
             />
             {capitalize(cls.name())}
+            <div
+              css={css`
+                font-size: 0.75rem;
+                color: ${colors.muted};
+              `}
+            >
+              <ClassSymbol dirClass={cls} />
+            </div>
           </Link>
         )
       })}

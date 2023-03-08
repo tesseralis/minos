@@ -16,10 +16,10 @@ export default function ClassSymbol({ dirClass }: Props) {
 
 function printLevel(level: any) {
   switch (level) {
-    case "2-meta":
-      return "2\\textrm{m}"
-    case "2-para":
-      return "2\\textrm{p}"
+    case "2-cis":
+      return "2\\textrm{c}"
+    case "2-trans":
+      return "2\\textrm{t}"
     default:
       return level
   }
