@@ -3,19 +3,15 @@ import type { GetStaticProps } from "next"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { css } from "@emotion/react"
-import Layout from "components/Layout"
 import { escapeClass, unescapeClass } from "./classHelpers"
 import ClassList from "./ClassList"
-import ClassIcon from "components/ClassIcon"
-import { getClassColor } from "components/graph"
-import NavAndContent from "components/NavAndContent"
 
 import antler from "./subpages/antler.mdx"
 import barChart from "./subpages/bar-chart.mdx"
 import bentTree from "./subpages/bent-tree.mdx"
 import crescent from "./subpages/crescent.mdx"
-import cross from "./subpages/cross.mdx"
-import ferrersDiagram from "./subpages/ferrers-diagram.mdx"
+import diamond from "./subpages/diamond.mdx"
+import wedge from "./subpages/wedge.mdx"
 import fork from "./subpages/fork.mdx"
 import other from "./subpages/other.mdx"
 import rangeChart from "./subpages/range-chart.mdx"
@@ -37,8 +33,8 @@ const pages = {
   "bar chart": barChart,
   "bent tree": bentTree,
   crescent,
-  cross,
-  "Ferrers diagram": ferrersDiagram,
+  diamond,
+  wedge,
   fork,
   other,
   "range chart": rangeChart,

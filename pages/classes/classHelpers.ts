@@ -145,5 +145,5 @@ export function escapeClass(cls: string) {
 }
 
 export function unescapeClass(cls: string): string {
-  return cls.replace(/-/g, " ").replace("ferrers", "Ferrers") as string
+  return cls.replace(/-/g, " ") as string
 }

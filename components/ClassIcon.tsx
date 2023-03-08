@@ -41,7 +41,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       ),
     },
     {
-      type: "Ferrers diagram",
+      type: "wedge",
       mino: Polyomino.of("001_011_111"),
       markers: (
         <>
@@ -98,7 +98,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       ),
     },
     {
-      type: "cross",
+      type: "diamond",
       mino: Polyomino.of("010_111_010"),
       markers: <ConvexMarker />,
     },

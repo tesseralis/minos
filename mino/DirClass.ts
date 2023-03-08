@@ -40,12 +40,12 @@ export default class DirClass {
 
 const classNamesMap: Record<string, DirClass> = {
   rectangle: new DirClass(4, 4),
-  "Ferrers diagram": new DirClass(4, 3),
+  wedge: new DirClass(4, 3),
   staircase: new DirClass(4, "2-para"),
   stack: new DirClass(4, "2-meta"),
   fork: new DirClass(4, 1),
   "bar chart": new DirClass(3, "2-meta"),
-  cross: new DirClass(4, 0),
+  diamond: new DirClass(4, 0),
   wing: new DirClass(3, 1),
   crescent: new DirClass(3, 0),
   antler: new DirClass("2-meta", 1),
@@ -57,12 +57,12 @@ const classNamesMap: Record<string, DirClass> = {
 
 const codes: Record<string, string> = {
   rectangle: "rect",
-  "Ferrers diagram": "ferr",
+  wedge: "wedge",
   staircase: "stair",
   stack: "stack",
   fork: "fork",
   "bar chart": "bar",
-  cross: "cross",
+  diamond: "diam",
   wing: "wing",
   crescent: "cres",
   antler: "ant",
@@ -74,12 +74,12 @@ const codes: Record<string, string> = {
 
 const regexes: Record<string, string> = {
   rectangle: "ruld",
-  "Ferrers diagram": "ru(ru)*ld",
+  wedge: "ru(ru)*ld",
   staircase: "ru(ru)*ld(ld)*",
   stack: "ru(ru)*(lu)*ld",
   fork: "ru(ru)*(lu)*ld(ld)*",
   "bar chart": "ru(ru|lu)*ld",
-  cross: "ru(ru)*(lu)*ld(ld)*(rd)*",
+  diamond: "ru(ru)*(lu)*ld(ld)*(rd)*",
   wing: "ru(ru|lu)*ld(ld)*",
   crescent: "ru(ru|lu)*ld(ld)*(rd)*",
   antler: "ru(ru|lu|ld(ld)*lu)*ld(ld)*",

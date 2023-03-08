@@ -60,16 +60,16 @@ function SubpageNav() {
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(10, 1fr);
         grid-template-areas:
-          ".     .    rect  ."
-          ".     ferr rect  ."
-          "stair ferr stack ."
-          "stair fork stack bar"
-          "cross fork wing  bar"
-          "cross cres wing  ant"
-          "range cres btree ant"
-          "range tree btree ."
-          ".     tree other ."
-          ".     .    other .";
+          ".     .     rect  ."
+          ".     wedge rect  ."
+          "stair wedge stack ."
+          "stair fork  stack bar"
+          "diam  fork  wing  bar"
+          "diam  cres  wing  ant"
+          "range cres  btree ant"
+          "range tree  btree ."
+          ".     tree  other ."
+          ".     .     other .";
       `}
     >
       {DirClass.all().map((cls) => {

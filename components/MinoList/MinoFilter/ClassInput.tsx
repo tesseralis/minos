@@ -30,16 +30,16 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
           grid-gap: 1rem 0.75rem;
           align-items: center;
           grid-template-areas:
-            ".     .    rect  ."
-            ".     ferr rect  ."
-            "stair ferr stack ."
-            "stair fork stack bar"
-            "cross fork wing  bar"
-            "cross cres wing  ant"
-            "range cres btree ant"
-            "range tree btree ."
-            ".     tree other ."
-            ".     .    other .";
+            ".     .     rect  ."
+            ".     wedge rect  ."
+            "stair wedge stack ."
+            "stair fork  stack bar"
+            "diam  fork  wing  bar"
+            "diam  cres  wing  ant"
+            "range cres  btree ant"
+            "range tree  btree ."
+            ".     tree  other ."
+            ".     .     other .";
           justify-items: center;
         `}
       >

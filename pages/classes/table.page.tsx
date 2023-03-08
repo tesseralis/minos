@@ -135,10 +135,10 @@ export default function ClassesChart() {
             grid-gap: 1.5rem;
             grid-template-areas:
               "info  info  .     rect  rect  rect"
-              "info  info  ferr  ferr  ferr  ferr"
+              "info  info  wedge wedge wedge wedge"
               "stair stair stair stack stack stack"
               "fork  fork  fork  fork  bar   bar"
-              "cross cross wing  wing  wing  wing"
+              "diam  diam  wing  wing  wing  wing"
               "cres  cres  cres  cres  cres  ant"
               "range range range btree btree btree"
               ".     tree  tree  tree  tree  ."

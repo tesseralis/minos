@@ -28,12 +28,12 @@ export function getSymmetryColor(symmetry: Symmetry): string {
 
 const classColorMap: Record<string, string> = {
   rectangle: "#dbd", // white
-  "Ferrers diagram": "#f5f", // magenta
+  wedge: "#f5f", // magenta
   staircase: "#82f", // violet
   stack: "#f28", // rose
   fork: "#63f", // blue
   "bar chart": "#f22", // red
-  cross: "#08f", // azure
+  diamond: "#08f", // azure
   wing: "#f60", // orange
   crescent: "#0cf", // cyan
   antler: "#fc3", // yellow
