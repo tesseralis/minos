@@ -37,7 +37,15 @@ export function OctominoSymmetries() {
     ["all", "111_101_111"],
   ]
   return (
-    <div style={{ display: "flex", gap: "2rem", alignItems: "center" }}>
+    <div
+      style={{
+        display: "flex",
+        gap: "2rem",
+        flexWrap: "wrap",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
       {minos.map(([symmetry, minoStr]) => {
         const mino = Polyomino.of(minoStr)
         const color = tinycolor(getSymmetryColor(symmetry))
