@@ -17,7 +17,7 @@ export default function ClassLayout({ children }: { children: ReactNode }) {
   return (
     <Layout>
       <NavAndContent
-        columns="24rem 1fr"
+        columns="20rem 1fr"
         nav={
           <div
             css={css`
@@ -56,8 +56,9 @@ function SubpageNav() {
       css={css`
         display: grid;
         align-content: start;
-        gap: 1rem 0.5rem;
+        gap: 0.5rem 1rem;
         grid-template-columns: repeat(4, 1fr);
+        grid-template-rows: repeat(10, 1fr);
         grid-template-areas:
           ".     .    rect  ."
           ".     ferr rect  ."
@@ -83,6 +84,7 @@ function SubpageNav() {
               flex-direction: column;
               align-items: center;
               text-align: center;
+              max-width: 4rem;
               gap: 0.25rem;
               grid-area: ${cls.code()};
               text-decoration: ${isActive ? "underline" : "none"};

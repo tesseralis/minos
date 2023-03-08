@@ -14,7 +14,7 @@ export default function SymmetryLayout({ children }: { children?: ReactNode }) {
   return (
     <Layout>
       <NavAndContent
-        columns="24rem 1fr"
+        columns="20rem 1fr"
         nav={
           <div
             css={css`
