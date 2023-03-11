@@ -30,6 +30,7 @@ export default function Responsive({ query, match, default: def }: Props) {
     }
   }, [query, updateMatch])
 
+  // TODO (static css) convert this component to something that can be done with linaria.
   // By default, render both but place one under `display: none` depending on the query.
   // The effect should toggle which one renders in the DOM tree
   return (

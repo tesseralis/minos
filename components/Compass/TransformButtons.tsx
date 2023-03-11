@@ -91,7 +91,6 @@ export default function TransformButtons({ visible }: Props) {
             trans={trans}
             css={css`
               font-size: 20px;
-              /* FIXME fix this */
               dominant-baseline: ${trans === "rotateHalf"
                 ? "initial"
                 : "middle"};
