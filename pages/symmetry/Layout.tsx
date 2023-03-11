@@ -75,6 +75,7 @@ function SubsectionLinks() {
           <Link
             key={symmetry}
             href={route}
+            data-active={isActive}
             css={css`
               grid-area: ${symmetry};
               display: flex;
@@ -82,7 +83,10 @@ function SubsectionLinks() {
               align-items: center;
               text-align: center;
               gap: 0.5rem;
-              text-decoration: ${isActive ? "underline" : "none"};
+              text-decoration: none;
+              &[data-active="true"] {
+                text-decoration: underline;
+              }
             `}
           >
             <SymmetryIcon

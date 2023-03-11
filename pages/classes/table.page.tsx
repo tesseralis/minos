@@ -36,8 +36,8 @@ const arrowPositions = [
 function PolyominoClass({ dirClass }: { dirClass: DirClass }) {
   return (
     <section
+      style={{ gridArea: dirClass.code() }}
       css={css`
-        grid-area: ${dirClass.code()};
         border: 2px grey solid;
         padding: 1.5rem 1rem;
         border-radius: 2px;
@@ -92,9 +92,8 @@ interface ArrowProps {
 function Arrow({ row, column }: ArrowProps) {
   return (
     <div
+      style={{ gridRow: row, gridColumn: column }}
       css={css`
-        grid-row: ${row};
-        grid-column: ${column};
         align-self: end;
         justify-self: center;
         position: relative;

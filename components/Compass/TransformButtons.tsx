@@ -37,9 +37,9 @@ function Button({ icon, trans, svgTrans, className }: ButtonProps) {
 
   return (
     <Text
+      fill={color}
       css={css`
         cursor: pointer;
-        fill: ${color};
         text-anchor: middle;
         pointer-events: initial;
         user-select: none;
@@ -68,9 +68,9 @@ interface Props {
 export default function TransformButtons({ visible }: Props) {
   return (
     <g
+      opacity={visible ? 1 : 0}
       css={css`
         transition: opacity 100ms ease-in-out;
-        opacity: ${visible ? 1 : 0};
       `}
     >
       {reflectionOrder.map((trans, i) => (
@@ -91,6 +91,7 @@ export default function TransformButtons({ visible }: Props) {
             trans={trans}
             css={css`
               font-size: 20px;
+              /* FIXME fix this */
               dominant-baseline: ${trans === "rotateHalf"
                 ? "initial"
                 : "middle"};

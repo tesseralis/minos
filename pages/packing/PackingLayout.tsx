@@ -58,11 +58,16 @@ function PatternNav() {
                   key={shape}
                   href={route}
                   passHref
+                  data-active={isActive}
                   css={css`
                     font-size: 1.125rem;
                     margin-right: 0.5rem;
-                    color: ${isActive ? colors.highlight : colors.fg};
-                    text-decoration: ${isActive ? "underline" : "none"};
+                    color: ${colors.fg};
+                    text-decoration: none;
+                    &[data-active="true"] {
+                      color: ${colors.highlight};
+                      text-decoration: underline;
+                    }
                   `}
                 >
                   {getShapeText(shape)}

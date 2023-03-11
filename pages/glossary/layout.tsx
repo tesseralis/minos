@@ -42,8 +42,12 @@ function GlossaryNav({ terms }: { terms: string[] }) {
             <li key={term}>
               <Link
                 href={path}
+                data-active={isActive}
                 css={css`
-                  text-decoration: ${isActive ? "underline" : "none"};
+                  text-decoration: none;
+                  &[data-active="true"] {
+                    text-decoration: underline;
+                  }
                   font-size: 1.25rem;
                 `}
               >

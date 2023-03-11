@@ -28,28 +28,33 @@ function DesktopNav() {
     >
       <Title />
       <ul>
-        {navLinks.map((view) => (
-          <li key={view}>
-            <Link
-              href={`/${view}`}
-              passHref
-              css={css`
-                font-size: 1.25rem;
-                line-height: 1.25;
-                color: ${router.asPath.startsWith(`/${view}`)
-                  ? colors.highlight
-                  : colors.fg};
+        {navLinks.map((view) => {
+          const isActive = router.asPath.startsWith(`/${view}`)
+          return (
+            <li key={view}>
+              <Link
+                href={`/${view}`}
+                passHref
+                data-active={isActive}
+                css={css`
+                  font-size: 1.25rem;
+                  line-height: 1.25;
+                  color: ${colors.fg};
+                  &[data-active="true"] {
+                    color: ${colors.highlight};
+                  }
 
-                text-decoration: none;
-                :hover {
-                  text-decoration: underline;
-                }
-              `}
-            >
-              {view}
-            </Link>
-          </li>
-        ))}
+                  text-decoration: none;
+                  :hover {
+                    text-decoration: underline;
+                  }
+                `}
+              >
+                {view}
+              </Link>
+            </li>
+          )
+        })}
       </ul>
     </nav>
   )
@@ -127,30 +132,35 @@ function MobileNav() {
               padding: 1rem;
             `}
           >
-            {navLinks.map((view) => (
-              <div key={view}>
-                <NavMenu.Link asChild>
-                  <Link
-                    href={`/${view}`}
-                    passHref
-                    css={css`
-                      font-size: 1.25rem;
-                      line-height: 1.25;
-                      color: ${router.asPath.startsWith(`/${view}`)
-                        ? colors.highlight
-                        : colors.fg};
+            {navLinks.map((view) => {
+              const isActive = router.asPath.startsWith(`/${view}`)
+              return (
+                <div key={view}>
+                  <NavMenu.Link asChild>
+                    <Link
+                      href={`/${view}`}
+                      passHref
+                      data-active={isActive}
+                      css={css`
+                        font-size: 1.25rem;
+                        line-height: 1.25;
+                        color: ${colors.fg};
+                        &[data-active="true"] {
+                          color: ${colors.highlight};
+                        }
 
-                      text-decoration: none;
-                      :hover {
-                        text-decoration: underline;
-                      }
-                    `}
-                  >
-                    {view}
-                  </Link>
-                </NavMenu.Link>
-              </div>
-            ))}
+                        text-decoration: none;
+                        :hover {
+                          text-decoration: underline;
+                        }
+                      `}
+                    >
+                      {view}
+                    </Link>
+                  </NavMenu.Link>
+                </div>
+              )
+            })}
           </NavMenu.Content>
         </NavMenu.Item>
       </NavMenu.List>

@@ -77,10 +77,16 @@ function YesNoInput({
               onChange={(e) => onUpdate(e.target.value)}
             />
             <span
+              data-checked={checked}
               css={css`
                 margin-right: 1rem;
-                color: ${checked ? colors.highlight : colors.fg};
-                text-decoration: ${checked ? "underline" : "none"};
+                color: ${colors.fg};
+                text-decoration: none;
+
+                [data-checked="true"] {
+                  color: ${colors.highlight};
+                  text-decoration: underline;
+                }
                 cursor: pointer;
               `}
             >

@@ -10,8 +10,8 @@ import Breadcrumbs from "components/Breadcrumbs"
 function SymmetryClass({ sym }: { sym: Symmetry }) {
   return (
     <section
+      style={{ gridArea: sym }}
       css={css`
-        grid-area: ${sym};
         border: 1px solid grey;
         padding: 1rem;
 

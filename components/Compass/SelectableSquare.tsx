@@ -31,6 +31,7 @@ interface SquareProps {
   link: PossibleRelativeLink
 }
 
+// FIXME think of another way to do this
 /** A single possibly selectable mino square */
 export default function SelectableSquare({
   defaultCss,

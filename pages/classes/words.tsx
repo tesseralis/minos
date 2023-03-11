@@ -25,9 +25,7 @@ export function BoundaryWord({ word, currentIndex, onChangeIndex }: WordProps) {
       {segments.map(({ dir, count }, index) => (
         <span
           key={index}
-          css={css`
-            color: ${index === currentIndex ? "white" : getDirColor(dir)};
-          `}
+          style={{ color: index === currentIndex ? "white" : getDirColor(dir) }}
           onMouseOver={() => {
             onChangeIndex(index)
           }}
@@ -63,12 +61,7 @@ export function ClassRegex({ dirClass }: { dirClass: DirClass }) {
     >
       {parts.map((part, index) => {
         return (
-          <span
-            key={index}
-            css={css`
-              color: ${getDirColor(part)};
-            `}
-          >
+          <span key={index} style={{ color: getDirColor(part) }}>
             {part}
           </span>
         )

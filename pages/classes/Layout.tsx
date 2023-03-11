@@ -80,6 +80,7 @@ function SubpageNav() {
           <Link
             key={cls.code()}
             href={route}
+            data-active={isActive}
             css={css`
               display: flex;
               flex-direction: column;
@@ -88,8 +89,11 @@ function SubpageNav() {
               max-width: 4rem;
               gap: 0.25rem;
               grid-area: ${cls.code()};
-              text-decoration: ${isActive ? "underline" : "none"};
               line-height: 1;
+              text-decoration: none;
+              &[data-active="true"] {
+                text-decoration: underline;
+              }
             `}
           >
             <ClassIcon

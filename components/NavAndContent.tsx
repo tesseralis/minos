@@ -19,12 +19,12 @@ interface Props {
 export default function NavAndContent({ nav, children, columns }: Props) {
   return (
     <div
+      style={{ gridTemplateColumns: columns }}
       css={css`
         height: 100%;
         @media ${media.sm} {
           display: grid;
           gap: 2rem;
-          grid-template-columns: ${columns};
         }
 
         [data-matches="true"] {
@@ -77,9 +77,10 @@ interface DialogProps {
   content: ReactNode
 }
 
+const timeoutMs = 200
+
 function MobileNavDialog({ content }: DialogProps) {
   const [state, setState] = useState<"open" | "pending" | "closed">("closed")
-  const timeoutMs = 200
   const isOpen = state !== "closed"
   const onOpenChange = useCallback((open: boolean) => {
     setState("pending")
