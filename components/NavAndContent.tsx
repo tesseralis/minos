@@ -4,7 +4,8 @@ import Responsive from "./Responsive"
 import { media } from "style/media"
 import * as Dialog from "@radix-ui/react-dialog"
 import { colors } from "style/theme"
-import { Cross1Icon, RowsIcon } from "@radix-ui/react-icons"
+import { Cross1Icon } from "@radix-ui/react-icons"
+import { FaBars } from "react-icons/fa"
 
 interface Props {
   nav: ReactNode
@@ -98,8 +99,8 @@ function MobileNavDialog({ content }: DialogProps) {
           background: ${colors.bg};
 
           color: ${colors.fg};
-          padding: 1rem;
-          padding-right: 1.25rem;
+          padding: 0.75rem;
+          padding-right: 1rem;
 
           border: 1px solid ${colors.border};
           border-left: none;
@@ -107,7 +108,7 @@ function MobileNavDialog({ content }: DialogProps) {
           border-bottom-right-radius: 9999px;
         `}
       >
-        <RowsIcon width={40} height={40} />
+        <FaBars size={30} />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay
