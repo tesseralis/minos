@@ -31,7 +31,7 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
   const gen = srcMino.order
   const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2
 
-  // FIXME (css) change this
+  // TODO (static css) change out keyframes and change the isSelected
   const base = css`
     transition: all 250ms ${isSelected ? "ease-out" : "ease-in"};
     pointer-events: none;
@@ -47,7 +47,6 @@ const MinoLink = memo(({ link, isSelected }: MinoLinkProps) => {
     }
   `
 
-  // FIXME (css) change this
   const fadeAnimation = css`
     animation: ${fadeIn} 500ms;
   `

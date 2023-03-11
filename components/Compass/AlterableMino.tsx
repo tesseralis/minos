@@ -11,7 +11,7 @@ interface Props {
   highlight?: boolean
 }
 
-// FIXME (css) how do I do this one?
+// TODO (static css) change this to be static
 /** The squares of the mino, highlighting parent squares */
 function InnerSquares({ highlight }: Props) {
   const mino = useSelected()

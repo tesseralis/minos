@@ -31,7 +31,6 @@ interface SquareProps {
   link: PossibleRelativeLink
 }
 
-// FIXME think of another way to do this
 /** A single possibly selectable mino square */
 export default function SelectableSquare({
   defaultCss,
@@ -51,6 +50,7 @@ export default function SelectableSquare({
     pointer-events: initial;
   `
 
+  // TODO (static css) change this to be static
   return (
     <Rect
       css={[!!mino && selectableStyle, defaultCss, isSelected && selectedCss]}
