@@ -66,6 +66,7 @@ export default function NavAndContent({ nav, children, columns }: Props) {
           height: 100%;
           padding: 2rem;
           overflow-y: scroll;
+          margin-bottom: 4rem;
         `}
       >
         {children}
@@ -95,7 +96,7 @@ function MobileNavDialog({ content }: DialogProps) {
         css={css`
           position: fixed;
           left: 0;
-          bottom: 2rem;
+          bottom: 1rem;
           background: ${colors.bg};
 
           color: ${colors.fg};
