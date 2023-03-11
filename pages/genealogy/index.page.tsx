@@ -43,8 +43,6 @@ export default function FamilyTree() {
           position: absolute;
           top: 0;
           left: 0;
-
-          margin-top: 2rem;
         `}
       >
         <Nav />
