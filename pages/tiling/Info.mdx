@@ -1,3 +1,9 @@
+import { Polyomino } from "mino"
+import Tiling from "components/Tiling"
+import Link from "next/link"
+import { Polyline, Circle } from "components/svg"
+import { colors } from "style/theme"
+
 # Tiling the plane
 
 A shape _tiles the plane_ if it is possible to cover an infinite grid with copies of it such that no holes are left. These tilings, or _tessellations_, have been well known for millenia, being featured in places such as [Islamic architecture] to the works of [M.C. Escher].
@@ -16,22 +22,20 @@ In the most restricted sense, we can ask if a polyomino tiles the plane by _tran
 
 As an example, consider the following polyomino:
 
-[Example]
+<TransExample />
 
-This polyomino tiles the plane because the segments A and D, B and E, and C and F are translations of each other. This translation is realized as shown here:
+This polyomino tiles the plane because blue, green, and yellow segments are translations of each other. This translation is realized as shown here:
 
-[Translation With Link].
+<TilingThumbnail mino={Polyomino.of("0011_1111_1001")} />
 
-a polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
+A polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
 
 ## The Conway Criterion
 
 The translation criterion covers some tilings but not all. We may ask which polyominoes tile the plane if we are allowed to rotate or reflect copies in addition to sliding. One powerful tool at our disposal is the _Conway Criterion_:
 
-A polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
-
 <blockquote>
-  A polyomino satisfies Conway's Criterion if its border can be divided into six segments A, B, C, D, E, F such that:
+  A polyomino satisfies the Conway criterion if its border can be divided into six segments A, B, C, D, E, F such that:
 
 1. A and D are translations of each other
 2. B, C, E, and F are symmetric with respect to rotation about a center point
@@ -40,13 +44,13 @@ A polyomino tiles the plane by translation if and only if it satisfies the trans
 
 As an example, consider the following polyomino:
 
-[Example]
+<ConwayExample />
 
-This polyomino satisfies the criterion since A and D are translations of each other, and each of the other segments can be rotated about their center to yield the same segment. The tiling for this example is as such:
+This polyomino satisfies the criterion since the grey segments are translations of each other, and each of the other segments can be rotated about their center to yield the same segment. The tiling for this example is as such:
 
-[Tiling]
+<TilingThumbnail mino={Polyomino.of("0010_0010_1011_1110")} />
 
-Note that, unlike the translation criterion, Conway's Criterion is _sufficient_ but not _necessary_. Some polyominoes do not satisfy it but still tile the plane. However, it is still very powerful, and all tileable polyominoes up to size 8 satisfy the criterion, or you can glue two copies of it to form a shape that satisfies the criterion, in this example:
+Note that, unlike the translation criterion, the Conway criterion is _sufficient_ but not _necessary_. Some polyominoes do not satisfy it but still tile the plane. However, it is still very powerful, and all tileable polyominoes up to size 8 satisfy the criterion, or you can glue two copies of it to form a shape that satisfies the criterion, in this example:
 
 [Conway Pair example]
 
@@ -57,6 +61,140 @@ This catalog gives an example tiling for every polyomino that tiles the plane, t
 ## Reference
 
 1. "[Planar tilings by polyominoes, polyhexes, and polyiamonds](https://www.sciencedirect.com/science/article/pii/S0377042704002195)" by Glenn C. Rhoads.
+
+export function TilingThumbnail({ mino }) {
+  return (
+    <Link href={`/tiling/${mino.toString()}`}>
+      <Tiling mino={mino} gridSize={16} svgSize={200} />
+    </Link>
+  )
+}
+
+export function TransExample() {
+  const cellSize = 30
+  const lines = [
+    [
+      [2, 0],
+      [0, 0],
+    ],
+    [
+      [0, 0],
+      [0, 1],
+    ],
+    [
+      [0, 1],
+      [1, 1],
+      [1, 3],
+      [0, 3],
+      [0, 4],
+    ],
+    [
+      [0, 4],
+      [2, 4],
+    ],
+    [
+      [2, 4],
+      [2, 3],
+    ],
+    [
+      [2, 3],
+      [2, 2],
+      [3, 2],
+      [3, 0],
+      [2, 0],
+    ],
+  ]
+  return (
+    <svg style={{ overflow: "visible" }}>
+      {lines.map((points, i) => {
+        return (
+          <Polyline
+            stroke={colors.palette[(i % 3) + 1]}
+            fill="none"
+            strokeWidth={3}
+            strokeLinecap="round"
+            points={points.map((point) => [
+              point[0] * cellSize,
+              point[1] * cellSize,
+            ])}
+          />
+        )
+      })}
+    </svg>
+  )
+}
+
+export function ConwayExample() {
+  const cellSize = 30
+  const lines = [
+    [
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+    [
+      [0, 1],
+      [0, 4],
+    ],
+    [
+      [0, 4],
+      [1, 4],
+    ],
+    [
+      [1, 4],
+      [2, 4],
+      [2, 3],
+    ],
+    [
+      [2, 3],
+      [1, 3],
+      [1, 2],
+      [4, 2],
+      [4, 1],
+      [3, 1],
+    ],
+    [
+      [3, 1],
+      [2, 1],
+      [2, 0],
+      [1, 0],
+    ],
+  ]
+  const circles = [
+    [0, 2.5],
+    [0.5, 4],
+    [2.5, 2],
+    [2, 0.5],
+  ]
+  return (
+    <svg style={{ overflow: "visible" }}>
+      {lines.map((points, i) => {
+        return (
+          <Polyline
+            stroke={
+              i % 3 === 0 ? "grey" : colors.palette[i > 3 ? i - 2 : i - 1]
+            }
+            points={points.map((p) => [p[0] * cellSize, p[1] * cellSize])}
+            fill="none"
+            strokeWidth={3}
+            strokeLinecap="round"
+          />
+        )
+      })}
+      {circles.map((center, i) => {
+        return (
+          <Circle
+            center={[center[0] * cellSize, center[1] * cellSize]}
+            r={cellSize / 5}
+            fill="none"
+            strokeWidth={2}
+            stroke={colors.palette[i]}
+          />
+        )
+      })}
+    </svg>
+  )
+}
 
 [islamic architecture]: https://en.wikipedia.org/wiki/Islamic_architecture
 [m.c. escher]: https://en.wikipedia.org/wiki/M._C._Escher
