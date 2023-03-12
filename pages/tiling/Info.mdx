@@ -52,15 +52,14 @@ This polyomino satisfies the criterion since the grey segments are translations 
 
 Note that, unlike the translation criterion, the Conway criterion is _sufficient_ but not _necessary_. Some polyominoes do not satisfy it but still tile the plane. However, it is still very powerful, and all tileable polyominoes up to size 8 satisfy the criterion, or you can glue two copies of it to form a shape that satisfies the criterion, in this example:
 
-[Conway Pair example]
+<TilingThumbnail mino={Polyomino.of("00011_10110_11100")} />
 
-## This Catalog
-
-This catalog gives an example tiling for every polyomino that tiles the plane, through either the translation or the Conway criterion (or pairs that satisfy these criteria).
+With the translation and Conway criteria, we can find all the polyominoes that tile the plane for up to size 8. For more information on tilings for larger polyominoes, see the references below.
 
 ## Reference
 
 1. "[Planar tilings by polyominoes, polyhexes, and polyiamonds](https://www.sciencedirect.com/science/article/pii/S0377042704002195)" by Glenn C. Rhoads.
+2. "[Polyomino, polyhex and polyiamond tiling](https://www.polyomino.org.uk/mathematics/polyform-tiling/)" by Joseph Myers.
 
 export function TilingThumbnail({ mino }) {
   return (
@@ -185,10 +184,8 @@ export function ConwayExample() {
         return (
           <Circle
             center={[center[0] * cellSize, center[1] * cellSize]}
-            r={cellSize / 5}
-            fill="none"
-            strokeWidth={2}
-            stroke={colors.palette[i]}
+            r={cellSize / 6}
+            fill={colors.palette[i]}
           />
         )
       })}
