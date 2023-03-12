@@ -1,5 +1,62 @@
 # Tiling the plane
 
-A polyomino _tiles the plane_ if it is possible to cover an infinite grid with copies of the polyomino such that no holes are left.
+A shape _tiles the plane_ if it is possible to cover an infinite grid with copies of it such that no holes are left. These tilings, or _tessellations_, have been well known for millenia, being featured in places such as [Islamic architecture] to the works of [M.C. Escher].
 
-Select a polyomino to see its tiling. These tilings use an algorithm described in "[Planar tilings by polyominoes, polyhexes, and polyiamonds](https://www.sciencedirect.com/science/article/pii/S0377042704002195)" by Glenn C. Rhoads.
+Given their structure, it is a natural question to ask: which polyominoes tile the plane?
+
+## The Translation Criterion
+
+In the most restricted sense, we can ask if a polyomino tiles the plane by _translation_ only--that is, by sliding copies of itself without rotating or flipping. Whether a polyomino can do this is determined by the _translation criterion_:
+
+<blockquote>
+  A polyomino satisfies the Translation Criterion if its border can be divided
+  into six segments A, B, C, D, E, F such that the pairs A-D, B-E, and C-F are
+  translations of each other.
+</blockquote>
+
+As an example, consider the following polyomino:
+
+[Example]
+
+This polyomino tiles the plane because the segments A and D, B and E, and C and F are translations of each other. This translation is realized as shown here:
+
+[Translation With Link].
+
+a polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
+
+## The Conway Criterion
+
+The translation criterion covers some tilings but not all. We may ask which polyominoes tile the plane if we are allowed to rotate or reflect copies in addition to sliding. One powerful tool at our disposal is the _Conway Criterion_:
+
+A polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
+
+<blockquote>
+  A polyomino satisfies Conway's Criterion if its border can be divided into six segments A, B, C, D, E, F such that:
+
+1. A and D are translations of each other
+2. B, C, E, and F are symmetric with respect to rotation about a center point
+
+</blockquote>
+
+As an example, consider the following polyomino:
+
+[Example]
+
+This polyomino satisfies the criterion since A and D are translations of each other, and each of the other segments can be rotated about their center to yield the same segment. The tiling for this example is as such:
+
+[Tiling]
+
+Note that, unlike the translation criterion, Conway's Criterion is _sufficient_ but not _necessary_. Some polyominoes do not satisfy it but still tile the plane. However, it is still very powerful, and all tileable polyominoes up to size 8 satisfy the criterion, or you can glue two copies of it to form a shape that satisfies the criterion, in this example:
+
+[Conway Pair example]
+
+## This Catalog
+
+This catalog gives an example tiling for every polyomino that tiles the plane, through either the translation or the Conway criterion (or pairs that satisfy these criteria).
+
+## Reference
+
+1. "[Planar tilings by polyominoes, polyhexes, and polyiamonds](https://www.sciencedirect.com/science/article/pii/S0377042704002195)" by Glenn C. Rhoads.
+
+[islamic architecture]: https://en.wikipedia.org/wiki/Islamic_architecture
+[m.c. escher]: https://en.wikipedia.org/wiki/M._C._Escher
