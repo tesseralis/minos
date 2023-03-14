@@ -54,6 +54,12 @@ function OuterSquares() {
             fill: ${colors.highlight};
             stroke: gray;
             opacity: 0;
+
+            @media (hover: none) {
+              fill: ${colors.bg};
+              stroke: grey;
+              opacity: 0.25;
+            }
           `}
           selectedCss={css`
             opacity: 0.5;

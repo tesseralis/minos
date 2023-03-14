@@ -1,4 +1,4 @@
-import { ReactNode, useCallback, useState } from "react"
+import { ReactNode, useCallback, useEffect, useState } from "react"
 import { css } from "@emotion/react"
 import Responsive from "./Responsive"
 import { media } from "style/media"
@@ -90,6 +90,17 @@ function MobileNavDialog({ content }: DialogProps) {
       setState(open ? "open" : "closed")
     }, timeoutMs)
   }, [])
+
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e.target?.closest("a")) {
+        onOpenChange(false)
+      }
+    }
+    // TODO work on keyboard as well
+    window.addEventListener("click", handler)
+    return () => window.removeEventListener("click", handler)
+  }, [onOpenChange])
   return (
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Trigger

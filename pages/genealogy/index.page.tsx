@@ -8,6 +8,7 @@ import MinoLinks from "./MinoLinks"
 import Compass from "components/Compass"
 import Nav from "components/Nav"
 import { useSelected, useSetSelected } from "components/SelectedContext"
+import { media } from "style/media"
 
 /**
  * A graph showing the "family tree" of minos,
@@ -50,9 +51,16 @@ export default function FamilyTree() {
       <div
         css={css`
           position: absolute;
-          top: 0;
-          right: 0;
+          top: 50%;
+          right: 50%;
+          transform: translate(50%, -50%);
           pointer-events: none;
+
+          @media ${media.sm} {
+            top: 0;
+            right: 0;
+            transform: initial;
+          }
         `}
       >
         {selected && <Compass selected={selected} onSelect={setSelected} />}
