@@ -130,6 +130,7 @@ export default function ClassesChart() {
         />
         <main
           css={css`
+            min-width: 900px;
             display: grid;
             grid-gap: 1.5rem;
             grid-template-areas:
