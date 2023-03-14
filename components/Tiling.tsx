@@ -5,6 +5,7 @@ import { Polyomino, Tiling as MinoTiling } from "mino"
 import { getMinoColor } from "components/graph"
 import Vector from "lib/vector"
 import { colors } from "style/theme"
+import { css } from "@emotion/css"
 
 // Mod except it works for negative numbers
 function mod(n: number, d: number) {
@@ -77,9 +78,8 @@ const squareSize = 20
 interface Props {
   mino: Polyomino
   gridSize: number
-  svgSize: number
 }
-export default function Tiling({ mino, gridSize, svgSize }: Props) {
+export default function Tiling({ mino, gridSize }: Props) {
   // Normalize the number of unit squares so that approximately 64 minos are shown
   // (for monominoes, this is the size of a checkerboard)
   // Also make sure that the side length is even
@@ -97,8 +97,10 @@ export default function Tiling({ mino, gridSize, svgSize }: Props) {
 
   return (
     <svg
-      width={svgSize}
-      height={svgSize}
+      css={css`
+        width: 100%;
+        aspect-ratio: 1 / 1;
+      `}
       viewBox={`${-viewLength / 2} ${
         -viewLength / 2
       } ${viewLength} ${viewLength}`}

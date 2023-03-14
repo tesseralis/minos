@@ -77,9 +77,16 @@ const data: MinoDatum[] = [
     name: "tiling",
     display: (m) =>
       m.tilings.has() ? (
-        <Link href={`/tiling/${m.toString()}`}>
-          <Tiling mino={m} gridSize={8} svgSize={100} />
-        </Link>
+        <div
+          css={css`
+            position: relative;
+            width: 100px;
+          `}
+        >
+          <Link href={`/tiling/${m.toString()}`}>
+            <Tiling mino={m} gridSize={8} />
+          </Link>
+        </div>
       ) : (
         "no"
       ),

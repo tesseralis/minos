@@ -61,11 +61,30 @@ With the translation and Conway criteria, we can find all the polyominoes that t
 1. "[Planar tilings by polyominoes, polyhexes, and polyiamonds](https://www.sciencedirect.com/science/article/pii/S0377042704002195)" by Glenn C. Rhoads.
 2. "[Polyomino, polyhex and polyiamond tiling](https://www.polyomino.org.uk/mathematics/polyform-tiling/)" by Joseph Myers.
 
+export function Wrapper({ children }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        margin: "2rem 0",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </div>
+  )
+}
+
 export function TilingThumbnail({ mino }) {
   return (
-    <Link href={`/tiling/${mino.toString()}`}>
-      <Tiling mino={mino} gridSize={16} svgSize={200} />
-    </Link>
+    <Wrapper>
+      <div style={{ position: "relative", width: "200px" }}>
+        <Link href={`/tiling/${mino.toString()}`}>
+          <Tiling mino={mino} gridSize={16} svgSize={200} />
+        </Link>
+      </div>
+    </Wrapper>
   )
 }
 
@@ -104,22 +123,28 @@ export function TransExample() {
     ],
   ]
   return (
-    <svg style={{ overflow: "visible" }}>
-      {lines.map((points, i) => {
-        return (
-          <Polyline
-            stroke={colors.palette[(i % 3) + 1]}
-            fill="none"
-            strokeWidth={3}
-            strokeLinecap="round"
-            points={points.map((point) => [
-              point[0] * cellSize,
-              point[1] * cellSize,
-            ])}
-          />
-        )
-      })}
-    </svg>
+    <Wrapper>
+      <svg
+        style={{ overflow: "visible" }}
+        width={cellSize * 3}
+        height={cellSize * 4}
+      >
+        {lines.map((points, i) => {
+          return (
+            <Polyline
+              stroke={colors.palette[(i % 3) + 1]}
+              fill="none"
+              strokeWidth={3}
+              strokeLinecap="round"
+              points={points.map((point) => [
+                point[0] * cellSize,
+                point[1] * cellSize,
+              ])}
+            />
+          )
+        })}
+      </svg>
+    </Wrapper>
   )
 }
 
@@ -166,30 +191,36 @@ export function ConwayExample() {
     [2, 0.5],
   ]
   return (
-    <svg style={{ overflow: "visible" }}>
-      {lines.map((points, i) => {
-        return (
-          <Polyline
-            stroke={
-              i % 3 === 0 ? "grey" : colors.palette[i > 3 ? i - 2 : i - 1]
-            }
-            points={points.map((p) => [p[0] * cellSize, p[1] * cellSize])}
-            fill="none"
-            strokeWidth={3}
-            strokeLinecap="round"
-          />
-        )
-      })}
-      {circles.map((center, i) => {
-        return (
-          <Circle
-            center={[center[0] * cellSize, center[1] * cellSize]}
-            r={cellSize / 6}
-            fill={colors.palette[i]}
-          />
-        )
-      })}
-    </svg>
+    <Wrapper>
+      <svg
+        style={{ overflow: "visible" }}
+        width={cellSize * 4}
+        height={cellSize * 4}
+      >
+        {lines.map((points, i) => {
+          return (
+            <Polyline
+              stroke={
+                i % 3 === 0 ? "grey" : colors.palette[i > 3 ? i - 2 : i - 1]
+              }
+              points={points.map((p) => [p[0] * cellSize, p[1] * cellSize])}
+              fill="none"
+              strokeWidth={3}
+              strokeLinecap="round"
+            />
+          )
+        })}
+        {circles.map((center, i) => {
+          return (
+            <Circle
+              center={[center[0] * cellSize, center[1] * cellSize]}
+              r={cellSize / 6}
+              fill={colors.palette[i]}
+            />
+          )
+        })}
+      </svg>
+    </Wrapper>
   )
 }
 

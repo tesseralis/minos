@@ -12,7 +12,6 @@ import NavAndContent from "components/NavAndContent"
 // TODO add other information in here
 export function TilingView({ mino }: { mino: Polyomino }) {
   const gridSize = Math.round(Math.sqrt(64 * mino.order) / 2) * 2
-  const svgSize = 500
   return (
     <div
       css={css`
@@ -21,7 +20,14 @@ export function TilingView({ mino }: { mino: Polyomino }) {
       `}
     >
       <Link href="/tiling">Close</Link>
-      <Tiling mino={mino} gridSize={gridSize} svgSize={svgSize} />
+      <div
+        css={css`
+          width: 100%;
+          max-width: 500px;
+        `}
+      >
+        <Tiling mino={mino} gridSize={gridSize} />
+      </div>
     </div>
   )
 }
