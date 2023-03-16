@@ -10,6 +10,7 @@ import MinoSvg from "components/MinoSvg"
 import { getMinoColor } from "components/graph"
 import { Polyomino } from "mino"
 import Vector from "lib/vector"
+import { css } from "@emotion/react"
 
 interface MinoProps {
   blockSize: number
@@ -91,7 +92,14 @@ export default function MinoPattern({ pattern: patternStr }: Props) {
   const blockWidth = width * blockSize
   const blockHeight = height * blockSize
   return (
-    <svg width={blockWidth} height={blockHeight}>
+    <svg
+      viewBox={`0 0 ${blockWidth} ${blockHeight}`}
+      css={css`
+        overflow: visible;
+        width: 100%;
+        aspect-ratio: ${width} / ${height};
+      `}
+    >
       {pattern.map(({ mino, coord }, i) =>
         !skipAnimation && i > visIndex ? null : (
           <PatternMino

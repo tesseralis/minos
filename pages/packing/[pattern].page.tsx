@@ -19,14 +19,17 @@ export default function PackingPatternPage({ pattern, patternName }: Props) {
           width: 100%;
           display: flex;
           flex-direction: column;
-          /* align-items: left; */
-
-          > svg {
-            align-self: center;
-          }
         `}
       >
-        <Pattern pattern={pattern} />
+        <div
+          css={css`
+            align-self: center;
+            width: 100%;
+            max-width: 600px;
+          `}
+        >
+          <Pattern pattern={pattern} />
+        </div>
         <div
           css={css`
             margin: 1rem;
