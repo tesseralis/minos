@@ -42,7 +42,7 @@ export default function FamilyTree() {
       <div
         css={css`
           position: absolute;
-          top: 0;
+          top: 2rem;
           left: 0;
         `}
       >
