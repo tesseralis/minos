@@ -97,7 +97,14 @@ export default function HomePage({ pattern }: Props) {
             `}
           >
             by{" "}
-            <a target="_blank" rel="noreferrer" href="https://www.tessera.li">
+            <a
+              target="_blank"
+              rel="noreferrer"
+              href="https://tesseralis.site"
+              css={css`
+                font-family: monospace;
+              `}
+            >
               @tesseralis
             </a>
           </p>
