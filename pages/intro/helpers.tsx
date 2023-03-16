@@ -2,6 +2,7 @@ import { css } from "@emotion/react"
 import { Polyomino } from "mino"
 import MinoLink from "components/MinoLink"
 import { getMinoColor } from "components/graph"
+import { media } from "style/media"
 
 const minos = [
   "1",
@@ -17,9 +18,13 @@ export function MinoList() {
     <div
       css={css`
         display: flex;
+        flex-wrap: wrap;
         align-items: center;
-        > * {
-          margin: 0 0.5rem;
+        justify-content: center;
+        gap: 1rem;
+
+        @media ${media.sm} {
+          gap: 2rem;
         }
       `}
     >
@@ -30,7 +35,7 @@ export function MinoList() {
             key={minoStr}
             mino={mino}
             to={`catalog/${mino.transform.free()}`}
-            size={10}
+            size={15}
             {...getMinoColor(mino)}
           />
         )

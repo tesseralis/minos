@@ -1,22 +1,42 @@
 import { MinoList } from "./helpers"
 
-# Introduction
+# Welcome to the Labyrinth.
 
-A _polyomino_ is a figure made up of squares joined by their edges:
+This site is a encyclopedia and shrine to the _polyominoes_, figures made of squares joined by their edges:
 
-<MinoList />
+<Wrapper>
+  <MinoList />
+</Wrapper>
 
-The smallest polyomino is a _monomino_, consisting of only a single square, followed by the _domino_ with two squares. _Tetrominoes_, polyominoes with four squares, are featured in the popular video game [Tetris][tetris]. _Pentominoes_, with five squares, are the subject of many puzzles and games, such as the problem of fitting the 12 pentominoes in a [rectangular grid](/packing/5-rect).
+Underlying their simple definition are complex and intricate shapes whose properties are still not fully known. There is no known formula for counting the number of polyominoes of a given size, and the ways that polyominoes tile and fit together are still being explored.
 
-A polyomino is _fixed_ if different rotations and reflections are considered separate. It is _one-sided_ if rotations are considered the same figure but not reflections. It is a _free polyomino_ if reflections and rotations are considered the same. Unless otherwise stated, we will consider a polyomino to be a free polyomino.
+Polyominoes have been featured in video games such as [Tetris], to board games such as [Blokus] and [Patchwork], to pencil puzzles such as [Fillomino].
 
-This site provides interactive explorations of several interesting properties of polyominoes:
+This site documents several interesting properties of polyominoes:
 
 - [catalog](/catalog): a list of polyominoes up to octominoes with a summary of their properties.
 - [symmetry](/symmetry): an explanation of the different types of symmetries a polyomino can have.
-- [classes](/classes): a categorization of polyominoes based on convexity and directedness.
+- [classes](/classes): a hierarchial categorization of polyominoes based on "directedness".
 - [packing](/packing): fitting a set of polyominoes tightly in some container.
 - [tiling](/tiling): whether a single polyomino can completely fill the plane.
 - [genealogy](/genealogy): a "family tree" showing how polyominoes are built from simpler polyominoes.
 
 [tetris]: https://en.wikipedia.org/wiki/Tetris
+[blokus]: https://boardgamegeek.com/boardgame/2453/blokus
+[patchwork]: https://boardgamegeek.com/boardgame/163412/patchwork
+[fillomino]: https://www.nikoli.co.jp/en/puzzles/fillomino/
+
+export function Wrapper({ children }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        margin: "2rem 0",
+        display: "flex",
+        justifyContent: "center",
+      }}
+    >
+      {children}
+    </div>
+  )
+}
