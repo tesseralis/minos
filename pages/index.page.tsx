@@ -4,51 +4,7 @@ import { css } from "@emotion/react"
 import Pattern from "components/Pattern"
 import { navLinks } from "components/Nav"
 import { colors } from "style/theme"
-
-function EnterLink() {
-  return (
-    <Link
-      href="/intro"
-      passHref
-      css={css`
-        border: 1px solid ${colors.fg};
-        padding: 0.5rem 2rem;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 1.5rem;
-        text-decoration: none;
-
-        :hover {
-          background-color: #333;
-        }
-      `}
-    >
-      Enter
-    </Link>
-  )
-}
-
-function HomePageNav() {
-  return (
-    <nav
-      css={css`
-        margin-top: 1rem;
-
-        a {
-          margin: 1rem;
-          font-size: 1.5rem;
-        }
-      `}
-    >
-      {navLinks.map((link) => (
-        <Link key={link} href={`/${link}`}>
-          {link}
-        </Link>
-      ))}
-    </nav>
-  )
-}
+import { media } from "style/media"
 
 interface Props {
   pattern: string
@@ -72,11 +28,18 @@ export default function HomePage({ pattern }: Props) {
         css={css`
           grid-area: center;
           opacity: 12.5%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
+          justify-self: center;
+          align-self: center;
           overflow: hidden;
-          transform: scale(5);
+          transform: scale(3);
+
+          @media ${media.sm} {
+            transform: scale(4);
+          }
+
+          @media ${media.md} {
+            transform: scale(5);
+          }
         `}
       >
         <Pattern pattern={pattern} />
@@ -88,6 +51,7 @@ export default function HomePage({ pattern }: Props) {
           flex-direction: column;
           align-items: center;
           justify-content: center;
+          padding: 1rem;
           z-index: 1000;
         `}
       >
@@ -104,7 +68,10 @@ export default function HomePage({ pattern }: Props) {
             <span>
               <span
                 css={css`
-                  font-size: 4rem;
+                  font-size: 3rem;
+                  @media ${media.sm} {
+                    font-size: 4rem;
+                  }
                 `}
               >
                 Labyrinth
@@ -113,7 +80,10 @@ export default function HomePage({ pattern }: Props) {
             </span>{" "}
             <span
               css={css`
-                font-size: 6rem;
+                font-size: 4rem;
+                @media ${media.sm} {
+                  font-size: 6rem;
+                }
               `}
             >
               Polyominoes
@@ -145,4 +115,54 @@ export async function getStaticProps() {
     "utf-8",
   )
   return { props: { pattern } }
+}
+
+function HomePageNav() {
+  return (
+    <nav
+      css={css`
+        display: flex;
+        flex-direction: column;
+        flex-wrap: wrap;
+        gap: 0.5rem 1.5rem;
+        font-size: 1.5rem;
+        text-align: center;
+
+        @media ${media.md} {
+          flex-direction: row;
+        }
+      `}
+    >
+      {navLinks.map((link) => (
+        <Link key={link} href={`/${link}`}>
+          {link}
+        </Link>
+      ))}
+    </nav>
+  )
+}
+
+function EnterLink() {
+  return (
+    <Link
+      href="/intro"
+      passHref
+      css={css`
+        border: 1px solid ${colors.fg};
+        padding: 0.5rem 2rem;
+        margin: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        text-decoration: none;
+
+        :hover {
+          background-color: #333;
+        }
+      `}
+    >
+      Enter
+    </Link>
+  )
 }
