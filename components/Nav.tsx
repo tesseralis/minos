@@ -95,7 +95,7 @@ function MobileNav() {
         position: relative;
         display: flex;
         align-items: center;
-        /* justify-content: center; */
+        background: ${colors.bg};
         height: 3rem;
         width: 100vw;
         z-index: 1;

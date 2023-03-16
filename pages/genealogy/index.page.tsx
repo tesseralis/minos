@@ -42,8 +42,11 @@ export default function FamilyTree() {
       <div
         css={css`
           position: absolute;
-          top: 2rem;
+          top: 0;
           left: 0;
+          @media ${media.lg} {
+            top: 2rem;
+          }
         `}
       >
         <Nav />
