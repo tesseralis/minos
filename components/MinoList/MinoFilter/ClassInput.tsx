@@ -48,7 +48,12 @@ export default function ClassInput({ value = [], onUpdate }: Props) {
           return (
             <Tooltip.Root key={cls.name()}>
               <Tooltip.Trigger asChild>
-                <label style={{ gridArea: cls.code() }}>
+                <label
+                  css={css`
+                    cursor: pointer;
+                  `}
+                  style={{ gridArea: cls.code() }}
+                >
                   {/* TODO maybe use the Radix toggle group instead? */}
                   <input
                     type="checkbox"

@@ -42,6 +42,7 @@ export default function SymmetryInput({ value = [], onUpdate }: Props) {
               <Tooltip.Trigger asChild>
                 <label
                   css={css`
+                    cursor: pointer;
                     grid-area: ${sym};
                   `}
                 >

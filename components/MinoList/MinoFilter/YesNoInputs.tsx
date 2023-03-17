@@ -83,7 +83,7 @@ function YesNoInput({
                 color: ${colors.fg};
                 text-decoration: none;
 
-                [data-checked="true"] {
+                &[data-checked="true"] {
                   color: ${colors.highlight};
                   text-decoration: underline;
                 }

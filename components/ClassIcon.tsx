@@ -21,7 +21,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
   }
   const markerProps = {
     stroke,
-    strokeWidth: 2,
+    strokeWidth: size / 24,
     fill: "none",
   }
 
