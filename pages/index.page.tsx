@@ -5,6 +5,7 @@ import Pattern from "components/Pattern"
 import { navLinks } from "components/Nav"
 import { colors } from "style/theme"
 import { media } from "style/media"
+import Logo from "components/Logo"
 
 interface Props {
   pattern: string
@@ -111,6 +112,14 @@ export default function HomePage({ pattern }: Props) {
         </div>
         <EnterLink />
         <HomePageNav />
+        <div
+          css={css`
+            margin-top: 2rem;
+            width: 75px;
+          `}
+        >
+          <Logo />
+        </div>
       </main>
     </div>
   )

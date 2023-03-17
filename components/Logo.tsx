@@ -10,14 +10,13 @@ export default function Logo() {
         size * 3 + 2 * margin
       }`}
       css={css`
-        width: 100%;
         aspect-ratio: 1 / 1;
         overflow: visible;
 
         rect,
         line {
           fill: none;
-          stroke: grey;
+          stroke: currentcolor;
         }
       `}
     >
