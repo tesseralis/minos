@@ -141,8 +141,8 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
       mino: Polyomino.of("1011_1110_0011"),
       markers: (
         <>
-          <SemiDirectedMarker anchor="bottom" yOffset={7.5} />
-          <SemiDirectedMarker anchor="left" yOffset={7.5} />
+          <SemiDirectedMarker anchor="bottom" yOffset={size / 8} />
+          <SemiDirectedMarker anchor="left" yOffset={size / 8} />
         </>
       ),
     },
@@ -159,7 +159,7 @@ export default function ClassIcon({ class: cls, size, fill, stroke }: Props) {
     {
       type: "tree",
       mino: Polyomino.of("1011_1110_1011"),
-      markers: <SemiDirectedMarker yOffset={7.5} />,
+      markers: <SemiDirectedMarker yOffset={size / 8} />,
     },
     { type: "other", mino: Polyomino.of("11011_01110_11011") },
   ]

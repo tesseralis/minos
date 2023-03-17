@@ -1,7 +1,7 @@
 body {
   /* TODO get these values from the theme */
   background-color: #202020;
-  color: #ccc;
+  color: #aaa;
   /* Don't adjust text size on iOS */
   -webkit-text-size-adjust: none;
 }
@@ -9,10 +9,15 @@ body {
 h1,
 h2,
 h3 {
+  color: #ccc;
   font-weight: normal;
   margin: 0;
 }
 
-a {
+dt {
   color: #ccc;
+}
+
+a {
+  color: #aaa;
 }

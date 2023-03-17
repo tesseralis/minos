@@ -1,7 +1,8 @@
 export const colors = {
   highlight: "#eee",
-  fg: "#ccc",
-  muted: "#aaa",
+  fg: "#aaa",
+  heading: "#ccc",
+  muted: "#888",
   bg: "#202020",
   bg2: "#333",
   border: "grey",

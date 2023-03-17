@@ -92,7 +92,7 @@ function SubpageNav() {
               line-height: 1;
               text-decoration: none;
               &[data-active="true"] {
-                text-decoration: underline;
+                color: ${colors.highlight};
               }
             `}
           >
