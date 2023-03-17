@@ -155,6 +155,7 @@ function EnterLink() {
       href="/intro"
       passHref
       css={css`
+        background-color: ${colors.bg};
         border: 1px solid ${colors.fg};
         padding: 0.5rem 2rem;
         margin: 1rem;
@@ -163,6 +164,7 @@ function EnterLink() {
         justify-content: center;
         font-size: 1.5rem;
         text-decoration: none;
+        transition: background-color 250ms ease-in-out;
 
         :hover {
           background-color: #333;
