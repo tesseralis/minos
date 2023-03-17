@@ -4,6 +4,7 @@ import NavAndContent from "components/NavAndContent"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ReactElement } from "react"
+import { colors } from "style/theme"
 
 interface Props {
   children: ReactElement
@@ -46,7 +47,7 @@ function GlossaryNav({ terms }: { terms: string[] }) {
                 css={css`
                   text-decoration: none;
                   &[data-active="true"] {
-                    text-decoration: underline;
+                    color: ${colors.highlight};
                   }
                   font-size: 1.25rem;
                 `}
