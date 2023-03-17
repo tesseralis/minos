@@ -140,11 +140,13 @@ function HomePageNav() {
         }
       `}
     >
-      {navLinks.map((link) => (
-        <Link key={link} href={`/${link}`}>
-          {link}
-        </Link>
-      ))}
+      {navLinks
+        .filter((link) => link !== "intro")
+        .map((link) => (
+          <Link key={link} href={`/${link}`}>
+            {link}
+          </Link>
+        ))}
     </nav>
   )
 }

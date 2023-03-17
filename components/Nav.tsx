@@ -193,6 +193,7 @@ function MobileNav() {
 }
 
 export const navLinks = [
+  "intro",
   "catalog",
   "symmetry",
   "classes",

@@ -1,5 +1,6 @@
 import { css } from "@emotion/react"
 import Layout from "components/Layout"
+import Logo from "components/Logo"
 import Text from "./Text.mdx"
 
 export default function IntroPage() {
@@ -27,6 +28,18 @@ export default function IntroPage() {
           `}
         >
           <Text />
+          <div
+            css={css`
+              display: flex;
+              justify-content: center;
+              margin-bottom: 2rem;
+              svg {
+                width: 100px;
+              }
+            `}
+          >
+            <Logo />
+          </div>
         </div>
       </div>
     </Layout>
