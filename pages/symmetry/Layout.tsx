@@ -9,7 +9,7 @@ import { printSymmetry, symmetries } from "mino"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { colors } from "style/theme"
-import { Polygon, svgTransform } from "components/svg"
+import HierarchyArrow from "components/HierarchyArrow"
 
 export default function SymmetryLayout({ children }: { children?: ReactNode }) {
   return (
@@ -124,7 +124,7 @@ function SubsectionLinks() {
               justify-self: center;
             `}
           >
-            <Arrow direction={direction} />
+            <HierarchyArrow direction={direction} size={20} />
           </div>
         )
       })}
@@ -145,35 +145,3 @@ const arrows: [(string | number)[], string][] = [
   [["rot", "none"], "up"],
   [["rot", "d"], "up right"],
 ]
-
-function Arrow({ direction = "down" }: { direction?: string }) {
-  const width = 1
-  return (
-    <svg viewBox="-2 -2 4 4" width={20}>
-      <Polygon
-        transform={svgTransform().rotate(getAngle(direction))}
-        fill="none"
-        stroke={colors.muted}
-        strokeWidth="0.1"
-        points={[
-          [0, 1],
-          [-width, 2],
-          [0, -2],
-          [width, 2],
-        ]}
-      />
-    </svg>
-  )
-}
-
-function getAngle(direction: string) {
-  switch (direction) {
-    case "up right":
-      return 45
-    case "up left":
-      return -45
-    case "down":
-    default:
-      return 0
-  }
-}

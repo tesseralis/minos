@@ -1,4 +1,4 @@
-import { capitalize } from "lodash"
+import { capitalize, range } from "lodash"
 import { useRouter } from "next/router"
 import Link from "next/link"
 import { css } from "@emotion/react"
@@ -12,9 +12,9 @@ import { DirClass } from "mino"
 import { ReactNode } from "react"
 import { colors } from "style/theme"
 import ClassSymbol from "./ClassSymbol"
+import HierarchyArrow from "components/HierarchyArrow"
 
 export default function ClassLayout({ children }: { children: ReactNode }) {
-  const router = useRouter()
   return (
     <Layout>
       <NavAndContent
@@ -114,6 +114,30 @@ function SubpageNav() {
           </Link>
         )
       })}
+      {range(1, 4).flatMap((col) =>
+        range(...rowRanges[col]).map((row) => {
+          const direction = (row + col) % 2 === 0 ? "up left" : "up right"
+          return (
+            <div
+              key={`${row},${col}`}
+              css={css`
+                justify-self: center;
+                align-self: center;
+                grid-area: ${row} / ${col} / span 2 / span 2;
+              `}
+            >
+              <HierarchyArrow direction={direction} size={15} />
+            </div>
+          )
+        }),
+      )}
     </div>
   )
 }
+
+const rowRanges: [number, number][] = [
+  [0, 0],
+  [2, 8],
+  [1, 9],
+  [3, 7],
+]
