@@ -88,7 +88,7 @@ const data: MinoDatum[] = [
           </Link>
         </div>
       ) : (
-        "no"
+        "——"
       ),
   },
   {
