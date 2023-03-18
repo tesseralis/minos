@@ -38,7 +38,7 @@ export function TilingView({ mino }: { mino: Polyomino }) {
       <div
         css={css`
           width: 100%;
-          max-width: 500px;
+          max-width: 90vmin;
         `}
       >
         <Tiling mino={mino} gridSize={gridSize} />

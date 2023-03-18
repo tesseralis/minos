@@ -96,7 +96,6 @@ export default function MinoPattern({ pattern: patternStr }: Props) {
       viewBox={`0 0 ${blockWidth} ${blockHeight}`}
       css={css`
         overflow: visible;
-        width: 100%;
         aspect-ratio: ${width} / ${height};
       `}
     >

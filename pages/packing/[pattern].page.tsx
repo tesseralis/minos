@@ -25,7 +25,8 @@ export default function PackingPatternPage({ pattern, patternName }: Props) {
           css={css`
             align-self: center;
             width: 100%;
-            max-width: 600px;
+            max-width: 90vmin;
+            max-height: 90vmin;
           `}
         >
           <Pattern pattern={pattern} />
