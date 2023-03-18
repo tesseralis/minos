@@ -24,6 +24,7 @@ module.exports = {
     "react/no-unescaped-entities": "off",
     // typescript will take care of this for me
     "react/prop-types": "off",
+    "react/no-unknown-property": ["error", { ignore: ["css"] }],
     // This is too annoying for a personal project
     "@typescript-eslint/no-explicit-any": "off",
     // Too annoying for a personal project -- maybe enable for specific libs?
