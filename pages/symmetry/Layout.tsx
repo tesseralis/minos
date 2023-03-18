@@ -9,6 +9,7 @@ import { printSymmetry, symmetries } from "mino"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { colors } from "style/theme"
+import { Polygon, svgTransform } from "components/svg"
 
 export default function SymmetryLayout({ children }: { children?: ReactNode }) {
   return (
@@ -54,14 +55,18 @@ function SubsectionLinks() {
     <div
       css={css`
         display: grid;
-        gap: 1rem 0.75rem;
+        gap: 2rem 0.75rem;
         align-content: start;
         grid-template-columns: repeat(3, 1fr);
+        grid-template-rows: repeat(4, 1fr);
         grid-template-areas:
-          ".     all  ."
+          "a     all  b"
           "axis2 rot2 diag2"
           "axis  rot  diag"
-          ".     none .";
+          "c     none d";
+        [data-area="all"] {
+          align-self: end;
+        }
       `}
     >
       {symmetries.map((symmetry) => {
@@ -76,6 +81,7 @@ function SubsectionLinks() {
             key={symmetry}
             href={route}
             data-active={isActive}
+            data-area={symmetry}
             css={css`
               grid-area: ${symmetry};
               display: flex;
@@ -83,6 +89,7 @@ function SubsectionLinks() {
               align-items: center;
               text-align: center;
               gap: 0.5rem;
+              padding-top: 0.5rem;
               text-decoration: none;
               &[data-active="true"] {
                 color: ${colors.highlight};
@@ -107,6 +114,66 @@ function SubsectionLinks() {
           </Link>
         )
       })}
+      {arrows.map(([gridArea, direction], index) => {
+        return (
+          <div
+            key={index}
+            css={css`
+              grid-area: ${gridArea.flatMap((x) => [x, x]).join(" / ")};
+              align-self: center;
+              justify-self: center;
+            `}
+          >
+            <Arrow direction={direction} />
+          </div>
+        )
+      })}
     </div>
   )
+}
+
+const arrows: [(string | number)[], string][] = [
+  [["all", "rot2"], "up"],
+  [["a", "rot2"], "up right"],
+  [["all", "diag2"], "up left"],
+  [["axis2", "axis"], "up"],
+  [["axis2", "rot"], "up left"],
+  [["rot2", "rot"], "up"],
+  [["rot2", "diag"], "up right"],
+  [["diag2", "diag"], "up"],
+  [["axis", "none"], "up left"],
+  [["rot", "none"], "up"],
+  [["rot", "d"], "up right"],
+]
+
+function Arrow({ direction = "down" }: { direction?: string }) {
+  const width = 1
+  return (
+    <svg viewBox="-2 -2 4 4" width={20}>
+      <Polygon
+        transform={svgTransform().rotate(getAngle(direction))}
+        fill="none"
+        stroke={colors.muted}
+        strokeWidth="0.1"
+        points={[
+          [0, 1],
+          [-width, 2],
+          [0, -2],
+          [width, 2],
+        ]}
+      />
+    </svg>
+  )
+}
+
+function getAngle(direction: string) {
+  switch (direction) {
+    case "up right":
+      return 45
+    case "up left":
+      return -45
+    case "down":
+    default:
+      return 0
+  }
 }
