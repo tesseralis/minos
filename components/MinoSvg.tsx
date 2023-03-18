@@ -84,7 +84,8 @@ export default function MinoSvg({
           coord={translate(scale(new Vector(1, 1)))}
           width={size}
           height={size}
-          stroke="none"
+          stroke={stroke}
+          strokeWidth={strokeWidth}
         />
       )}
       {gridStyle !== "none" && (
