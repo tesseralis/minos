@@ -39,10 +39,12 @@ export function TilingView({ mino }: { mino: Polyomino }) {
         css={css`
           width: 100%;
           max-width: 90vmin;
+          margin-bottom: 1rem;
         `}
       >
         <Tiling mino={mino} gridSize={gridSize} />
       </div>
+      <Link href={`/catalog/${mino.toString()}`}>Go to catalog entry</Link>
     </div>
   )
 }
