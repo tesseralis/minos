@@ -114,7 +114,6 @@ const data: MinoDatum[] = [
 export function MinoInfo({ mino }: { mino: Polyomino }) {
   return (
     <>
-      <Link href="/catalog">close</Link>
       <div
         css={css`
           display: flex;

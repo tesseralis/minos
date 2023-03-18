@@ -1,4 +1,4 @@
-import React from "react"
+import React, { ReactNode } from "react"
 import Link from "next/link"
 import { FaChevronRight } from "react-icons/fa"
 import { css } from "@emotion/react"
@@ -7,7 +7,7 @@ interface Props {
   paths: CrumbPath[]
 }
 
-type CrumbPath = [name: string, url: string]
+type CrumbPath = [name: ReactNode, url: string]
 
 export default function Breadcrumbs({ paths }: Props) {
   return (
