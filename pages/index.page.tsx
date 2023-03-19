@@ -39,7 +39,11 @@ export default function HomePage({ pattern }: Props) {
           }
 
           @media ${media.md} {
-            transform: scale(5);
+            transform: scale(6);
+          }
+
+          svg {
+            width: 100%;
           }
         `}
       >
