@@ -37,6 +37,10 @@ export default function ClassLayout({ children }: { children: ReactNode }) {
                 text-decoration: none;
                 padding: 0.5rem 1rem;
                 border: 1px solid ${colors.border};
+                transition: background-color 150ms ease-in-out;
+                :hover {
+                  background-color: ${colors.bg2};
+                }
               `}
             >
               Full Table
@@ -57,7 +61,7 @@ function SubpageNav() {
       css={css`
         display: grid;
         align-content: start;
-        gap: 0.125rem 1rem;
+        gap: 0.125rem 0;
         grid-template-columns: repeat(4, 1fr);
         grid-template-rows: repeat(10, 1fr);
         grid-template-areas:
@@ -86,13 +90,20 @@ function SubpageNav() {
               flex-direction: column;
               align-items: center;
               text-align: center;
-              max-width: 4rem;
               gap: 0.25rem;
               grid-area: ${cls.code()};
               line-height: 1;
               text-decoration: none;
               &[data-active="true"] {
                 color: ${colors.highlight};
+              }
+
+              padding: 0.5rem;
+              border-radius: 4px;
+              transition: background-color 150ms ease-in-out;
+
+              :hover {
+                background-color: ${colors.bg2};
               }
             `}
           >
