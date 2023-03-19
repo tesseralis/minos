@@ -1,7 +1,7 @@
 import { css } from "@emotion/react"
-import { Polyomino } from "mino"
+import { Polyomino, DirClass } from "mino"
 import MinoLink from "components/MinoLink"
-import { getMinoColor, getSymmetryColor } from "components/graph"
+import { getClassColor, getMinoColor, getSymmetryColor } from "components/graph"
 import { media } from "style/media"
 import Link from "next/link"
 import { capitalize } from "lodash"
@@ -12,6 +12,7 @@ import tinycolor from "tinycolor2"
 import MinoDiv from "components/MinoDiv"
 import SymmetryMarkers from "components/SymmetryMarkers"
 import { nodes } from "components/graph"
+import ClassIcon from "components/ClassIcon"
 
 const minos = [
   "1",
@@ -134,6 +135,7 @@ const cards = [
     name: "classes",
     description:
       'A hierarchial categorization of polyominoes based on "directedness".',
+    thumbnail: <ClassThumbnail />,
   },
   {
     name: "packing",
@@ -228,6 +230,31 @@ function SymmetryThumbnail() {
               strokeWidth={2}
             />
           </MinoDiv>
+        )
+      })}
+    </div>
+  )
+}
+
+function ClassThumbnail() {
+  return (
+    <div
+      css={css`
+        margin: 0.5rem;
+        height: 100%;
+        display: grid;
+        grid-template-columns: repeat(5, 1fr);
+      `}
+    >
+      {DirClass.all().map((cls) => {
+        return (
+          <ClassIcon
+            key={cls.name()}
+            class={cls}
+            size={28}
+            fill="none"
+            stroke={getClassColor(cls.name())}
+          />
         )
       })}
     </div>
