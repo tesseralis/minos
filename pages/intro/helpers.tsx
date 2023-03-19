@@ -1,3 +1,4 @@
+import React from "react"
 import { css } from "@emotion/react"
 import { Polyomino, DirClass } from "mino"
 import MinoLink from "components/MinoLink"
@@ -13,6 +14,9 @@ import MinoDiv from "components/MinoDiv"
 import SymmetryMarkers from "components/SymmetryMarkers"
 import { nodes } from "components/graph"
 import ClassIcon from "components/ClassIcon"
+import MinoSvg from "components/MinoSvg"
+import Vector from "lib/vector"
+import { Line } from "components/svg"
 
 const minos = [
   "1",
@@ -151,6 +155,7 @@ const cards = [
     name: "genealogy",
     description:
       'A "family tree" showing how polyominoes are built from simpler polyominoes.',
+    thumbnail: <GenealogyThumbnail />,
   },
 ]
 
@@ -278,4 +283,46 @@ function PatternThumbnail() {
 
 function TilingThumbnail() {
   return <Tiling mino={Polyomino.of("00011_10110_11100")} gridSize={12} />
+}
+
+function GenealogyThumbnail() {
+  const mino = Polyomino.of("01_11_01")
+  const children = [...mino.relatives.freeChildren()]
+  const radius = 30
+  return (
+    <svg viewBox="-50 -10 100 50">
+      {children.map((child, i) => {
+        const angle =
+          (i / (children.length - 1)) * Math.PI * (22 / 24) + Math.PI / 24
+        const coord = new Vector(
+          radius * Math.cos(angle),
+          radius * Math.sin(angle),
+        )
+        return (
+          <>
+            <Line
+              p1={[0, 0]}
+              p2={coord}
+              stroke="currentColor"
+              strokeWidth={0.2}
+            />
+            <MinoSvg
+              mino={child}
+              fill={colors.bg}
+              stroke="currentColor"
+              coord={coord}
+              size={3}
+            />
+          </>
+        )
+      })}
+      <MinoSvg
+        mino={mino}
+        fill={colors.bg}
+        stroke="currentColor"
+        coord={new Vector(0, 0)}
+        size={4}
+      />
+    </svg>
+  )
 }
