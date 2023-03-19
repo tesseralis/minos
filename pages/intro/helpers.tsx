@@ -94,9 +94,15 @@ export function LinkCards() {
           >
             <div
               css={css`
-                height: 8rem;
+                height: 12rem;
                 background-color: ${colors.bg};
                 overflow: hidden;
+                @media ${media.sm} {
+                  height: 10rem;
+                }
+                @media ${media.md} {
+                  height: 8rem;
+                }
               `}
             >
               {thumbnail}
