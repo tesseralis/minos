@@ -152,10 +152,6 @@ const cards = [
     description:
       'A "family tree" showing how polyominoes are built from simpler polyominoes.',
   },
-  {
-    name: "glossary",
-    description: "A list of polyomino-related terms.",
-  },
 ]
 
 function CatalogThumbnail() {
@@ -175,7 +171,7 @@ function CatalogThumbnail() {
         <div
           key={p.data}
           css={css`
-            min-width: 10%;
+            flex-basis: 10%;
           `}
         >
           <MinoDiv mino={p} size={10} fill="none" stroke="currentcolor" />
