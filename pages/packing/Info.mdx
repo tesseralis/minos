@@ -1,5 +1,28 @@
+import MinoPattern from "components/Pattern"
+import Link from "next/link"
+
 # Packing polyominoes
 
-Given a set of polyominoes, such as the set of all pentominoes, it is natural to ask whether that set can be arranged to form certain patterns, such as squares or rectangles, called _packing_. Polyomino packing problems are popular and have been the basis of many puzzles and video games.
+Given a group of polyominoes, an interesting question to ask is whether that group can completely cover some shape, such as a rectangle. For example, the set of pentominoes can completely fill a 6 by 10 rectangle:
 
-This section reprints patterns sourced from various other polyomino sites and publications.
+<PentominoPattern />
+
+These _packing problems_ are some of the most well studied aspects of polyominoes. Using advanced algorithms, people have made beautiful patterns using large numbers of polyominoes. I've reprinted some of my favorites in this section.
+
+export function PentominoPattern() {
+  const pattern = `🟥🟩🟩🟧🟧🟧🟧🟨🟨🟨
+🟥🟩🟩🟪🟧🟦🟦🟦🟦🟨
+🟥🟩🟪🟪🟪🟥🟨🟨🟦🟨
+🟥🟦🟧🟪🟥🟥🟥🟨🟪🟪
+🟥🟦🟧🟧🟩🟩🟥🟨🟨🟪
+🟦🟦🟦🟧🟧🟩🟩🟩🟪🟪`
+  return (
+    <div style={{ display: "flex", justifyContent: "center" }}>
+      <Link href="/packing/5-rect" style={{ width: "100%", maxWidth: "500px" }}>
+        <div style={{ pointerEvents: "none" }}>
+          <MinoPattern pattern={pattern} />
+        </div>
+      </Link>
+    </div>
+  )
+}
