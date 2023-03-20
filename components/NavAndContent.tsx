@@ -66,8 +66,8 @@ export default function NavAndContent({ nav, children, columns }: Props) {
           width: 100%;
           height: 100%;
           padding: 2rem;
+          padding-bottom: 4rem;
           overflow-y: scroll;
-          margin-bottom: 4rem;
         `}
       >
         {children}
@@ -106,6 +106,8 @@ function MobileNavDialog({ content }: DialogProps) {
     <Dialog.Root open={isOpen} onOpenChange={onOpenChange}>
       <Dialog.Trigger
         css={css`
+          /* Set z-index because of katex formatting */
+          z-index: 10;
           position: fixed;
           left: 0;
           bottom: 1rem;

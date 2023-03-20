@@ -13,14 +13,16 @@ export default function Layout({ children }: Props) {
     <Tooltip.Provider delayDuration={0}>
       <div
         css={css`
-          /* grid-template-columns: 1fr; */
+          display: grid;
           position: fixed;
           width: 100vw;
           height: 100vh;
 
+          grid-template-rows: 48px 1fr;
+
           @media ${media.lg} {
-            display: grid;
             grid-template-columns: 10rem 1fr;
+            grid-template-rows: 1fr;
           }
         `}
       >
