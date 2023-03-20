@@ -39,7 +39,8 @@ export default function Responsive({ query, match, default: def }: Props) {
         <div
           data-matches="true"
           css={css`
-            @media not ${query} {
+            /* https://stackoverflow.com/a/36584829 */
+            @media not all and ${query} {
               display: none;
             }
           `}
