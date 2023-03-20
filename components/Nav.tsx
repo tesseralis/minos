@@ -6,7 +6,8 @@ import { colors } from "style/theme"
 import { media } from "style/media"
 import * as NavMenu from "@radix-ui/react-navigation-menu"
 import Responsive from "./Responsive"
-import { FaBars } from "react-icons/fa"
+import Logo from "./Logo"
+import { BsList } from "react-icons/bs"
 
 export default function Nav() {
   return (
@@ -105,11 +106,12 @@ function MobileNav() {
     >
       <NavMenu.List
         css={css`
-          display: flex;
+          display: grid;
           padding: 4px;
-          border-radius: 6px;
-          list-style: none;
           margin: 0;
+          grid-template-columns: 2rem 1fr 2rem;
+          justify-items: center;
+          width: 100vw;
         `}
       >
         <NavMenu.Item>
@@ -122,7 +124,7 @@ function MobileNav() {
               font-size: 1.25rem;
             `}
           >
-            <FaBars size={30} />
+            <BsList size={30} />
           </NavMenu.Trigger>
           <NavMenu.Content
             css={css`
@@ -168,6 +170,20 @@ function MobileNav() {
               )
             })}
           </NavMenu.Content>
+        </NavMenu.Item>
+        <NavMenu.Item>
+          <NavMenu.Link asChild>
+            <Link
+              href="/"
+              css={css`
+                svg {
+                  width: 30px;
+                }
+              `}
+            >
+              <Logo />
+            </Link>
+          </NavMenu.Link>
         </NavMenu.Item>
       </NavMenu.List>
       <div

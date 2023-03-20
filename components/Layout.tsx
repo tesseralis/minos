@@ -5,11 +5,10 @@ import * as Tooltip from "@radix-ui/react-tooltip"
 import { media } from "style/media"
 
 interface Props {
-  subNav?: ReactNode
   children: ReactNode
 }
 
-export default function Layout({ subNav, children }: Props) {
+export default function Layout({ children }: Props) {
   return (
     <Tooltip.Provider delayDuration={0}>
       <div
@@ -33,7 +32,6 @@ export default function Layout({ subNav, children }: Props) {
           `}
         >
           <Nav />
-          {subNav}
         </div>
         <div
           css={css`
