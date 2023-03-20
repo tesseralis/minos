@@ -6,6 +6,7 @@ import * as Dialog from "@radix-ui/react-dialog"
 import { colors } from "style/theme"
 import { Cross1Icon } from "@radix-ui/react-icons"
 import { FaBars } from "react-icons/fa"
+import { BsFillGrid3X3GapFill } from "react-icons/bs"
 
 interface Props {
   nav: ReactNode
@@ -120,7 +121,7 @@ function MobileNavDialog({ content }: DialogProps) {
           border-bottom-right-radius: 9999px;
         `}
       >
-        <FaBars size={30} />
+        <BsFillGrid3X3GapFill size={30} />
       </Dialog.Trigger>
       <Dialog.Portal>
         <Dialog.Overlay

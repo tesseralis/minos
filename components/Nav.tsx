@@ -6,6 +6,7 @@ import { colors } from "style/theme"
 import { media } from "style/media"
 import * as NavMenu from "@radix-ui/react-navigation-menu"
 import Responsive from "./Responsive"
+import { FaBars } from "react-icons/fa"
 
 export default function Nav() {
   return (
@@ -121,7 +122,7 @@ function MobileNav() {
               font-size: 1.25rem;
             `}
           >
-            Nav
+            <FaBars size={30} />
           </NavMenu.Trigger>
           <NavMenu.Content
             css={css`
@@ -129,7 +130,6 @@ function MobileNav() {
               top: 0;
               left: 0;
               width: 100%;
-              padding: 1rem;
             `}
           >
             {navLinks.map((view) => {
@@ -142,16 +142,22 @@ function MobileNav() {
                       passHref
                       data-active={isActive}
                       css={css`
+                        display: block;
                         font-size: 1.25rem;
                         line-height: 1.25;
                         color: ${colors.fg};
                         &[data-active="true"] {
                           color: ${colors.highlight};
                         }
-
                         text-decoration: none;
+                        padding: 0.25rem 1rem;
+
                         :hover {
-                          text-decoration: underline;
+                          background-color: ${colors.bg2};
+                        }
+
+                        @media (pointer: coarse) {
+                          padding: 0.5rem 1rem;
                         }
                       `}
                     >
@@ -178,13 +184,22 @@ function MobileNav() {
           css={css`
             position: relative;
             transform-origin: top left;
-            margin-top: 10px;
-            width: 8rem;
-            border-radius: 6px;
+            /* margin-top: 10px;
+            width: 8rem; */
+            /* border-radius: 6px; */
             overflow: hidden;
-            border: 1px solid ${colors.border};
+            /* border: 1px solid ${colors.border}; */
+            border-top: 1px solid ${colors.border};
+            border-bottom: 1px solid ${colors.border};
             background-color: ${colors.bg};
             height: var(--radix-navigation-menu-viewport-height);
+
+            width: 100%;
+
+            @media ${media.sm} {
+              width: 8rem;
+              border: 1px solid ${colors.border};
+            }
           `}
         />
       </div>
