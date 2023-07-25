@@ -153,7 +153,7 @@ const cards = [
     thumbnail: <PatternThumbnail />,
   },
   {
-    name: "Tiling",
+    name: "tiling",
     description: "Whether a single polyomino can completely fill the plane.",
     thumbnail: <TilingThumbnail />,
   },
