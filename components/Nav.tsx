@@ -232,4 +232,5 @@ export const navLinks = [
   "tiling",
   "genealogy",
   "glossary",
+  "links",
 ]
