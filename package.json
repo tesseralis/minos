@@ -67,6 +67,9 @@
     "format": "yarn format:other && yarn format:code",
     "prepare": "husky install"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "browserslist": [
     ">0.2%",
     "not dead",
