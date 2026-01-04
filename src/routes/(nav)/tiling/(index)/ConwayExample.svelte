@@ -1,0 +1,75 @@
+<script lang="ts">
+  import Circle from "$lib/components/svg/Circle.svelte"
+  import Polyline from "$lib/components/svg/Polyline.svelte"
+  import { colors } from "$lib/components/theme"
+  import Wrapper from "./Wrapper.svelte"
+
+  const cellSize = 30
+  const lines = [
+    [
+      [1, 0],
+      [1, 1],
+      [0, 1],
+    ],
+    [
+      [0, 1],
+      [0, 4],
+    ],
+    [
+      [0, 4],
+      [1, 4],
+    ],
+    [
+      [1, 4],
+      [2, 4],
+      [2, 3],
+    ],
+    [
+      [2, 3],
+      [1, 3],
+      [1, 2],
+      [4, 2],
+      [4, 1],
+      [3, 1],
+    ],
+    [
+      [3, 1],
+      [2, 1],
+      [2, 0],
+      [1, 0],
+    ],
+  ]
+  const circles = [
+    [0, 2.5],
+    [0.5, 4],
+    [2.5, 2],
+    [2, 0.5],
+  ]
+</script>
+
+<Wrapper>
+  <svg width={cellSize * 4} height={cellSize * 4}>
+    {#each lines as points, i}
+      <Polyline
+        stroke={i % 3 === 0 ? "grey" : colors.palette[i > 3 ? i - 2 : i - 1]}
+        points={points.map((p) => [p[0] * cellSize, p[1] * cellSize])}
+        fill="none"
+        stroke-width={3}
+        stroke-linecap="round"
+      />
+    {/each}
+    {#each circles as center, i}
+      <Circle
+        center={[center[0] * cellSize, center[1] * cellSize]}
+        r={cellSize / 6}
+        fill={colors.palette[i]}
+      />
+    {/each}
+  </svg>
+</Wrapper>
+
+<style>
+  svg {
+    overflow: visible;
+  }
+</style>

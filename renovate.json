@@ -1,9 +1,0 @@
-{
-  "extends": ["config:base"],
-  "packageRules": [
-    {
-      "groupName": "package.json",
-      "paths": ["package.json"]
-    }
-  ]
-}

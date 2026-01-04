@@ -1,0 +1,10 @@
+
+<script lang="ts">
+  import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
+</script>
+
+<Breadcrumbs paths={[["Catalog", "/catalog"]]} />
+
+# Polyomino Catalog
+
+This catalog lists all the polyominoes up to octominoes. Select a polyomino to see an overview of its properties.
