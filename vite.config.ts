@@ -1,6 +1,7 @@
 import { svelteTesting } from "@testing-library/svelte/vite"
 import { sveltekit } from "@sveltejs/kit/vite"
 import { defineConfig } from "vite"
+import "vitest/config"
 import Icons from "unplugin-icons/vite"
 import fs from "fs"
 // import { visualizer } from "rollup-plugin-visualizer"
@@ -31,7 +32,7 @@ export default defineConfig({
     },
   },
   test: {
-    workspace: [
+    projects: [
       {
         extends: "./vite.config.ts",
         plugins: [svelteTesting()],

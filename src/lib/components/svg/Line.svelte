@@ -1,8 +1,10 @@
 <script lang="ts">
   import { type Point, type SVGProps, getBaseSVGProps } from "./util"
 
-  interface Props
-    extends Omit<SVGProps<SVGLineElement>, "x1" | "x2" | "y1" | "y2"> {
+  interface Props extends Omit<
+    SVGProps<SVGLineElement>,
+    "x1" | "x2" | "y1" | "y2"
+  > {
     p1: Point
     p2: Point
   }

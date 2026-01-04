@@ -3,14 +3,13 @@
   import { page } from "$app/state"
 
   const { data, children } = $props()
-  const terms = data.terms
 </script>
 
 <NavAndContent columns="18rem 1fr">
   {#snippet nav()}
     <div class="nav-wrapper">
       <ul>
-        {#each terms as term}
+        {#each data.terms as term}
           {@const path = `/glossary/${term}`}
           <li>
             <a href={path} class:active={path === page.url.pathname}>

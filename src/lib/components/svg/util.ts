@@ -43,8 +43,7 @@ interface ExtendedSVGProps {
 }
 
 export interface SVGProps<T extends EventTarget>
-  extends Omit<SVGAttributes<T>, keyof ExtendedSVGProps>,
-    ExtendedSVGProps {}
+  extends Omit<SVGAttributes<T>, keyof ExtendedSVGProps>, ExtendedSVGProps {}
 
 export function getBaseSVGProps<T extends EventTarget>({
   transform,

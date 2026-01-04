@@ -12,7 +12,7 @@
 
   const { query, match, default: def }: Props = $props()
 
-  const isMatch = new MediaQuery(query)
+  const isMatch = $derived(new MediaQuery(query))
   let mounted = $state(false)
 
   onMount(() => {

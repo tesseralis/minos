@@ -29,13 +29,13 @@
   }
 
   const { class: cls, size, fill, stroke }: Props = $props()
-  const className = cls.name()
-  const mino = Polyomino.of(reprMinos[className])
-  const markerProps = {
+  const className = $derived(cls.name())
+  const mino = $derived(Polyomino.of(reprMinos[className]))
+  const markerProps = $derived({
     stroke,
     strokeWidth: size / 24,
     fill: "none",
-  }
+  })
 </script>
 
 <MinoDiv

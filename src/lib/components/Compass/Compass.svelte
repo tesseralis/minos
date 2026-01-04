@@ -8,18 +8,13 @@
 
   let { selected = $bindable() } = $props()
   let showEditable = $state(false)
-  let showTransforms = $state(false)
 
   let context = new CompassContext()
   setCompassContext(context)
 </script>
 
 <svg viewBox="{-svgSize} {-svgSize} {svgSize * 2} {svgSize * 2}">
-  <G
-    onhover={(hovered) => {
-      showTransforms = hovered
-    }}
-  >
+  <G>
     <CompassBackground />
     <CompassLinks bind:mino={selected} />
     <G

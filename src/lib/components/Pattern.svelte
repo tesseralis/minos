@@ -6,7 +6,6 @@
     pattern: string
   }
 
-  // FIXME animation
   const maxWidth = 500
   const { pattern: patternStr }: Props = $props()
   const pattern = $derived(parsePattern(patternStr))
@@ -31,7 +30,7 @@
   style:aspect-ratio="{width} / {height}"
 >
   {#each pattern as { mino, coord }}
-    <PatternMino {mino} {coord} {blockSize} isSelected={false} />
+    <PatternMino {mino} {coord} {blockSize} />
   {/each}
 </svg>
 

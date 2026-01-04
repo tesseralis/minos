@@ -7,17 +7,16 @@
   interface Props {
     selected: Polyomino | undefined
     href(mino: Polyomino): string
-    initFilter?: FilterOptions
+    filter?: FilterOptions
   }
 
   const listMinos = nodes.map(Polyomino.sort)
 
-  const {
+  let {
     selected,
     href,
-    initFilter = { symmetries: [], classes: [], yesNo: {} },
+    filter = $bindable({ symmetries: [], classes: [], yesNo: {} }),
   }: Props = $props()
-  let filter = $state<FilterOptions>(initFilter)
   const minoSets = $derived(applyFilter(listMinos, filter))
 </script>
 
