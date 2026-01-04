@@ -1,0 +1,39 @@
+<script lang="ts">
+  import Pattern from "$lib/components/Pattern.svelte"
+  const { data } = $props()
+  const pattern = $derived(data.pattern)
+</script>
+
+# Packing polyominoes
+
+Given a group of polyominoes, an interesting question to ask is whether that group can completely cover some shape, such as a rectangle. For example, the set of pentominoes can completely fill a 6 by 10 rectangle:
+
+{@render pentominoPattern()}
+
+These _packing problems_ are some of the most well studied aspects of polyominoes. Using advanced algorithms, people have made beautiful patterns using large numbers of polyominoes. I've reprinted some of my favorites in this section.
+
+{#snippet pentominoPattern()}
+  <div class="wrapper">
+    <a href="/packing/5-rect">
+      <div class="pattern">
+        <Pattern {pattern} />
+      </div>
+    </a>
+  </div>
+{/snippet}
+
+<style>
+  .wrapper {
+    display: flex;
+    justify-content: center;
+  }
+
+  a {
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .pattern {
+    pointer-events: none;
+  }
+</style>

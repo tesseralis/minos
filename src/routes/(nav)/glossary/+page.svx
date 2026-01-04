@@ -1,0 +1,2 @@
+# Glossary
+This is a glossary of various terms related to polyominoes.

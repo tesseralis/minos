@@ -1,0 +1,52 @@
+/* A11y */
+
+* :focus:not(:focus-visible) {
+  outline: none;
+}
+
+.visually-hidden {
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+/* Theme */
+
+:root {
+  /* TODO deduplicate these from JS definitions */
+  --color-highlight: #eee;
+  --color-fg: #aaa;
+  --color-heading: #ccc;
+  --color-muted: #888;
+  --color-bg: #202020;
+  --color-bg2: #333;
+  --color-border: grey;
+}
+
+body {
+  /* TODO get these values from the theme */
+  background-color: #202020;
+  color: #aaa;
+  /* Don't adjust text size on iOS */
+  -webkit-text-size-adjust: none;
+}
+
+h1,
+h2,
+h3 {
+  color: #ccc;
+  font-weight: normal;
+  margin: 0;
+}
+
+dt {
+  color: #ccc;
+}
+
+a {
+  color: #aaa;
+}

@@ -1,0 +1,17 @@
+<script lang="ts">
+  import MinoDiv from "$lib/components/MinoDiv.svelte"
+  import { Polyomino } from "$lib/mino"
+</script>
+
+A space not in a polyomino that is enclosed by cells of the polyomino.
+
+This heptomino is the smallest polyomino that contains a hole:
+
+<MinoDiv
+  mino={Polyomino.of("111_101_110")}
+  stroke="black"
+  fill="grey"
+  size={20}
+/>
+
+Polyominoes with holes cannot [tile the plane](/tiling).
