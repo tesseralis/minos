@@ -1,2 +1,8 @@
+<script lang="ts">
+  import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
+</script>
+
+<Breadcrumbs paths={[["Glossary", "/glossary"]]} />
+
 # Glossary
 This is a glossary of various terms related to polyominoes.
