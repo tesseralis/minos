@@ -34,7 +34,7 @@
   nav {
     margin-bottom: 1rem;
     display: flex;
-    gap: 0.5rem;
+    gap: 0.25rem;
     align-items: center;
   }
 
