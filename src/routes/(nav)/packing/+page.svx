@@ -1,8 +1,11 @@
 <script lang="ts">
+  import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
   import Pattern from "$lib/components/Pattern.svelte"
   const { data } = $props()
   const pattern = $derived(data.pattern)
 </script>
+
+<Breadcrumbs paths={[["Packing", "/packing"]]} />
 
 # Packing polyominoes
 

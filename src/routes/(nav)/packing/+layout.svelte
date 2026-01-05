@@ -1,23 +1,11 @@
 <script lang="ts">
   import { page } from "$app/state"
   import NavAndContent from "$lib/components/NavAndContent"
-  import { orderName } from "$lib/mino"
+  import { getSizeText, getShapeText } from "./helpers"
 
   const { children } = $props()
   const sizes = ["1_4", 5, 6, 7, 8]
   const shapes = ["rect", "square"]
-
-  function getSizeText(size: number | string) {
-    if (typeof size === "string") {
-      return "small polyominoes"
-    }
-    return orderName(size) + "es"
-  }
-
-  function getShapeText(shape: string) {
-    if (shape === "rect") return "rectangle"
-    return shape
-  }
 </script>
 
 <NavAndContent columns="18rem 1fr">

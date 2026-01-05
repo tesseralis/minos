@@ -1,5 +1,7 @@
 <script lang="ts">
+  import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
   import Pattern from "$lib/components/Pattern.svelte"
+  import { getLongName } from "../helpers"
   import { getAttribution } from "../helpers.svelte"
 
   const { data } = $props()
@@ -7,11 +9,18 @@
   const attribution = $derived(getAttribution(data.patternName))
 </script>
 
+<Breadcrumbs
+  paths={[
+    ["Packing", "/packing"],
+    [getLongName(data.patternName), `/packing/${data.patternName}`],
+  ]}
+/>
+
 <div class="container">
   <div class="pattern">
     <Pattern {pattern} />
     <div class="attribution">
-      {@render attribution()}
+      {@render attribution?.()}
     </div>
   </div>
 </div>
