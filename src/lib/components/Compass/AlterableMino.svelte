@@ -3,7 +3,6 @@
   import Vector from "$lib/vector"
   import { getMinoColor, NUM_GENERATIONS } from "../graph"
   import { point } from "../svgUtils"
-  import { colors } from "../theme"
   import { getMinoSizeAndTransform } from "./helpers.svelte"
   import SelectableSquare from "./SelectableSquare.svelte"
 
@@ -47,11 +46,10 @@
 {#snippet hole()}
   {@const { size, transform } = getMinoSizeAndTransform(mino)}
   <rect
+    class="hole"
     {...point(transform(new Vector(1, 1)))}
     width={size}
     height={size}
-    fill={colors.bg}
-    stroke="none"
   />
 {/snippet}
 
@@ -83,5 +81,10 @@
 
   .outer :global(rect[data-selected="true"]) {
     opacity: 0.5;
+  }
+
+  .hole {
+    fill: var(--color-bg);
+    stroke: none;
   }
 </style>

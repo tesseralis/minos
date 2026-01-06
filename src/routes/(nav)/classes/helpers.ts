@@ -150,7 +150,7 @@ export function unescapeClass(cls: string): string {
 }
 
 export function getDirColor(dir: string) {
-  return colorMap[dir] ?? colors.fg
+  return colorMap[dir]
 }
 
 const colorMap: Record<string, string> = {

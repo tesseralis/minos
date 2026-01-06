@@ -9,10 +9,7 @@
 
 <script lang="ts">
   import { getSymmetryColor } from "../graph"
-
-  import { svgTransform } from "../svgUtils"
   import { endpoints } from "../svgUtils"
-  import { colors } from "../theme"
   import {
     getCompassContext,
     innerRingRadius as radius,
@@ -23,18 +20,33 @@
   const context = $derived(getCompassContext())
 </script>
 
-<g opacity={2 / 3}>
+<g>
   {#each reflectionOrder as reflection, i}
-    {@const isHovered = reflection === context.transform}
-    {#if mino.transform.hasSymmetry(reflection) || isHovered}
+    {@const hovered = reflection === context.transform}
+    {#if mino.transform.hasSymmetry(reflection) || hovered}
       <line
         {...endpoints([-radius, 0], [radius, 0])}
-        stroke={isHovered ? colors.highlight : color}
-        stroke-width={isHovered ? 4 : 2}
-        transform={svgTransform()
-          .rotate(45 * i)
-          .toString()}
+        class:hovered
+        style:--angle="{45 * i}deg"
+        style:--color={color}
       />
     {/if}
   {/each}
 </g>
+
+<style>
+  g {
+    opacity: 2/3;
+  }
+
+  line {
+    stroke-width: 2;
+    stroke: var(--color);
+    rotate: var(--angle);
+  }
+
+  line.hovered {
+    stroke-width: 4;
+    stroke: var(--color-highlight);
+  }
+</style>

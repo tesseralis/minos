@@ -1,7 +1,7 @@
 <script lang="ts">
   import { type Transform } from "$lib/mino"
+  import { type Point } from "$lib/vector"
   import { getSymmetryColor } from "../graph"
-  import { svgTransform, SVGTransform } from "../svgUtils"
   import { onHover } from "../svgUtils"
   import { getCompassContext, innerRingRadius } from "./helpers.svelte"
   import { reflectionOrder } from "./ReflectionAxes.svelte"
@@ -22,21 +22,14 @@
 
 <g class="buttons" opacity={visible ? 1 : 0}>
   {#each reflectionOrder as trans, i}
-    {@render button(
-      "↕︎",
-      trans,
-      svgTransform()
-        .translate(radius, 0)
-        .rotate(45 * i),
-    )}
+    {@render button("↕︎", trans, [radius, 0], 45 * i)}
   {/each}
   {#each ["rotateLeft", "rotateHalf", "rotateRight"] as const as trans, i}
     {@render button(
       rotationSymbols[trans],
       trans,
-      svgTransform()
-        .translate(0, -radius)
-        .rotate(30 * (i - 1)),
+      [0, -radius],
+      30 * (i - 1),
       trans === "rotateHalf" ? "rotate-half" : "rotate",
     )}
   {/each}
@@ -45,15 +38,17 @@
 {#snippet button(
   icon: string,
   trans: Transform,
-  svgTrans: SVGTransform,
+  [x, y]: Point,
+  angle: number,
   cls?: string,
 )}
   <text
     class={["text", cls]}
     fill={color}
     onclick={() => (mino = mino.transform.apply(trans))}
+    style:--angle="{angle}deg"
+    style:--translate="{x}px, {y}px"
     {...onHover((hovered) => (context.transform = hovered ? trans : undefined))}
-    transform={svgTrans.toString()}
   >
     {icon}
   </text>
@@ -70,6 +65,7 @@
     pointer-events: initial;
     user-select: none;
     dominant-baseline: middle;
+    transform: rotate(var(--angle)) translate(var(--translate));
   }
   .buttons .text:hover {
     fill: var(--color-highlight);

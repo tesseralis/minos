@@ -1,9 +1,12 @@
 <script lang="ts">
   import { Polyomino } from "$lib/mino"
+  import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
   import TransExample from "./TransExample.svelte"
   import ConwayExample from "./ConwayExample.svelte"
   import TilingThumbnail from "./TilingThumbnail.svelte"
 </script>
+
+<Breadcrumbs paths={[["Tiling", "/tiling"]]} />
 
 # Tiling the plane
 

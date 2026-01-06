@@ -27,7 +27,7 @@
 
 <style>
   .container {
-    margin-top: 2rem;
+    margin-top: 1rem;
     width: 100%;
     display: flex;
     flex-direction: column;

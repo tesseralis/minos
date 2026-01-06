@@ -1,7 +1,5 @@
 <script lang="ts">
-  import tinycolor from "tinycolor2"
   import { innerRingRadius as radius } from "./helpers.svelte"
-  import { colors } from "../theme"
   import ReflectionAxes from "./ReflectionAxes.svelte"
   import RotationMarkers from "./RotationMarkers.svelte"
   import TransformButtons from "./TransformButtons.svelte"
@@ -13,11 +11,7 @@
 
 <g opacity={2 / 3}>
   <!-- Hide the strands behind the component -->
-  <circle
-    class="circle"
-    r={radius}
-    fill={tinycolor.mix(color, colors.bg, 90).toString()}
-  />
+  <circle class="circle" style:--color={color} r={radius} />
   <ReflectionAxes {mino} />
   <RotationMarkers {mino} />
   <TransformButtons bind:mino visible={true} />
@@ -27,5 +21,6 @@
 <style>
   .circle {
     pointer-events: initial;
+    fill: color-mix(in srgb, var(--color), var(--color-bg) 90%);
   }
 </style>
