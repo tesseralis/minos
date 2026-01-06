@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Polygon, svgTransform } from "./svg"
+  import { svgTransform } from "./svgUtils"
+  import { getPoints } from "./svgUtils"
   import { colors } from "./theme"
 
   const {
@@ -25,16 +26,16 @@
 </script>
 
 <svg viewBox="-2 -2 4 4" width={size}>
-  <Polygon
-    transform={svgTransform().rotate(getAngle(direction))}
+  <polygon
+    transform={svgTransform().rotate(getAngle(direction)).toString()}
     fill="none"
     stroke={colors.muted}
     stroke-width="0.2"
-    points={[
+    points={getPoints([
       [0, 1],
       [-width, 2],
       [0, -2],
       [width, 2],
-    ]}
+    ])}
   />
 </svg>

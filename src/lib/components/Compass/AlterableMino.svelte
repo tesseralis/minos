@@ -2,7 +2,7 @@
   import { O_OCTOMINO } from "$lib/mino"
   import Vector from "$lib/vector"
   import { getMinoColor, NUM_GENERATIONS } from "../graph"
-  import Rect from "../svg/Rect.svelte"
+  import { point } from "../svgUtils"
   import { colors } from "../theme"
   import { getMinoSizeAndTransform } from "./helpers.svelte"
   import SelectableSquare from "./SelectableSquare.svelte"
@@ -46,11 +46,11 @@
 
 {#snippet hole()}
   {@const { size, transform } = getMinoSizeAndTransform(mino)}
-  <Rect
-    fill={colors.bg}
-    coord={transform(new Vector(1, 1))}
+  <rect
+    {...point(transform(new Vector(1, 1)))}
     width={size}
     height={size}
+    fill={colors.bg}
     stroke="none"
   />
 {/snippet}

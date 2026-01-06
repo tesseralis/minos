@@ -5,9 +5,9 @@
   import { minBy } from "lodash-es"
   import { getMinoColor } from "$lib/components/graph"
   import MinoLink from "$lib/components/MinoLink.svelte"
-  import Polyline from "$lib/components/svg/Polyline.svelte"
   import tinycolor from "tinycolor2"
   import { getDirColor } from "./helpers"
+  import { getPoints } from "$lib/components/svgUtils"
 
   function getPathSegments(mino: Polyomino, size: number) {
     const outline = mino.boundary().outline()
@@ -100,8 +100,8 @@
     gridStyle="thin"
   >
     {#each segments as { dir, points }, index}
-      <Polyline
-        {points}
+      <polyline
+        points={getPoints(points)}
         stroke={currentIndex === index
           ? "white"
           : tinycolor(getDirColor(dir)).darken(15).toString()}

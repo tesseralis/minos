@@ -5,10 +5,10 @@
     innerRingRadius as radius,
     getCompassContext,
   } from "./helpers.svelte"
-  import Polygon from "../svg/Polygon.svelte"
-  import { svgTransform } from "../svg"
+  import { svgTransform } from "../svgUtils"
   import { colors } from "../theme"
   import { getSymmetryColor } from "../graph"
+  import { getPoints } from "../svgUtils"
 
   const { mino } = $props()
   const color = $derived(getSymmetryColor(mino.transform.symmetry()))
@@ -41,13 +41,14 @@
     {#if shouldShow || isHover}
       {@const chiral = mino?.transform.isOneSided()}
       {@const points: Point[] = [[0, size], [size, 0], chiral ? [0, 0] : [-size, 0]]}
-      <Polygon
+      <polygon
         stroke-width={2}
-        {points}
+        points={getPoints(points)}
         fill={isHover ? colors.highlight : color}
         transform={svgTransform()
           .translate(0, -radius)
-          .rotate(90 * index)}
+          .rotate(90 * index)
+          .toString()}
       />
     {/if}
   {/each}

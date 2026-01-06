@@ -1,8 +1,8 @@
 <script lang="ts">
   import { type Transform } from "$lib/mino"
   import { getSymmetryColor } from "../graph"
-  import Text from "../svg/Text.svelte"
-  import { svgTransform, SVGTransform } from "../svg/util"
+  import { svgTransform, SVGTransform } from "../svgUtils"
+  import { onHover } from "../svgUtils"
   import { getCompassContext, innerRingRadius } from "./helpers.svelte"
   import { reflectionOrder } from "./ReflectionAxes.svelte"
 
@@ -48,15 +48,15 @@
   svgTrans: SVGTransform,
   cls?: string,
 )}
-  <Text
+  <text
     class={["text", cls]}
     fill={color}
     onclick={() => (mino = mino.transform.apply(trans))}
-    onhover={(hovered) => (context.transform = hovered ? trans : undefined)}
-    transform={svgTrans}
+    {...onHover((hovered) => (context.transform = hovered ? trans : undefined))}
+    transform={svgTrans.toString()}
   >
     {icon}
-  </Text>
+  </text>
 {/snippet}
 
 <style>
@@ -64,22 +64,22 @@
     transition: opacity 100ms ease-in-out;
   }
 
-  .buttons :global(.text) {
+  .buttons .text {
     cursor: pointer;
     text-anchor: middle;
     pointer-events: initial;
     user-select: none;
     dominant-baseline: middle;
   }
-  .buttons :global(.text):hover {
+  .buttons .text:hover {
     fill: var(--color-highlight);
   }
 
-  .buttons :global(.rotate) {
+  .buttons .rotate {
     font-size: 20px;
     dominant-baseline: middle;
   }
-  .buttons :global(.rotate-half) {
+  .buttons .rotate-half {
     font-size: 20px;
     dominant-baseline: initial;
   }

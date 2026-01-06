@@ -5,7 +5,6 @@
   import FullScreenSvg from "./FullScreenSvg.svelte"
   import GenerationRings from "./GenerationRings.svelte"
   import MinoLinks from "./MinoLinks.svelte"
-  import Rect from "$lib/components/svg/Rect.svelte"
   import type { Polyomino } from "$lib/mino"
   import onClickOnly from "$lib/components/onClickOnly"
 
@@ -14,7 +13,7 @@
 
 <div class="container">
   <FullScreenSvg width={1100}>
-    <Rect
+    <rect
       width="100%"
       height="100%"
       opacity={0}

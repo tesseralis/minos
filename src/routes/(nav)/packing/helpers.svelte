@@ -1,6 +1,5 @@
 <script module lang="ts">
   import type { Snippet } from "svelte"
-  import { getShapeText, getSizeText } from "./helpers"
 
   const packingPatterns: Record<string, Snippet> = {
     "5-rect": rect5,

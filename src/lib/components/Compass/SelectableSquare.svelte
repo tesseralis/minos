@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Polyomino, PossibleRelativeLink } from "$lib/mino"
-  import Rect from "../svg/Rect.svelte"
+  import { onHover, point } from "../svgUtils"
   import { getCompassContext, getMinoSizeAndTransform } from "./helpers.svelte"
 
   interface Props {
@@ -17,11 +17,11 @@
 </script>
 
 <g>
-  <Rect
+  <rect
     data-selectable={!!mino}
     data-selected={isSelected}
     class={[!!mino && "selectable"]}
-    coord={transform(coord)}
+    {...point(transform(coord))}
     width={size}
     height={size}
     stroke-width={(size / 8) * 0.75}
@@ -30,16 +30,16 @@
         selected = mino
       }
     }}
-    onhover={(hovered) => {
+    {...onHover((hovered) => {
       if (mino) {
         context.relativeLink = hovered ? (link as any) : undefined
       }
-    }}
+    })}
   />
 </g>
 
 <style>
-  g :global([data-selectable="true"]) {
+  g rect[data-selectable="true"] {
     transition: all 150ms ease-in-out;
     transition-property: fill, opacity;
     cursor: pointer;

@@ -10,8 +10,8 @@
 <script lang="ts">
   import { getSymmetryColor } from "../graph"
 
-  import { svgTransform } from "../svg"
-  import Line from "../svg/Line.svelte"
+  import { svgTransform } from "../svgUtils"
+  import { endpoints } from "../svgUtils"
   import { colors } from "../theme"
   import {
     getCompassContext,
@@ -27,12 +27,13 @@
   {#each reflectionOrder as reflection, i}
     {@const isHovered = reflection === context.transform}
     {#if mino.transform.hasSymmetry(reflection) || isHovered}
-      <Line
-        p1={[-radius, 0]}
-        p2={[radius, 0]}
+      <line
+        {...endpoints([-radius, 0], [radius, 0])}
         stroke={isHovered ? colors.highlight : color}
         stroke-width={isHovered ? 4 : 2}
-        transform={svgTransform().rotate(45 * i)}
+        transform={svgTransform()
+          .rotate(45 * i)
+          .toString()}
       />
     {/if}
   {/each}

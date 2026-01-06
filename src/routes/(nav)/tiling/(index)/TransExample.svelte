@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Polyline from "$lib/components/svg/Polyline.svelte"
+  import { getPoints } from "$lib/components/svgUtils"
   import { colors } from "$lib/components/theme"
   import Wrapper from "./Wrapper.svelte"
 
@@ -41,15 +41,14 @@
 <Wrapper>
   <svg width={cellSize * 3} height={cellSize * 4}>
     {#each lines as points, i}
-      <Polyline
+      <polyline
         stroke={colors.palette[(i % 3) + 1]}
         fill="none"
         stroke-width={3}
         stroke-linecap="round"
-        points={points.map((point) => [
-          point[0] * cellSize,
-          point[1] * cellSize,
-        ])}
+        points={getPoints(
+          points.map((point) => [point[0] * cellSize, point[1] * cellSize]),
+        )}
       />
     {/each}
   </svg>
