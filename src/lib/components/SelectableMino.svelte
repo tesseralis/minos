@@ -59,7 +59,7 @@
 </g>
 
 <style>
-  g :global(circle) {
+  circle {
     opacity: 0;
     cursor: pointer;
     pointer-events: initial;

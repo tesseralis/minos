@@ -22,7 +22,7 @@
 </g>
 
 <style>
-  g :global(circle) {
+  circle {
     pointer-events: initial;
   }
 </style>

@@ -18,11 +18,11 @@
   svg {
     aspect-ratio: 1 / 1;
     overflow: visible;
+  }
 
-    :global(rect),
-    :global(line) {
-      fill: none;
-      stroke: currentcolor;
-    }
+  rect,
+  line {
+    fill: none;
+    stroke: currentcolor;
   }
 </style>

@@ -56,32 +56,32 @@
 {/snippet}
 
 <style>
-  .inner :global(rect) {
+  .inner rect {
     fill: var(--fill);
     stroke: var(--stroke);
   }
 
-  .inner.highlight :global(rect[data-selectable="true"]) {
+  .inner.highlight rect[data-selectable="true"] {
     fill: color-mix(in oklch, var(--fill), white 20%);
   }
 
-  .inner.highlight :global(rect[data-selected="true"]) {
+  .inner.highlight rect[data-selected="true"] {
     fill: color-mix(in oklch, var(--fill), white 80%);
   }
 
-  .outer :global(rect) {
+  .outer rect {
     stroke: grey;
     opacity: 0;
   }
 
   @media (hover: none) {
-    .outer :global(rect) {
+    .outer rect {
       stroke: grey;
       opacity: 0.5;
     }
   }
 
-  .outer :global(rect[data-selected="true"]) {
+  .outer rect[data-selected="true"] {
     opacity: 0.5;
   }
 </style>

@@ -64,22 +64,22 @@
     transition: opacity 100ms ease-in-out;
   }
 
-  .buttons :global(.text) {
+  .buttons .text {
     cursor: pointer;
     text-anchor: middle;
     pointer-events: initial;
     user-select: none;
     dominant-baseline: middle;
   }
-  .buttons :global(.text):hover {
+  .buttons .text:hover {
     fill: var(--color-highlight);
   }
 
-  .buttons :global(.rotate) {
+  .buttons .rotate {
     font-size: 20px;
     dominant-baseline: middle;
   }
-  .buttons :global(.rotate-half) {
+  .buttons .rotate-half {
     font-size: 20px;
     dominant-baseline: initial;
   }
