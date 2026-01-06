@@ -127,10 +127,10 @@
     />
     <SelectableMino
       mino={isSelected ? hovered!.mino : link.mino}
-      stroke={isSelected ? colors.highlight : stroke}
       {coord}
       {size}
-      {fill}
+      --stroke={isSelected ? colors.highlight : stroke}
+      --fill={fill}
       onselect={(_mino) => {
         mino = _mino
       }}

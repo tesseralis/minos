@@ -30,10 +30,10 @@
 <div class="wrapper">
   <MinoDiv
     {mino}
-    {fill}
-    stroke={minoStroke}
     size={size / mino.height}
     gridStyle="none"
+    --fill={fill}
+    --stroke={minoStroke}
   >
     <SymmetryMarkers {mino} size={size / mino.height} {stroke} />
   </MinoDiv>

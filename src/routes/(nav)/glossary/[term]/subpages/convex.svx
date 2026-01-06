@@ -23,8 +23,8 @@ The U pentomino, on the other hand, is not convex because it has a perimeter of 
       {...point([-width / 2, -height / 2])}
       {width}
       {height}
-      fill="none"
-      stroke="#ffffff88"
+      --fill="none"
+      --stroke="#ffffff88"
     />
   </MinoDiv>
 {/snippet}

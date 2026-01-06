@@ -24,8 +24,8 @@
   coord={coord.scale(blockSize)}
   anchor="top left"
   size={blockSize}
-  fill={hovered ? baseFill.clone().lighten().toString() : baseFill.toString()}
-  stroke="black"
+  --fill={hovered ? baseFill.clone().lighten().toString() : baseFill.toString()}
+  --stroke="black"
   gridStyle="thin"
   onhover={(_hovered) => {
     hovered = _hovered

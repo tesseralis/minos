@@ -91,10 +91,10 @@
         {mino}
         coord={coord.scale(squareSize)}
         size={squareSize}
-        fill={tilingColors[color]}
-        gridStyle="thin"
-        {stroke}
         anchor="top left"
+        gridStyle="thin"
+        --fill={tilingColors[color]}
+        --stroke={stroke}
       />
     {/each}
   {:else}

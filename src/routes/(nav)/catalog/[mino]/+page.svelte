@@ -22,25 +22,28 @@
     ["parents", parents],
     ["children", children],
   ]
+  const { stroke, fill } = $derived(getMinoColor(mino))
 </script>
 
 {#snippet minoDiv()}
   <MinoDiv
     {mino}
     size={Math.min(30 / mino.height, 15)}
-    fill="none"
-    stroke="currentcolor"
+    --fill="none"
+    --stroke="currentcolor"
   />
 {/snippet}
 
 {#snippet minoList(minos: Polyomino[])}
   <div class="list">
     {#each minos as mino}
+      {@const { fill, stroke } = getMinoColor(mino)}
       <MinoLink
         {mino}
-        size={getBlockSize(mino.order)}
-        {...getMinoColor(mino)}
         href="/catalog/{mino.toString()}"
+        size={getBlockSize(mino.order)}
+        --fill={fill}
+        --stroke={stroke}
       />
     {/each}
   </div>
@@ -54,7 +57,7 @@
     ]}
   />
   <div class="header">
-    <MinoDiv {mino} size={96 / mino.order} {...getMinoColor(mino)} />
+    <MinoDiv {mino} size={96 / mino.order} --stroke={stroke} --fill={fill} />
   </div>
   <dl>
     {#each minoData as [name, display]}
@@ -146,10 +149,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-
-  .list > :global(*) {
-    margin: 0.375rem;
+    gap: 0.75rem;
   }
 
   .tiling {

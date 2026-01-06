@@ -1,8 +1,11 @@
 <!-- @component
 Draws a mino in SVG using the given center x and y coordinates, size, fill, stroke color, etc.
 
-Params:
-- _anchor_ a string representing where the edge of the mino should be anchored (e.getComputedStyle. "top left")
+Style props:
+
+* --fill
+* --stroke
+
  -->
 <script lang="ts" module>
   export interface Props {
@@ -11,8 +14,6 @@ Params:
     size: number
     strokeWidth?: number
     gridStrokeWidth?: number
-    fill: string
-    stroke: string
     anchor?: string
     // (misnamed) whether the grid lines should be shown, clear, or not
     gridStyle?: "thick" | "thin" | "none"
@@ -33,8 +34,6 @@ Params:
     mino,
     coord,
     size,
-    fill,
-    stroke,
     anchor = "center center",
     gridStyle = "thick",
     onclick,
@@ -70,9 +69,8 @@ Params:
 <g class={["container", onclick && "clickable"]}>
   <g {onclick} {...onHover(onhover)}>
     <polygon
+      class="outline"
       points={getPoints(outlinePoints)}
-      {fill}
-      {stroke}
       stroke-width={strokeWidth}
     />
     {#if mino.equals(O_OCTOMINO)}
@@ -81,15 +79,13 @@ Params:
         {...point(translate(scale(new Vector(1, 1))))}
         width={size}
         height={size}
-        {stroke}
         stroke-width={strokeWidth}
       />
     {/if}
     {#if gridStyle !== "none"}
       <path
+        class="grid"
         d={path.toString()}
-        {stroke}
-        fill="none"
         opacity={gridStyle === "thick" ? 1 : 0.25}
         stroke-width={gridStrokeWidth}
       />
@@ -98,8 +94,19 @@ Params:
 </g>
 
 <style>
+  .outline {
+    fill: var(--fill);
+    stroke: var(--stroke);
+  }
+
+  .grid {
+    stroke: var(--stroke);
+    fill: none;
+  }
+
   .hole {
     fill: var(--color-bg);
+    stroke: var(--stroke);
   }
 
   .clickable {

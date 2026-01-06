@@ -12,8 +12,8 @@
   <MinoDiv
     {mino}
     size={Math.min(30 / mino.height, 15)}
-    fill="none"
-    stroke="currentcolor"
+    --fill="none"
+    --stroke="currentcolor"
   />
 {/snippet}
 

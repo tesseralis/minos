@@ -32,12 +32,14 @@
     <g in:fade>
       {#each minos as mino}
         {@const coord = getCoords(mino)}
+        {@const { stroke, fill } = getMinoColor(mino)}
         <SelectableMino
           {mino}
           {coord}
           size={getBlockSize(gen)}
           selected={selected?.transform.equivalent(mino)}
-          {...getMinoColor(mino)}
+          --stroke={stroke}
+          --fill={fill}
           onselect={(_selected) => {
             selected = _selected
           }}

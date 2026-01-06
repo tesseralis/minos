@@ -18,8 +18,8 @@
     href="/catalog/{mino.toString()}"
     {mino}
     {size}
-    {fill}
-    {stroke}
+    --fill={fill}
+    --stroke={stroke}
     gridStyle="thin"
   >
     <SymmetryMarkers {mino} {size} stroke-width={2} stroke="#ffffffaa" />

@@ -16,11 +16,13 @@
 <div class="mino-list">
   {#each minos as minoStr}
     {@const mino = Polyomino.fromString(minoStr)}
+    {@const { stroke, fill } = getMinoColor(mino)}
     <MinoLink
       {mino}
       href={`catalog/${mino.transform.free()}`}
       size={15}
-      {...getMinoColor(mino)}
+      --stroke={stroke}
+      --fill={fill}
     />
   {/each}
 </div>

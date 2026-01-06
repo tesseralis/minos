@@ -93,8 +93,8 @@
     href="/catalog/{mino.toString()}"
     {mino}
     {size}
-    {fill}
-    {stroke}
+    --fill={fill}
+    --stroke={stroke}
     strokeWidth={4}
     gridStrokeWidth={1}
     gridStyle="thin"

@@ -9,9 +9,9 @@ This heptomino is the smallest polyomino that contains a hole:
 
 <MinoDiv
   mino={Polyomino.of("111_101_110")}
-  stroke="black"
-  fill="grey"
   size={20}
+  --stroke="black"
+  --fill="grey"
 />
 
 Polyominoes with holes cannot [tile the plane](/tiling).

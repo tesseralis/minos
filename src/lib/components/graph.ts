@@ -188,8 +188,6 @@ export function getIndex(mino: Polyomino) {
 
 /**
  * Return the fill and stroke of the given mino to pass in as SVG props:
- *
- * <MinoSvg {...getMinoColor(mino)} />
  */
 export function getMinoColor(mino: Polyomino) {
   let color

@@ -21,10 +21,10 @@
         {@const { stroke, fill } = getMinoColor(mino)}
         <MinoLink
           {mino}
-          {fill}
-          stroke={isSelected ? colors.highlight : stroke}
           size={getBlockSize(mino.order)}
           href={href(mino)}
+          --fill={fill}
+          --stroke={isSelected ? colors.highlight : stroke}
         />
       {/each}
     {/if}
@@ -37,9 +37,7 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-  }
-
-  .container > :global(*) {
-    margin: 0.5rem;
+    gap: 1rem;
+    margin-block: 0.5rem;
   }
 </style>
