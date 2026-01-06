@@ -26,7 +26,6 @@ Params:
 
   import Vector from "$lib/vector"
   import { Polyomino, O_OCTOMINO } from "$lib/mino"
-  import { colors } from "./theme"
   import { getAnchor } from "./utils"
   import { getPoints, onHover, point } from "./svgUtils"
 
@@ -78,7 +77,7 @@ Params:
     />
     {#if mino.equals(O_OCTOMINO)}
       <rect
-        fill={colors.bg}
+        class="hole"
         {...point(translate(scale(new Vector(1, 1))))}
         width={size}
         height={size}
@@ -99,6 +98,10 @@ Params:
 </g>
 
 <style>
+  .hole {
+    fill: var(--color-bg);
+  }
+
   .clickable {
     cursor: pointer;
   }

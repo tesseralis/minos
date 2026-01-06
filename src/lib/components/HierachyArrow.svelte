@@ -1,7 +1,6 @@
 <script lang="ts">
   import { svgTransform } from "./svgUtils"
   import { getPoints } from "./svgUtils"
-  import { colors } from "./theme"
 
   const {
     direction = "down",
@@ -28,9 +27,6 @@
 <svg viewBox="-2 -2 4 4" width={size}>
   <polygon
     transform={svgTransform().rotate(getAngle(direction)).toString()}
-    fill="none"
-    stroke={colors.muted}
-    stroke-width="0.2"
     points={getPoints([
       [0, 1],
       [-width, 2],
@@ -39,3 +35,11 @@
     ])}
   />
 </svg>
+
+<style>
+  polygon {
+    fill: none;
+    stroke: var(--color-muted);
+    stroke-width: 0.2;
+  }
+</style>
