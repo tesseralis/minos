@@ -1,5 +1,5 @@
 <script lang="ts">
-  import G from "../svg/G.svelte"
+  import { onHover } from "../svgUtils"
   import AlterableMino from "./AlterableMino.svelte"
   import CompassBackground from "./CompassBackground.svelte"
   import CompassLinks from "./CompassLinks.svelte"
@@ -14,18 +14,18 @@
 </script>
 
 <svg viewBox="{-svgSize} {-svgSize} {svgSize * 2} {svgSize * 2}">
-  <G>
+  <g>
     <CompassBackground />
     <CompassLinks bind:mino={selected} />
-    <G
-      onhover={(hovered) => {
+    <g
+      {...onHover((hovered) => {
         showEditable = hovered
-      }}
+      })}
     >
       <SymmetryRing bind:mino={selected} />
       <AlterableMino highlight={showEditable} bind:mino={selected} />
-    </G>
-  </G>
+    </g>
+  </g>
 </svg>
 
 <style>

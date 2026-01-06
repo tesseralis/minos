@@ -28,7 +28,7 @@ Params:
   import { Polyomino, O_OCTOMINO } from "$lib/mino"
   import { colors } from "./theme"
   import { getAnchor } from "./utils"
-  import { G, Rect, Polygon } from "./svg"
+  import { getPoints, onHover, point } from "./svgUtils"
 
   const {
     mino,
@@ -69,17 +69,17 @@ Params:
 </script>
 
 <g class={["container", onclick && "clickable"]}>
-  <G {onclick} {onhover}>
-    <Polygon
-      points={outlinePoints}
+  <g {onclick} {...onHover(onhover)}>
+    <polygon
+      points={getPoints(outlinePoints)}
       {fill}
       {stroke}
       stroke-width={strokeWidth}
     />
     {#if mino.equals(O_OCTOMINO)}
-      <Rect
+      <rect
         fill={colors.bg}
-        coord={translate(scale(new Vector(1, 1)))}
+        {...point(translate(scale(new Vector(1, 1))))}
         width={size}
         height={size}
         {stroke}
@@ -95,7 +95,7 @@ Params:
         stroke-width={gridStrokeWidth}
       />
     {/if}
-  </G>
+  </g>
 </g>
 
 <style>

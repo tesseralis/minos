@@ -9,9 +9,9 @@
   import Pattern from "$lib/components/Pattern.svelte"
   import Tiling from "$lib/components/Tiling.svelte"
   import Vector from "$lib/vector"
-  import Line from "$lib/components/svg/Line.svelte"
   import MinoSvg from "$lib/components/MinoSvg.svelte"
   import { capitalize } from "lodash-es"
+  import { endpoints } from "$lib/components/svgUtils"
   const cards = [
     {
       name: "catalog",
@@ -141,7 +141,11 @@
         radius * Math.cos(angle),
         radius * Math.sin(angle),
       )}
-      <Line p1={[0, 0]} p2={coord} stroke="currentcolor" stroke-width={0.2} />
+      <line
+        {...endpoints([0, 0], coord)}
+        stroke="currentcolor"
+        stroke-width={0.2}
+      />
       <MinoSvg
         mino={child}
         fill={colors.bg}

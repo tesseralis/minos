@@ -2,7 +2,6 @@
   import tinycolor from "tinycolor2"
   import { innerRingRadius as radius } from "./helpers.svelte"
   import { colors } from "../theme"
-  import Circle from "../svg/Circle.svelte"
   import ReflectionAxes from "./ReflectionAxes.svelte"
   import RotationMarkers from "./RotationMarkers.svelte"
   import TransformButtons from "./TransformButtons.svelte"
@@ -14,15 +13,15 @@
 
 <g opacity={2 / 3}>
   <!-- Hide the strands behind the component -->
-  <Circle
+  <circle
     class="circle"
     r={radius}
-    fill={tinycolor.mix(color, colors.bg, 90)}
+    fill={tinycolor.mix(color, colors.bg, 90).toString()}
   />
   <ReflectionAxes {mino} />
   <RotationMarkers {mino} />
   <TransformButtons bind:mino visible={true} />
-  <Circle r={radius} fill="none" stroke={color} stroke-width={3} />
+  <circle r={radius} fill="none" stroke={color} stroke-width={3} />
 </g>
 
 <style>

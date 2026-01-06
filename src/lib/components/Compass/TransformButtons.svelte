@@ -1,8 +1,8 @@
 <script lang="ts">
   import { type Transform } from "$lib/mino"
   import { getSymmetryColor } from "../graph"
-  import Text from "../svg/Text.svelte"
-  import { svgTransform, SVGTransform } from "../svg/util"
+  import { svgTransform, SVGTransform } from "../svgUtils"
+  import { onHover } from "../svgUtils"
   import { getCompassContext, innerRingRadius } from "./helpers.svelte"
   import { reflectionOrder } from "./ReflectionAxes.svelte"
 
@@ -48,15 +48,15 @@
   svgTrans: SVGTransform,
   cls?: string,
 )}
-  <Text
+  <text
     class={["text", cls]}
     fill={color}
     onclick={() => (mino = mino.transform.apply(trans))}
-    onhover={(hovered) => (context.transform = hovered ? trans : undefined)}
-    transform={svgTrans}
+    {...onHover((hovered) => (context.transform = hovered ? trans : undefined))}
+    transform={svgTrans.toString()}
   >
     {icon}
-  </Text>
+  </text>
 {/snippet}
 
 <style>

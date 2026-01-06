@@ -1,6 +1,5 @@
 <script lang="ts">
-  import Circle from "$lib/components/svg/Circle.svelte"
-  import Polyline from "$lib/components/svg/Polyline.svelte"
+  import { center, getPoints } from "$lib/components/svgUtils"
   import { colors } from "$lib/components/theme"
   import Wrapper from "./Wrapper.svelte"
 
@@ -50,17 +49,19 @@
 <Wrapper>
   <svg width={cellSize * 4} height={cellSize * 4}>
     {#each lines as points, i}
-      <Polyline
+      <polyline
         stroke={i % 3 === 0 ? "grey" : colors.palette[i > 3 ? i - 2 : i - 1]}
-        points={points.map((p) => [p[0] * cellSize, p[1] * cellSize])}
+        points={getPoints(
+          points.map((p) => [p[0] * cellSize, p[1] * cellSize]),
+        )}
         fill="none"
         stroke-width={3}
         stroke-linecap="round"
       />
     {/each}
-    {#each circles as center, i}
-      <Circle
-        center={[center[0] * cellSize, center[1] * cellSize]}
+    {#each circles as c, i}
+      <circle
+        {...center([c[0] * cellSize, c[1] * cellSize])}
         r={cellSize / 6}
         fill={colors.palette[i]}
       />

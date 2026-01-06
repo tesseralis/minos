@@ -2,7 +2,7 @@
   import { DirClass, Polyomino } from "$lib/mino"
   import tinycolor from "tinycolor2"
   import MinoDiv from "./MinoDiv.svelte"
-  import { Circle, Line } from "./svg"
+  import { center, endpoints } from "./svgUtils"
 
   interface Props {
     class: DirClass
@@ -114,9 +114,11 @@
   {@const [vert, horiz] = anchor.split(" ")}
   {@const ySign = vert === "top" ? -1 : 1}
   {@const xSign = horiz === "left" ? -1 : 1}
-  <Line
-    p1={[xSign * x, ySign * y]}
-    p2={[xSign * (x - offset), ySign * (y - offset)]}
+  <line
+    {...endpoints(
+      [xSign * x, ySign * y],
+      [xSign * (x - offset), ySign * (y - offset)],
+    )}
     {...markerProps}
   />
 {/snippet}
@@ -142,23 +144,26 @@
   {#if anchor === "top" || anchor === "bottom"}
     {@const ySign = anchor === "top" ? 1 : -1}
     {@const radius = size / 15}
-    <Circle
-      center={[xOffset, yOffset]}
+    <circle
+      {...center([xOffset, yOffset])}
       r={radius}
       {...markerProps}
       fill={stroke}
     />
-    <Line
-      p1={[xOffset, yOffset]}
-      p2={[xOffset, yOffset + ySign * offset]}
+    <line
+      {...endpoints([xOffset, yOffset], [xOffset, yOffset + ySign * offset])}
       {...markerProps}
     />
   {:else}
     {@const xSign = anchor === "left" ? 1 : -1}
-    <Circle center={[xOffset, yOffset]} r={1} {...markerProps} fill={stroke} />
-    <Line
-      p1={[xOffset, yOffset]}
-      p2={[xOffset + xSign * offset, yOffset]}
+    <circle
+      {...center([xOffset, yOffset])}
+      r={1}
+      {...markerProps}
+      fill={stroke}
+    />
+    <line
+      {...endpoints([xOffset, yOffset], [xOffset + xSign * offset, yOffset])}
       {...markerProps}
     />
   {/if}
