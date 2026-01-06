@@ -5,8 +5,6 @@
     innerRingRadius as radius,
     getCompassContext,
   } from "./helpers.svelte"
-  import { svgTransform } from "../svgUtils"
-  import { colors } from "../theme"
   import { getSymmetryColor } from "../graph"
   import { getPoints } from "../svgUtils"
 
@@ -36,20 +34,30 @@
 <g>
   {#each range(4) as index}
     {@const shouldShow = index % (4 / order) === 0}
-    {@const isHover =
+    {@const hovered =
       !!context.transform && (index - hoverIndex + 4) % (4 / order) === 0}
-    {#if shouldShow || isHover}
+    {#if shouldShow || hovered}
       {@const chiral = mino?.transform.isOneSided()}
       {@const points: Point[] = [[0, size], [size, 0], chiral ? [0, 0] : [-size, 0]]}
       <polygon
-        stroke-width={2}
         points={getPoints(points)}
-        fill={isHover ? colors.highlight : color}
-        transform={svgTransform()
-          .translate(0, -radius)
-          .rotate(90 * index)
-          .toString()}
+        class:hovered
+        style:--color={color}
+        style:--translateY="{-radius}px"
+        style:--angle="{90 * index}deg"
       />
     {/if}
   {/each}
 </g>
+
+<style>
+  polygon {
+    stroke-width: 2;
+    fill: var(--color);
+    transform: rotate(var(--angle)) translate(0, var(--translateY));
+  }
+
+  polygon.hovered {
+    fill: var(--color-highlight);
+  }
+</style>
