@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Polyomino } from "$lib/mino"
   import TransExample from "./TransExample.svelte"
-  import ConwayExample from "./TransExample.svelte"
+  import ConwayExample from "./ConwayExample.svelte"
   import TilingThumbnail from "./TilingThumbnail.svelte"
 </script>
 
