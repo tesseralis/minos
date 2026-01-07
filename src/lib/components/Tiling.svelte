@@ -80,7 +80,6 @@
   // Also make sure that the side length is even
   const viewLength = $derived(squareSize * gridSize)
   const tiling = $derived(mino.tilings.get())
-  const { stroke } = $derived(getMinoColor(mino))
   const tilingColors = $derived(colors.palette)
 </script>
 
@@ -94,7 +93,7 @@
         anchor="top left"
         gridStyle="thin"
         --fill={tilingColors[color]}
-        --stroke={stroke}
+        --stroke="black"
       />
     {/each}
   {:else}

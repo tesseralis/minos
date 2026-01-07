@@ -1,9 +1,8 @@
 <script lang="ts">
   import { scaleLinear } from "d3-scale"
-  import { getMinoColor, NUM_GENERATIONS } from "../graph"
+  import { NUM_GENERATIONS } from "../graph"
   import GenSection from "./GenSection.svelte"
   import MinoLink from "../MinoLink.svelte"
-  import { colors } from "../theme"
 
   const { minos, gen, href, selected } = $props()
   const getBlockSize = scaleLinear()
@@ -18,14 +17,9 @@
     {:else}
       {#each minos as mino}
         {@const isSelected = !!selected && mino.transform.equivalent(selected)}
-        {@const { stroke, fill } = getMinoColor(mino)}
-        <MinoLink
-          {mino}
-          size={getBlockSize(mino.order)}
-          href={href(mino)}
-          --fill={fill}
-          --stroke={isSelected ? colors.highlight : stroke}
-        />
+        <div class:isSelected>
+          <MinoLink {mino} size={getBlockSize(mino.order)} href={href(mino)} />
+        </div>
       {/each}
     {/if}
   </div>
@@ -38,5 +32,9 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
+  }
+
+  .isSelected {
+    --stroke: var(--color-highlight);
   }
 </style>

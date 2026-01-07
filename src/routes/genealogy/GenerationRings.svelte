@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { NUM_GENERATIONS, getMinoColor, nodes } from "$lib/components/graph"
+  import { NUM_GENERATIONS, nodes } from "$lib/components/graph"
   import SelectableMino from "$lib/components/SelectableMino.svelte"
   import type { Polyomino } from "$lib/mino"
   import { onMount } from "svelte"
@@ -32,14 +32,11 @@
     <g in:fade>
       {#each minos as mino}
         {@const coord = getCoords(mino)}
-        {@const { stroke, fill } = getMinoColor(mino)}
         <SelectableMino
           {mino}
           {coord}
           size={getBlockSize(gen)}
           selected={selected?.transform.equivalent(mino)}
-          --stroke={stroke}
-          --fill={fill}
           onselect={(_selected) => {
             selected = _selected
           }}

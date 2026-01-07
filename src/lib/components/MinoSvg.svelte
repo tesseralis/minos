@@ -29,6 +29,7 @@ Style props:
   import { Polyomino, O_OCTOMINO } from "$lib/mino"
   import { getAnchor } from "./utils"
   import { getPoints, onHover, point } from "./svgUtils"
+  import { getMinoColor } from "./graph"
 
   const {
     mino,
@@ -64,9 +65,14 @@ Style props:
     }
     return path
   })
+  const { stroke, fill } = $derived(getMinoColor(mino))
 </script>
 
-<g class={["container", onclick && "clickable"]}>
+<g
+  class={["container", onclick && "clickable"]}
+  style:--derived-stroke="var(--stroke, {stroke})"
+  style:--derived-fill="var(--fill, {fill})"
+>
   <g {onclick} {...onHover(onhover)}>
     <polygon
       class="outline"
@@ -95,18 +101,18 @@ Style props:
 
 <style>
   .outline {
-    fill: var(--fill);
-    stroke: var(--stroke);
+    fill: var(--derived-fill);
+    stroke: var(--derived-stroke);
   }
 
   .grid {
-    stroke: var(--stroke);
+    stroke: var(--derived-stroke);
     fill: none;
   }
 
   .hole {
     fill: var(--color-bg);
-    stroke: var(--stroke);
+    stroke: var(--derived-stroke);
   }
 
   .clickable {

@@ -4,7 +4,6 @@
   import { scaleLinear } from "d3-scale"
   import {
     getLinkColor,
-    getMinoColor,
     getSortedChildren,
     getSortedParents,
     MAX_NUM_CHILDREN,
@@ -116,21 +115,12 @@
   {@const isSelected =
     !!hovered && hovered.mino.transform.equivalent(link.mino)}
   {@const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))}
-  {@const { fill, stroke } = getMinoColor(link.mino)}
-  <g>
-    <path
-      stroke={isSelected ? colors.highlight : linkColor}
-      stroke-width={isSelected ? 2 : 1}
-      d={linkPath}
-      fill="none"
-      opacity={0.5}
-    />
+  <g class:isSelected>
+    <path stroke={linkColor} d={linkPath} />
     <SelectableMino
       mino={isSelected ? hovered!.mino : link.mino}
       {coord}
       {size}
-      --stroke={isSelected ? colors.highlight : stroke}
-      --fill={fill}
       onselect={(_mino) => {
         mino = _mino
       }}
@@ -140,3 +130,20 @@
     />
   </g>
 {/snippet}
+
+<style>
+  path {
+    stroke-width: 1;
+    fill: none;
+    opacity: 0.5;
+  }
+
+  .isSelected {
+    --stroke: var(--color-highlight);
+  }
+
+  .isSelected path {
+    stroke-width: 2;
+    stroke: var(--color-highlight);
+  }
+</style>

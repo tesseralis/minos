@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { getMinoColor } from "$lib/components/graph"
   import MinoLink from "$lib/components/MinoLink.svelte"
   import { Polyomino } from "$lib/mino"
 
@@ -16,14 +15,7 @@
 <div class="mino-list">
   {#each minos as minoStr}
     {@const mino = Polyomino.fromString(minoStr)}
-    {@const { stroke, fill } = getMinoColor(mino)}
-    <MinoLink
-      {mino}
-      href={`catalog/${mino.transform.free()}`}
-      size={15}
-      --stroke={stroke}
-      --fill={fill}
-    />
+    <MinoLink {mino} href={`catalog/${mino.transform.free()}`} size={15} />
   {/each}
 </div>
 
