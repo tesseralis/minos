@@ -57,7 +57,7 @@
         {@render thumbnail()}
       </div>
       <div class="text">
-        <div style:color={colors.heading}>
+        <div class="heading">
           {capitalize(name)}
         </div>
         <div>{description}</div>
@@ -191,6 +191,10 @@
 
   .cards .text {
     padding: 0.5rem;
+  }
+
+  .cards .text .heading {
+    color: var(--color-heading);
   }
 
   @media (min-width: 40rem) {
