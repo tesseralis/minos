@@ -37,9 +37,6 @@
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
-  }
-
-  .container > :global(*) {
-    margin: 0.5rem;
+    gap: 1rem;
   }
 </style>

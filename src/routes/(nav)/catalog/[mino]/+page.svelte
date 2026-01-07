@@ -146,10 +146,7 @@
     display: flex;
     flex-wrap: wrap;
     align-items: center;
-  }
-
-  .list > :global(*) {
-    margin: 0.375rem;
+    gap: 0.75rem;
   }
 
   .tiling {
