@@ -1,6 +1,5 @@
 <script lang="ts">
   import { getLinkColor, links } from "$lib/components/graph"
-  import { colors } from "$lib/components/theme"
   import { getArc } from "$lib/components/utils"
   import type { Polyomino } from "$lib/mino"
   import Vector from "$lib/vector"
@@ -34,12 +33,10 @@
     {@const isSelected = !!selected && link.includes(selected.transform.free())}
     {#if visible || gen < 5}
       <path
+        class:isSelected
         d={getLinkPath(link)}
-        fill="none"
-        style:stroke={isSelected
-          ? colors.highlight
-          : getLinkColor(srcMino, tgtMino)}
-        style:stroke-width={strokeWidth * (isSelected ? 3 : 1)}
+        stroke={getLinkColor(srcMino, tgtMino)}
+        style:--stroke-width={strokeWidth}
         in:fade={{ delay: i * 3 }}
       />
     {/if}
@@ -48,7 +45,14 @@
 
 <style>
   path {
+    fill: none;
     transition: all 250ms ease-in-out;
     pointer-events: none;
+    stroke-width: var(--stroke-width);
+  }
+
+  path.isSelected {
+    stroke: var(--color-highlight);
+    stroke-width: calc(3 * var(--stroke-width));
   }
 </style>
