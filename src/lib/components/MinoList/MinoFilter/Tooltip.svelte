@@ -3,7 +3,7 @@
   import type { Snippet } from "svelte"
 
   interface Props extends Tooltip.RootProps {
-    trigger: Snippet<[{ props: any }]>
+    trigger: Snippet<[{ props: Record<string, unknown> }]>
   }
 
   let { children, trigger }: Props = $props()

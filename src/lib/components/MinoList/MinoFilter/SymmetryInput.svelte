@@ -15,7 +15,7 @@
     {#each symmetries as sym}
       {@const checked = value.includes(sym)}
       <Tooltip>
-        {#snippet trigger({ props }: { props: any })}
+        {#snippet trigger({ props })}
           <label {...props} style:grid-area={sym}>
             <!-- TODO (a11y) tab navigation -->
             <input

@@ -20,7 +20,7 @@ export {
   getNeighbors,
   getKingwiseNeighbors,
 } from "./relatives"
-export { default as DirClass } from "./DirClass"
+export { default as DirClass, type Level } from "./DirClass"
 export { default as MinoClasses } from "./classes"
 export { MONOMINO, O_OCTOMINO } from "./constants"
 export { MinoPattern, parsePattern } from "./pattern"

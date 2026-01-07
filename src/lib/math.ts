@@ -20,17 +20,23 @@ export function equalsToPrecision(
   return Math.abs(n1 - n2) < precision
 }
 
+type Mat2x2 = [[number, number], [number, number]]
 /**
  * Get the determinant of the 2x2 matrix
  */
-export function det2([[x1, x2], [x3, x4]]: any) {
+export function det2([[x1, x2], [x3, x4]]: Mat2x2) {
   return x1 * x4 - x2 * x3
 }
 
+type Mat3x3 = [
+  [number, number, number],
+  [number, number, number],
+  [number, number, number],
+]
 /**
  * Get the determinant of the 3x3 matrix
  */
-export function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]: any) {
+export function det3([[x1, x2, x3], [x4, x5, x6], [x7, x8, x9]]: Mat3x3) {
   return (
     x1 *
       det2([

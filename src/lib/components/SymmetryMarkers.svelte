@@ -3,7 +3,7 @@
   import type { SVGAttributes } from "svelte/elements"
   import { endpoints } from "./svgUtils"
 
-  interface Props extends SVGAttributes<any> {
+  interface Props extends SVGAttributes<EventTarget> {
     mino: Polyomino
     // The size to a cell of the polyomino
     size: number

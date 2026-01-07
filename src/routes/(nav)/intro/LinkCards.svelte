@@ -85,11 +85,11 @@
     ["axis2", "010_111_111_010"],
     ["diag2", "0100_1110_0111_0010"],
     ["rot2", "0100_0111_1110_0010"],
-  ]}
+  ] as const}
   <div class="symmetry">
     {#each minos as [symmetry, minoStr]}
       {@const mino = Polyomino.of(minoStr)}
-      {@const color = tinycolor(getSymmetryColor(symmetry as any))
+      {@const color = tinycolor(getSymmetryColor(symmetry))
         .desaturate(40)
         .toHexString()}
       {@const size = 12}
