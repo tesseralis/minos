@@ -19,7 +19,7 @@ export default function onClickOnly(onClick: () => void): Attachment {
           onClick()
         }
       },
-      keypress(e: KeyboardEvent) {
+      keydown(e: KeyboardEvent) {
         if (e.key === "Enter" || e.key === " ") {
           onClick()
         }

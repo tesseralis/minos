@@ -20,7 +20,7 @@ export default ts.config(
     languageOptions: { globals: { ...globals.browser, ...globals.node } },
     rules: {
       "no-undef": "off",
-      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-explicit-any": "warn",
       "svelte/no-navigation-without-resolve": "off",
       "svelte/require-each-key": "off",
     },

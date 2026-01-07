@@ -18,4 +18,5 @@ export type {
   MinoRelatives,
   MinoPattern,
   Tiling,
+  Level,
 } from "./internal"

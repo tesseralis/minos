@@ -8,6 +8,7 @@ import {
   getNeighbors,
   getKingwiseNeighbors,
   DirClass,
+  type Level,
 } from "./internal"
 
 const axes = ["row", "column"] as const
@@ -34,14 +35,18 @@ export default class MinoClasses {
     const dirDiags = this.anchors().filter((anchor) =>
       this.isDirectedAtAnchor(anchor),
     )
-    let ortho: any = dirSides.length
-    if (ortho === 2) {
+    let ortho: Level
+    if (dirSides.length === 2) {
       const [first, second] = dirSides
       ortho = `2-${isOppositeSides(first, second) ? "trans" : "cis"}`
+    } else {
+      ortho = dirSides.length as Level
     }
-    let diag: any = dirDiags.length
-    if (diag === 2) {
+    let diag: Level
+    if (dirDiags.length === 2) {
       diag = `2-${hasOppositeAnchors(dirDiags) ? "trans" : "cis"}`
+    } else {
+      diag = dirDiags.length as Level
     }
 
     return new DirClass(ortho, diag)

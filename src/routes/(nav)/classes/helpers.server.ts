@@ -1,12 +1,12 @@
 // Stuff that should only be used on the server
 import katex from "katex"
-import { DirClass } from "$lib/mino"
+import { DirClass, type Level } from "$lib/mino"
 
 function getClassTex(dirClass: DirClass) {
   return `\\textrm{Dir}_{${printLevel(dirClass.ortho)}}^{${printLevel(dirClass.diag)}}`
 }
 
-function printLevel(level: any) {
+function printLevel(level: Level) {
   switch (level) {
     case "2-cis":
       return "2\\textrm{c}"

@@ -1,14 +1,13 @@
 import { nodes } from "$lib/components/graph"
-import { Polyomino, type Symmetry } from "$lib/mino"
+import { Polyomino, symmetries, type Symmetry } from "$lib/mino"
 
-const symClasses: Record<Symmetry, Polyomino[][]> = {} as any
+const symClasses = Object.fromEntries(
+  symmetries.map((sym) => [sym, []] as [Symmetry, Polyomino[][]]),
+)
 
 for (const [gen, minos] of nodes.entries()) {
   for (const mino of minos) {
     const sym = mino.transform.symmetry()
-    if (!symClasses[sym]) {
-      symClasses[sym] = []
-    }
     if (!symClasses[sym][gen + 1]) {
       symClasses[sym][gen + 1] = []
     }

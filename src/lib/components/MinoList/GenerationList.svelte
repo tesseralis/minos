@@ -38,6 +38,5 @@
     align-items: center;
     justify-content: center;
     gap: 1rem;
-    margin-block: 0.5rem;
   }
 </style>

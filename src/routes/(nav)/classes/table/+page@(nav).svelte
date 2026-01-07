@@ -1,6 +1,7 @@
 <script lang="ts">
   import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
-  // import Text from "./Text.svx"
+  // @ts-expect-error Issues importing SVX
+  import Text from "./Text.svx"
   import { DirClass } from "$lib/mino"
   import { capitalize } from "lodash-es"
   import { escapeClass } from "../helpers"
@@ -39,8 +40,7 @@
   />
   <main>
     <div class="info">
-      <!-- FIXME re-enable info text -->
-      <!-- <Text /> -->
+      <Text />
     </div>
     {#each DirClass.all() as dirClass}
       <section style:grid-area={dirClass.code()}>

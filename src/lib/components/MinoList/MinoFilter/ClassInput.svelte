@@ -15,7 +15,7 @@
     {#each DirClass.all() as cls}
       {@const checked = value.includes(cls)}
       <Tooltip>
-        {#snippet trigger({ props }: { props: any })}
+        {#snippet trigger({ props })}
           <label {...props} style:grid-area={cls.code()}>
             <!-- TODO (a11y) tab navigation -->
             <!-- TODO should I use Bits toggle group instead? -->
