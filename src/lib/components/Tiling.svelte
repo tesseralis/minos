@@ -3,7 +3,6 @@
   import type Vector from "$lib/vector"
   import { range } from "lodash-es"
   import { colors } from "./theme"
-  import { getMinoColor } from "./graph"
   import MinoSvg from "./MinoSvg.svelte"
 
   // Mod except it works for negative numbers

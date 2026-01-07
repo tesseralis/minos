@@ -10,7 +10,6 @@
     MAX_NUM_PARENTS,
   } from "../graph"
   import SelectableMino from "../SelectableMino.svelte"
-  import { colors } from "../theme"
   import { getAngleScale, getArc } from "../utils"
   import { getCompassContext } from "./helpers.svelte"
   import { linkRadius } from "./helpers.svelte"
