@@ -150,7 +150,7 @@
         mino={child}
         {coord}
         size={3}
-        --fill={colors.bg}
+        --fill="var(--color-bg)"
         --stroke="currentcolor"
       />
     {/each}
@@ -158,7 +158,7 @@
       {mino}
       coord={new Vector(0, 0)}
       size={4}
-      --fill={colors.bg}
+      --fill="var(--color-bg)"
       --stroke="currentcolor"
     />
   </svg>
