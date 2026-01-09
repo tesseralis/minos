@@ -3,7 +3,6 @@
   import type Vector from "$lib/vector"
   import { getAnchor } from "$lib/components/utils"
   import { minBy } from "lodash-es"
-  import { getMinoColor } from "$lib/components/graph"
   import MinoLink from "$lib/components/MinoLink.svelte"
   import tinycolor from "tinycolor2"
   import { getDirColor } from "./helpers"
@@ -84,7 +83,6 @@
   }
 
   const { mino, size, currentIndex }: Props = $props()
-  const { stroke, fill } = $derived(getMinoColor(mino))
   const segments = $derived(getPathSegments(mino, size))
 </script>
 
@@ -93,8 +91,6 @@
     href="/catalog/{mino.toString()}"
     {mino}
     {size}
-    {fill}
-    {stroke}
     strokeWidth={4}
     gridStrokeWidth={1}
     gridStyle="thin"

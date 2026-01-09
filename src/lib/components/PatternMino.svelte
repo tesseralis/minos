@@ -19,18 +19,23 @@
   const baseFill = $derived(tinycolor(fill))
 </script>
 
-<MinoSvg
-  {mino}
-  coord={coord.scale(blockSize)}
-  anchor="top left"
-  size={blockSize}
-  fill={hovered ? baseFill.clone().lighten().toString() : baseFill.toString()}
-  stroke="black"
-  gridStyle="thin"
-  onhover={(_hovered) => {
-    hovered = _hovered
-  }}
-  onclick={() => {
-    goto(`/catalog/${mino.transform.free().toString()}`)
-  }}
-/>
+<!-- Need to wrap this in an element to work on initial load -->
+<g>
+  <MinoSvg
+    {mino}
+    coord={coord.scale(blockSize)}
+    anchor="top left"
+    size={blockSize}
+    --fill={hovered
+      ? baseFill.clone().lighten().toString()
+      : baseFill.toString()}
+    --stroke="black"
+    gridStyle="thin"
+    onhover={(_hovered) => {
+      hovered = _hovered
+    }}
+    onclick={() => {
+      goto(`/catalog/${mino.transform.free().toString()}`)
+    }}
+  />
+</g>

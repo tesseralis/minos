@@ -51,10 +51,10 @@ The next smallest size that has all symmetries is $n = 12$, the dodecominoes.
       {@const size = 15}
       <MinoLink
         {mino}
-        href="/catalog/{minoStr}"
-        stroke="black"
-        fill={color}
         {size}
+        href="/catalog/{minoStr}"
+        --stroke="black"
+        --fill={color}
       >
         <SymmetryMarkers
           {mino}

@@ -9,18 +9,26 @@
   const color = $derived(getSymmetryColor(mino.transform.symmetry()))
 </script>
 
-<g opacity={2 / 3}>
+<g style:--color={color}>
   <!-- Hide the strands behind the component -->
-  <circle class="circle" style:--color={color} r={radius} />
+  <circle class="background" r={radius} />
   <ReflectionAxes {mino} />
   <RotationMarkers {mino} />
   <TransformButtons bind:mino visible={true} />
-  <circle r={radius} fill="none" stroke={color} stroke-width={3} />
+  <circle class="border" r={radius} />
 </g>
 
 <style>
-  .circle {
+  g {
+    opacity: 2 / 3;
+  }
+  .background {
     pointer-events: initial;
     fill: color-mix(in srgb, var(--color), var(--color-bg) 90%);
+  }
+  .border {
+    fill: none;
+    stroke: var(--color);
+    stroke-width: 3;
   }
 </style>

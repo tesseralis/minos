@@ -18,7 +18,7 @@ The U pentomino, on the other hand, is not convex because it has a perimeter of 
   {@const cellSize = 15}
   {@const _mino = Polyomino.of(mino)}
   {@const [width, height] = _mino.dims.map((dim) => cellSize * dim)}
-  <MinoDiv mino={_mino} stroke="black" fill="grey" size={cellSize}>
+  <MinoDiv mino={_mino} --stroke="black" --fill="grey" size={cellSize}>
     <rect
       {...point([-width / 2, -height / 2])}
       {width}

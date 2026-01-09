@@ -40,11 +40,11 @@
 
 <MinoDiv
   {mino}
-  {fill}
-  stroke={tinycolor(stroke).setAlpha(0.75).toString()}
   strokeWidth={1}
   size={size / Math.max(mino.height, mino.width)}
   gridStyle="none"
+  --fill={fill}
+  --stroke={tinycolor(stroke).setAlpha(0.75).toString()}
 >
   {#if className === "rectangle"}
     {@render convex()}

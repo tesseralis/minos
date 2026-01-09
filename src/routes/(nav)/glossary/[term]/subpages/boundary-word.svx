@@ -11,9 +11,9 @@ For example, the following polyomino:
 
 <MinoDiv
   mino={Polyomino.of("111_100_100")}
-  stroke="black"
-  fill="grey"
   size={20}
+  --stroke="black"
+  --fill="grey"
 />
 
 has the boundary word `ENWSWS`.

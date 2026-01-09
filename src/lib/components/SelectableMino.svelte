@@ -4,14 +4,11 @@
   import MinoSvg from "./MinoSvg.svelte"
   import onClickOnly from "./onClickOnly"
   import { center, onHover } from "./svgUtils"
-  import { colors } from "./theme"
 
   interface Props {
     mino: Polyomino
     coord: Vector
     size: number
-    fill: string
-    stroke: string
     anchor?: string
     selected?: boolean
     onselect(mino: Polyomino): void
@@ -22,8 +19,6 @@
     mino,
     coord,
     size,
-    fill,
-    stroke,
     anchor,
     selected = false,
     onselect,
@@ -34,15 +29,8 @@
   const n = $derived(mino.order)
 </script>
 
-<g>
-  <MinoSvg
-    {mino}
-    {coord}
-    size={size * (hovered ? 1.25 : 1)}
-    {fill}
-    {anchor}
-    stroke={selected ? colors.highlight : stroke}
-  />
+<g class:selected>
+  <MinoSvg {mino} {coord} size={size * (hovered ? 1.25 : 1)} {anchor} />
   <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
   <circle
     tabindex={0}
@@ -59,6 +47,10 @@
 </g>
 
 <style>
+  g.selected {
+    --stroke: var(--color-highlight);
+  }
+
   circle {
     opacity: 0;
     cursor: pointer;

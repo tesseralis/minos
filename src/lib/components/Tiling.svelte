@@ -3,7 +3,6 @@
   import type Vector from "$lib/vector"
   import { range } from "lodash-es"
   import { colors } from "./theme"
-  import { getMinoColor } from "./graph"
   import MinoSvg from "./MinoSvg.svelte"
 
   // Mod except it works for negative numbers
@@ -80,7 +79,6 @@
   // Also make sure that the side length is even
   const viewLength = $derived(squareSize * gridSize)
   const tiling = $derived(mino.tilings.get())
-  const { stroke } = $derived(getMinoColor(mino))
   const tilingColors = $derived(colors.palette)
 </script>
 
@@ -91,10 +89,10 @@
         {mino}
         coord={coord.scale(squareSize)}
         size={squareSize}
-        fill={tilingColors[color]}
-        gridStyle="thin"
-        {stroke}
         anchor="top left"
+        gridStyle="thin"
+        --fill={tilingColors[color]}
+        --stroke="black"
       />
     {/each}
   {:else}

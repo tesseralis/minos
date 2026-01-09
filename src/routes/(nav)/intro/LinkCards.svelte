@@ -70,7 +70,7 @@
   {@const pentominoes = nodes[5 - 1]}
   <div class="catalog">
     {#each pentominoes as mino}
-      <MinoDiv {mino} size={10} fill="none" stroke="currentcolor" />
+      <MinoDiv {mino} size={10} --fill="none" --stroke="currentcolor" />
     {/each}
   </div>
 {/snippet}
@@ -93,7 +93,7 @@
         .desaturate(40)
         .toHexString()}
       {@const size = 12}
-      <MinoDiv {mino} stroke="black" fill={color} {size}>
+      <MinoDiv {mino} {size} --stroke="black" --fill={color}>
         <SymmetryMarkers {mino} {size} stroke="white" stroke-width={2} />
       </MinoDiv>
     {/each}
@@ -148,18 +148,18 @@
       />
       <MinoSvg
         mino={child}
-        fill={colors.bg}
-        stroke="currentcolor"
         {coord}
         size={3}
+        --fill="var(--color-bg)"
+        --stroke="currentcolor"
       />
     {/each}
     <MinoSvg
       {mino}
-      fill={colors.bg}
-      stroke="currentcolor"
       coord={new Vector(0, 0)}
       size={4}
+      --fill="var(--color-bg)"
+      --stroke="currentcolor"
     />
   </svg>
 {/snippet}

@@ -1,6 +1,6 @@
 <script lang="ts">
   import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
-  import { getMinoColor, NUM_GENERATIONS } from "$lib/components/graph"
+  import { NUM_GENERATIONS } from "$lib/components/graph"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import MinoLink from "$lib/components/MinoLink.svelte"
   import { orderName, Polyomino, printSymmetry } from "$lib/mino"
@@ -28,8 +28,8 @@
   <MinoDiv
     {mino}
     size={Math.min(30 / mino.height, 15)}
-    fill="none"
-    stroke="currentcolor"
+    --fill="none"
+    --stroke="currentcolor"
   />
 {/snippet}
 
@@ -38,9 +38,8 @@
     {#each minos as mino}
       <MinoLink
         {mino}
-        size={getBlockSize(mino.order)}
-        {...getMinoColor(mino)}
         href="/catalog/{mino.toString()}"
+        size={getBlockSize(mino.order)}
       />
     {/each}
   </div>
@@ -54,7 +53,7 @@
     ]}
   />
   <div class="header">
-    <MinoDiv {mino} size={96 / mino.order} {...getMinoColor(mino)} />
+    <MinoDiv {mino} size={96 / mino.order} />
   </div>
   <dl>
     {#each minoData as [name, display]}

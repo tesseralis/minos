@@ -9,8 +9,8 @@ For example, the "O" octomino has a puncture:
 
 <MinoDiv
   mino={Polyomino.of("111_101_111")}
-  stroke="black"
-  fill="grey"
+  --stroke="black"
+  --fill="grey"
   size={20}
 />
 
@@ -18,7 +18,7 @@ while its parent has a [hole](/glossary/hole) but is not punctured:
 
 <MinoDiv
   mino={Polyomino.of("111_101_110")}
-  stroke="black"
-  fill="grey"
+  --stroke="black"
+  --fill="grey"
   size={20}
 />

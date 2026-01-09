@@ -9,8 +9,8 @@ For example, the following polyomino is up-directed with the bottom-left cell as
 
 <MinoDiv
   mino={Polyomino.of("110_101_111_101")}
-  stroke="black"
-  fill="grey"
+  --stroke="black"
+  --fill="grey"
   size={20}
 />
 

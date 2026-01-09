@@ -13,7 +13,7 @@ For example, the following transformations of the L tetromino represent the same
   {@const mino = Polyomino.of("100_111")}
   <div class="wrapper">
     {#each mino.transform.all() as transform}
-      <MinoDiv mino={transform} stroke="black" fill="grey" size={15} />
+      <MinoDiv mino={transform} --stroke="black" --fill="grey" size={15} />
     {/each}
   </div>
 {/snippet}

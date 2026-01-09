@@ -1,8 +1,11 @@
 <!-- @component
 Draws a mino in SVG using the given center x and y coordinates, size, fill, stroke color, etc.
 
-Params:
-- _anchor_ a string representing where the edge of the mino should be anchored (e.getComputedStyle. "top left")
+Style props:
+
+* --fill
+* --stroke
+
  -->
 <script lang="ts" module>
   export interface Props {
@@ -11,8 +14,6 @@ Params:
     size: number
     strokeWidth?: number
     gridStrokeWidth?: number
-    fill: string
-    stroke: string
     anchor?: string
     // (misnamed) whether the grid lines should be shown, clear, or not
     gridStyle?: "thick" | "thin" | "none"
@@ -28,13 +29,12 @@ Params:
   import { Polyomino, O_OCTOMINO } from "$lib/mino"
   import { getAnchor } from "./utils"
   import { getPoints, onHover, point } from "./svgUtils"
+  import { getMinoColor } from "./graph"
 
   const {
     mino,
     coord,
     size,
-    fill,
-    stroke,
     anchor = "center center",
     gridStyle = "thick",
     onclick,
@@ -65,14 +65,18 @@ Params:
     }
     return path
   })
+  const { stroke, fill } = $derived(getMinoColor(mino))
 </script>
 
-<g class={["container", onclick && "clickable"]}>
+<g
+  class={["container", onclick && "clickable"]}
+  style:--derived-stroke="var(--stroke, {stroke})"
+  style:--derived-fill="var(--fill, {fill})"
+>
   <g {onclick} {...onHover(onhover)}>
     <polygon
+      class="outline"
       points={getPoints(outlinePoints)}
-      {fill}
-      {stroke}
       stroke-width={strokeWidth}
     />
     {#if mino.equals(O_OCTOMINO)}
@@ -81,15 +85,13 @@ Params:
         {...point(translate(scale(new Vector(1, 1))))}
         width={size}
         height={size}
-        {stroke}
         stroke-width={strokeWidth}
       />
     {/if}
     {#if gridStyle !== "none"}
       <path
+        class="grid"
         d={path.toString()}
-        {stroke}
-        fill="none"
         opacity={gridStyle === "thick" ? 1 : 0.25}
         stroke-width={gridStrokeWidth}
       />
@@ -98,8 +100,19 @@ Params:
 </g>
 
 <style>
+  .outline {
+    fill: var(--derived-fill);
+    stroke: var(--derived-stroke);
+  }
+
+  .grid {
+    stroke: var(--derived-stroke);
+    fill: none;
+  }
+
   .hole {
     fill: var(--color-bg);
+    stroke: var(--derived-stroke);
   }
 
   .clickable {
