@@ -3,9 +3,7 @@
   import { getClassColor, getSymmetryColor, nodes } from "$lib/components/graph"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import SymmetryMarkers from "$lib/components/SymmetryMarkers.svelte"
-  import { colors } from "$lib/components/theme"
   import { DirClass, Polyomino } from "$lib/mino"
-  import tinycolor from "tinycolor2"
   import Pattern from "$lib/components/Pattern.svelte"
   import Tiling from "$lib/components/Tiling.svelte"
   import Vector from "$lib/vector"
@@ -89,11 +87,14 @@
   <div class="symmetry">
     {#each minos as [symmetry, minoStr]}
       {@const mino = Polyomino.of(minoStr)}
-      {@const color = tinycolor(getSymmetryColor(symmetry))
-        .desaturate(40)
-        .toHexString()}
+      {@const color = getSymmetryColor(symmetry)}
       {@const size = 12}
-      <MinoDiv {mino} {size} --stroke="black" --fill={color}>
+      <MinoDiv
+        {mino}
+        {size}
+        --stroke="black"
+        --fill="hsl(from {color} h max(0, calc(s - 40)) l)"
+      >
         <SymmetryMarkers {mino} {size} stroke="white" stroke-width={2} />
       </MinoDiv>
     {/each}

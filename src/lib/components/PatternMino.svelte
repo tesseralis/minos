@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { Polyomino } from "$lib/mino"
   import type Vector from "$lib/vector"
-  import tinycolor from "tinycolor2"
   import { getMinoColor } from "./graph"
   import MinoSvg from "./MinoSvg.svelte"
   import { goto } from "$app/navigation"
@@ -13,29 +12,29 @@
   }
 
   const { blockSize, mino, coord }: Props = $props()
-
-  let hovered = $state(false)
   const { fill } = $derived(getMinoColor(mino))
-  const baseFill = $derived(tinycolor(fill))
 </script>
 
-<!-- Need to wrap this in an element to work on initial load -->
-<g>
+<g style:--base-fill={fill}>
   <MinoSvg
     {mino}
     coord={coord.scale(blockSize)}
     anchor="top left"
     size={blockSize}
-    --fill={hovered
-      ? baseFill.clone().lighten().toString()
-      : baseFill.toString()}
     --stroke="black"
     gridStyle="thin"
-    onhover={(_hovered) => {
-      hovered = _hovered
-    }}
     onclick={() => {
       goto(`/catalog/${mino.transform.free().toString()}`)
     }}
   />
 </g>
+
+<style>
+  g {
+    --fill: var(--base-fill);
+  }
+
+  g:hover {
+    --fill: hsl(from var(--base-fill) h s calc(l + 15));
+  }
+</style>

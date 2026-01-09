@@ -1,6 +1,5 @@
 <script lang="ts">
   import { DirClass, Polyomino } from "$lib/mino"
-  import tinycolor from "tinycolor2"
   import MinoDiv from "./MinoDiv.svelte"
   import { center, endpoints } from "./svgUtils"
 
@@ -44,7 +43,7 @@
   size={size / Math.max(mino.height, mino.width)}
   gridStyle="none"
   --fill={fill}
-  --stroke={tinycolor(stroke).setAlpha(0.75).toString()}
+  --stroke="hsl(from {stroke} h s l / 0.75"
 >
   {#if className === "rectangle"}
     {@render convex()}

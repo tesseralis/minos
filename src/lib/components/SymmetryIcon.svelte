@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Polyomino, type Symmetry } from "$lib/mino"
   import MinoDiv from "./MinoDiv.svelte"
-  import tinycolor from "tinycolor2"
   import SymmetryMarkers from "./SymmetryMarkers.svelte"
 
   interface Props {
@@ -24,7 +23,6 @@
 
   const { symmetry, fill, stroke, size }: Props = $props()
   const mino = $derived(Polyomino.of(minoMap[symmetry]))
-  const minoStroke = $derived(tinycolor(stroke).setAlpha(0.5).toString())
 </script>
 
 <div class="wrapper">
@@ -33,7 +31,7 @@
     size={size / mino.height}
     gridStyle="none"
     --fill={fill}
-    --stroke={minoStroke}
+    --stroke="hsl(from {stroke} h s l / 0.5)"
   >
     <SymmetryMarkers {mino} size={size / mino.height} {stroke} />
   </MinoDiv>

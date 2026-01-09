@@ -4,7 +4,6 @@
   import { getAnchor } from "$lib/components/utils"
   import { minBy } from "lodash-es"
   import MinoLink from "$lib/components/MinoLink.svelte"
-  import tinycolor from "tinycolor2"
   import { getDirColor } from "./helpers"
   import { getPoints } from "$lib/components/svgUtils"
 
@@ -97,14 +96,22 @@
   >
     {#each segments as { dir, points }, index}
       <polyline
+        class:selected={currentIndex === index}
         points={getPoints(points)}
-        stroke={currentIndex === index
-          ? "white"
-          : tinycolor(getDirColor(dir)).darken(15).toString()}
-        stroke-width={2}
-        stroke-linecap="round"
-        fill="none"
+        stroke="hsl(from {getDirColor(dir)} h s calc(l - 15))"
       />
     {/each}
   </MinoLink>
 </div>
+
+<style>
+  polyline {
+    stroke-width: 2;
+    stroke-linecap: round;
+    fill: none;
+  }
+
+  polyline.selected {
+    stroke: white;
+  }
+</style>
