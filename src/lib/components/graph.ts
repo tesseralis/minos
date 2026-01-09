@@ -36,7 +36,7 @@ const classColorMap: Record<string, string> = {
   wedge: "#f5f", // magenta
   staircase: "#82f", // violet
   stack: "#f28", // rose
-  fork: "#63f", // blue
+  fork: "#44f", // blue
   "bar chart": "#f22", // red
   diamond: "#08f", // azure
   wing: "#f60", // orange
