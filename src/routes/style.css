@@ -17,7 +17,6 @@
 /* Theme */
 
 :root {
-  /* TODO deduplicate these from JS definitions */
   --color-highlight: #eee;
   --color-fg: #aaa;
   --color-heading: #ccc;
@@ -28,9 +27,8 @@
 }
 
 body {
-  /* TODO get these values from the theme */
-  background-color: #202020;
-  color: #aaa;
+  background-color: var(--color-bg);
+  color: var(--color-fg);
   /* Don't adjust text size on iOS */
   -webkit-text-size-adjust: none;
 }
@@ -38,15 +36,15 @@ body {
 h1,
 h2,
 h3 {
-  color: #ccc;
+  color: var(--color-heading);
   font-weight: normal;
   margin: 0;
 }
 
 dt {
-  color: #ccc;
+  color: var(--color-heading);
 }
 
 a {
-  color: #aaa;
+  color: var(--color-fg);
 }
