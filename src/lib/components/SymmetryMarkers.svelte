@@ -57,27 +57,22 @@
     r={radius}
     {...svgProps}
     stroke-dasharray={`${circumference / 8} ${circumference / 8}`}
-    fill="none"
   />
   <line
     {...svgProps}
     {...endpoints([-radius, 0], [-radius - arrowTip / 2, -arrowTip / 2])}
-    stroke-linecap="round"
   />
   <line
     {...svgProps}
     {...endpoints([radius, 0], [radius + arrowTip / 2, arrowTip / 2])}
-    stroke-linecap="round"
   />
   <line
     {...svgProps}
     {...endpoints([0, -radius], [arrowTip / 2, -radius - arrowTip / 2])}
-    stroke-linecap="round"
   />
   <line
     {...svgProps}
     {...endpoints([0, radius], [-arrowTip / 2, radius + arrowTip / 2])}
-    stroke-linecap="round"
   />
 {:else if symmetry === "axis"}
   {#if mino.equals(mino.transform.apply("flipVert"))}
@@ -96,17 +91,24 @@
     r={radius}
     {...svgProps}
     stroke-dasharray={`${circumference / 4} ${circumference / 4}`}
-    fill="none"
-    stroke-linecap="round"
   />
   <line
     {...svgProps}
     {...endpoints([-radius, 0], [-radius - arrowTip, -arrowTip])}
-    stroke-linecap="round"
   />
   <line
     {...svgProps}
     {...endpoints([radius, 0], [radius + arrowTip, arrowTip])}
-    stroke-linecap="round"
   />
 {/if}
+
+<style>
+  circle {
+    fill: none;
+  }
+
+  circle,
+  line {
+    stroke-linecap: round;
+  }
+</style>
