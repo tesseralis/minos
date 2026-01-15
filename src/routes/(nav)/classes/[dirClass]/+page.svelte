@@ -6,6 +6,7 @@
   import ClassList from "../ClassList.svelte"
   import type { PageProps } from "./$types"
   import ClassSymbol from "../ClassSymbol.svelte"
+  import StateDiagram from "../StateDiagram.svelte"
 
   const { data }: PageProps = $props()
   const Content = $derived(data.content)
@@ -34,6 +35,10 @@
       {:else}
         --
       {/if}
+    </div>
+    <div>
+      <h2>State Diagram</h2>
+      <StateDiagram />
     </div>
   </div>
   <h2>Polyomino list</h2>
