@@ -43,7 +43,7 @@
   size={size / Math.max(mino.height, mino.width)}
   gridStyle="none"
   --fill={fill}
-  --stroke="hsl(from {stroke} h s l / 0.75"
+  --stroke="hsl(from {stroke} h s l / 0.75)"
 >
   {#if className === "rectangle"}
     {@render convex()}
