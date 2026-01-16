@@ -25,6 +25,10 @@
   <Content />
   <div class="class-data">
     <div>
+      <h2>State Diagram</h2>
+      <StateDiagram {dirClass} />
+    </div>
+    <div>
       <h2>Symbol</h2>
       <ClassSymbol {dirClass} />
     </div>
@@ -35,10 +39,6 @@
       {:else}
         --
       {/if}
-    </div>
-    <div>
-      <h2>State Diagram</h2>
-      <StateDiagram />
     </div>
   </div>
   <h2>Polyomino list</h2>
