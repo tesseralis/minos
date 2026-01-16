@@ -1,9 +1,9 @@
 <script lang="ts">
   import { endpoints } from "$lib/components/svgUtils"
-  import { colors } from "$lib/components/theme"
   import type { DirClass } from "$lib/mino"
   import { path, type Path } from "d3-path"
-  import { range } from "lodash-es"
+  import { getDirColor } from "./helpers"
+  import { TAU } from "$lib/math"
 
   interface Props {
     dirClass: DirClass
@@ -40,6 +40,7 @@
       <path d="M 0 -4 L 10 0 L 0 4 z" stroke="context-stroke" />
     </marker>
   </defs>
+  <!-- `ru` -> `ld` -->
   <line
     {...endpoints([0, nodeOffset - nodeRadius], [0, -nodeOffset + nodeRadius])}
   />
@@ -52,12 +53,14 @@
       )}
     />
   {/if}
-  {#each range(4) as i}
+  {#each dirs as dir, i}
     <g transform="rotate({i * -90})">
+      <!-- Arrow to the next node -->
+      <!-- Only render the arrows to/from the `lu` and `rd` nodes if they're actually in the diagram -->
       {#if (i < 2 && diagramData.lu) || (i == 2 && diagramData.rd)}
         <path
           class={{
-            backward: diagramData.backward?.includes(dirs[i]),
+            backward: diagramData.backward?.includes(dir),
           }}
           d={getPath((p) => {
             p.moveTo(nodeRadius, nodeOffset)
@@ -72,8 +75,8 @@
           })}
         />
       {/if}
-      <!-- Repeat arrow -->
-      {#if diagramData.repeats?.includes(dirs[i])}
+      <!-- Arrow from a node to itself -->
+      {#if diagramData.repeats?.includes(dir)}
         <path
           transform="translate(0, {nodeOffset})"
           d={getPath((p) => {
@@ -92,29 +95,21 @@
       {/if}
     </g>
   {/each}
+  <!-- "State machine start" arrow -->
   <line {...endpoints([-nodeOffset, nodeOffset], [-nodeRadius, nodeOffset])} />
-  <g transform="translate(0, {nodeOffset})">
-    <circle r={nodeRadius} stroke={colors.palette[1]} />
-    <text fill={colors.palette[1]}>ru</text>
-  </g>
-  {#if diagramData.lu}
-    <g transform="translate({nodeOffset}, 0)">
-      <circle r={nodeRadius} stroke={colors.palette[2]} />
-      <text fill={colors.palette[2]}>lu</text>
-    </g>
-  {/if}
-  <g transform="translate(0, {-nodeOffset})">
-    <circle r={nodeRadius} stroke={colors.palette[3]} />
-    <circle r={nodeRadius * 0.75} stroke={colors.palette[3]} />
-    <text fill={colors.palette[3]}>ld</text>
-  </g>
-  {#if diagramData.rd}
-    <g transform="translate({-nodeOffset}, 0)">
-      <circle r={nodeRadius} stroke={colors.palette[0]} />
-      <circle r={nodeRadius * 0.75} stroke={colors.palette[0]} />
-      <text fill={colors.palette[0]}>rd</text>
-    </g>
-  {/if}
+  <!-- Nodes -->
+  {#each dirs as dir, i}
+    {@const color = getDirColor(dir)}
+    {#if i % 2 === 0 || (diagramData.lu && dir === "lu") || (diagramData.rd && dir === "rd")}
+      <g
+        transform="translate({nodeOffset *
+          Math.sin((i / 4) * TAU)}, {nodeOffset * Math.cos((i / 4) * TAU)})"
+      >
+        <circle r={nodeRadius} stroke={color} />
+        <text fill={color}>{dir}</text>
+      </g>
+    {/if}
+  {/each}
 </svg>
 
 <style>
