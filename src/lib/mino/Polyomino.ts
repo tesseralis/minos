@@ -20,6 +20,7 @@ import {
   MinoRelatives,
   MinoClasses,
   MinoTilings,
+  O_OCTOMINO,
 } from "./internal"
 
 // cache of all created minos
@@ -125,6 +126,16 @@ export default class Polyomino {
 
   /** Return the edge list for this mino */
   boundary = once(() => getEdges(this.coords()))
+
+  /** Return the perimeter of this polyomino */
+  perimeter = once(() => {
+    const perim = this.boundary().length
+    // TODO handle larger minos more generally
+    if (this.equals(O_OCTOMINO)) {
+      return perim + 4
+    }
+    return perim
+  })
 
   /**
    * Return whether the polyomino is "balanced".

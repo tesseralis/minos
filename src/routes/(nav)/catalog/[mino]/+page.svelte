@@ -16,6 +16,7 @@
   const minoData: [string, Snippet<[Polyomino]>][] = [
     ["size", size],
     ["dimensions", dimensions],
+    ["perimeter", perimeter],
     ["symmetry", symmetry],
     ["class", dirClass],
     ["tiling", tiling],
@@ -73,6 +74,10 @@
   {mino.dims.join(" × ")}
 {/snippet}
 
+{#snippet perimeter(mino: Polyomino)}
+  {mino.perimeter()}
+{/snippet}
+
 {#snippet symmetry(mino: Polyomino)}
   <a href="/symmetry/{mino.transform.symmetry()}">
     {printSymmetry(mino.transform.symmetry())}
@@ -124,12 +129,13 @@
 
   dl {
     display: grid;
+    grid-template-columns: repeat(3, 1fr);
     grid-template-areas:
-      "size dimensions"
-      "symmetry class"
-      "tiling tiling"
-      "parents parents"
-      "children children";
+      "size dimensions perimeter"
+      "symmetry class ."
+      "tiling tiling tiling"
+      "parents parents parents"
+      "children children children";
   }
 
   dt {
