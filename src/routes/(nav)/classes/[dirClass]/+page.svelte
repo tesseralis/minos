@@ -25,25 +25,25 @@
     <div>
       <h1>{capitalize(className)} polyomino</h1>
       <Content />
-    </div>
-    <div class="class-data">
-      <div>
-        <h2>Symbol</h2>
-        <ClassSymbol {dirClass} />
-      </div>
-      <div>
-        <h2>Regex</h2>
-        {#if dirClass.regex()}
-          <ClassRegex {dirClass} />
-        {:else}
-          --
+      <div class="class-data">
+        <div>
+          <h2>Symbol</h2>
+          <ClassSymbol {dirClass} />
+        </div>
+        {#if dirClass.name() !== "other"}
+          <div>
+            <h2>Regex</h2>
+            <ClassRegex {dirClass} />
+          </div>
         {/if}
       </div>
-      <div>
+    </div>
+    {#if dirClass.name() !== "other"}
+      <div class="state-diagram">
         <h2>State Diagram</h2>
         <StateDiagram {dirClass} />
       </div>
-    </div>
+    {/if}
   </div>
   <h2>Polyomino list</h2>
   <ClassList {dirClass} />
@@ -68,17 +68,17 @@
     .main {
       display: flex;
       flex-direction: column;
-      gap: 0;
+      gap: 1rem;
     }
   }
 
   .class-data {
     display: flex;
-    flex-direction: column;
     gap: 2rem;
   }
 
-  .class-data h2 {
+  .class-data h2,
+  .state-diagram h2 {
     font-size: 1.125rem;
     margin: 0;
   }

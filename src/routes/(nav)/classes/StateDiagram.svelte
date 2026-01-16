@@ -30,19 +30,18 @@
     <!-- A marker to be used as an arrowhead -->
     <marker
       id="arrow"
-      viewBox="0 0 10 10"
+      viewBox="0 -5 10 10"
       refX="10"
-      refY="5"
-      markerWidth="8"
-      markerHeight="8"
+      refY="0"
+      markerWidth="6"
+      markerHeight="6"
       orient="auto-start-reverse"
     >
-      <path d="M 0 0 L 10 5 L 0 10 z" stroke="context-stroke" />
+      <path d="M 0 -4 L 10 0 L 0 4 z" stroke="context-stroke" />
     </marker>
   </defs>
   <line
-    class="backward"
-    {...endpoints([0, -nodeOffset + nodeRadius], [0, nodeOffset - nodeRadius])}
+    {...endpoints([0, nodeOffset - nodeRadius], [0, -nodeOffset + nodeRadius])}
   />
   {#if diagramData.lu_rd}
     <line
@@ -55,7 +54,7 @@
   {/if}
   {#each range(4) as i}
     <g transform="rotate({i * -90})">
-      {#if (i < 2 && diagramData.lu) || (i >= 2 && diagramData.rd)}
+      {#if (i < 2 && diagramData.lu) || (i == 2 && diagramData.rd)}
         <path
           class={{
             backward: diagramData.backward?.includes(dirs[i]),
@@ -73,6 +72,7 @@
           })}
         />
       {/if}
+      <!-- Repeat arrow -->
       {#if diagramData.repeats?.includes(dirs[i])}
         <path
           transform="translate(0, {nodeOffset})"
@@ -80,9 +80,9 @@
             p.moveTo(-repeatShort, repeatLong)
             p.bezierCurveTo(
               -repeatShort * 4,
-              repeatLong * 3,
+              repeatLong * 3.25,
               repeatShort * 4,
-              repeatLong * 3,
+              repeatLong * 3.25,
               repeatShort,
               repeatLong,
             )
@@ -92,9 +92,9 @@
       {/if}
     </g>
   {/each}
+  <line {...endpoints([-nodeOffset, nodeOffset], [-nodeRadius, nodeOffset])} />
   <g transform="translate(0, {nodeOffset})">
     <circle r={nodeRadius} stroke={colors.palette[1]} />
-    <circle r={nodeRadius * 0.75} stroke={colors.palette[1]} />
     <text fill={colors.palette[1]}>ru</text>
   </g>
   {#if diagramData.lu}
@@ -105,11 +105,13 @@
   {/if}
   <g transform="translate(0, {-nodeOffset})">
     <circle r={nodeRadius} stroke={colors.palette[3]} />
+    <circle r={nodeRadius * 0.75} stroke={colors.palette[3]} />
     <text fill={colors.palette[3]}>ld</text>
   </g>
   {#if diagramData.rd}
     <g transform="translate({-nodeOffset}, 0)">
       <circle r={nodeRadius} stroke={colors.palette[0]} />
+      <circle r={nodeRadius * 0.75} stroke={colors.palette[0]} />
       <text fill={colors.palette[0]}>rd</text>
     </g>
   {/if}
@@ -132,6 +134,7 @@
   path {
     fill: none;
     stroke: var(--color-fg);
+    stroke-width: 1.5;
     marker-end: url(#arrow);
   }
 
