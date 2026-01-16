@@ -1,5 +1,6 @@
 <script lang="ts">
   import { endpoints } from "$lib/components/svgUtils"
+  import { colors } from "$lib/components/theme"
   import type { DirClass } from "$lib/mino"
   import { path, type Path } from "d3-path"
   import { range } from "lodash-es"
@@ -39,27 +40,6 @@
       <path d="M 0 0 L 10 5 L 0 10 z" stroke="context-stroke" />
     </marker>
   </defs>
-  <g transform="translate(0, {nodeOffset})">
-    <circle r={nodeRadius} />
-    <circle r={nodeRadius * 0.75} />
-    <text>ru</text>
-  </g>
-  {#if diagramData.lu}
-    <g transform="translate({nodeOffset}, 0)">
-      <circle r={nodeRadius} />
-      <text>lu</text>
-    </g>
-  {/if}
-  <g transform="translate(0, {-nodeOffset})">
-    <circle r={nodeRadius} />
-    <text>ld</text>
-  </g>
-  {#if diagramData.rd}
-    <g transform="translate({-nodeOffset}, 0)">
-      <circle r={nodeRadius} />
-      <text>rd</text>
-    </g>
-  {/if}
   <line
     class="backward"
     {...endpoints([0, -nodeOffset + nodeRadius], [0, nodeOffset - nodeRadius])}
@@ -112,6 +92,27 @@
       {/if}
     </g>
   {/each}
+  <g transform="translate(0, {nodeOffset})">
+    <circle r={nodeRadius} stroke={colors.palette[1]} />
+    <circle r={nodeRadius * 0.75} stroke={colors.palette[1]} />
+    <text fill={colors.palette[1]}>ru</text>
+  </g>
+  {#if diagramData.lu}
+    <g transform="translate({nodeOffset}, 0)">
+      <circle r={nodeRadius} stroke={colors.palette[2]} />
+      <text fill={colors.palette[2]}>lu</text>
+    </g>
+  {/if}
+  <g transform="translate(0, {-nodeOffset})">
+    <circle r={nodeRadius} stroke={colors.palette[3]} />
+    <text fill={colors.palette[3]}>ld</text>
+  </g>
+  {#if diagramData.rd}
+    <g transform="translate({-nodeOffset}, 0)">
+      <circle r={nodeRadius} stroke={colors.palette[0]} />
+      <text fill={colors.palette[0]}>rd</text>
+    </g>
+  {/if}
 </svg>
 
 <style>
@@ -123,19 +124,24 @@
     fill: var(--color-fg);
   }
 
-  circle,
+  circle {
+    fill: none;
+  }
+
   line,
   path {
     fill: none;
     stroke: var(--color-fg);
-  }
-
-  line,
-  path {
     marker-end: url(#arrow);
   }
 
+  circle {
+    stroke-width: 1.5;
+  }
+
   text {
+    font-family: monospace;
+    font-weight: bold;
     text-anchor: middle;
     dominant-baseline: central;
   }
