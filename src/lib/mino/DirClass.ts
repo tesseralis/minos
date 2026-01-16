@@ -1,5 +1,3 @@
-import { repeat } from "lodash-es"
-
 export type Level = 0 | 1 | "2-cis" | "2-trans" | 3 | 4
 
 export default class DirClass {
