@@ -21,24 +21,28 @@
       [capitalize(className), `/classes/${className}`],
     ]}
   />
-  <h1>{capitalize(className)} polyomino</h1>
-  <Content />
-  <div class="class-data">
+  <div class="main">
     <div>
-      <h2>State Diagram</h2>
-      <StateDiagram {dirClass} />
+      <h1>{capitalize(className)} polyomino</h1>
+      <Content />
     </div>
-    <div>
-      <h2>Symbol</h2>
-      <ClassSymbol {dirClass} />
-    </div>
-    <div>
-      <h2>Regex</h2>
-      {#if dirClass.regex()}
-        <ClassRegex {dirClass} />
-      {:else}
-        --
-      {/if}
+    <div class="class-data">
+      <div>
+        <h2>Symbol</h2>
+        <ClassSymbol {dirClass} />
+      </div>
+      <div>
+        <h2>Regex</h2>
+        {#if dirClass.regex()}
+          <ClassRegex {dirClass} />
+        {:else}
+          --
+        {/if}
+      </div>
+      <div>
+        <h2>State Diagram</h2>
+        <StateDiagram {dirClass} />
+      </div>
     </div>
   </div>
   <h2>Polyomino list</h2>
@@ -50,8 +54,16 @@
     margin: 0;
   }
 
+  .main {
+    display: grid;
+    gap: 4rem;
+    grid-template-columns: 1fr 20rem;
+  }
+
+  /* FIXME mobile styling */
   .class-data {
     display: flex;
+    flex-direction: column;
     gap: 2rem;
   }
 
