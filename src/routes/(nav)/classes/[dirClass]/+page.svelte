@@ -14,7 +14,7 @@
   const dirClass = $derived(DirClass.fromName(className))
 </script>
 
-<div>
+<div class="container">
   <Breadcrumbs
     paths={[
       ["Classes", "/classes"],
@@ -50,6 +50,10 @@
 </div>
 
 <style>
+  .container {
+    container-type: inline-size;
+  }
+
   h1 {
     margin: 0;
   }
@@ -60,7 +64,14 @@
     grid-template-columns: 1fr 20rem;
   }
 
-  /* FIXME mobile styling */
+  @container (width < 40rem) {
+    .main {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+  }
+
   .class-data {
     display: flex;
     flex-direction: column;
