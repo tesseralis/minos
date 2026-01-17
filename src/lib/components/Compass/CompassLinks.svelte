@@ -3,7 +3,7 @@
   import Vector from "$lib/vector"
   import { scaleLinear } from "d3-scale"
   import {
-    getLinkColor,
+    getMinoColor,
     getSortedChildren,
     getSortedParents,
     MAX_NUM_CHILDREN,
@@ -25,8 +25,6 @@
   interface StrandProps {
     // the relative mino represented by this strand
     link: RelativeLink
-    // color of the link
-    linkColor: string
     // block size of the relative mino
     size: number
     // x and y coordinates of the relative mino
@@ -46,8 +44,6 @@
     spreadStart: number
     // Whether to reverse the order of minos
     reverse?: boolean
-    // Function to determine the color of the link
-    linkColor(mino: Polyomino): string
   }
 
   let { mino = $bindable() } = $props()
@@ -61,7 +57,6 @@
     scaleRange: [4, 2],
     maxSpread: 1 / 3,
     spreadStart: -1 / 4,
-    linkColor: (parent) => getLinkColor(parent, mino),
   })}
   {@render strands({
     links: getSortedChildren(mino),
@@ -70,7 +65,6 @@
     maxSpread: 15 / 32,
     spreadStart: 1 / 4,
     reverse: true,
-    linkColor: (child) => getLinkColor(mino, child),
   })}
 </g>
 
@@ -81,7 +75,6 @@
   maxSpread,
   spreadStart,
   reverse,
-  linkColor,
   ...props
 }: StrandsProps)}
   {@const gen = links[0]?.mino.order}
@@ -101,7 +94,6 @@
       {@render strand({
         ...props,
         link,
-        linkColor: linkColor(link.mino),
         size: scaledSize,
         coord,
       })}
@@ -109,13 +101,17 @@
   </g>
 {/snippet}
 
-{#snippet strand({ link, linkColor, coord, size }: StrandProps)}
+{#snippet strand({ link, coord, size }: StrandProps)}
   {@const hovered = context.relativeLink}
   {@const isSelected =
     !!hovered && hovered.mino.transform.equivalent(link.mino)}
   {@const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))}
   <g class:isSelected>
-    <path stroke={linkColor} d={linkPath} />
+    <path
+      style:--color-src={getMinoColor(mino).fill}
+      style:--color-tgt={getMinoColor(link.mino).fill}
+      d={linkPath}
+    />
     <SelectableMino
       mino={isSelected ? hovered!.mino : link.mino}
       {coord}
@@ -132,6 +128,7 @@
 
 <style>
   path {
+    stroke: color-mix(in oklab, var(--color-src), var(--color-tgt));
     stroke-width: 1;
     fill: none;
     opacity: 0.5;

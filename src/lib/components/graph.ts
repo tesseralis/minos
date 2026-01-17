@@ -47,19 +47,6 @@ const classColorMap: Record<string, string> = {
   tree: "#2a2", // green
   other: "#686", // grey
 }
-/**
- * Get the unique randomized color ID for the given polyomino.
- */
-// function getNoise(mino: Polyomino) {
-//   let data = mino.transform.free().data
-//   let h = 0
-//   while (data) {
-//     h = h ^ data % (1 << 4)
-//     data >>= 4
-//   }
-//   h = h / (1 << 4)
-//   return tinycolor.fromRatio({ h, s: 1, v: 1 })
-// }
 
 function getBorderColor(color: Color) {
   return color.clone().darken(50).desaturate(40).spin(-30)
@@ -124,20 +111,11 @@ export function generateGraph(n: number) {
   }
   nodes.push(currentGen)
 
-  // Generate mino colors
-  const colors: Record<MinoData, Color> = {}
-  for (const generation of nodes) {
-    for (const mino of generation) {
-      const minoClass = mino.classes.get().name()
-      colors[mino.data] = colorMap[minoClass]
-    }
-  }
-
-  return { nodes, links, colors, indices }
+  return { nodes, links, indices }
 }
 
 export const NUM_GENERATIONS = 8
-const { nodes, links, colors, indices } = generateGraph(NUM_GENERATIONS)
+const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
 
 const allMinos = nodes.flat()
 
@@ -147,15 +125,6 @@ export const MAX_NUM_PARENTS = Math.max(
 export const MAX_NUM_CHILDREN = Math.max(
   ...allMinos.map((mino) => mino.relatives.freeChildren().size),
 )
-
-// Cached colors of each link
-const linkColors: Record<number, Record<number, string>> = {}
-for (const [src, tgt] of links) {
-  linkColors[src.data] = linkColors[src.data] ?? {}
-  linkColors[src.data][tgt.data] = tinycolor
-    .mix(colors[src.data], colors[tgt.data])
-    .toHexString()
-}
 
 export { nodes, links }
 
@@ -196,15 +165,4 @@ export function getMinoColor(mino: Polyomino) {
     fill: color!.toHexString(),
     stroke: getBorderColor(color).toString(),
   }
-}
-
-/**
- * Return the stroke color of the link between the given pair of minos
- */
-
-export function getLinkColor(src: Polyomino, tgt: Polyomino) {
-  const color =
-    linkColors[src.transform.free().data]?.[tgt.transform.free().data]
-  if (!color) throw new Error(`Invalid mino pair given`)
-  return color
 }

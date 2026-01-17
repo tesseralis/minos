@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getLinkColor, links } from "$lib/components/graph"
+  import { getMinoColor, links } from "$lib/components/graph"
   import { getArc } from "$lib/components/utils"
   import type { Polyomino } from "$lib/mino"
   import Vector from "$lib/vector"
@@ -35,7 +35,8 @@
       <path
         class:isSelected
         d={getLinkPath(link)}
-        stroke={getLinkColor(srcMino, tgtMino)}
+        style:--color-src={getMinoColor(srcMino).fill}
+        style:--color-tgt={getMinoColor(tgtMino).fill}
         style:--stroke-width={strokeWidth}
         in:fade={{ delay: i * 3 }}
       />
@@ -48,6 +49,7 @@
     fill: none;
     transition: all 250ms ease-in-out;
     pointer-events: none;
+    stroke: color-mix(in oklab, var(--color-src), var(--color-tgt));
     stroke-width: var(--stroke-width);
   }
 
