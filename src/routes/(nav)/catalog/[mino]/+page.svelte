@@ -54,7 +54,7 @@
     ]}
   />
   <div class="header">
-    <MinoDiv {mino} size={96 / mino.order} />
+    <MinoDiv {mino} size={250 / (mino.order + 4)} />
   </div>
   <dl>
     {#each minoData as [name, display]}
@@ -124,7 +124,7 @@
     justify-content: center;
     align-items: center;
     /* Constant height so lower parts don't shift down */
-    height: 6rem;
+    height: 10rem;
   }
 
   dl {
