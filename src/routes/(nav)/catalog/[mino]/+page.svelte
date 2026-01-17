@@ -67,7 +67,7 @@
 </div>
 
 {#snippet size(mino: Polyomino)}
-  {mino.order} {orderName(mino.order)}
+  {mino.order} ({orderName(mino.order)})
 {/snippet}
 
 {#snippet dimensions(mino: Polyomino)}
