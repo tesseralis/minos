@@ -106,6 +106,9 @@
           Math.sin((i / 4) * TAU)}, {nodeOffset * Math.cos((i / 4) * TAU)})"
       >
         <circle r={nodeRadius} stroke={color} />
+        {#if i >= 2}
+          <circle r={nodeRadius * 0.75} stroke={color} />
+        {/if}
         <text fill={color}>{dir}</text>
       </g>
     {/if}
