@@ -30,16 +30,12 @@ export type RelativeLink = Required<PossibleRelativeLink>
 export function removeSquare(mino: MinoData, [i, j]: VectorLike) {
   const removed = doRemove(mino, i, j)
   if (rowStartEmpty(removed)) {
-    console.log("row start empty")
     return unshiftRow(removed)
   } else if (columnStartEmpty(removed)) {
-    console.log("col start empty")
     return unshiftColumn(removed)
   } else if (columnEndEmpty(removed)) {
-    console.log("col end empty")
     return decWidth(removed)
   }
-  console.log("no adjustments needed")
   return removed
 }
 
@@ -140,7 +136,7 @@ function shiftColumn(mino: MinoData) {
 
 function unshiftColumn(mino: MinoData) {
   for (let i = 0; i < mino.length; i++) {
-    mino[i] >> 1
+    mino[i] >>= 1
   }
   return decWidth(mino)
 }

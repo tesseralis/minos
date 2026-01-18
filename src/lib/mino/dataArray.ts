@@ -47,7 +47,7 @@ export function getKey(mino: MinoData): MinoKey {
 
 export function getHeight(mino: MinoData) {
   const width = mino.width
-  const first = floordiv(MAX_WIDTH, width) * (mino.length - 1)
+  const first = rowsPerWord(width) * (mino.length - 1)
   const last = getSingleHeight(mino.at(-1) ?? 0, width)
   return first + last
 }

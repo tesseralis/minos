@@ -28,7 +28,7 @@ describe("modify", () => {
   })
 
   describe("removeSquare", () => {
-    it.only("works for the domino", () => {
+    it("works for the domino", () => {
       expect(toString(removeSquare(fromString("11"), [0, 0]))).toEqual("1")
     })
     // X pentomino

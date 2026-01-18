@@ -70,7 +70,6 @@ function avg(nums: number[]) {
 }
 
 function getParentKey(mino: Polyomino, indices: Record<MinoKey, number>) {
-  console.log(mino.display())
   return avg([...mino.freeParents()].map((p) => indices[p.key]))
 }
 
