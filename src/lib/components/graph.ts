@@ -114,16 +114,22 @@ export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
-// console.log("Graph generated in: ", performance.now() - start)
+// // console.log("Graph generated in: ", performance.now() - start)
 
-const allMinos = nodes.flat()
-
-export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.freeParents().size),
-)
-export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.freeChildren().size),
-)
+// These are hard coded for NUM_GENERATIONS = 8.
+// These functions are more expensive than graph generation so we'll hard code them.
+// They're used to determine compass relative sizes, and ideally we'd just have some way
+// to determine them that isn't expensive to calculate.
+export const MAX_NUM_CHILDREN = 17
+export const MAX_NUM_PARENTS = 7
+// const allMinos = nodes.flat()
+// export const MAX_NUM_PARENTS = Math.max(
+//   ...allMinos.map((mino) => mino.freeParents().size),
+// )
+// export const MAX_NUM_CHILDREN = Math.max(
+//   ...allMinos.map((mino) => mino.freeChildren().size),
+// )
+// console.log({ MAX_NUM_CHILDREN, MAX_NUM_PARENTS })
 
 export { nodes, links }
 
