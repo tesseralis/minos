@@ -115,7 +115,10 @@ export function generateGraph(n: number) {
 }
 
 export const NUM_GENERATIONS = 8
+
+// const start = performance.now()
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
+// console.log("Graph generated in: ", performance.now() - start)
 
 const allMinos = nodes.flat()
 
