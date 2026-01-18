@@ -1,4 +1,4 @@
-import { isInteger, once, range } from "lodash-es"
+import { once, range } from "lodash-es"
 import Vector from "$lib/vector"
 import PointSet from "$lib/PointSet"
 import {

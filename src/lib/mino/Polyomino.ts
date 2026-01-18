@@ -1,4 +1,4 @@
-import { partition, sortBy, once, isInteger } from "lodash-es"
+import { partition, sortBy, once } from "lodash-es"
 import { type VectorLike } from "$lib/vector"
 import {
   type MinoData,
@@ -8,13 +8,11 @@ import {
   contains,
   getCoords,
   fromCoords,
-  // displayMino,
   fromString,
   toString,
   type Coord,
   type MinoKey,
   getKey,
-  create,
   displayMino,
 } from "./dataArray"
 import {
@@ -224,7 +222,7 @@ export default class Polyomino {
     return toString(this.data)
   }
 
-  // /** Pretty-printed representation of the mino */
+  /** Pretty-printed representation of the mino */
   display() {
     return displayMino(this.data)
   }

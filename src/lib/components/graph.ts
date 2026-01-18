@@ -106,7 +106,6 @@ export function generateGraph(n: number) {
 
     nodes.push(currentGen)
     currentGen = sortByParents(nextGen, indices)
-    // currentGen = nextGen
     currentGen.forEach((mino, i) => {
       indices[mino.key] = i
     })
@@ -118,9 +117,6 @@ export function generateGraph(n: number) {
 
 export const NUM_GENERATIONS = 8
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
-// const nodes = {}
-// const links = {}
-// const indices = {}
 
 const allMinos = nodes.flat()
 
