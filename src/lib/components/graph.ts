@@ -61,23 +61,19 @@ export function getClassColor(cls: string) {
   return classColorMap[cls]
 }
 
-function sum(nums: number[]) {
-  return nums.reduce((s, n) => s + n, 0)
-}
-
-function avg(nums: number[]) {
-  return sum(nums) / nums.length
-}
-
-function getParentKey(mino: Polyomino, indices: Record<MinoKey, number>) {
-  return avg([...mino.freeParents()].map((p) => indices[p.key]))
-}
-
-/**
- * Sort the list of minos by the average of their parents' indices
- */
-function sortByParents(minos: Polyomino[], indices: Record<MinoData, number>) {
-  return sortBy(minos, (mino) => getParentKey(mino, indices))
+function sortGeneration(minos: Polyomino[]) {
+  // Sort minos by the longest "line" and "wave" polyominoes they contain,
+  // which creates a nices spread.
+  // Secondarily sort by the *number* of those families, and then by dimensions.
+  return sortBy(
+    minos,
+    (mino) => -mino.longestLine().max,
+    (mino) => mino.longestWave().max,
+    (mino) => -mino.longestLine().maxCount,
+    (mino) => mino.longestWave().maxCount,
+    (mino) => -Math.max(...mino.dims),
+    (mino) => -Math.min(...mino.dims),
+  )
 }
 
 export function generateGraph(n: number) {
@@ -105,7 +101,7 @@ export function generateGraph(n: number) {
     }
 
     nodes.push(currentGen)
-    currentGen = sortByParents(nextGen, indices)
+    currentGen = sortGeneration(nextGen)
     currentGen.forEach((mino, i) => {
       indices[mino.key] = i
     })
@@ -119,16 +115,22 @@ export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
-// console.log("Graph generated in: ", performance.now() - start)
+// // console.log("Graph generated in: ", performance.now() - start)
 
-const allMinos = nodes.flat()
-
-export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.freeParents().size),
-)
-export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.freeChildren().size),
-)
+// These are hard coded for NUM_GENERATIONS = 8.
+// These functions are more expensive than graph generation so we'll hard code them.
+// They're used to determine compass relative sizes, and ideally we'd just have some way
+// to determine them that isn't expensive to calculate.
+export const MAX_NUM_CHILDREN = 17
+export const MAX_NUM_PARENTS = 7
+// const allMinos = nodes.flat()
+// export const MAX_NUM_PARENTS = Math.max(
+//   ...allMinos.map((mino) => mino.freeParents().size),
+// )
+// export const MAX_NUM_CHILDREN = Math.max(
+//   ...allMinos.map((mino) => mino.freeChildren().size),
+// )
+// console.log({ MAX_NUM_CHILDREN, MAX_NUM_PARENTS })
 
 export { nodes, links }
 
