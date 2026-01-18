@@ -1,4 +1,4 @@
-import { once, range } from "lodash-es"
+import { isInteger, once, range } from "lodash-es"
 import Vector from "$lib/vector"
 import PointSet from "$lib/PointSet"
 import {
@@ -74,6 +74,10 @@ export default class MinoClasses {
       case "top":
       case "bottom": {
         const yCoord = side === "top" ? 0 : h - 1
+        if (!isInteger(w) || w < 0) {
+          console.log("invalid", w)
+          console.log(this.mino.display())
+        }
         return range(w)
           .map((i) => new Vector(i, yCoord))
           .find((p) => this.mino.contains(p))!

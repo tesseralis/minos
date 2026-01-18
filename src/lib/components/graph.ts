@@ -168,6 +168,10 @@ export function getIndex(mino: Polyomino) {
  * Return the fill and stroke of the given mino to pass in as SVG props:
  */
 export function getMinoColor(mino: Polyomino) {
+  const cls = mino.classes.get()
+  if (!cls) {
+    console.log(mino.display())
+  }
   const minoClass = mino.classes.get().name()
   const color = colorMap[minoClass]
   return {

@@ -20,16 +20,14 @@ describe("graph", () => {
     // }
     const { nodes } = generateGraph(8)
     // const visited = new Set()
-    for (let mino of nodes[6 - 1]) {
-      // if (visited.has(mino.transform.free().toString())) {
-      //   console.log("repeat:\n" + mino.display())
-      // }
-      // visited.add(mino.transform.free().toString())
-      // // console.log(mino.display(), "\n")
-      // if (!mino.equals(mino.transform.free())) {
-      //   console.log(mino.display() + "\n" + mino.transform.free().display())
-      // }
-    }
+    // if (visited.has(mino.transform.free().toString())) {
+    //   console.log("repeat:\n" + mino.display())
+    // }
+    // visited.add(mino.transform.free().toString())
+    // // console.log(mino.display(), "\n")
+    // if (!mino.equals(mino.transform.free())) {
+    //   console.log(mino.display() + "\n" + mino.transform.free().display())
+    // }
     expect(nodes.map((gen) => gen.length)).toEqual([
       1, 1, 2, 5, 12, 35, 108, 369,
     ])

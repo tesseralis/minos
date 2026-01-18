@@ -46,17 +46,17 @@ export default class Polyomino {
   height: number
   dims: Dims
 
-  // classes: MinoClasses
+  classes: MinoClasses
   transform: MinoTransform
 
   // This breaks tests if it's not lazily generated
-  // private _tilings?: MinoTilings
-  // get tilings() {
-  //   if (!this._tilings) {
-  //     this._tilings = new MinoTilings(this)
-  //   }
-  //   return this._tilings
-  // }
+  private _tilings?: MinoTilings
+  get tilings() {
+    if (!this._tilings) {
+      this._tilings = new MinoTilings(this)
+    }
+    return this._tilings
+  }
 
   // Constructors
   // ============
@@ -65,12 +65,11 @@ export default class Polyomino {
   private constructor(data: MinoData) {
     this.data = data
     this.key = getKey(data)
-    // this.key = ""
     this.order = getOrder(data)
     this.width = getHeight(data)
     this.height = data.width
     this.dims = [this.width, this.height]
-    // this.classes = new MinoClasses(this)
+    this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
@@ -80,7 +79,6 @@ export default class Polyomino {
       cache[key] = new Polyomino(data)
     }
     return cache[key]
-    // return new Polyomino(data)
   }
 
   /**
@@ -214,7 +212,9 @@ export default class Polyomino {
   children = once(() => this.enumerateChildren().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeChildren = () => new Set(this.children().map((c) => c.transform.free()))
+  freeChildren = once(
+    () => new Set(this.children().map((c) => c.transform.free())),
+  )
 
   // Formatting
   // ==========

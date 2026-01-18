@@ -10,6 +10,7 @@ import {
   getAnchor,
   transforms,
 } from "./internal"
+import type { MinoKey } from "./dataArray"
 
 export type Basis = [u: Coord, v: Coord]
 
@@ -48,11 +49,11 @@ export default class MinoTilings {
     if (this.mino.classes.hasHole()) {
       return undefined
     }
-    if (transPairMap[this.mino.data]) {
-      return getTransTiling(transPairMap[this.mino.data])
+    if (transPairMap[this.mino.key]) {
+      return getTransTiling(transPairMap[this.mino.key])
     }
-    if (conwayPairMap[this.mino.data]) {
-      return getConwayTiling(conwayPairMap[this.mino.data])
+    if (conwayPairMap[this.mino.key]) {
+      return getConwayTiling(conwayPairMap[this.mino.key])
     }
     const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
 
@@ -291,8 +292,8 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
 
 type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
-function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
-  const result: Record<number, MinoPattern> = {}
+function getPairsMapping(pairs: TilingPair[]): Record<MinoKey, MinoPattern> {
+  const result: Record<MinoKey, MinoPattern> = {}
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
     const pattern = MinoPattern.of([
@@ -301,7 +302,7 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
-      result[mino.transform.apply(transform).data] = transformedPattern.shift(
+      result[mino.transform.apply(transform).key] = transformedPattern.shift(
         transformedPattern.data[0].coord,
       )
     }
@@ -341,5 +342,5 @@ const conwayPairs: TilingPair[] = [
   ["10001_11111_10000", "rotateLeft", [-1, 4]],
 ]
 
-// const transPairMap = getPairsMapping(transPairs)
-// const conwayPairMap = getPairsMapping(conwayPairs)
+const transPairMap = getPairsMapping(transPairs)
+const conwayPairMap = getPairsMapping(conwayPairs)

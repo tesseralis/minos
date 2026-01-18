@@ -1,6 +1,6 @@
 import { ceildiv, floordiv } from "$lib/math"
 import type { VectorLike } from "$lib/vector"
-import { sum } from "lodash-es"
+import { isInteger, sum } from "lodash-es"
 import Vector from "$lib/vector"
 
 export type MinoData = Uint32Array & { width: number }
@@ -15,6 +15,9 @@ export const MAX_WIDTH = 32
 
 export function create(data: Uint32Array, width: number) {
   ;(data as any).width = width
+  if (!isInteger(width)) {
+    console.log(data)
+  }
   return data as MinoData
 }
 export function copy(mino: MinoData) {
