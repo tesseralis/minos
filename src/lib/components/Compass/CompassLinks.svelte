@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Polyomino, RelativeLink } from "$lib/mino"
+  import type { RelativeLink } from "$lib/mino"
   import Vector from "$lib/vector"
   import { scaleLinear } from "d3-scale"
   import {
