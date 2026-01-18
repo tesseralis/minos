@@ -1,7 +1,7 @@
-import { remove } from "$lib/components/MinoList/MinoFilter/common"
 import { ceildiv, floordiv } from "$lib/math"
 import PointSet from "$lib/PointSet"
 import Vector, { type VectorLike } from "$lib/vector"
+import { isInteger } from "lodash-es"
 import {
   type Coord,
   copy,
@@ -144,14 +144,14 @@ function unshiftColumn(mino: MinoData) {
 function shiftRow(mino: MinoData): MinoData {
   const width = mino.width
   let clone
-  if (getHeight(mino) === width * mino.length) {
+  const rpw = rowsPerWord(width)
+  if (getHeight(mino) === rpw * mino.length) {
     clone = new Uint32Array(mino.length + 1)
     clone.set(mino)
   } else {
     clone = mino.slice()
   }
   let remainder = 0
-  const rpw = rowsPerWord(width)
   const trueWordLength = rpw * width
   for (let i = 0; i < mino.length; i++) {
     const oldRemainder = remainder

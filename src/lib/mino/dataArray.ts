@@ -15,9 +15,6 @@ export const MAX_WIDTH = 32
 
 export function create(data: Uint32Array, width: number) {
   ;(data as any).width = width
-  if (!isInteger(width)) {
-    console.log(data)
-  }
   return data as MinoData
 }
 export function copy(mino: MinoData) {
@@ -95,7 +92,6 @@ export function* getCoords(mino: MinoData): Generator<Coord> {
   }
 }
 export function fromCoords(coords: VectorLike[]) {
-  // return create(new Uint32Array([1]), 1)
   // TODO dedupe
   const w = Math.max(...coords.map(([, y]) => y)) + 1
   const h = Math.max(...coords.map(([x]) => x)) + 1

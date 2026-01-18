@@ -2,7 +2,7 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import { once } from "lodash-es"
+import { isInteger, once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"
@@ -86,6 +86,7 @@ export default class MinoTransform {
     if (!this._free) {
       const transforms = this.all()
       const free = Polyomino.sort(transforms)[0]
+      // return free
       // populate the free polyomino for all the transforms
       // so we don't have to re-calculate
       for (const trans of transforms) {

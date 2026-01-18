@@ -1,4 +1,4 @@
-import { partition, sortBy, once } from "lodash-es"
+import { partition, sortBy, once, isInteger } from "lodash-es"
 import { type VectorLike } from "$lib/vector"
 import {
   type MinoData,

@@ -88,8 +88,6 @@ export function generateGraph(n: number) {
   const indices: Record<MinoKey, number> = {
     [MONOMINO.key]: 0,
   }
-  // console.log("creating graph")
-  // return { nodes, links, indices }
   const visited = new Set<MinoKey>([MONOMINO.key])
   let currentGen = [MONOMINO]
 
@@ -98,11 +96,6 @@ export function generateGraph(n: number) {
     const nextGen = []
     for (const mino of currentGen) {
       for (const child of mino.freeChildren()) {
-        // if (!child.equals(child.transform.free())) {
-        //   console.log("parent: ")
-        //   console.log(mino.display() + "\n")
-        //   console.log(child.display() + "\n")
-        // }
         if (!visited.has(child.key)) {
           nextGen.push(child)
           visited.add(child.key)
@@ -125,15 +118,18 @@ export function generateGraph(n: number) {
 
 export const NUM_GENERATIONS = 8
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
+// const nodes = {}
+// const links = {}
+// const indices = {}
 
-// const allMinos = nodes.flat()
+const allMinos = nodes.flat()
 
-// export const MAX_NUM_PARENTS = Math.max(
-//   ...allMinos.map((mino) => mino.freeParents().size),
-// )
-// export const MAX_NUM_CHILDREN = Math.max(
-//   ...allMinos.map((mino) => mino.freeChildren().size),
-// )
+export const MAX_NUM_PARENTS = Math.max(
+  ...allMinos.map((mino) => mino.freeParents().size),
+)
+export const MAX_NUM_CHILDREN = Math.max(
+  ...allMinos.map((mino) => mino.freeChildren().size),
+)
 
 export { nodes, links }
 
@@ -145,9 +141,9 @@ function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
 /**
  * Get the parents of the mino sorted by their indices in the graph
  */
-// export function getSortedParents(mino: Polyomino): RelativeLink[] {
-//   return getUniqSorted(mino.enumerateParents())
-// }
+export function getSortedParents(mino: Polyomino): RelativeLink[] {
+  return getUniqSorted(mino.enumerateParents())
+}
 
 /**
  * Get the children of the mino sorted by their indices in the graph
@@ -168,10 +164,6 @@ export function getIndex(mino: Polyomino) {
  * Return the fill and stroke of the given mino to pass in as SVG props:
  */
 export function getMinoColor(mino: Polyomino) {
-  const cls = mino.classes.get()
-  if (!cls) {
-    console.log(mino.display())
-  }
   const minoClass = mino.classes.get().name()
   const color = colorMap[minoClass]
   return {
