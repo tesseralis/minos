@@ -7,10 +7,8 @@ import {
   type Symmetry,
   MONOMINO,
 } from "$lib/mino"
-import type { MinoKey } from "$lib/mino/dataArray"
 
 type Color = tinycolor.Instance
-type MinoData = number
 
 // TODO now that we don't parent/child colors any more, we can move color-related stuff
 // to a different location
@@ -81,20 +79,17 @@ export function generateGraph(n: number) {
   const links: [Polyomino, Polyomino][] = []
 
   // mapping from each mino to its index in the generation
-  const indices: Record<MinoKey, number> = {
-    [MONOMINO.key]: 0,
-  }
-  const visited = new Set<MinoKey>([MONOMINO.key])
+  const indices = new Map<Polyomino, number>()
+  const visited = new Set<Polyomino>([MONOMINO])
   let currentGen = [MONOMINO]
 
-  // TODO don't need to iterate over children of last generation
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
       for (const child of mino.freeChildren()) {
-        if (!visited.has(child.key)) {
+        if (!visited.has(child)) {
           nextGen.push(child)
-          visited.add(child.key)
+          visited.add(child)
         }
         links.push([mino, child])
       }
@@ -103,7 +98,7 @@ export function generateGraph(n: number) {
     nodes.push(currentGen)
     currentGen = sortGeneration(nextGen)
     currentGen.forEach((mino, i) => {
-      indices[mino.key] = i
+      indices.set(mino, i)
     })
   }
   nodes.push(currentGen)
@@ -115,7 +110,7 @@ export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
-// // console.log("Graph generated in: ", performance.now() - start)
+// console.log("Graph generated in: ", performance.now() - start)
 
 // These are hard coded for NUM_GENERATIONS = 8.
 // These functions are more expensive than graph generation so we'll hard code them.
@@ -158,7 +153,7 @@ export function getSortedChildren(mino: Polyomino): RelativeLink[] {
  * Get the index of the mino within its generation
  */
 export function getIndex(mino: Polyomino) {
-  return indices[mino.transform.free().key]
+  return indices.get(mino.transform.free()) ?? 0
 }
 
 /**
