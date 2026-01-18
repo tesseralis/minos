@@ -86,7 +86,6 @@ export function generateGraph(n: number) {
   const visited = new Set<MinoData>([MONOMINO.data])
   let currentGen = [MONOMINO]
 
-  // TODO don't need to iterate over children of last generation
   while (nodes.length < n - 1) {
     const nextGen = []
     for (const mino of currentGen) {
