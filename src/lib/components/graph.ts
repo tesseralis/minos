@@ -60,23 +60,19 @@ export function getClassColor(cls: string) {
   return classColorMap[cls]
 }
 
-function sum(nums: number[]) {
-  return nums.reduce((s, n) => s + n, 0)
-}
-
-function avg(nums: number[]) {
-  return sum(nums) / nums.length
-}
-
-function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
-  return avg([...mino.freeParents()].map((p) => indices[p.data]))
-}
-
-/**
- * Sort the list of minos by the average of their parents' indices
- */
-function sortByParents(minos: Polyomino[], indices: Record<MinoData, number>) {
-  return sortBy(minos, (mino) => getParentKey(mino, indices))
+function sortGeneration(minos: Polyomino[]) {
+  // Sort minos by the longest "line" and "wave" polyominoes they contain,
+  // which creates a nices spread.
+  // Secondarily sort by the *number* of those families, and then by dimensions.
+  return sortBy(
+    minos,
+    (mino) => -mino.longestLine().max,
+    (mino) => mino.longestWave().max,
+    (mino) => -mino.longestLine().maxCount,
+    (mino) => mino.longestWave().maxCount,
+    (mino) => -Math.max(...mino.dims),
+    (mino) => -Math.min(...mino.dims),
+  )
 }
 
 export function generateGraph(n: number) {
@@ -104,7 +100,7 @@ export function generateGraph(n: number) {
     }
 
     nodes.push(currentGen)
-    currentGen = sortByParents(nextGen, indices)
+    currentGen = sortGeneration(nextGen)
     currentGen.forEach((mino, i) => {
       indices[mino.data] = i
     })

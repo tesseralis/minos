@@ -1,5 +1,5 @@
 import { partition, sortBy, once } from "lodash-es"
-import { type VectorLike } from "$lib/vector"
+import Vector, { type VectorLike } from "$lib/vector"
 import {
   type MinoData,
   type Dims,
@@ -209,6 +209,83 @@ export default class Polyomino {
   freeChildren = once(
     () => new Set(this.children().map((c) => c.transform.free())),
   )
+
+  /**
+   * Get the longest straight line mino contained in this one,
+   * and the number of times it occurs.
+   */
+  longestLine = once(() => {
+    let max = 0
+    let maxCount = 0
+    for (const point of this.coords()) {
+      for (const dir of [Vector.RIGHT, Vector.DOWN]) {
+        if (!this.contains(point.sub(dir))) {
+          const newMax = this.getLineLength(point, dir)
+          if (newMax > max) {
+            max = newMax
+            maxCount = 1
+          } else {
+            maxCount++
+          }
+        }
+      }
+    }
+    return { max, maxCount }
+  })
+
+  /**
+   * Get the longest wave/zigzag mino contained in this one,
+   * and the number of times it occurs.
+   */
+  longestWave = once(() => {
+    let max = 0
+    let maxCount = 0
+    for (const point of this.coords()) {
+      for (const [dir1, dir2] of [
+        [Vector.DOWN, Vector.RIGHT],
+        [Vector.DOWN, Vector.LEFT],
+        [Vector.RIGHT, Vector.DOWN],
+        [Vector.LEFT, Vector.DOWN],
+      ]) {
+        if (!this.contains(point.sub(dir2))) {
+          const newMax = this.getWaveLength(point, dir1, dir2)
+          if (newMax > max) {
+            max = newMax
+            maxCount = 1
+          } else {
+            maxCount++
+          }
+        }
+      }
+    }
+    return { max, maxCount }
+  })
+
+  private getLineLength(point: Vector, dir: Vector) {
+    let count = 0
+    while (
+      point.x < this.width &&
+      point.y < this.height &&
+      this.contains(point)
+    ) {
+      point = point.add(dir)
+      count++
+    }
+    return count
+  }
+
+  private getWaveLength(point: Vector, dir1: Vector, dir2: Vector) {
+    let count = 0
+    while (
+      point.x < this.width &&
+      point.y < this.height &&
+      this.contains(point)
+    ) {
+      point = point.add(count % 2 === 0 ? dir1 : dir2)
+      count++
+    }
+    return count
+  }
 
   // Formatting
   // ==========
