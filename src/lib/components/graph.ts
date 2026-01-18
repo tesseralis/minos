@@ -69,16 +69,16 @@ function avg(nums: number[]) {
   return sum(nums) / nums.length
 }
 
-// function getParentKey(mino: Polyomino, indices: Record<MinoKey, number>) {
-//   return avg([...mino.freeParents()].map((p) => indices[p.key]))
-// }
+function getParentKey(mino: Polyomino, indices: Record<MinoKey, number>) {
+  console.log(mino.display())
+  return avg([...mino.freeParents()].map((p) => indices[p.key]))
+}
 
 /**
  * Sort the list of minos by the average of their parents' indices
  */
 function sortByParents(minos: Polyomino[], indices: Record<MinoData, number>) {
-  return minos
-  // return sortBy(minos, (mino) => getParentKey(mino, indices))
+  return sortBy(minos, (mino) => getParentKey(mino, indices))
 }
 
 export function generateGraph(n: number) {
@@ -113,8 +113,8 @@ export function generateGraph(n: number) {
     }
 
     nodes.push(currentGen)
-    // currentGen = sortByParents(nextGen, indices)
-    currentGen = nextGen
+    currentGen = sortByParents(nextGen, indices)
+    // currentGen = nextGen
     currentGen.forEach((mino, i) => {
       indices[mino.key] = i
     })

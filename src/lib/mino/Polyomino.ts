@@ -18,8 +18,8 @@ import {
   displayMino,
 } from "./dataArray"
 import {
-  // removeSquare,
-  // isValid,
+  removeSquare,
+  isValid,
   type RelativeLink,
   getNeighbors,
   addSquare,
@@ -168,28 +168,26 @@ export default class Polyomino {
   // =========
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
-  // possibleParents = once(() =>
-  //   this.coords().map((coord) => {
-  //     const parent = removeSquare(this.data, this.width, coord)
-  //     return {
-  //       mino: isValid(parent, this.width)
-  //         ? Polyomino.fromData(parent)
-  //         : undefined,
-  //       coord,
-  //     }
-  //   }),
-  // )
+  possibleParents = once(() =>
+    this.coords().map((coord) => {
+      const parent = removeSquare(this.data, coord)
+      return {
+        mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
+        coord,
+      }
+    }),
+  )
 
-  // enumerateParents = once(
-  //   () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
-  // )
+  enumerateParents = once(
+    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
+  )
 
-  // parents = once(() => this.enumerateParents().map((link) => link.mino))
+  parents = once(() => this.enumerateParents().map((link) => link.mino))
 
-  // /** Return the set of all free parents of this mino */
-  // freeParents = once(
-  //   () => new Set(this.parents().map((p) => p.transform.free())),
-  // )
+  /** Return the set of all free parents of this mino */
+  freeParents = once(
+    () => new Set(this.parents().map((p) => p.transform.free())),
+  )
 
   private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()

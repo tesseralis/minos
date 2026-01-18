@@ -69,6 +69,14 @@ export function getCoordMask(i: number, j: number, width: number) {
   return 1 << (i * width + j)
 }
 
+export function getColumnMask(word: number, j: number, width: number) {
+  let mask = 0
+  for (let i = 0; i < rowsPerWord(width); i++) {
+    mask |= getCoordMask(i, j, width)
+  }
+  return word & mask
+}
+
 export function* getCoords(mino: MinoData): Generator<Coord> {
   const width = mino.width
   const rpw = rowsPerWord(width)

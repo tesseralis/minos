@@ -1,4 +1,6 @@
+import { remove } from "$lib/components/MinoList/MinoFilter/common"
 import { ceildiv, floordiv } from "$lib/math"
+import PointSet from "$lib/PointSet"
 import Vector, { type VectorLike } from "$lib/vector"
 import {
   type Coord,
@@ -10,7 +12,11 @@ import {
   toString,
   type MinoData,
   getCoordMask,
+  getColumnMask,
   create,
+  getCoords,
+  contains,
+  getOrder,
 } from "./dataArray"
 import type Polyomino from "./Polyomino"
 
@@ -21,13 +27,44 @@ export interface PossibleRelativeLink {
 
 export type RelativeLink = Required<PossibleRelativeLink>
 
-// FIXME do this later; not necessary for graph
-// export function removeSquare(mino: MinoData, width: number, coord: VectorLike) {
-//   return mino
-// }
-// export function isValid(mino: MinoData, width: number) {
-//   return false
-// }
+export function removeSquare(mino: MinoData, [i, j]: VectorLike) {
+  const removed = doRemove(mino, i, j)
+  if (rowStartEmpty(removed)) {
+    console.log("row start empty")
+    return unshiftRow(removed)
+  } else if (columnStartEmpty(removed)) {
+    console.log("col start empty")
+    return unshiftColumn(removed)
+  } else if (columnEndEmpty(removed)) {
+    console.log("col end empty")
+    return decWidth(removed)
+  }
+  console.log("no adjustments needed")
+  return removed
+}
+
+export function isValid(mino: MinoData) {
+  const p0 = [...getCoords(mino)][0]
+  if (!p0) return false
+  const queue = [p0]
+
+  // Make a copy with the mino
+  // let visited = create(new Uint32Array(mino.length), mino.width)
+  let visited = new PointSet()
+
+  while (queue.length) {
+    const p = queue.pop()!
+    if (visited.has(p)) continue
+    visited.add(p)
+
+    for (const nbr of getNeighbors(p)) {
+      if (!contains(mino, nbr)) continue
+      queue.push(nbr)
+    }
+  }
+  return visited.size === getOrder(mino)
+}
+
 export function* getNeighbors(p: Coord): Generator<Coord> {
   // TODO it turns out this order greatly impacts the order of the minos
   // either standardize it or sort the minos independently
@@ -42,11 +79,11 @@ export function* getNeighbors(p: Coord): Generator<Coord> {
  */
 export function addSquare(mino: MinoData, [i, j]: VectorLike) {
   if (i < 0) {
-    return doAdd(shiftRowStart(mino), 0, j)
+    return doAdd(shiftRow(mino), 0, j)
   }
   // FIXME larger mino if go down
   if (j < 0) {
-    return doAdd(shiftColStart(mino), i, 0)
+    return doAdd(shiftColumn(mino), i, 0)
   }
   if (j === mino.width) {
     return doAdd(incWidth(mino), i, j)
@@ -59,6 +96,13 @@ function doAdd(mino: MinoData, i: number, j: number) {
   const rpw = rowsPerWord(mino.width)
   mino[floordiv(i, rpw)] |= getCoordMask(i % rpw, j, mino.width)
   return mino
+}
+
+function doRemove(mino: MinoData, i: number, j: number) {
+  const result = mino.slice()
+  const rpw = rowsPerWord(mino.width)
+  result[floordiv(i, rpw)] &= ~getCoordMask(i % rpw, j, mino.width)
+  return create(result, mino.width)
 }
 
 function adjustWidth(mino: MinoData, delta: number): MinoData {
@@ -75,15 +119,18 @@ function adjustWidth(mino: MinoData, delta: number): MinoData {
     clone[floordiv(i, rpw)] |= row << ((i % rpw) * newWidth)
     i++
   }
-  ;(clone as any).width = newWidth
-  return clone as MinoData
+  return create(clone, newWidth)
 }
 
 function incWidth(mino: MinoData) {
   return adjustWidth(mino, +1)
 }
 
-function shiftColStart(mino: MinoData) {
+function decWidth(mino: MinoData) {
+  return adjustWidth(mino, -1)
+}
+
+function shiftColumn(mino: MinoData) {
   const expanded = incWidth(mino)
   for (let i = 0; i < expanded.length; i++) {
     expanded[i] <<= 1
@@ -91,7 +138,14 @@ function shiftColStart(mino: MinoData) {
   return expanded
 }
 
-function shiftRowStart(mino: MinoData): MinoData {
+function unshiftColumn(mino: MinoData) {
+  for (let i = 0; i < mino.length; i++) {
+    mino[i] >> 1
+  }
+  return decWidth(mino)
+}
+
+function shiftRow(mino: MinoData): MinoData {
   const width = mino.width
   let clone
   if (getHeight(mino) === width * mino.length) {
@@ -113,4 +167,30 @@ function shiftRowStart(mino: MinoData): MinoData {
   }
 
   return create(clone, mino.width)
+}
+
+function unshiftRow(mino: MinoData): MinoData {
+  const width = mino.width
+  let result =
+    (mino.at(-1) ?? 0) >> width
+      ? mino
+      : create(new Uint32Array(mino.length - 1), width)
+  const remainderShift = (rowsPerWord(width) - 1) * width
+  for (let i = 0; i < mino.length; i++) {
+    const remainder = (mino[i + 1] || 0) % (1 << width)
+    result[i] = (mino[i] >> width) | (remainder << remainderShift)
+  }
+  return result
+}
+
+function rowStartEmpty(mino: MinoData): boolean {
+  return !(mino[0] % (1 << mino.width))
+}
+
+function columnStartEmpty(mino: MinoData): boolean {
+  return mino.every((word) => !getColumnMask(word, 0, mino.width))
+}
+
+function columnEndEmpty(mino: MinoData): boolean {
+  return mino.every((word) => !getColumnMask(word, mino.width - 1, mino.width))
 }

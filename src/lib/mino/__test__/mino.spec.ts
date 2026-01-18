@@ -83,8 +83,15 @@ describe("mino", () => {
       const children = Polyomino.of("11").freeChildren()
       expect([...children.values().map((c) => c.toString())]).toEqual([
         "111",
-        "10_11",
+        "01_11",
       ])
+    })
+  })
+
+  describe("freeParents", () => {
+    it("works on domino", () => {
+      const parents = Polyomino.of("11").freeParents()
+      expect([...parents.values().map((p) => p.toString())]).toEqual(["1"])
     })
   })
 })

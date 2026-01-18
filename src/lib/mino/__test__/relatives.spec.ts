@@ -1,11 +1,11 @@
 import { describe, it, expect } from "vitest"
 import { fromString, toString } from "../dataArray"
 // import { isValid, addSquare, removeSquare } from "../internal"
-import { addSquare } from "../relativesArray"
+import { addSquare, isValid, removeSquare } from "../relativesArray"
 
 describe("modify", () => {
   describe("addSquare", () => {
-    it.only("works on monomino", () => {
+    it("works on monomino", () => {
       expect(toString(addSquare(fromString("1"), [-1, 0]))).toEqual("1_1")
     })
     // L tetromino
@@ -27,55 +27,58 @@ describe("modify", () => {
     })
   })
 
-  // describe("removeSquare", () => {
-  //   // X pentomino
-  //   const mino = fromString("010_111_010")
-  //   it("works correctly when adjustments not needed", () => {
-  //     expect(removeSquare(mino, [2, 1])).toEqual(fromString("111_010"))
-  //   })
+  describe("removeSquare", () => {
+    it.only("works for the domino", () => {
+      expect(toString(removeSquare(fromString("11"), [0, 0]))).toEqual("1")
+    })
+    // X pentomino
+    const mino = fromString("010_111_010")
+    it("works correctly when adjustments not needed", () => {
+      expect(toString(removeSquare(mino, [2, 1]))).toEqual("111_010")
+    })
 
-  //   it("works correctly when a downshift is needed", () => {
-  //     expect(removeSquare(mino, [0, 1])).toEqual(fromString("010_111"))
-  //   })
+    it("works correctly when a downshift is needed", () => {
+      expect(removeSquare(mino, [0, 1])).toEqual(fromString("010_111"))
+    })
 
-  //   it("works correctly when left shift is needed", () => {
-  //     expect(removeSquare(mino, [1, 0])).toEqual(fromString("01_11_01"))
-  //   })
+    it("works correctly when left shift is needed", () => {
+      expect(removeSquare(mino, [1, 0])).toEqual(fromString("01_11_01"))
+    })
 
-  //   it("works correctly when decreasing width is needed", () => {
-  //     expect(removeSquare(mino, [1, 2])).toEqual(fromString("10_11_10"))
-  //   })
-  // })
+    it("works correctly when decreasing width is needed", () => {
+      expect(removeSquare(mino, [1, 2])).toEqual(fromString("10_11_10"))
+    })
+  })
 
-  // describe("isValid", () => {
-  //   it("returns true for valid minos", () => {
-  //     const testCases = [
-  //       fromString("11_01"),
-  //       fromString("010_111_001"),
-  //       fromString("111_101_111"),
-  //     ]
-  //     for (const testCase of testCases) {
-  //       expect(isValid(testCase)).toBeTruthy()
-  //     }
-  //   })
+  describe("isValid", () => {
+    it("returns true for valid minos", () => {
+      const testCases = [
+        fromString("11_01"),
+        fromString("010_111_001"),
+        fromString("111_101_111"),
+      ]
+      for (const testCase of testCases) {
+        expect(isValid(testCase)).toBeTruthy()
+      }
+    })
 
-  //   it("returns true for the monomino", () => {
-  //     expect(isValid(fromString("1"))).toBeTruthy()
-  //   })
+    it("returns true for the monomino", () => {
+      expect(isValid(fromString("1"))).toBeTruthy()
+    })
 
-  //   it("returns false for the zero-mino", () => {
-  //     expect(isValid(0)).toBeFalsy()
-  //   })
+    it("returns false for the zero-mino", () => {
+      expect(isValid(fromString("0"))).toBeFalsy()
+    })
 
-  //   it("returns false for invalid minos", () => {
-  //     const testCases = [
-  //       fromString("101"),
-  //       fromString("10_01"),
-  //       fromString("011_101_110"),
-  //     ]
-  //     for (const testCase of testCases) {
-  //       expect(isValid(testCase)).toBeFalsy()
-  //     }
-  //   })
-  // })
+    it("returns false for invalid minos", () => {
+      const testCases = [
+        fromString("101"),
+        fromString("10_01"),
+        fromString("011_101_110"),
+      ]
+      for (const testCase of testCases) {
+        expect(isValid(testCase)).toBeFalsy()
+      }
+    })
+  })
 })
