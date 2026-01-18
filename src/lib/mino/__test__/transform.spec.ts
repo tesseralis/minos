@@ -7,16 +7,16 @@ describe("transforms", () => {
     // 100
     const mino = Polyomino.fromString("111_100")
     const transforms = mino.transform.all()
-    expect(transforms).toEqual(
+    expect(transforms.map((t) => t.toString())).toEqual(
       expect.arrayContaining([
-        mino,
-        Polyomino.fromString("10_10_11"),
-        Polyomino.fromString("001_111"),
-        Polyomino.fromString("11_01_01"),
-        Polyomino.fromString("100_111"),
-        Polyomino.fromString("10_10_11"),
-        Polyomino.fromString("01_01_11"),
-        Polyomino.fromString("11_10_10"),
+        mino.toString(),
+        "10_10_11",
+        "001_111",
+        "11_01_01",
+        "100_111",
+        "10_10_11",
+        "01_01_11",
+        "11_10_10",
       ]),
     )
   })

@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest"
 import { Polyomino } from ".."
+import { create, getKey } from "../dataArray"
+import Vector from "$lib/vector"
 
 describe("mino", () => {
   describe("strings", () => {
@@ -36,7 +38,53 @@ describe("mino", () => {
         [2, 1],
       ])
       const expected = Polyomino.fromString("10_10_11")
-      expect(actual).toEqual(expected)
+      expect(actual.toString()).toEqual(expected.toString())
+    })
+  })
+
+  describe("coords", () => {
+    it("correctly lists coordinates", () => {
+      const mino = Polyomino.of("1")
+      const coords = mino.coords()
+      expect(coords).toEqual([new Vector(0, 0)])
+    })
+  })
+
+  describe("neighbors", () => {
+    it("correctly identifies neighbors", () => {
+      const mino = Polyomino.of("1")
+      expect(mino.neighbors().map((v) => [...v])).toEqual([
+        [0, 1],
+        [0, -1],
+        [1, 0],
+        [-1, 0],
+      ])
+    })
+  })
+
+  describe("children", () => {
+    it("works on monomino", () => {
+      const children = Polyomino.of("1").children()
+      expect([...children.values().map((c) => c.toString())]).toEqual([
+        "11",
+        "11",
+        "1_1",
+        "1_1",
+      ])
+    })
+  })
+
+  describe("freeChildren", () => {
+    it("works on monomino", () => {
+      const children = Polyomino.of("1").freeChildren()
+      expect([...children.values().map((c) => c.toString())]).toEqual(["11"])
+    })
+    it("works on domino", () => {
+      const children = Polyomino.of("11").freeChildren()
+      expect([...children.values().map((c) => c.toString())]).toEqual([
+        "111",
+        "10_11",
+      ])
     })
   })
 })

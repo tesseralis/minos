@@ -7,6 +7,7 @@ import {
   type Symmetry,
   MONOMINO,
 } from "$lib/mino"
+import type { MinoKey } from "$lib/mino/dataArray"
 
 type Color = tinycolor.Instance
 type MinoData = number
@@ -68,15 +69,16 @@ function avg(nums: number[]) {
   return sum(nums) / nums.length
 }
 
-function getParentKey(mino: Polyomino, indices: Record<MinoData, number>) {
-  return avg([...mino.freeParents()].map((p) => indices[p.data]))
-}
+// function getParentKey(mino: Polyomino, indices: Record<MinoKey, number>) {
+//   return avg([...mino.freeParents()].map((p) => indices[p.key]))
+// }
 
 /**
  * Sort the list of minos by the average of their parents' indices
  */
 function sortByParents(minos: Polyomino[], indices: Record<MinoData, number>) {
-  return sortBy(minos, (mino) => getParentKey(mino, indices))
+  return minos
+  // return sortBy(minos, (mino) => getParentKey(mino, indices))
 }
 
 export function generateGraph(n: number) {
@@ -84,10 +86,12 @@ export function generateGraph(n: number) {
   const links: [Polyomino, Polyomino][] = []
 
   // mapping from each mino to its index in the generation
-  const indices: Record<MinoData, number> = {
-    [MONOMINO.data]: 0,
+  const indices: Record<MinoKey, number> = {
+    [MONOMINO.key]: 0,
   }
-  const visited = new Set<MinoData>([MONOMINO.data])
+  // console.log("creating graph")
+  // return { nodes, links, indices }
+  const visited = new Set<MinoKey>([MONOMINO.key])
   let currentGen = [MONOMINO]
 
   // TODO don't need to iterate over children of last generation
@@ -95,18 +99,24 @@ export function generateGraph(n: number) {
     const nextGen = []
     for (const mino of currentGen) {
       for (const child of mino.freeChildren()) {
-        if (!visited.has(child.data)) {
+        // if (!child.equals(child.transform.free())) {
+        //   console.log("parent: ")
+        //   console.log(mino.display() + "\n")
+        //   console.log(child.display() + "\n")
+        // }
+        if (!visited.has(child.key)) {
           nextGen.push(child)
-          visited.add(child.data)
+          visited.add(child.key)
         }
         links.push([mino, child])
       }
     }
 
     nodes.push(currentGen)
-    currentGen = sortByParents(nextGen, indices)
+    // currentGen = sortByParents(nextGen, indices)
+    currentGen = nextGen
     currentGen.forEach((mino, i) => {
-      indices[mino.data] = i
+      indices[mino.key] = i
     })
   }
   nodes.push(currentGen)
@@ -117,14 +127,14 @@ export function generateGraph(n: number) {
 export const NUM_GENERATIONS = 8
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
 
-const allMinos = nodes.flat()
+// const allMinos = nodes.flat()
 
-export const MAX_NUM_PARENTS = Math.max(
-  ...allMinos.map((mino) => mino.freeParents().size),
-)
-export const MAX_NUM_CHILDREN = Math.max(
-  ...allMinos.map((mino) => mino.freeChildren().size),
-)
+// export const MAX_NUM_PARENTS = Math.max(
+//   ...allMinos.map((mino) => mino.freeParents().size),
+// )
+// export const MAX_NUM_CHILDREN = Math.max(
+//   ...allMinos.map((mino) => mino.freeChildren().size),
+// )
 
 export { nodes, links }
 
@@ -136,9 +146,9 @@ function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
 /**
  * Get the parents of the mino sorted by their indices in the graph
  */
-export function getSortedParents(mino: Polyomino): RelativeLink[] {
-  return getUniqSorted(mino.enumerateParents())
-}
+// export function getSortedParents(mino: Polyomino): RelativeLink[] {
+//   return getUniqSorted(mino.enumerateParents())
+// }
 
 /**
  * Get the children of the mino sorted by their indices in the graph
@@ -152,7 +162,7 @@ export function getSortedChildren(mino: Polyomino): RelativeLink[] {
  * Get the index of the mino within its generation
  */
 export function getIndex(mino: Polyomino) {
-  return indices[mino.transform.free().data]
+  return indices[mino.transform.free().key]
 }
 
 /**

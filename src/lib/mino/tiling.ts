@@ -341,5 +341,5 @@ const conwayPairs: TilingPair[] = [
   ["10001_11111_10000", "rotateLeft", [-1, 4]],
 ]
 
-const transPairMap = getPairsMapping(transPairs)
-const conwayPairMap = getPairsMapping(conwayPairs)
+// const transPairMap = getPairsMapping(transPairs)
+// const conwayPairMap = getPairsMapping(conwayPairs)

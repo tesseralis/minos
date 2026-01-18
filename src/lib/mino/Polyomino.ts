@@ -4,36 +4,40 @@ import {
   type MinoData,
   type Dims,
   getOrder,
-  getWidth,
   getHeight,
   contains,
   getCoords,
   fromCoords,
-  displayMino,
+  // displayMino,
   fromString,
   toString,
   type Coord,
-} from "./data"
+  type MinoKey,
+  getKey,
+  create,
+  displayMino,
+} from "./dataArray"
 import {
-  removeSquare,
-  isValid,
+  // removeSquare,
+  // isValid,
   type RelativeLink,
   getNeighbors,
   addSquare,
-} from "./relatives"
+} from "./relativesArray"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
 import PointSet from "$lib/PointSet"
 
 // cache of all created minos
-const cache: Record<MinoData, Polyomino> = {}
+const cache: Record<MinoKey, Polyomino> = {}
 
 // type of stuff that can be cast into a Polyomino
 export type MinoLike = string | VectorLike[] | Polyomino
 
 export default class Polyomino {
   data: MinoData
+  key: string
   /** The number of squares in this polyomino */
   order: number
 
@@ -42,17 +46,17 @@ export default class Polyomino {
   height: number
   dims: Dims
 
-  classes: MinoClasses
+  // classes: MinoClasses
   transform: MinoTransform
 
   // This breaks tests if it's not lazily generated
-  private _tilings?: MinoTilings
-  get tilings() {
-    if (!this._tilings) {
-      this._tilings = new MinoTilings(this)
-    }
-    return this._tilings
-  }
+  // private _tilings?: MinoTilings
+  // get tilings() {
+  //   if (!this._tilings) {
+  //     this._tilings = new MinoTilings(this)
+  //   }
+  //   return this._tilings
+  // }
 
   // Constructors
   // ============
@@ -60,19 +64,23 @@ export default class Polyomino {
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
     this.data = data
+    this.key = getKey(data)
+    // this.key = ""
     this.order = getOrder(data)
     this.width = getHeight(data)
-    this.height = getWidth(data)
+    this.height = data.width
     this.dims = [this.width, this.height]
-    this.classes = new MinoClasses(this)
+    // this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
   static fromData(data: MinoData) {
-    if (!cache[data]) {
-      cache[data] = new Polyomino(data)
+    const key = getKey(data)
+    if (!cache[key]) {
+      cache[key] = new Polyomino(data)
     }
-    return cache[data]
+    return cache[key]
+    // return new Polyomino(data)
   }
 
   /**
@@ -105,7 +113,7 @@ export default class Polyomino {
     return sortBy(minos, [
       (mino) => -mino.height,
       (mino) => -mino.width,
-      (mino) => mino.data,
+      (mino) => mino.key,
     ])
   }
 
@@ -114,7 +122,7 @@ export default class Polyomino {
 
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
-    return this.data === other.data
+    return this.key === other.key
   }
 
   /** Return the coordinate of the mino's squares */
@@ -160,26 +168,28 @@ export default class Polyomino {
   // =========
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
-  possibleParents = once(() =>
-    this.coords().map((coord) => {
-      const parent = removeSquare(this.data, coord)
-      return {
-        mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
-        coord,
-      }
-    }),
-  )
+  // possibleParents = once(() =>
+  //   this.coords().map((coord) => {
+  //     const parent = removeSquare(this.data, this.width, coord)
+  //     return {
+  //       mino: isValid(parent, this.width)
+  //         ? Polyomino.fromData(parent)
+  //         : undefined,
+  //       coord,
+  //     }
+  //   }),
+  // )
 
-  enumerateParents = once(
-    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
-  )
+  // enumerateParents = once(
+  //   () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
+  // )
 
-  parents = once(() => this.enumerateParents().map((link) => link.mino))
+  // parents = once(() => this.enumerateParents().map((link) => link.mino))
 
-  /** Return the set of all free parents of this mino */
-  freeParents = once(
-    () => new Set(this.parents().map((p) => p.transform.free())),
-  )
+  // /** Return the set of all free parents of this mino */
+  // freeParents = once(
+  //   () => new Set(this.parents().map((p) => p.transform.free())),
+  // )
 
   private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
@@ -206,9 +216,7 @@ export default class Polyomino {
   children = once(() => this.enumerateChildren().map((link) => link.mino))
 
   /** Return the set of all free parents of this mino */
-  freeChildren = once(
-    () => new Set(this.children().map((c) => c.transform.free())),
-  )
+  freeChildren = () => new Set(this.children().map((c) => c.transform.free()))
 
   // Formatting
   // ==========
@@ -218,7 +226,7 @@ export default class Polyomino {
     return toString(this.data)
   }
 
-  /** Pretty-printed representation of the mino */
+  // /** Pretty-printed representation of the mino */
   display() {
     return displayMino(this.data)
   }

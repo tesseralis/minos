@@ -1,5 +1,13 @@
 import Vector from "./vector"
 
+export function floordiv(n: number, d: number) {
+  return (n - (n % d)) / d
+}
+
+export function ceildiv(n: number, d: number) {
+  return floordiv(n, d) + (n % d === 0 ? 0 : 1)
+}
+
 export interface Circle {
   center: Vector
   radius: number
