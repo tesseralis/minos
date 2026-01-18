@@ -12,16 +12,19 @@ import {
   displayMino,
   fromString,
   toString,
+  type Coord,
 } from "./data"
+import {
+  removeSquare,
+  isValid,
+  type RelativeLink,
+  getNeighbors,
+  addSquare,
+} from "./relatives"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
-import {
-  MinoTransform,
-  MinoRelatives,
-  MinoClasses,
-  MinoTilings,
-  O_OCTOMINO,
-} from "./internal"
+import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
+import PointSet from "$lib/PointSet"
 
 // cache of all created minos
 const cache: Record<MinoData, Polyomino> = {}
@@ -40,7 +43,6 @@ export default class Polyomino {
   dims: Dims
 
   classes: MinoClasses
-  relatives: MinoRelatives
   transform: MinoTransform
 
   // This breaks tests if it's not lazily generated
@@ -63,7 +65,6 @@ export default class Polyomino {
     this.height = getWidth(data)
     this.dims = [this.width, this.height]
     this.classes = new MinoClasses(this)
-    this.relatives = new MinoRelatives(this)
     this.transform = new MinoTransform(this)
   }
 
@@ -154,6 +155,60 @@ export default class Polyomino {
       return Math.abs(white.length - black.length) === 1
     }
   }
+
+  // Relatives
+  // =========
+
+  /** Iterate over all points of this mino along with the possible parent associated with it. */
+  possibleParents = once(() =>
+    this.coords().map((coord) => {
+      const parent = removeSquare(this.data, coord)
+      return {
+        mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
+        coord,
+      }
+    }),
+  )
+
+  enumerateParents = once(
+    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
+  )
+
+  parents = once(() => this.enumerateParents().map((link) => link.mino))
+
+  /** Return the set of all free parents of this mino */
+  freeParents = once(
+    () => new Set(this.parents().map((p) => p.transform.free())),
+  )
+
+  private *iterNeighbors(): Generator<Coord> {
+    const visited = new PointSet()
+    for (const coord of this.coords()) {
+      for (const nbr of getNeighbors(coord)) {
+        if (!this.contains(nbr) && !visited.has(nbr)) {
+          visited.add(nbr)
+          yield nbr
+        }
+      }
+    }
+  }
+
+  neighbors = once(() => [...this.iterNeighbors()])
+
+  enumerateChildren = once(() =>
+    this.neighbors().map((coord) => ({
+      mino: Polyomino.fromData(addSquare(this.data, coord)),
+      coord,
+    })),
+  )
+
+  /** Return the list of all children of this mino */
+  children = once(() => this.enumerateChildren().map((link) => link.mino))
+
+  /** Return the set of all free parents of this mino */
+  freeChildren = once(
+    () => new Set(this.children().map((c) => c.transform.free())),
+  )
 
   // Formatting
   // ==========

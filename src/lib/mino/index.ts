@@ -15,7 +15,6 @@ export type {
   Transform,
   PossibleRelativeLink,
   RelativeLink,
-  MinoRelatives,
   MinoPattern,
   Tiling,
   Level,

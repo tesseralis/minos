@@ -22,7 +22,7 @@
 
 {#snippet innerSquares(highlight: boolean)}
   <g class="inner" class:highlight>
-    {#each mino.relatives.possibleParents() as link}
+    {#each mino.possibleParents() as link}
       <SelectableSquare
         {link}
         bind:selected={mino}
@@ -36,7 +36,7 @@
 {#snippet outerSquares()}
   {#if mino.order < NUM_GENERATIONS}
     <g class="outer">
-      {#each mino.relatives.enumerateChildren() as link}
+      {#each mino.enumerateChildren() as link}
         <SelectableSquare {link} bind:selected={mino} />
       {/each}
     </g>

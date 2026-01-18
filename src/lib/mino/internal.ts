@@ -13,7 +13,6 @@ export {
 } from "./transform"
 export type { PossibleRelativeLink, RelativeLink } from "./relatives"
 export {
-  default as MinoRelatives,
   isValid,
   addSquare,
   removeSquare,

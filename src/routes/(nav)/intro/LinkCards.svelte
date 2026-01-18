@@ -132,7 +132,7 @@
 
 {#snippet genealogyThumbnail()}
   {@const mino = Polyomino.of("01_11_01")}
-  {@const children = [...mino.relatives.freeChildren()]}
+  {@const children = [...mino.freeChildren()]}
   {@const radius = 30}
   <svg viewBox="-50 -10 100 50">
     {#each children as child, i}

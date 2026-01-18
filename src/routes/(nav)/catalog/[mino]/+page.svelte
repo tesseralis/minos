@@ -104,7 +104,7 @@
 
 {#snippet parents(mino: Polyomino)}
   {#if mino.order > 1}
-    {@render minoList(Polyomino.sort([...mino.relatives.freeParents()]))}
+    {@render minoList(Polyomino.sort([...mino.freeParents()]))}
   {:else}
     ——
   {/if}
@@ -112,7 +112,7 @@
 
 {#snippet children(mino: Polyomino)}
   {#if mino.order < NUM_GENERATIONS}
-    {@render minoList(Polyomino.sort([...mino.relatives.freeChildren()]))}
+    {@render minoList(Polyomino.sort([...mino.freeChildren()]))}
   {:else}
     ——
   {/if}
