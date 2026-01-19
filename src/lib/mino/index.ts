@@ -9,12 +9,10 @@ export {
   symmetries,
   DirClass,
 } from "./internal"
+export type { Coord, RelativeLink, PossibleRelativeLink } from "./data"
 export type {
-  Coord,
   Symmetry,
   Transform,
-  PossibleRelativeLink,
-  RelativeLink,
   MinoPattern,
   Tiling,
   Level,

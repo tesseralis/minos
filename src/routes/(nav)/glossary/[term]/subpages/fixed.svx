@@ -10,7 +10,7 @@ For example, the following transformations of the L tetromino count as different
 {@render example()}
 
 {#snippet example()}
-  {@const mino = Polyomino.of("100_111")}
+  {@const mino = Polyomino.of("111_001")}
   <div class="wrapper">
     {#each mino.transform.all() as transform}
       <MinoDiv mino={transform} --stroke="black" --fill="grey" size={15} />

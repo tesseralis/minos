@@ -8,7 +8,7 @@ For an orthogonal direction $d$, we say a polyomino is "$d$-directed" if every c
 For example, the following polyomino is up-directed with the bottom-left cell as an anchor, since every cell in it can be reached from that cell without going down:
 
 <MinoDiv
-  mino={Polyomino.of("110_101_111_101")}
+  mino={Polyomino.of("101_111_101_011")}
   --stroke="black"
   --fill="grey"
   size={20}

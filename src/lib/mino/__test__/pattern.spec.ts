@@ -7,8 +7,8 @@ describe("pattern", () => {
     describe(".coords()", () => {
       it("lists all coords of the pattern", () => {
         const pattern = MinoPattern.of([
-          { coord: [-1, -1], mino: "11_10" },
-          { coord: [-1, 0], mino: "11_10_10" },
+          { coord: [-1, -1], mino: "01_11" },
+          { coord: [-1, 0], mino: "01_01_11" },
         ])
         const coords = [...pattern.coords()]
         const expected: [number, number][] = [

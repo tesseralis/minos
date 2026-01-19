@@ -5,11 +5,10 @@ import {
   type Polyomino,
   type Anchor,
   getAnchors,
-  getNeighbors,
-  getKingwiseNeighbors,
   DirClass,
   type Level,
 } from "./internal"
+import { getNeighbors, getKingwiseNeighbors } from "./data"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]
@@ -190,6 +189,7 @@ export default class MinoClasses {
     if (this.mino.order < 7) {
       return false
     }
+    // TODO this will fail for holes larger than a single cell
     for (const x of range(1, this.mino.width - 1)) {
       for (const y of range(1, this.mino.height - 1)) {
         // Has a hole if there is a point inside the mino that isn't contained in the mino
@@ -197,7 +197,7 @@ export default class MinoClasses {
         // Note: this only works for order <= 8
         const p = new Vector(x, y)
         if (this.mino.contains(p)) {
-          break
+          continue
         }
         const nbrs = [...getNeighbors(p)]
         if (nbrs.every((nbr) => this.mino.contains(nbr))) {

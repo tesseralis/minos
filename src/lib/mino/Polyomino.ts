@@ -1,33 +1,30 @@
-import { partition, sortBy, once } from "lodash-es"
+import { partition, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import {
-  type MinoData,
-  type Dims,
-  getOrder,
-  getWidth,
-  getHeight,
-  contains,
-  getCoords,
-  fromCoords,
-  displayMino,
-  fromString,
-  toString,
-  type Coord,
-} from "./data"
-import {
-  removeSquare,
-  isValid,
-  type RelativeLink,
-  getNeighbors,
-  addSquare,
-} from "./relatives"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
 import PointSet from "$lib/PointSet"
+import {
+  addAll,
+  display,
+  getHeight,
+  getKey,
+  getNeighbors,
+  getWidth,
+  encodeVec,
+  decode,
+  addSquare,
+  removeSquare,
+  isValid,
+  type Coord,
+  type MinoData,
+  type RelativeLink,
+  fromString,
+} from "./data"
+import type { Dims } from "./data"
 
 // cache of all created minos
-const cache: Record<MinoData, Polyomino> = {}
+const cache: Record<string, Polyomino> = {}
 
 // type of stuff that can be cast into a Polyomino
 export type MinoLike = string | VectorLike[] | Polyomino
@@ -60,26 +57,29 @@ export default class Polyomino {
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
     this.data = data
-    this.order = getOrder(data)
-    this.width = getHeight(data)
-    this.height = getWidth(data)
+    this.order = data.size
+    this.width = getWidth(data)
+    this.height = getHeight(data)
     this.dims = [this.width, this.height]
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
   static fromData(data: MinoData) {
-    if (!cache[data]) {
-      cache[data] = new Polyomino(data)
+    const key = getKey(data)
+    if (!cache[key]) {
+      cache[key] = new Polyomino(data)
     }
-    return cache[data]
+    return cache[key]
   }
 
   /**
    * Return the mino represented by the given coordinates
    */
   static fromCoords(coords: VectorLike[]) {
-    return Polyomino.fromData(fromCoords(coords))
+    const set = new Set<number>()
+    addAll(set, coords)
+    return Polyomino.fromData(set)
   }
 
   static fromString(str: string) {
@@ -102,27 +102,43 @@ export default class Polyomino {
 
   /** Sort the minos in a canonical order */
   static sort(minos: Polyomino[]): Polyomino[] {
-    return sortBy(minos, [
-      (mino) => -mino.height,
-      (mino) => -mino.width,
-      (mino) => mino.data,
-    ])
+    return minos.toSorted((a, b) => a.cmp(b))
   }
 
   // Properties
   // ==========
 
+  cmp(other: Polyomino) {
+    if (this.height !== other.height) {
+      return other.height - this.height
+    }
+    if (this.width !== other.width) {
+      return other.width - this.width
+    }
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        if (this.contains([x, y]) !== other.contains([x, y])) {
+          return +other.contains([x, y]) - +this.contains([x, y])
+        }
+      }
+    }
+    return 0
+  }
+
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
-    return this.data === other.data
+    // Just do identity equality since everything is cached
+    return this === other
   }
 
   /** Return the coordinate of the mino's squares */
-  coords = once(() => [...getCoords(this.data)])
+  coords = once(() => [
+    ...this.data.values().map((v) => Vector.fromArray(decode(v))),
+  ])
 
   /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
-    return contains(this.data, coord)
+    return this.data.has(encodeVec(coord))
   }
 
   /** Return the edge list for this mino */
@@ -292,12 +308,12 @@ export default class Polyomino {
 
   /** Print the delimited source string of the mino */
   toString() {
-    return toString(this.data)
+    return display(this.data)
   }
 
   /** Pretty-printed representation of the mino */
   display() {
-    return displayMino(this.data)
+    return display(this.data, ", ", ", ", "\n") + "\n"
   }
 }
 

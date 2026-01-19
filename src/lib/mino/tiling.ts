@@ -48,11 +48,11 @@ export default class MinoTilings {
     if (this.mino.classes.hasHole()) {
       return undefined
     }
-    if (transPairMap[this.mino.data]) {
-      return getTransTiling(transPairMap[this.mino.data])
+    if (transPairMap.has(this.mino)) {
+      return getTransTiling(transPairMap.get(this.mino)!)
     }
-    if (conwayPairMap[this.mino.data]) {
-      return getConwayTiling(conwayPairMap[this.mino.data])
+    if (conwayPairMap.has(this.mino)) {
+      return getConwayTiling(conwayPairMap.get(this.mino)!)
     }
     const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
 
@@ -291,8 +291,8 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
 
 type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
-function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
-  const result: Record<number, MinoPattern> = {}
+function getPairsMapping(pairs: TilingPair[]): Map<Polyomino, MinoPattern> {
+  const result: Map<Polyomino, MinoPattern> = new Map()
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
     const pattern = MinoPattern.of([
@@ -301,8 +301,9 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
-      result[mino.transform.apply(transform).data] = transformedPattern.shift(
-        transformedPattern.data[0].coord,
+      result.set(
+        mino.transform.apply(transform),
+        transformedPattern.shift(transformedPattern.data[0].coord),
       )
     }
   }
@@ -310,35 +311,35 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
 }
 
 const transPairs: TilingPair[] = [
-  ["1001_1111_0010", "flipMinorDiag", [0, 3]],
-  ["11011_01110", "rotateLeft", [1, 2]],
-  ["11011_11110", "flipMainDiag", [-3, 5]],
-  ["00011_10110_11100", "flipMainDiag", [-3, 5]],
-  ["1001_1111_0010_0010", "flipMinorDiag", [1, 3]],
-  ["0101_0111_1100_0100", "flipMinorDiag", [-1, 3]],
-  ["11110_01010_00011", "rotateRight", [-3, 2]],
-  ["00100_11111_10000_10000", "flipMainDiag", [-1, 3]],
-  ["01000_11111_10001", "flipMainDiag", [-2, 4]],
-  ["1100_0111_1100_1000", "flipMainDiag", [-1, 3]],
-  ["00100_11111_10010", "flipMainDiag", [-2, 4]],
-  ["11111_10001_00001", "flipMinorDiag", [1, 5]],
-  ["001111_111001", "flipMinorDiag", [-5, 1]],
-  ["011100_110111", "flipMainDiag", [-3, 5]],
-  ["0100_1100_1111_0100", "flipMainDiag", [1, 3]],
-  ["01001_11111_10000", "flipMainDiag", [2, 0]],
+  ["0100_1111_1001", "flipMinorDiag", [0, 3]],
+  ["01110_11011", "rotateLeft", [1, 2]],
+  ["01111_11011", "flipMainDiag", [-3, 5]],
+  ["00111_01101_11000", "flipMainDiag", [-3, 5]],
+  ["0100_0100_1111_1001", "flipMinorDiag", [1, 3]],
+  ["0010_0011_1110_1010", "flipMinorDiag", [-1, 3]],
+  ["11000_01010_01111", "rotateRight", [-3, 2]],
+  ["00001_00001_11111_00100", "flipMainDiag", [-1, 3]],
+  ["10001_11111_00010", "flipMainDiag", [-2, 4]],
+  ["0001_0011_1110_0011", "flipMainDiag", [-1, 3]],
+  ["01001_11111_00100", "flipMainDiag", [-2, 4]],
+  ["10000_10001_11111", "flipMinorDiag", [1, 5]],
+  ["100111_111100", "flipMinorDiag", [-5, 1]],
+  ["111011_001110", "flipMainDiag", [-3, 5]],
+  ["0010_1111_0011_0010", "flipMainDiag", [1, 3]],
+  ["00001_11111_10010", "flipMainDiag", [2, 0]],
 ]
 
 const conwayPairs: TilingPair[] = [
-  ["11111_01001", "flipMinorDiag", [-4, 1]],
-  ["1101_0111_0001_0001", "flipMinorDiag", [3, 1]],
-  ["111111_001001", "flipMinorDiag", [-5, 1]],
-  ["111111_010010", "rotateLeft", [-5, 3]],
-  ["00010_01111_11000_10000", "flipMainDiag", [-1, 3]],
-  ["111111_100001", "rotateLeft", [-5, 3]],
-  ["11110_10011_00010", "rotateLeft", [-3, 2]],
-  ["111111_010001", "flipMinorDiag", [-5, 1]],
-  ["10000_10000_11111_01000", "rotateLeft", [0, 4]],
-  ["10001_11111_10000", "rotateLeft", [-1, 4]],
+  ["10010_11111", "flipMinorDiag", [-4, 1]],
+  ["1000_1000_1110_1011", "flipMinorDiag", [3, 1]],
+  ["100100_111111", "flipMinorDiag", [-5, 1]],
+  ["010010_111111", "rotateLeft", [-5, 3]],
+  ["00001_00011_11110_01000", "flipMainDiag", [-1, 3]],
+  ["100001_111111", "rotateLeft", [-5, 3]],
+  ["01000_11001_01111", "rotateLeft", [-3, 2]],
+  ["100010_111111", "flipMinorDiag", [-5, 1]],
+  ["00010_11111_00001_00001", "rotateLeft", [0, 4]],
+  ["00001_11111_10001", "rotateLeft", [-1, 4]],
 ]
 
 const transPairMap = getPairsMapping(transPairs)

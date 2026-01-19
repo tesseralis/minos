@@ -12,18 +12,18 @@
 
   const reprMinos: Record<string, string> = {
     rectangle: "111_111",
-    wedge: "001_011_111",
-    staircase: "001_011_110",
-    stack: "010_011_111",
-    fork: "010_011_110",
-    "bar chart": "001_101_111",
+    wedge: "111_110_100",
+    staircase: "011_110_100",
+    stack: "111_110_010",
+    fork: "011_110_010",
+    "bar chart": "111_101_100",
     diamond: "010_111_010",
-    wing: "101_111_100",
-    crescent: "101_111_010",
-    antler: "110_101_111",
-    "bent tree": "1011_1110_0011",
+    wing: "001_111_101",
+    crescent: "010_111_101",
+    antler: "111_101_011",
+    "bent tree": "1100_0111_1101",
     "range chart": "101_111_101",
-    tree: "1011_1110_1011",
+    tree: "1101_0111_1101",
     other: "11011_01110_11011",
   }
 

@@ -8,12 +8,12 @@ import PointSet from "$lib/PointSet"
 import { type MinoLike } from "./Polyomino"
 import {
   Polyomino,
-  getNeighbors,
   getAnchor,
   type Transform,
   transformAnchor,
   transformCoord,
 } from "./internal"
+import { getNeighbors } from "./data"
 import type { Dims, Coord } from "./data"
 import { getEdges } from "./outline"
 import { EdgeList } from "./edges"

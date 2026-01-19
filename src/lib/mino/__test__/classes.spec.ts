@@ -57,7 +57,7 @@ describe("MinoClasses", () => {
         "0111_1101_0110",
       ].map(Polyomino.fromString)
       for (const mino of cases) {
-        expect(mino.classes.hasHole()).toBe(true)
+        expect(mino.classes.hasHole()).toBeTruthy()
       }
     })
 
