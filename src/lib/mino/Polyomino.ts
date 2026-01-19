@@ -19,7 +19,7 @@ import {
   isValid,
   type RelativeLink,
   getNeighbors,
-  addSquare,
+  // addSquare,
 } from "./relatives"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
@@ -27,13 +27,13 @@ import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
 import PointSet from "$lib/PointSet"
 
 // cache of all created minos
-const cache: Record<MinoData, Polyomino> = {}
+const cache: Record<string, Polyomino> = {}
 
 // type of stuff that can be cast into a Polyomino
 export type MinoLike = string | VectorLike[] | Polyomino
 
 export default class Polyomino {
-  data: MinoData
+  data: PointSet
   /** The number of squares in this polyomino */
   order: number
 
@@ -58,32 +58,45 @@ export default class Polyomino {
   // ============
 
   // Private constructor -- we want to make sure any mino we create is cached
-  private constructor(data: MinoData) {
+  private constructor(data: PointSet) {
     this.data = data
-    this.order = getOrder(data)
-    this.width = getHeight(data)
-    this.height = getWidth(data)
+    this.order = data.size
+    this.width = data.width
+    this.height = data.height
     this.dims = [this.width, this.height]
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
-  static fromData(data: MinoData) {
-    if (!cache[data]) {
-      cache[data] = new Polyomino(data)
+  static fromData(data: PointSet) {
+    const key = data.toString()
+    if (!cache[key]) {
+      cache[key] = new Polyomino(data)
     }
-    return cache[data]
+    return cache[key]
   }
 
   /**
    * Return the mino represented by the given coordinates
    */
   static fromCoords(coords: VectorLike[]) {
-    return Polyomino.fromData(fromCoords(coords))
+    const set = new PointSet()
+    set.addAll(coords)
+    return Polyomino.fromData(set)
   }
 
   static fromString(str: string) {
-    return Polyomino.fromData(fromString(str))
+    let rows = str.split("_")
+    const set = new PointSet()
+    for (let [y, row] of rows.entries()) {
+      for (let x = 0; x < row.length; x++) {
+        if (row[x] === "1") {
+          set.add([x, y])
+        }
+      }
+    }
+    return Polyomino.fromData(set)
+    // return Polyomino.fromData(fromString(str))
   }
 
   static of(mino: MinoLike) {
@@ -118,11 +131,11 @@ export default class Polyomino {
   }
 
   /** Return the coordinate of the mino's squares */
-  coords = once(() => [...getCoords(this.data)])
+  coords = once(() => [...this.data.values()])
 
   /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
-    return contains(this.data, coord)
+    return this.data.has(coord)
   }
 
   /** Return the edge list for this mino */
@@ -195,12 +208,12 @@ export default class Polyomino {
 
   neighbors = once(() => [...this.iterNeighbors()])
 
-  enumerateChildren = once(() =>
-    this.neighbors().map((coord) => ({
+  enumerateChildren = once(() => {
+    return this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
-    })),
-  )
+    }))
+  })
 
   /** Return the list of all children of this mino */
   children = once(() => this.enumerateChildren().map((link) => link.mino))
@@ -292,12 +305,12 @@ export default class Polyomino {
 
   /** Print the delimited source string of the mino */
   toString() {
-    return toString(this.data)
+    return this.data.toString()
   }
 
   /** Pretty-printed representation of the mino */
   display() {
-    return displayMino(this.data)
+    return this.data.toString("[]", "  ", "\n") + "\n"
   }
 }
 
@@ -319,4 +332,18 @@ const orderPrefixes = [
 
 export function orderName(order: number, plural = false) {
   return `${orderPrefixes[order]}mino${plural ? "es" : ""}`
+}
+
+function addSquare(mino: PointSet, [x, y]: VectorLike) {
+  const newMino = mino.copy()
+  if (x < 0) {
+    newMino.translate([1, 0])
+    newMino.add([0, y])
+  } else if (y < 0) {
+    newMino.translate([0, 1])
+    newMino.add([x, 0])
+  } else {
+    newMino.add([x, y])
+  }
+  return newMino
 }
