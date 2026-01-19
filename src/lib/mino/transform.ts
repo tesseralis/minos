@@ -6,6 +6,8 @@ import { minBy, once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"
+import { mask, mx, my } from "./dataSet"
+import { identifierToKeywordKind } from "typescript"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -56,11 +58,11 @@ export default class MinoTransform {
   /** Transform this mino with the given transformation */
   apply(trans: Transform) {
     const [w, h] = this.mino.dims
-    // If the transformation keeps each coordinate intact, we can do it directly
-    return Polyomino.fromCoords(
-      this.mino
-        .coords()
-        .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
+    if (trans === "identity") return this.mino
+    return Polyomino.fromData(
+      new Set(
+        this.mino.data.values().map((m) => transformMinoMask(m, w, h, trans)),
+      ),
     )
   }
 
@@ -164,25 +166,38 @@ export function transformCoord(p: Coord, transform: Transform) {
   return Vector.fromArray(transforms[transform])
 }
 
-// TODO express this in terms of transformCoord
-export function transformMinoCoord(
-  p: Coord,
-  [w, h]: Dims,
+function transformMinoMask(
+  m: number,
+  w: number,
+  h: number,
   transform: Transform,
-): Coord {
-  const x1 = w - 1 - p.x
-  const y1 = h - 1 - p.y
-  const transforms: Record<Transform, Point> = {
-    identity: [p.x, p.y],
-    rotateLeft: [p.y, x1],
-    rotateHalf: [x1, y1],
-    rotateRight: [y1, p.x],
-    flipHoriz: [x1, p.y],
-    flipVert: [p.x, y1],
-    flipMainDiag: [p.y, p.x],
-    flipMinorDiag: [y1, x1],
+) {
+  switch (transform) {
+    case "identity": {
+      return m
+    }
+    case "rotateHalf": {
+      return mask(w - 1, h - 1) - m
+    }
+    case "rotateLeft": {
+      return mask(my(m), w - 1 - mx(m))
+    }
+    case "rotateRight": {
+      return mask(h - 1 - my(m), mx(m))
+    }
+    case "flipVert": {
+      return mask(mx(m), h - 1 - my(m))
+    }
+    case "flipHoriz": {
+      return mask(w - 1 - mx(m), my(m))
+    }
+    case "flipMainDiag": {
+      return mask(my(m), mx(m))
+    }
+    case "flipMinorDiag": {
+      return mask(h - 1 - my(m), w - 1 - mx(m))
+    }
   }
-  return Vector.fromArray(transforms[transform])
 }
 
 function getSymmetry(predicate: (axis: Transform) => boolean) {

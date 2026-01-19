@@ -1,18 +1,24 @@
 import { partition, sortBy, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { type Dims, type Coord } from "./data"
-import {
-  // removeSquare,
-  // isValid,
-  type RelativeLink,
-  getNeighbors,
-  // addSquare,
-} from "./relatives"
+import { type RelativeLink, getNeighbors } from "./relatives"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
 import PointSet from "$lib/PointSet"
-import MinoPointSet from "$lib/MinoPointSet"
+import {
+  addAll,
+  display,
+  getHeight,
+  getKey,
+  getWidth,
+  hasX,
+  hasY,
+  mask,
+  maskVec,
+  unmask,
+  type MinoData,
+} from "$lib/mino/dataSet"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -21,7 +27,7 @@ const cache: Record<string, Polyomino> = {}
 export type MinoLike = string | VectorLike[] | Polyomino
 
 export default class Polyomino {
-  data: MinoPointSet
+  data: MinoData
   /** The number of squares in this polyomino */
   order: number
 
@@ -46,18 +52,18 @@ export default class Polyomino {
   // ============
 
   // Private constructor -- we want to make sure any mino we create is cached
-  private constructor(data: MinoPointSet) {
+  private constructor(data: MinoData) {
     this.data = data
-    this.order = data.data.size
-    this.width = data.width
-    this.height = data.height
+    this.order = data.size
+    this.width = getWidth(data)
+    this.height = getHeight(data)
     this.dims = [this.width, this.height]
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
-  static fromData(data: MinoPointSet) {
-    const key = data.key()
+  static fromData(data: MinoData) {
+    const key = getKey(data)
     if (!cache[key]) {
       cache[key] = new Polyomino(data)
     }
@@ -68,18 +74,18 @@ export default class Polyomino {
    * Return the mino represented by the given coordinates
    */
   static fromCoords(coords: VectorLike[]) {
-    const set = new MinoPointSet()
-    set.addAll(coords)
+    const set = new Set<number>()
+    addAll(set, coords)
     return Polyomino.fromData(set)
   }
 
   static fromString(str: string) {
     let rows = str.split("_")
-    const set = new MinoPointSet()
+    const set = new Set<number>()
     for (let [y, row] of rows.entries()) {
       for (let x = 0; x < row.length; x++) {
         if (row[x] === "1") {
-          set.add([x, y])
+          set.add(mask(x, y))
         }
       }
     }
@@ -119,11 +125,13 @@ export default class Polyomino {
   }
 
   /** Return the coordinate of the mino's squares */
-  coords = once(() => [...this.data.values()])
+  coords = once(() => [
+    ...this.data.values().map((v) => Vector.fromArray(unmask(v))),
+  ])
 
   /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
-    return this.data.has(coord)
+    return this.data.has(maskVec(coord))
   }
 
   /** Return the edge list for this mino */
@@ -293,12 +301,12 @@ export default class Polyomino {
 
   /** Print the delimited source string of the mino */
   toString() {
-    return this.data.toString()
+    return display(this.data)
   }
 
   /** Pretty-printed representation of the mino */
   display() {
-    return this.data.toString("[]", "  ", "\n") + "\n"
+    return display(this.data, ", ", ", ", "\n") + "\n"
   }
 }
 
@@ -322,35 +330,35 @@ export function orderName(order: number, plural = false) {
   return `${orderPrefixes[order]}mino${plural ? "es" : ""}`
 }
 
-function addSquare(mino: MinoPointSet, [x, y]: VectorLike) {
+function addSquare(mino: MinoData, [x, y]: VectorLike) {
   if (x < 0) {
-    const result = mino.translate([1, 0])
-    result.add([0, y])
+    const result = new Set(mino.values().map((m) => m + mask(1, 0)))
+    result.add(mask(0, y))
     return result
   } else if (y < 0) {
-    const result = mino.translate([0, 1])
-    result.add([x, 0])
+    const result = new Set(mino.values().map((m) => m + mask(0, 1)))
+    result.add(mask(x, 0))
     return result
   } else {
-    const result = mino.copy()
-    result.add([x, y])
+    const result = new Set(mino)
+    result.add(mask(x, y))
     return result
   }
 }
 
-function removeSquare(mino: MinoPointSet, [x, y]: VectorLike) {
-  const clone = mino.copy()
-  clone.remove([x, y])
-  if (!clone.hasX(0)) {
-    return clone.translate([-1, 0])
+function removeSquare(mino: MinoData, [x, y]: VectorLike) {
+  const clone = new Set(mino)
+  clone.delete(mask(x, y))
+  if (!hasX(clone, 0)) {
+    return new Set(clone.values().map((m) => m - mask(1, 0)))
   }
-  if (!clone.hasY(0)) {
-    return clone.translate([0, -1])
+  if (!hasY(clone, 0)) {
+    return new Set(clone.values().map((m) => m - mask(0, 1)))
   }
   return clone
 }
 
-export function isValid(mino: MinoPointSet): boolean {
+export function isValid(mino: MinoData): boolean {
   const p0 = mino.values().next().value!
   // the null-omino is not a valid polyomino
   if (!p0) return false
@@ -362,14 +370,14 @@ export function isValid(mino: MinoPointSet): boolean {
 
   while (queue.length) {
     const p = queue.pop()!
-    if (visited.has(p)) continue
-    visited.add(p)
+    if (visited.has(unmask(p))) continue
+    visited.add(unmask(p))
 
-    for (const nbr of getNeighbors(p)) {
-      if (!mino.has(nbr)) continue
-      queue.push(nbr)
+    for (const nbr of getNeighbors(Vector.fromArray(unmask(p)))) {
+      if (!mino.has(maskVec(nbr))) continue
+      queue.push(maskVec(nbr))
     }
   }
   // True if we have visited all the squares in the mino
-  return visited.size === mino.data.size
+  return visited.size === mino.size
 }
