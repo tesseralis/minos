@@ -6,7 +6,7 @@ import { once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord } from "./data"
 import { Polyomino } from "./internal"
-import { mask, mx, my } from "./data"
+import { encode, px, py } from "./data"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -174,25 +174,25 @@ function transformMinoMask(
       return m
     }
     case "rotateHalf": {
-      return mask(w - 1, h - 1) - m
+      return encode(w - 1, h - 1) - m
     }
     case "rotateLeft": {
-      return mask(my(m), w - 1 - mx(m))
+      return encode(py(m), w - 1 - px(m))
     }
     case "rotateRight": {
-      return mask(h - 1 - my(m), mx(m))
+      return encode(h - 1 - py(m), px(m))
     }
     case "flipVert": {
-      return mask(mx(m), h - 1 - my(m))
+      return encode(px(m), h - 1 - py(m))
     }
     case "flipHoriz": {
-      return mask(w - 1 - mx(m), my(m))
+      return encode(w - 1 - px(m), py(m))
     }
     case "flipMainDiag": {
-      return mask(my(m), mx(m))
+      return encode(py(m), px(m))
     }
     case "flipMinorDiag": {
-      return mask(h - 1 - my(m), w - 1 - mx(m))
+      return encode(h - 1 - py(m), w - 1 - px(m))
     }
   }
 }

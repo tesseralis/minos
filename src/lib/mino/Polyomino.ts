@@ -11,8 +11,8 @@ import {
   getKey,
   getNeighbors,
   getWidth,
-  maskVec,
-  unmask,
+  encodeVec,
+  decode,
   addSquare,
   removeSquare,
   isValid,
@@ -132,12 +132,12 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords = once(() => [
-    ...this.data.values().map((v) => Vector.fromArray(unmask(v))),
+    ...this.data.values().map((v) => Vector.fromArray(decode(v))),
   ])
 
   /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
-    return this.data.has(maskVec(coord))
+    return this.data.has(encodeVec(coord))
   }
 
   /** Return the edge list for this mino */
