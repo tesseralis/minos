@@ -370,8 +370,9 @@ export function isValid(mino: MinoData): boolean {
 
   while (queue.length) {
     const p = queue.pop()!
-    if (visited.has(unmask(p))) continue
-    visited.add(unmask(p))
+    const v = Vector.of(unmask(p))
+    if (visited.has(v)) continue
+    visited.add(v)
 
     for (const nbr of getNeighbors(Vector.fromArray(unmask(p)))) {
       if (!mino.has(maskVec(nbr))) continue
