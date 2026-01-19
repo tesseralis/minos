@@ -1,6 +1,6 @@
 import { once, range } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-type Coord = Vector
+import { type Coord } from "./data"
 
 // Directions
 // ==========

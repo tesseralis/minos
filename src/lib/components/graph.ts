@@ -109,9 +109,9 @@ export function generateGraph(n: number) {
 
 export const NUM_GENERATIONS = 8
 
-const start = performance.now()
+// const start = performance.now()
 const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
-console.log("Graph generated in: ", performance.now() - start)
+// console.log("Graph generated in: ", performance.now() - start)
 
 // These are hard coded for NUM_GENERATIONS = 8.
 // These functions are more expensive than graph generation so we'll hard code them.
