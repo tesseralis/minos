@@ -150,8 +150,6 @@ export function toString(mino: MinoData) {
   }
   return strs.reverse().join("_")
 }
-// export function getCoordMask(data: MinoData) {}
-// export function getColumnMask(data: MinoData) {}
 
 export function rowsPerWord(width: number) {
   return floordiv(MAX_WIDTH, width)
