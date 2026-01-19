@@ -1,4 +1,4 @@
-import { partition, sortBy, once } from "lodash-es"
+import { partition, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency

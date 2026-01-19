@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest"
 import { Polyomino } from "../internal"
-import { min } from "lodash-es"
 
 describe("MinoClasses", () => {
   describe(".isConvex()", () => {

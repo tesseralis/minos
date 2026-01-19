@@ -36,7 +36,7 @@ export function unmask(m: number): [number, number] {
 export function getWidth(mino: MinoData) {
   let min = Infinity
   let max = -Infinity
-  for (let value of mino.values()) {
+  for (const value of mino.values()) {
     min = Math.min(min, mx(value))
     max = Math.max(max, mx(value))
   }
@@ -46,7 +46,7 @@ export function getWidth(mino: MinoData) {
 export function getHeight(mino: MinoData) {
   let min = Infinity
   let max = -Infinity
-  for (let value of mino.values()) {
+  for (const value of mino.values()) {
     min = Math.min(min, my(value))
     max = Math.max(max, my(value))
   }
@@ -65,9 +65,9 @@ export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
 }
 
 export function fromString(str: string) {
-  let rows = str.split("_")
+  const rows = str.split("_")
   const set = new Set<number>()
-  for (let [x, row] of rows.entries()) {
+  for (const [x, row] of rows.entries()) {
     for (let y = 0; y < row.length; y++) {
       if (row[y] === "1") {
         set.add(mask(x, y))
@@ -134,7 +134,7 @@ export function isValid(mino: MinoData): boolean {
   if (p0 == null) return false
   const queue = [p0]
 
-  let visited = new PointSet()
+  const visited = new PointSet()
 
   while (queue.length) {
     const p = queue.pop()!
