@@ -2,8 +2,8 @@ import { partition, sortBy, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { type Dims, type Coord } from "./data"
 import {
-  removeSquare,
-  isValid,
+  // removeSquare,
+  // isValid,
   type RelativeLink,
   getNeighbors,
   // addSquare,
@@ -335,4 +335,40 @@ function addSquare(mino: PointSet, [x, y]: VectorLike) {
     result.add([x, y])
     return result
   }
+}
+
+function removeSquare(mino: PointSet, [x, y]: VectorLike) {
+  const clone = mino.copy()
+  clone.remove([x, y])
+  if (!clone.hasX(0)) {
+    return clone.translate([-1, 0])
+  }
+  if (!clone.hasY(0)) {
+    return clone.translate([0, -1])
+  }
+  return clone
+}
+
+export function isValid(mino: PointSet): boolean {
+  const p0 = mino.values().next().value!
+  // the null-omino is not a valid polyomino
+  if (!p0) return false
+  const queue = [p0]
+
+  // Initialize the visited bitmask
+  // Include the mino's width so that we can easily compare later
+  let visited = new PointSet()
+
+  while (queue.length) {
+    const p = queue.pop()!
+    if (visited.has(p)) continue
+    visited.add(p)
+
+    for (const nbr of getNeighbors(p)) {
+      if (!mino.has(nbr)) continue
+      queue.push(nbr)
+    }
+  }
+  // True if we have visited all the squares in the mino
+  return visited.size === mino.size
 }

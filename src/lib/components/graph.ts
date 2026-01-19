@@ -96,8 +96,8 @@ export function generateGraph(n: number) {
     }
 
     nodes.push(currentGen)
-    currentGen = nextGen
-    // currentGen = sortGeneration(nextGen)
+    // currentGen = nextGen
+    currentGen = sortGeneration(nextGen)
     currentGen.forEach((mino, i) => {
       indices.set(mino, i)
     })

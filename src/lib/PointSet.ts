@@ -54,18 +54,6 @@ export default class PointSet {
       (x) => x + x1,
       (y) => y + y1,
     )
-    // const result = new PointSet()
-    // result.data = new Map(
-    //   this.data.entries().map(([x, ys]) => {
-    //     return [x + x1, new Set(ys.values().map((y) => y + y1))]
-    //   }),
-    // )
-    // result.size = this.size
-    // result.minX = this.minX + x1
-    // result.minY = this.minY + y1
-    // result.maxX = this.maxX + x1
-    // result.maxY = this.maxY + y1
-    // return result
   }
 
   add([x, y]: VectorLike) {
@@ -89,6 +77,34 @@ export default class PointSet {
     for (const p of ps) {
       this.add(p)
     }
+  }
+
+  remove([x, y]: VectorLike) {
+    this.data.get(x)?.delete(y)
+    if (this.data.get(x)?.size === 0) {
+      this.data.delete(x)
+    }
+    this.size--
+    if (x === this.minX) {
+      this.minX = Math.min(this.minX, ...this.data.keys())
+    }
+    if (x === this.maxX) {
+      this.maxX = Math.max(this.maxX, ...this.data.keys())
+    }
+    if (y === this.minY) {
+      this.minY = Math.min(this.minY, ...this.data.values().flatMap((y) => y))
+    }
+    if (y === this.maxY) {
+      this.maxY = Math.max(this.maxY, ...this.data.values().flatMap((y) => y))
+    }
+  }
+
+  hasX(x: number) {
+    return this.data.has(x)
+  }
+
+  hasY(y: number) {
+    return this.data.values().some((set) => set.has(y))
   }
 
   has([x, y]: VectorLike): boolean {
