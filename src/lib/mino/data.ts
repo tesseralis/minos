@@ -129,13 +129,11 @@ export function removeSquare(mino: MinoData, [x, y]: VectorLike) {
 }
 
 export function isValid(mino: MinoData): boolean {
-  const p0 = mino.values().next().value!
+  const p0 = mino.values().next().value
   // the null-omino is not a valid polyomino
-  if (!p0) return false
+  if (p0 == null) return false
   const queue = [p0]
 
-  // Initialize the visited bitmask
-  // Include the mino's width so that we can easily compare later
   let visited = new PointSet()
 
   while (queue.length) {
@@ -144,7 +142,7 @@ export function isValid(mino: MinoData): boolean {
     if (visited.has(v)) continue
     visited.add(v)
 
-    for (const nbr of getNeighbors(Vector.fromArray(unmask(p)))) {
+    for (const nbr of getNeighbors(v)) {
       if (!mino.has(maskVec(nbr))) continue
       queue.push(maskVec(nbr))
     }

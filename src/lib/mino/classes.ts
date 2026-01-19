@@ -185,7 +185,6 @@ export default class MinoClasses {
 
   /** Return whether the polyomino contains a hole */
   hasHole = once(() => {
-    console.log("testing ", this.mino.toString())
     // First mino with a hole is a heptomino
     if (this.mino.order < 7) {
       return false
