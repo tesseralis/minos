@@ -1,11 +1,11 @@
-import { cloneDeep, mapKeys, range } from "lodash-es"
+import { range } from "lodash-es"
 import Vector, { type VectorLike } from "./vector"
 
 /**
  * A class representing a set of (integer) vectors.
  */
 export default class PointSet {
-  data: Record<number, Record<number, boolean>>
+  data: Map<number, Set<number>>
   size: number
   minX: number = 0
   maxX: number = 0
@@ -13,34 +13,43 @@ export default class PointSet {
   maxY: number = 0
 
   constructor() {
-    this.data = {}
+    this.data = new Map()
     this.size = 0
   }
 
   copy() {
     const copy = new PointSet()
-    // copy.data = cloneDeep(this.data)
-    copy.addAll(this.values())
+    copy.data = new Map(
+      this.data.entries().map(([x, set]) => [x, new Set(set)]),
+    )
+    copy.size = this.size
+    copy.minX = this.minX
+    copy.minY = this.minY
+    copy.maxX = this.maxX
+    copy.maxY = this.maxY
     return copy
   }
 
   translate([x1, y1]: VectorLike) {
-    this.data = Object.fromEntries(
-      Object.entries(this.data).map(([x, ys]) => {
-        return [+x + x1, mapKeys(ys, (_, y) => +y + y1)]
+    const result = new PointSet()
+    result.data = new Map(
+      this.data.entries().map(([x, ys]) => {
+        return [x + x1, new Set(ys.values().map((y) => y + y1))]
       }),
     )
-    this.minX += x1
-    this.minY += y1
-    this.maxX += x1
-    this.maxY += y1
+    result.size = this.size
+    result.minX = this.minX + x1
+    result.minY = this.minY + y1
+    result.maxX = this.maxX + x1
+    result.maxY = this.maxY + y1
+    return result
   }
 
   add([x, y]: VectorLike) {
-    if (!this.data[x]) {
-      this.data[x] = {}
+    if (!this.data.has(x)) {
+      this.data.set(x, new Set())
     }
-    this.data[x][y] = true
+    this.data.get(x)!.add(y)
     this.size++
     if (this.size === 1) {
       this.minX = this.maxX = x
@@ -60,12 +69,12 @@ export default class PointSet {
   }
 
   has([x, y]: VectorLike): boolean {
-    return !!this.data[x]?.[y]
+    return !!this.data.get(x)?.has(y)
   }
 
   *values() {
-    for (const [x, value] of Object.entries(this.data)) {
-      for (const y of Object.keys(value)) {
+    for (const [x, value] of this.data.entries()) {
+      for (const y of value.values()) {
         yield new Vector(+x, +y)
       }
     }

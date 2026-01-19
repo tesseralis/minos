@@ -1,19 +1,6 @@
 import { partition, sortBy, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import {
-  type MinoData,
-  type Dims,
-  getOrder,
-  getWidth,
-  getHeight,
-  contains,
-  getCoords,
-  fromCoords,
-  displayMino,
-  fromString,
-  toString,
-  type Coord,
-} from "./data"
+import { type Dims, type Coord } from "./data"
 import {
   removeSquare,
   isValid,
@@ -335,15 +322,17 @@ export function orderName(order: number, plural = false) {
 }
 
 function addSquare(mino: PointSet, [x, y]: VectorLike) {
-  const newMino = mino.copy()
   if (x < 0) {
-    newMino.translate([1, 0])
-    newMino.add([0, y])
+    const result = mino.translate([1, 0])
+    result.add([0, y])
+    return result
   } else if (y < 0) {
-    newMino.translate([0, 1])
-    newMino.add([x, 0])
+    const result = mino.translate([0, 1])
+    result.add([x, 0])
+    return result
   } else {
-    newMino.add([x, y])
+    const result = mino.copy()
+    result.add([x, y])
+    return result
   }
-  return newMino
 }

@@ -2,10 +2,11 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import { once } from "lodash-es"
+import { minBy, once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"
+import PointSet from "$lib/PointSet"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -55,11 +56,18 @@ export default class MinoTransform {
 
   /** Transform this mino with the given transformation */
   apply(trans: Transform) {
-    return Polyomino.fromCoords(
-      this.mino
-        .coords()
+    const newCoords = new PointSet()
+    newCoords.addAll(
+      this.mino.data
+        .values()
         .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
     )
+    return Polyomino.fromData(newCoords)
+    // return Polyomino.fromCoords(
+    //   this.mino
+    //     .coords()
+    //     .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
+    // )
   }
 
   rotations = once(() =>
@@ -85,7 +93,10 @@ export default class MinoTransform {
   free() {
     if (!this._free) {
       const transforms = this.all()
-      const free = Polyomino.sort(transforms)[0]
+      const free = minBy(transforms, (trans) => {
+        return [-trans.width, -trans.height, trans.data.toString()]
+      })
+      // const free = Polyomino.sort(transforms)[0]
       // populate the free polyomino for all the transforms
       // so we don't have to re-calculate
       for (const trans of transforms) {
