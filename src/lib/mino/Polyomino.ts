@@ -11,11 +11,12 @@ import {
   getKey,
   getNeighbors,
   getWidth,
-  hasX,
-  hasY,
   mask,
   maskVec,
   unmask,
+  addSquare,
+  removeSquare,
+  isValid,
   type MinoData,
   type RelativeLink,
 } from "$lib/mino/data"
@@ -329,57 +330,4 @@ const orderPrefixes = [
 
 export function orderName(order: number, plural = false) {
   return `${orderPrefixes[order]}mino${plural ? "es" : ""}`
-}
-
-function addSquare(mino: MinoData, [x, y]: VectorLike) {
-  if (x < 0) {
-    const result = new Set(mino.values().map((m) => m + mask(1, 0)))
-    result.add(mask(0, y))
-    return result
-  } else if (y < 0) {
-    const result = new Set(mino.values().map((m) => m + mask(0, 1)))
-    result.add(mask(x, 0))
-    return result
-  } else {
-    const result = new Set(mino)
-    result.add(mask(x, y))
-    return result
-  }
-}
-
-function removeSquare(mino: MinoData, [x, y]: VectorLike) {
-  const clone = new Set(mino)
-  clone.delete(mask(x, y))
-  if (!hasX(clone, 0)) {
-    return new Set(clone.values().map((m) => m - mask(1, 0)))
-  }
-  if (!hasY(clone, 0)) {
-    return new Set(clone.values().map((m) => m - mask(0, 1)))
-  }
-  return clone
-}
-
-export function isValid(mino: MinoData): boolean {
-  const p0 = mino.values().next().value!
-  // the null-omino is not a valid polyomino
-  if (!p0) return false
-  const queue = [p0]
-
-  // Initialize the visited bitmask
-  // Include the mino's width so that we can easily compare later
-  let visited = new PointSet()
-
-  while (queue.length) {
-    const p = queue.pop()!
-    const v = Vector.of(unmask(p))
-    if (visited.has(v)) continue
-    visited.add(v)
-
-    for (const nbr of getNeighbors(Vector.fromArray(unmask(p)))) {
-      if (!mino.has(maskVec(nbr))) continue
-      queue.push(maskVec(nbr))
-    }
-  }
-  // True if we have visited all the squares in the mino
-  return visited.size === mino.size
 }
