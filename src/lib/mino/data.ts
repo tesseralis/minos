@@ -64,16 +64,29 @@ export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
   }
 }
 
+export function fromString(str: string) {
+  let rows = str.split("_")
+  const set = new Set<number>()
+  for (let [x, row] of rows.entries()) {
+    for (let y = 0; y < row.length; y++) {
+      if (row[y] === "1") {
+        set.add(mask(x, y))
+      }
+    }
+  }
+  return set
+}
+
 export function display(
   mino: MinoData,
   entry = "1",
   empty = "0",
   delimiter = "_",
 ) {
-  return range(getHeight(mino))
-    .map((y) => {
-      return range(getWidth(mino))
-        .map((x) => (mino.has(mask(x, y)) ? entry : empty))
+  return range(getWidth(mino))
+    .map((x) => {
+      return range(getHeight(mino))
+        .map((y) => (mino.has(mask(x, y)) ? entry : empty))
         .join("")
     })
     .join(delimiter)

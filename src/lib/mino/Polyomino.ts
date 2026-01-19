@@ -11,7 +11,6 @@ import {
   getKey,
   getNeighbors,
   getWidth,
-  mask,
   maskVec,
   unmask,
   addSquare,
@@ -19,7 +18,8 @@ import {
   isValid,
   type MinoData,
   type RelativeLink,
-} from "$lib/mino/data"
+  fromString,
+} from "./data"
 import type { Dims } from "./data"
 
 // cache of all created minos
@@ -82,17 +82,7 @@ export default class Polyomino {
   }
 
   static fromString(str: string) {
-    let rows = str.split("_")
-    const set = new Set<number>()
-    for (let [y, row] of rows.entries()) {
-      for (let x = 0; x < row.length; x++) {
-        if (row[x] === "1") {
-          set.add(mask(x, y))
-        }
-      }
-    }
-    return Polyomino.fromData(set)
-    // return Polyomino.fromData(fromString(str))
+    return Polyomino.fromData(fromString(str))
   }
 
   static of(mino: MinoLike) {
@@ -114,7 +104,7 @@ export default class Polyomino {
     return sortBy(minos, [
       (mino) => -mino.height,
       (mino) => -mino.width,
-      (mino) => mino.data,
+      (mino) => mino.toString(),
     ])
   }
 
