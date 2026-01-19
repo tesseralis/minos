@@ -30,7 +30,7 @@ As an example, consider the following polyomino:
 
 This polyomino tiles the plane because blue, green, and yellow segments are translations of each other. This translation is realized as shown here:
 
-<TilingThumbnail mino={Polyomino.of("0011_1111_1001")} />
+<TilingThumbnail mino={Polyomino.of("1001_1111_1100")} />
 
 A polyomino tiles the plane by translation if and only if it satisfies the translation criterion.
 
@@ -52,7 +52,7 @@ As an example, consider the following polyomino:
 
 This polyomino satisfies the criterion since the grey segments are translations of each other, and each of the other segments can be rotated about their center to yield the same segment. The tiling for this example is as such:
 
-<TilingThumbnail mino={Polyomino.of("0010_0010_1011_1110")} />
+<TilingThumbnail mino={Polyomino.of("0111_1101_0100_0100")} />
 
 Note that, unlike the translation criterion, the Conway criterion is _sufficient_ but not _necessary_. Some polyominoes do not satisfy it but still tile the plane. However, it is still very powerful, and all tileable polyominoes up to size 8 satisfy the criterion, or you can glue two copies of it to form a shape that satisfies the criterion, in this example:
 

@@ -75,14 +75,14 @@
 
 {#snippet symmetryThumbnail()}
   {@const minos = [
-    ["none", "0010_1111_0110_0100"],
-    ["axis", "111_111_101"],
-    ["diag", "111_111_011"],
+    ["none", "0010_0110_1111_0100"],
+    ["axis", "101_111_111"],
+    ["diag", "110_111_111"],
     ["rot", "100_111_111_001"],
-    ["all", "111_101_111"],
     ["axis2", "010_111_111_010"],
     ["diag2", "0100_1110_0111_0010"],
     ["rot2", "0100_0111_1110_0010"],
+    ["all", "111_101_111"],
   ] as const}
   <div class="symmetry">
     {#each minos as [symmetry, minoStr]}
@@ -131,7 +131,7 @@
 {/snippet}
 
 {#snippet genealogyThumbnail()}
-  {@const mino = Polyomino.of("01_11_01")}
+  {@const mino = Polyomino.of("10_11_10")}
   {@const children = [...mino.freeChildren()]}
   {@const radius = 30}
   <svg viewBox="-50 -10 100 50">

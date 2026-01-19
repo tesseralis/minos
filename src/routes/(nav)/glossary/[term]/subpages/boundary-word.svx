@@ -10,7 +10,7 @@ By convention, the boundary word starts at the left-most point on the bottom row
 For example, the following polyomino:
 
 <MinoDiv
-  mino={Polyomino.of("111_100_100")}
+  mino={Polyomino.of("001_001_111")}
   size={20}
   --stroke="black"
   --fill="grey"

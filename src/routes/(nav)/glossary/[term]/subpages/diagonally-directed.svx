@@ -8,7 +8,7 @@ For a diagonal direction $d$ (e.g., up and right), we say a polyomino is "$d$-di
 For example, the following polyomino is up-right-directed with the bottom-left cell as an anchor, since every cell in it can be reached from that cell by going up and right, and not down or left:
 
 <MinoDiv
-  mino={Polyomino.of("110_101_111")}
+  mino={Polyomino.of("111_101_011")}
   size={20}
   --stroke="black"
   --fill="grey"

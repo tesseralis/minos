@@ -5,9 +5,9 @@
   import SymmetryMarkers from "$lib/components/SymmetryMarkers.svelte"
 
   const minos = [
-    ["none", "0010_1111_0110_0100"],
-    ["axis", "111_111_101"],
-    ["diag", "111_111_011"],
+    ["none", "0010_0110_1111_0100"],
+    ["axis", "101_111_111"],
+    ["diag", "110_111_111"],
     ["rot", "100_111_111_001"],
     ["axis2", "010_111_111_010"],
     ["diag2", "0100_1110_0111_0010"],
