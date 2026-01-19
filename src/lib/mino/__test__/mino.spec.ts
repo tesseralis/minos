@@ -35,7 +35,7 @@ describe("mino", () => {
         [1, 1],
         [2, 1],
       ])
-      const expected = Polyomino.fromString("100_111")
+      const expected = Polyomino.fromString("11_01_01")
       expect(actual).toEqual(expected)
     })
   })

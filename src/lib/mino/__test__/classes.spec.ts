@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { Polyomino } from "../internal"
+import { min } from "lodash-es"
 
 describe("MinoClasses", () => {
   describe(".isConvex()", () => {
@@ -57,7 +58,7 @@ describe("MinoClasses", () => {
         "0111_1101_0110",
       ].map(Polyomino.fromString)
       for (const mino of cases) {
-        expect(mino.classes.hasHole()).toBe(true)
+        expect(mino.classes.hasHole()).toBeTruthy()
       }
     })
 

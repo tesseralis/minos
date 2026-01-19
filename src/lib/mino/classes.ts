@@ -185,10 +185,12 @@ export default class MinoClasses {
 
   /** Return whether the polyomino contains a hole */
   hasHole = once(() => {
+    console.log("testing ", this.mino.toString())
     // First mino with a hole is a heptomino
     if (this.mino.order < 7) {
       return false
     }
+    // TODO this will fail for holes larger than a single cell
     for (const x of range(1, this.mino.width - 1)) {
       for (const y of range(1, this.mino.height - 1)) {
         // Has a hole if there is a point inside the mino that isn't contained in the mino
@@ -196,7 +198,7 @@ export default class MinoClasses {
         // Note: this only works for order <= 8
         const p = new Vector(x, y)
         if (this.mino.contains(p)) {
-          break
+          continue
         }
         const nbrs = [...getNeighbors(p)]
         if (nbrs.every((nbr) => this.mino.contains(nbr))) {
