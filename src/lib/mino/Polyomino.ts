@@ -16,6 +16,7 @@ import {
   addSquare,
   removeSquare,
   isValid,
+  type Coord,
   type MinoData,
   type RelativeLink,
   fromString,
@@ -196,7 +197,7 @@ export default class Polyomino {
     () => new Set(this.parents().map((p) => p.transform.free())),
   )
 
-  private *iterNeighbors(): Generator<Vector> {
+  private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {
@@ -210,12 +211,12 @@ export default class Polyomino {
 
   neighbors = once(() => [...this.iterNeighbors()])
 
-  enumerateChildren = once(() => {
-    return this.neighbors().map((coord) => ({
+  enumerateChildren = once(() =>
+    this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
-    }))
-  })
+    })),
+  )
 
   /** Return the list of all children of this mino */
   children = once(() => this.enumerateChildren().map((link) => link.mino))
