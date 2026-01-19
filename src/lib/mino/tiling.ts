@@ -48,11 +48,11 @@ export default class MinoTilings {
     if (this.mino.classes.hasHole()) {
       return undefined
     }
-    if (transPairMap[this.mino.data]) {
-      return getTransTiling(transPairMap[this.mino.data])
+    if (transPairMap.has(this.mino)) {
+      return getTransTiling(transPairMap.get(this.mino)!)
     }
-    if (conwayPairMap[this.mino.data]) {
-      return getConwayTiling(conwayPairMap[this.mino.data])
+    if (conwayPairMap.has(this.mino)) {
+      return getConwayTiling(conwayPairMap.get(this.mino)!)
     }
     const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
 
@@ -291,8 +291,8 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
 
 type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
-function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
-  const result: Record<number, MinoPattern> = {}
+function getPairsMapping(pairs: TilingPair[]): Map<Polyomino, MinoPattern> {
+  const result: Map<Polyomino, MinoPattern> = new Map()
   for (const [minoStr, pairTransform, coord] of pairs) {
     const mino = Polyomino.fromString(minoStr)
     const pattern = MinoPattern.of([
@@ -301,8 +301,9 @@ function getPairsMapping(pairs: TilingPair[]): Record<number, MinoPattern> {
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
-      result[mino.transform.apply(transform).data] = transformedPattern.shift(
-        transformedPattern.data[0].coord,
+      result.set(
+        mino.transform.apply(transform),
+        transformedPattern.shift(transformedPattern.data[0].coord),
       )
     }
   }

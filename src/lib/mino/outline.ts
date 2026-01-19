@@ -2,8 +2,8 @@ import { isEqual, minBy } from "lodash-es"
 
 import PointSet from "$lib/PointSet"
 
-import { type Coord } from "./data"
 import { type Edge, type Direction, EdgeList, move } from "./edges"
+import Coord from "$lib/vector"
 
 /**
  * Return whether, given a set of coordinates, starting at  point v,

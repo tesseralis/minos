@@ -4,10 +4,9 @@
 
 import { minBy, once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
-import type { Coord, Dims } from "./data"
+import type { Coord } from "./data"
 import { Polyomino } from "./internal"
-import { mask, mx, my } from "./dataSet"
-import { identifierToKeywordKind } from "typescript"
+import { mask, mx, my } from "./data"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 

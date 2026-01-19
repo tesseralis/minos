@@ -1,7 +1,5 @@
 import { partition, sortBy, once } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import { type Dims, type Coord } from "./data"
-import { type RelativeLink, getNeighbors } from "./relatives"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
@@ -11,6 +9,7 @@ import {
   display,
   getHeight,
   getKey,
+  getNeighbors,
   getWidth,
   hasX,
   hasY,
@@ -18,7 +17,9 @@ import {
   maskVec,
   unmask,
   type MinoData,
-} from "$lib/mino/dataSet"
+  type RelativeLink,
+} from "$lib/mino/data"
+import type { Dims } from "./data"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -190,7 +191,7 @@ export default class Polyomino {
     () => new Set(this.parents().map((p) => p.transform.free())),
   )
 
-  private *iterNeighbors(): Generator<Coord> {
+  private *iterNeighbors(): Generator<Vector> {
     const visited = new PointSet()
     for (const coord of this.coords()) {
       for (const nbr of getNeighbors(coord)) {

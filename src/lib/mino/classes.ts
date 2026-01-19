@@ -5,11 +5,10 @@ import {
   type Polyomino,
   type Anchor,
   getAnchors,
-  getNeighbors,
-  getKingwiseNeighbors,
   DirClass,
   type Level,
 } from "./internal"
+import { getNeighbors, getKingwiseNeighbors } from "./data"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]

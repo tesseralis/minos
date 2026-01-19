@@ -1,4 +1,3 @@
-export type { Coord } from "./data"
 export { default as Polyomino, orderName } from "./Polyomino"
 export type { Symmetry, Transform, Anchor } from "./transform"
 export {
@@ -11,14 +10,6 @@ export {
   transformCoord,
   printSymmetry,
 } from "./transform"
-export type { PossibleRelativeLink, RelativeLink } from "./relatives"
-export {
-  isValid,
-  addSquare,
-  removeSquare,
-  getNeighbors,
-  getKingwiseNeighbors,
-} from "./relatives"
 export { default as DirClass, type Level } from "./DirClass"
 export { default as MinoClasses } from "./classes"
 export { MONOMINO, O_OCTOMINO } from "./constants"
