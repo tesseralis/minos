@@ -92,15 +92,23 @@ export function* getCoords(mino: MinoData): Generator<Coord> {
   }
 }
 export function fromCoords(coords: VectorLike[]) {
-  // TODO dedupe
-  const w = Math.max(...coords.map(([, y]) => y)) + 1
-  const h = Math.max(...coords.map(([x]) => x)) + 1
+  const [w, h] = getDims(coords)
   const rpw = rowsPerWord(w)
   const result = new Uint32Array(ceildiv(h, rpw))
   for (const [i, j] of coords) {
     result[floordiv(i, rpw)] |= 1 << (w * (i % rpw) + j)
   }
   return create(result, w)
+}
+
+function getDims(coords: VectorLike[]) {
+  let w = 0
+  let h = 0
+  for (let [i, j] of coords) {
+    w = Math.max(w, j)
+    h = Math.max(h, i)
+  }
+  return [w + 1, h + 1]
 }
 
 export function* rowBits(mino: MinoData): Generator<number> {
