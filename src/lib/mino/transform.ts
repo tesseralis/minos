@@ -57,31 +57,6 @@ export default class MinoTransform {
   apply(trans: Transform) {
     const [w, h] = this.mino.dims
     // If the transformation keeps each coordinate intact, we can do it directly
-    switch (trans) {
-      case "identity":
-        return this.mino
-      case "rotateHalf":
-        return Polyomino.fromData(
-          this.mino.data.transform(
-            (x) => w - 1 - x,
-            (y) => h - 1 - y,
-          ),
-        )
-      case "flipHoriz":
-        return Polyomino.fromData(
-          this.mino.data.transform(
-            (x) => w - 1 - x,
-            (y) => y,
-          ),
-        )
-      case "flipVert":
-        return Polyomino.fromData(
-          this.mino.data.transform(
-            (x) => x,
-            (y) => h - 1 - y,
-          ),
-        )
-    }
     return Polyomino.fromCoords(
       this.mino
         .coords()
@@ -115,7 +90,6 @@ export default class MinoTransform {
       const free = minBy(transforms, (trans) => {
         return [-trans.width, -trans.height, trans.data.toString()]
       })
-      // const free = Polyomino.sort(transforms)[0]
       // populate the free polyomino for all the transforms
       // so we don't have to re-calculate
       for (const trans of transforms) {
