@@ -126,7 +126,8 @@ export default class Polyomino {
 
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
-    return this.data === other.data
+    // Just do identity equality since everything is cached
+    return this === other
   }
 
   /** Return the coordinate of the mino's squares */
