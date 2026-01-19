@@ -1,4 +1,4 @@
-import { range } from "lodash-es"
+import { entries, range } from "lodash-es"
 import Vector, { type VectorLike } from "./vector"
 
 /**
@@ -30,19 +30,42 @@ export default class PointSet {
     return copy
   }
 
-  translate([x1, y1]: VectorLike) {
+  transform(fx: (n: number) => number, fy: (n: number) => number) {
     const result = new PointSet()
     result.data = new Map(
       this.data.entries().map(([x, ys]) => {
-        return [x + x1, new Set(ys.values().map((y) => y + y1))]
+        return [fx(x), new Set(ys.values().map((y) => fy(y)))]
       }),
     )
     result.size = this.size
-    result.minX = this.minX + x1
-    result.minY = this.minY + y1
-    result.maxX = this.maxX + x1
-    result.maxY = this.maxY + y1
+    const newMinX = fx(this.minX)
+    const newMaxX = fx(this.maxX)
+    result.minX = Math.min(newMinX, newMaxX)
+    result.maxX = Math.max(newMinX, newMaxX)
+    const newMinY = fy(this.minY)
+    const newMaxY = fy(this.maxY)
+    result.minY = Math.min(newMinY, newMaxY)
+    result.maxY = Math.max(newMinY, newMaxY)
     return result
+  }
+
+  translate([x1, y1]: VectorLike) {
+    return this.transform(
+      (x) => x + x1,
+      (y) => y + y1,
+    )
+    // const result = new PointSet()
+    // result.data = new Map(
+    //   this.data.entries().map(([x, ys]) => {
+    //     return [x + x1, new Set(ys.values().map((y) => y + y1))]
+    //   }),
+    // )
+    // result.size = this.size
+    // result.minX = this.minX + x1
+    // result.minY = this.minY + y1
+    // result.maxX = this.maxX + x1
+    // result.maxY = this.maxY + y1
+    // return result
   }
 
   add([x, y]: VectorLike) {
@@ -85,6 +108,13 @@ export default class PointSet {
   }
   get height() {
     return this.maxY - this.minY + 1
+  }
+
+  key() {
+    const xs = [...this.data.keys()].sort()
+    return xs
+      .map((x) => `${x}:${[...this.data.get(x)!].sort().join(",")}`)
+      .join(" ")
   }
 
   toString(entry = "1", empty = "0", delimiter = "_") {

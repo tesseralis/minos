@@ -56,7 +56,7 @@ export default class Polyomino {
   }
 
   static fromData(data: PointSet) {
-    const key = data.toString()
+    const key = data.key()
     if (!cache[key]) {
       cache[key] = new Polyomino(data)
     }

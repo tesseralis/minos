@@ -6,7 +6,6 @@ import { minBy, once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord, Dims } from "./data"
 import { Polyomino } from "./internal"
-import PointSet from "$lib/PointSet"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -56,18 +55,38 @@ export default class MinoTransform {
 
   /** Transform this mino with the given transformation */
   apply(trans: Transform) {
-    const newCoords = new PointSet()
-    newCoords.addAll(
-      this.mino.data
-        .values()
+    const [w, h] = this.mino.dims
+    // If the transformation keeps each coordinate intact, we can do it directly
+    switch (trans) {
+      case "identity":
+        return this.mino
+      case "rotateHalf":
+        return Polyomino.fromData(
+          this.mino.data.transform(
+            (x) => w - 1 - x,
+            (y) => h - 1 - y,
+          ),
+        )
+      case "flipHoriz":
+        return Polyomino.fromData(
+          this.mino.data.transform(
+            (x) => w - 1 - x,
+            (y) => y,
+          ),
+        )
+      case "flipVert":
+        return Polyomino.fromData(
+          this.mino.data.transform(
+            (x) => x,
+            (y) => h - 1 - y,
+          ),
+        )
+    }
+    return Polyomino.fromCoords(
+      this.mino
+        .coords()
         .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
     )
-    return Polyomino.fromData(newCoords)
-    // return Polyomino.fromCoords(
-    //   this.mino
-    //     .coords()
-    //     .map((p) => transformMinoCoord(p, this.mino.dims, trans)),
-    // )
   }
 
   rotations = once(() =>
