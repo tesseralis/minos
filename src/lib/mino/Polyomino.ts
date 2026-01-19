@@ -101,15 +101,28 @@ export default class Polyomino {
 
   /** Sort the minos in a canonical order */
   static sort(minos: Polyomino[]): Polyomino[] {
-    return sortBy(minos, [
-      (mino) => -mino.height,
-      (mino) => -mino.width,
-      (mino) => mino.toString(),
-    ])
+    return minos.toSorted((a, b) => a.cmp(b))
   }
 
   // Properties
   // ==========
+
+  cmp(other: Polyomino) {
+    if (this.height !== other.height) {
+      return other.height - this.height
+    }
+    if (this.width !== other.width) {
+      return other.width - this.width
+    }
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        if (this.contains([x, y]) !== other.contains([x, y])) {
+          return +other.contains([x, y]) - +this.contains([x, y])
+        }
+      }
+    }
+    return 0
+  }
 
   /** Return whether the two polyominoes represent the same fixed mino */
   equals(other: Polyomino) {
