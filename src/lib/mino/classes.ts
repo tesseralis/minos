@@ -67,23 +67,44 @@ export default class MinoClasses {
     return new Vector(xCoord, yCoord)
   }
 
-  // Get an arbitrary point on the given side
-  private pointAtSide(side: Side): Vector {
+  // Check if the cells on the border of a given side are a connected series of points.
+  // If so, return one of them, otherwise return undefined
+  private checkPointsAtSide(side: Side): Vector | undefined {
     const [w, h] = this.mino.dims
     switch (side) {
       case "right":
       case "left": {
         const xCoord = side === "left" ? 0 : w - 1
-        return range(h)
-          .map((j) => new Vector(xCoord, j))
-          .find((p) => this.mino.contains(p))!
+        let point
+        let foundHole = false
+        for (const j of range(h)) {
+          if (this.mino.contains([xCoord, j])) {
+            if (foundHole) {
+              return undefined
+            }
+            point = new Vector(xCoord, j)
+          } else if (point) {
+            foundHole = true
+          }
+        }
+        return point
       }
       case "top":
       case "bottom": {
         const yCoord = side === "top" ? 0 : h - 1
-        return range(w)
-          .map((i) => new Vector(i, yCoord))
-          .find((p) => this.mino.contains(p))!
+        let point
+        let foundHole = false
+        for (const i of range(w)) {
+          if (this.mino.contains([i, yCoord])) {
+            if (foundHole) {
+              return undefined
+            }
+            point = new Vector(i, yCoord)
+          } else if (point) {
+            foundHole = true
+          }
+        }
+        return point
       }
     }
   }
@@ -234,7 +255,8 @@ export default class MinoClasses {
   isSemiDirectedAtSide(side: Side) {
     // Get the three dimensions for the side
     const directions = getDirectionsForSide(side)
-    const start = this.pointAtSide(side)
+    const start = this.checkPointsAtSide(side)
+    if (!start) return false
     // Do BFS in three orthogonal directions
     const visited = new PointSet()
     visited.add(start)
