@@ -74,7 +74,10 @@ function sortGeneration(minos: Polyomino[]) {
   )
 }
 
-export function generateGraph(n: number) {
+export function generateGraph(
+  n: number,
+  sort?: (minos: Polyomino[]) => Polyomino[],
+) {
   const nodes: Polyomino[][] = []
   const links: [Polyomino, Polyomino][] = []
 
@@ -97,7 +100,7 @@ export function generateGraph(n: number) {
 
     nodes.push(currentGen)
     // currentGen = nextGen
-    currentGen = sortGeneration(nextGen)
+    currentGen = sort?.(nextGen) ?? nextGen
     currentGen.forEach((mino, i) => {
       indices.set(mino, i)
     })
@@ -110,7 +113,7 @@ export function generateGraph(n: number) {
 export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
-const { nodes, links, indices } = generateGraph(NUM_GENERATIONS)
+const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, sortGeneration)
 // console.log("Graph generated in: ", performance.now() - start)
 
 // These are hard coded for NUM_GENERATIONS = 8.
