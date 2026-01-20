@@ -30,22 +30,30 @@ export default class MinoClasses {
    * Get this polyomino's directedness class
    */
   get = once(() => {
-    const dirSides = sides.filter((side) => this.isSemiDirectedAtSide(side))
     const dirDiags = this.anchors().filter((anchor) =>
       this.isDirectedAtAnchor(anchor),
     )
+    let diag: Level
+    if (dirDiags.length === 2) {
+      diag = `2-${hasOppositeAnchors(dirDiags) ? "trans" : "cis"}`
+    } else {
+      diag = dirDiags.length as Level
+    }
+    // `isSemiDirectedAtSide` is more expensive, so short circuit if we can
+    if (dirDiags.length > 2 || diag === "2-trans") {
+      return new DirClass(4, diag)
+    }
+    const anchorSides = dirDiags.flatMap(getSidesForAnchor)
+    const dirSides = sides.filter((side) => {
+      if (anchorSides.includes(side)) return true
+      return this.isSemiDirectedAtSide(side)
+    })
     let ortho: Level
     if (dirSides.length === 2) {
       const [first, second] = dirSides
       ortho = `2-${isOppositeSides(first, second) ? "trans" : "cis"}`
     } else {
       ortho = dirSides.length as Level
-    }
-    let diag: Level
-    if (dirDiags.length === 2) {
-      diag = `2-${hasOppositeAnchors(dirDiags) ? "trans" : "cis"}`
-    } else {
-      diag = dirDiags.length as Level
     }
 
     return new DirClass(ortho, diag)
@@ -350,6 +358,13 @@ function hasOppositeAnchors(anchors: Anchor[]) {
   if (anchors.length < 2) return false
   const [first, second] = anchors
   return first.x !== second.x && first.y !== second.y
+}
+
+function getSidesForAnchor(anchor: Anchor): Side[] {
+  return [
+    anchor.x === "end" ? "right" : "left",
+    anchor.y === "end" ? "bottom" : "top",
+  ]
 }
 
 function getDirectionsForSide(side: Side) {
