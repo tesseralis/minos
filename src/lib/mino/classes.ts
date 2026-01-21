@@ -85,7 +85,7 @@ export default class MinoClasses {
         let point
         let foundHole = false
         for (const j of range(h)) {
-          if (this.mino.contains([xCoord, j])) {
+          if (this.mino.has(xCoord, j)) {
             if (foundHole) {
               return undefined
             }
@@ -102,7 +102,7 @@ export default class MinoClasses {
         let point
         let foundHole = false
         for (const i of range(w)) {
-          if (this.mino.contains([i, yCoord])) {
+          if (this.mino.has(i, yCoord)) {
             if (foundHole) {
               return undefined
             }
@@ -263,10 +263,11 @@ export default class MinoClasses {
     // Get the three dimensions for the side
     const directions = getDirectionsForSide(side)
     const start = this.checkPointsAtSide(side)
-    if (!start) return false
+    if (start === undefined) {
+      return false
+    }
     // Do BFS in three orthogonal directions
     const visited = new Set<PackedPoint>()
-    // const visited = new PointSet()
     visited.add(start)
     const stack = [start]
     while (stack.length > 0) {

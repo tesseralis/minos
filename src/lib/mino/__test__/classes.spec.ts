@@ -105,4 +105,11 @@ describe("MinoClasses", () => {
       }
     })
   })
+
+  describe.only("getDirClass", () => {
+    it("works", () => {
+      const mino = Polyomino.of("11011_01110")
+      expect(mino.classes.get().name()).toEqual("crescent")
+    })
+  })
 })
