@@ -21,6 +21,7 @@ import {
   type RelativeLink,
   fromString,
   move,
+  encode,
 } from "./data"
 import type { Dims, PackedPoint } from "./data"
 import { flip, type Direction } from "./edges"
@@ -119,8 +120,9 @@ export default class Polyomino {
     }
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        if (this.contains([x, y]) !== other.contains([x, y])) {
-          return +other.contains([x, y]) - +this.contains([x, y])
+        let p = encode(x, y)
+        if (this.hasRaw(p) !== other.hasRaw(p)) {
+          return +other.hasRaw(p) - +this.hasRaw(p)
         }
       }
     }
@@ -140,6 +142,10 @@ export default class Polyomino {
 
   hasRaw(point: PackedPoint) {
     return this.data.has(point)
+  }
+
+  has(x: number, y: number) {
+    return this.hasRaw(encode(x, y))
   }
 
   /** Return whether this mino contains the coordinate */
