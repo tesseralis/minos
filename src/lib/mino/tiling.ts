@@ -1,4 +1,4 @@
-import { once, range, zip, maxBy } from "lodash-es"
+import { range, zip, maxBy } from "lodash-es"
 import Vector from "$lib/vector"
 import { type Coord } from "./data"
 import { EdgeList } from "./edges"
@@ -44,7 +44,7 @@ export default class MinoTilings {
   }
 
   /** Get the tiling of this mino */
-  get = once(() => {
+  get() {
     if (this.mino.classes.hasHole()) {
       return undefined
     }
@@ -62,7 +62,7 @@ export default class MinoTilings {
     }
 
     return getConwayTiling(pattern)
-  })
+  }
 }
 
 // Return the distance vector between the two segments

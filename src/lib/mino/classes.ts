@@ -1,4 +1,4 @@
-import { once, range } from "lodash-es"
+import { range } from "lodash-es"
 import Vector from "$lib/vector"
 import PointSet from "$lib/PointSet"
 import {
@@ -36,7 +36,7 @@ export default class MinoClasses {
   /**
    * Get this polyomino's directedness class
    */
-  get = once(() => {
+  get() {
     const dirDiags = this.anchors().filter((anchor) =>
       this.isDirectedAtAnchor(anchor),
     )
@@ -64,7 +64,7 @@ export default class MinoClasses {
     }
 
     return new DirClass(ortho, diag)
-  })
+  }
 
   // Get the point of this polyomino's bounding box at the given corner anchor
   private pointAtAnchor({ x, y }: Anchor) {
@@ -157,31 +157,31 @@ export default class MinoClasses {
   /**
    * Return true if this polyomino is either row-convex or column-convex.
    */
-  isSemiConvex = once(() => {
+  isSemiConvex() {
     return axes.some((axis) => this.isConvexAtAxis(axis))
-  })
+  }
 
   /**
    * Return true if this polyomino is a "crescent"
    * (i.e. has a concavity in at most one direction)
    */
-  isCrescent = once(() => {
+  isCrescent() {
     return sides.filter((side) => this.isSemiDirectedAtSide(side)).length >= 3
-  })
+  }
 
   /**
    * Return whether this polyomino is convex,
    * that is, whether there are no "gaps"
    * between squares within the same row or coloumn.
    */
-  isConvex = once(() => {
+  isConvex() {
     return axes.every((axis) => this.isConvexAtAxis(axis))
-  })
+  }
 
   /**
    * Return true if the polyomino has a puncture.
    */
-  punctures = once(() => {
+  punctures() {
     // Iterate over all internal cells and see what's not in the mino
     // If one is found, do BFS and traverse until queue runs out or we get to the edge
     // If we get to the edge, it's not a puncture.
@@ -224,10 +224,10 @@ export default class MinoClasses {
       }
     }
     return punctures
-  })
+  }
 
   /** Return whether the polyomino contains a hole */
-  hasHole = once(() => {
+  hasHole() {
     // First mino with a hole is a heptomino
     if (this.mino.order < 7) {
       return false
@@ -249,7 +249,7 @@ export default class MinoClasses {
       }
     }
     return false
-  })
+  }
 
   // Get all the corner points of this polyomino that are contained in it
   private *iterAnchors(): Generator<Anchor> {
@@ -261,9 +261,9 @@ export default class MinoClasses {
   }
 
   /** Return all the contained anchors of this polyomino */
-  anchors = once(() => {
+  anchors() {
     return [...this.iterAnchors()]
-  })
+  }
 
   /** Returns whether the polyomino is directed at the given anchor */
   isSemiDirectedAtSide(side: Side) {
@@ -320,39 +320,39 @@ export default class MinoClasses {
   }
 
   /** Return all the anchors that this polyomino is directed at */
-  directedAnchors = once(() => {
+  directedAnchors() {
     return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
-  })
+  }
 
   /**
    * Returns whether the mino is semi-directed (aka orthogonally directed),
    * that is, there is some square in the mino such that all the other squares
    * can be reached from that mino in going three directions but not the fourth
    */
-  isSemiDirected = once(() => {
+  isSemiDirected() {
     return sides.some((side) => this.isSemiDirectedAtSide(side))
-  })
+  }
 
   /**
    * Return whether the mino is pre-directed, that is,
    * if it is semi-directed with respect to two adjacent directions.
    */
-  isPreDirected = once(() => {
+  isPreDirected() {
     const semiDirSides = sides.filter((side) => this.isSemiDirectedAtSide(side))
     if (semiDirSides.length < 2) return false
     if (semiDirSides.length >= 3) return true
     const [side1, side2] = semiDirSides
     return isAdjacentSides(side1, side2)
-  })
+  }
 
   /**
    * Returns whether the mino is directed, that is,
    * there is some square in the mino such that all other squares
    * can be reached from that mino by going in two orthogonal directions.
    */
-  isDirected = once(() => {
+  isDirected() {
     return this.anchors().some((anchor) => this.isDirectedAtAnchor(anchor))
-  })
+  }
 
   /** Return whether this mino is a bar chart polyomino */
   isBar() {

@@ -2,7 +2,7 @@
  * Utility functions for parsing and handling patterns/tilings of polyominoes.
  */
 
-import { once } from "lodash-es"
+import {} from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import PointSet from "$lib/PointSet"
 import { type MinoLike } from "./Polyomino"
@@ -168,7 +168,7 @@ export class MinoPattern {
   }
 
   /** Get the outer edges of this mino pattern */
-  edges: () => EdgeList = once(() => {
+  edges() {
     return getEdges([...this.coords()])
-  })
+  }
 }

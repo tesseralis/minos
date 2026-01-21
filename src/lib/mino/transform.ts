@@ -2,7 +2,6 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import { once } from "lodash-es"
 import Vector, { type Point } from "$lib/vector"
 import type { Coord } from "./data"
 import { Polyomino } from "./internal"
@@ -65,13 +64,15 @@ export default class MinoTransform {
     )
   }
 
-  rotations = once(() =>
-    ["identity" as const, ...rotations].map((t) => this.apply(t)),
-  )
+  rotations() {
+    return ["identity" as const, ...rotations].map((t) => this.apply(t))
+  }
 
   /** Return the list of all transforms of this mino */
   // TODO make this unique
-  all = once(() => transforms.map((t) => this.apply(t)))
+  all() {
+    return transforms.map((t) => this.apply(t))
+  }
 
   /** true if this mino is symmetric wrt the given transform */
   hasSymmetry(t: Transform) {
@@ -79,10 +80,14 @@ export default class MinoTransform {
   }
 
   /** true if the mino is the same as its reflection */
-  isOneSided = once(() => !reflections.some((t) => this.hasSymmetry(t)))
+  isOneSided() {
+    return !reflections.some((t) => this.hasSymmetry(t))
+  }
 
   /** Get the symmetry of this mino */
-  symmetry = once(() => getSymmetry((axis) => this.hasSymmetry(axis)))
+  symmetry() {
+    return getSymmetry((axis) => this.hasSymmetry(axis))
+  }
 
   /** Get the free polyomino corresponding to this mino */
   free() {

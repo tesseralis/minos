@@ -1,4 +1,4 @@
-import { partition, once } from "lodash-es"
+import { partition } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
@@ -136,9 +136,9 @@ export default class Polyomino {
   }
 
   /** Return the coordinate of the mino's squares */
-  coords = once(() => [
-    ...this.data.values().map((v) => Vector.fromArray(decode(v))),
-  ])
+  coords() {
+    return [...this.data.values().map((v) => Vector.fromArray(decode(v)))]
+  }
 
   hasRaw(point: PackedPoint) {
     return this.data.has(point)
@@ -154,17 +154,19 @@ export default class Polyomino {
   }
 
   /** Return the edge list for this mino */
-  boundary = once(() => getEdges(this.coords()))
+  boundary() {
+    return getEdges(this.coords())
+  }
 
   /** Return the perimeter of this polyomino */
-  perimeter = once(() => {
+  perimeter() {
     const perim = this.boundary().length
     // TODO handle larger minos more generally
     if (this.equals(O_OCTOMINO)) {
       return perim + 4
     }
     return perim
-  })
+  }
 
   /**
    * Return whether the polyomino is "balanced".
@@ -188,26 +190,28 @@ export default class Polyomino {
   // =========
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
-  possibleParents = once(() =>
-    this.coords().map((coord) => {
+  possibleParents() {
+    return this.coords().map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
         mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
         coord,
       }
-    }),
-  )
+    })
+  }
 
-  enumerateParents = once(
-    () => this.possibleParents().filter((link) => link.mino) as RelativeLink[],
-  )
+  enumerateParents() {
+    return this.possibleParents().filter((link) => link.mino) as RelativeLink[]
+  }
 
-  parents = once(() => this.enumerateParents().map((link) => link.mino))
+  parents() {
+    return this.enumerateParents().map((link) => link.mino)
+  }
 
   /** Return the set of all free parents of this mino */
-  freeParents = once(
-    () => new Set(this.parents().map((p) => p.transform.free())),
-  )
+  freeParents() {
+    return new Set(this.parents().map((p) => p.transform.free()))
+  }
 
   private *iterNeighbors(): Generator<Coord> {
     const visited = new PointSet()
@@ -221,28 +225,32 @@ export default class Polyomino {
     }
   }
 
-  neighbors = once(() => [...this.iterNeighbors()])
+  neighbors() {
+    return [...this.iterNeighbors()]
+  }
 
-  enumerateChildren = once(() =>
-    this.neighbors().map((coord) => ({
+  enumerateChildren() {
+    return this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
       coord,
-    })),
-  )
+    }))
+  }
 
   /** Return the list of all children of this mino */
-  children = once(() => this.enumerateChildren().map((link) => link.mino))
+  children() {
+    return this.enumerateChildren().map((link) => link.mino)
+  }
 
   /** Return the set of all free parents of this mino */
-  freeChildren = once(
-    () => new Set(this.children().map((c) => c.transform.free())),
-  )
+  freeChildren() {
+    return new Set(this.children().map((c) => c.transform.free()))
+  }
 
   /**
    * Get the longest straight line mino contained in this one,
    * and the number of times it occurs.
    */
-  longestLine = once(() => {
+  longestLine() {
     let max = 0
     let maxCount = 0
     for (const point of this.data.values()) {
@@ -260,13 +268,13 @@ export default class Polyomino {
       }
     }
     return { max, maxCount }
-  })
+  }
 
   /**
    * Get the longest wave/zigzag mino contained in this one,
    * and the number of times it occurs.
    */
-  longestWave = once(() => {
+  longestWave() {
     let max = 0
     let maxCount = 0
     for (const point of this.data.values()) {
@@ -289,7 +297,7 @@ export default class Polyomino {
       }
     }
     return { max, maxCount }
-  })
+  }
 
   private getLineLength(point: PackedPoint, dir: Direction) {
     let count = 0
