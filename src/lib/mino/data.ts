@@ -47,6 +47,20 @@ export function decode(m: PackedPoint): [number, number] {
   return [px(m), py(m)]
 }
 
+export function getDims(mino: MinoData) {
+  let xMin = Infinity
+  let xMax = -Infinity
+  let yMin = Infinity
+  let yMax = -Infinity
+  for (const value of mino.values()) {
+    xMin = Math.min(xMin, px(value))
+    xMax = Math.max(xMax, px(value))
+    yMin = Math.min(yMin, py(value))
+    yMax = Math.max(yMax, py(value))
+  }
+  return encode(xMax - xMin + 1, yMax - yMin + 1)
+}
+
 export function getWidth(mino: MinoData) {
   let min = Infinity
   let max = -Infinity

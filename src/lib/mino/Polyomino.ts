@@ -22,6 +22,9 @@ import {
   fromString,
   move,
   encode,
+  getDims,
+  px,
+  py,
 } from "./data"
 import type { Dims, PackedPoint } from "./data"
 import { flip, type Direction } from "./edges"
@@ -38,9 +41,7 @@ export default class Polyomino {
   order: number
 
   /** Polyomino dimensions */
-  width: number
-  height: number
-  dims: Dims
+  rawDims: PackedPoint
 
   classes: MinoClasses
   transform: MinoTransform
@@ -61,11 +62,19 @@ export default class Polyomino {
   private constructor(data: MinoData) {
     this.data = data
     this.order = data.size
-    this.width = getWidth(data)
-    this.height = getHeight(data)
-    this.dims = [this.width, this.height]
+    this.rawDims = getDims(data)
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
+  }
+
+  get width() {
+    return px(this.rawDims)
+  }
+  get height() {
+    return py(this.rawDims)
+  }
+  get dims() {
+    return [this.width, this.height]
   }
 
   static fromData(data: MinoData) {

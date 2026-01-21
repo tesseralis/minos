@@ -71,13 +71,6 @@ export default class MinoClasses {
     const [w, h] = this.mino.dims
     const xCoord = x === "start" ? 0 : w - 1
     const yCoord = y === "start" ? 0 : h - 1
-    return new Vector(xCoord, yCoord)
-  }
-
-  private packedPointAtAnchor({ x, y }: Anchor) {
-    const [w, h] = this.mino.dims
-    const xCoord = x === "start" ? 0 : w - 1
-    const yCoord = y === "start" ? 0 : h - 1
     return encode(xCoord, yCoord)
   }
 
@@ -125,7 +118,7 @@ export default class MinoClasses {
 
   /** Return whether the polyomino has the given anchor */
   hasAnchor(anchor: Anchor) {
-    return this.mino.contains(this.pointAtAnchor(anchor))
+    return this.mino.hasRaw(this.pointAtAnchor(anchor))
   }
 
   /** Return whether the polyomino is row or column-convex */
@@ -300,7 +293,7 @@ export default class MinoClasses {
     // Get the two directions of that corner
     const xDir: Side = anchor.x === "end" ? "left" : "right"
     const yDir: Side = anchor.y === "end" ? "top" : "bottom"
-    const start = this.packedPointAtAnchor(anchor)
+    const start = this.pointAtAnchor(anchor)
     // Do BFS in the two orthogonal directions
     const visited = new Set<PackedPoint>()
     visited.add(start)
