@@ -8,7 +8,14 @@ import {
   DirClass,
   type Level,
 } from "./internal"
-import { getNeighbors, getKingwiseNeighbors } from "./data"
+import {
+  getNeighbors,
+  getKingwiseNeighbors,
+  type PackedPoint,
+  encode,
+  px,
+  py,
+} from "./data"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]
@@ -67,9 +74,16 @@ export default class MinoClasses {
     return new Vector(xCoord, yCoord)
   }
 
+  private packedPointAtAnchor({ x, y }: Anchor) {
+    const [w, h] = this.mino.dims
+    const xCoord = x === "start" ? 0 : w - 1
+    const yCoord = y === "start" ? 0 : h - 1
+    return encode(xCoord, yCoord)
+  }
+
   // Check if the cells on the border of a given side are a connected series of points.
   // If so, return one of them, otherwise return undefined
-  private checkPointsAtSide(side: Side): Vector | undefined {
+  private checkPointsAtSide(side: Side): PackedPoint | undefined {
     const [w, h] = this.mino.dims
     switch (side) {
       case "right":
@@ -82,7 +96,7 @@ export default class MinoClasses {
             if (foundHole) {
               return undefined
             }
-            point = new Vector(xCoord, j)
+            point = encode(xCoord, j)
           } else if (point) {
             foundHole = true
           }
@@ -99,7 +113,7 @@ export default class MinoClasses {
             if (foundHole) {
               return undefined
             }
-            point = new Vector(i, yCoord)
+            point = encode(i, yCoord)
           } else if (point) {
             foundHole = true
           }
@@ -258,16 +272,19 @@ export default class MinoClasses {
     const start = this.checkPointsAtSide(side)
     if (!start) return false
     // Do BFS in three orthogonal directions
-    const visited = new PointSet()
+    const visited = new Set<PackedPoint>()
+    // const visited = new PointSet()
     visited.add(start)
-    const queue = [start]
-    while (queue.length > 0) {
-      const current = queue.shift()!
+    const stack = [start]
+    while (stack.length > 0) {
+      const current = stack.pop()!
       for (const nbrDir of directions) {
-        const nbr = current.add(nbrDir)
-        if (this.mino.contains(nbr) && !visited.has(nbr)) {
+        if (nbrDir === "top" && py(current) === 0) continue
+        if (nbrDir === "left" && px(current) === 0) continue
+        const nbr = moveInDirection(current, nbrDir)
+        if (this.mino.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
-          queue.push(nbr)
+          stack.push(nbr)
         }
       }
     }
@@ -281,18 +298,18 @@ export default class MinoClasses {
       return false
     }
     // Get the two directions of that corner
-    const xDir = anchor.x === "end" ? Vector.LEFT : Vector.RIGHT
-    const yDir = anchor.y === "end" ? Vector.UP : Vector.DOWN
-    const start = this.pointAtAnchor(anchor)
+    const xDir: Side = anchor.x === "end" ? "left" : "right"
+    const yDir: Side = anchor.y === "end" ? "top" : "bottom"
+    const start = this.packedPointAtAnchor(anchor)
     // Do BFS in the two orthogonal directions
-    const visited = new PointSet()
+    const visited = new Set<PackedPoint>()
     visited.add(start)
     const queue = [start]
     while (queue.length > 0) {
       const current = queue.pop()!
       for (const nbrDir of [yDir, xDir]) {
-        const nbr = current.add(nbrDir)
-        if (this.mino.contains(nbr) && !visited.has(nbr)) {
+        const nbr = moveInDirection(current, nbrDir)
+        if (this.mino.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           queue.push(nbr)
         }
@@ -390,14 +407,20 @@ function getSidesForAnchor(anchor: Anchor): Side[] {
 }
 
 function getDirectionsForSide(side: Side) {
-  const vecs = [Vector.UP, Vector.DOWN, Vector.LEFT, Vector.RIGHT]
-  const sideVecs = {
-    left: Vector.LEFT,
-    right: Vector.RIGHT,
-    top: Vector.UP,
-    bottom: Vector.DOWN,
+  return sides.filter((s) => s !== side)
+}
+
+function moveInDirection(coord: PackedPoint, direction: Side) {
+  switch (direction) {
+    case "top":
+      return coord - encode(0, 1)
+    case "bottom":
+      return coord + encode(0, 1)
+    case "left":
+      return coord - encode(1, 0)
+    case "right":
+      return coord + encode(1, 0)
   }
-  return vecs.filter((v) => !v.equals(sideVecs[side]))
 }
 
 function getAxis(side: Side): Axis {

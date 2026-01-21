@@ -14,7 +14,7 @@ export interface PossibleRelativeLink {
 export type RelativeLink = Required<PossibleRelativeLink>
 
 const INT_WIDTH = 16
-type PackedPoint = number
+export type PackedPoint = number
 
 /**
  * The underlying representation for a polyomino, a set of coordinates,

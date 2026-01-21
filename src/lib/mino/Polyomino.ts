@@ -21,7 +21,7 @@ import {
   type RelativeLink,
   fromString,
 } from "./data"
-import type { Dims } from "./data"
+import type { Dims, PackedPoint } from "./data"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -135,6 +135,10 @@ export default class Polyomino {
   coords = once(() => [
     ...this.data.values().map((v) => Vector.fromArray(decode(v))),
   ])
+
+  hasRaw(point: PackedPoint) {
+    return this.data.has(point)
+  }
 
   /** Return whether this mino contains the coordinate */
   contains(coord: VectorLike) {
