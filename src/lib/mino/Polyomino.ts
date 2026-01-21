@@ -20,8 +20,10 @@ import {
   type MinoData,
   type RelativeLink,
   fromString,
+  move,
 } from "./data"
 import type { Dims, PackedPoint } from "./data"
+import { flip, type Direction } from "./edges"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -237,9 +239,10 @@ export default class Polyomino {
   longestLine = once(() => {
     let max = 0
     let maxCount = 0
-    for (const point of this.coords()) {
-      for (const dir of [Vector.RIGHT, Vector.DOWN]) {
-        if (!this.contains(point.sub(dir))) {
+    for (const point of this.data.values()) {
+      for (const dir of ["right", "down"] as const) {
+        const opposite = move(point, flip(dir))
+        if (opposite === undefined || !this.hasRaw(opposite)) {
           const newMax = this.getLineLength(point, dir)
           if (newMax > max) {
             max = newMax
@@ -260,14 +263,15 @@ export default class Polyomino {
   longestWave = once(() => {
     let max = 0
     let maxCount = 0
-    for (const point of this.coords()) {
+    for (const point of this.data.values()) {
       for (const [dir1, dir2] of [
-        [Vector.DOWN, Vector.RIGHT],
-        [Vector.DOWN, Vector.LEFT],
-        [Vector.RIGHT, Vector.DOWN],
-        [Vector.LEFT, Vector.DOWN],
-      ]) {
-        if (!this.contains(point.sub(dir2))) {
+        ["down", "right"],
+        ["right", "down"],
+        ["down", "left"],
+        ["left", "down"],
+      ] as const) {
+        const opposite = move(point, flip(dir2))
+        if (opposite === undefined || !this.hasRaw(opposite)) {
           const newMax = this.getWaveLength(point, dir1, dir2)
           if (newMax > max) {
             max = newMax
@@ -281,28 +285,22 @@ export default class Polyomino {
     return { max, maxCount }
   })
 
-  private getLineLength(point: Vector, dir: Vector) {
+  private getLineLength(point: PackedPoint, dir: Direction) {
     let count = 0
-    while (
-      point.x < this.width &&
-      point.y < this.height &&
-      this.contains(point)
-    ) {
-      point = point.add(dir)
+    let p: PackedPoint | undefined = point
+    while (p !== undefined && this.hasRaw(p)) {
       count++
+      p = move(p, dir)
     }
     return count
   }
 
-  private getWaveLength(point: Vector, dir1: Vector, dir2: Vector) {
+  private getWaveLength(point: PackedPoint, dir1: Direction, dir2: Direction) {
     let count = 0
-    while (
-      point.x < this.width &&
-      point.y < this.height &&
-      this.contains(point)
-    ) {
-      point = point.add(count % 2 === 0 ? dir1 : dir2)
+    let p: PackedPoint | undefined = point
+    while (p !== undefined && this.hasRaw(p)) {
       count++
+      p = move(p, count % 2 === 0 ? dir1 : dir2)
     }
     return count
   }

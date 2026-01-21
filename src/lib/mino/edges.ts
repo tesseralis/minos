@@ -7,7 +7,7 @@ import { type Coord } from "./data"
 
 export type Direction = "left" | "right" | "up" | "down"
 
-function flip(d: Direction) {
+export function flip(d: Direction) {
   switch (d) {
     case "up":
       return "down"

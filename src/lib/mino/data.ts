@@ -5,6 +5,8 @@ import PointSet from "$lib/PointSet"
 
 export type Dims = [number, number]
 export type Coord = Vector
+// TODO deduplicate with the definition in 'edges'
+export type Direction = "left" | "right" | "up" | "down"
 
 export interface PossibleRelativeLink {
   mino?: Polyomino
@@ -75,6 +77,28 @@ export function getKey(data: MinoData) {
 export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
   for (const p of items) {
     mino.add(encodeVec(p))
+  }
+}
+
+export function move(
+  point: PackedPoint,
+  dir: Direction,
+): PackedPoint | undefined {
+  switch (dir) {
+    case "left": {
+      if (px(point) === 0) return
+      return point - encode(1, 0)
+    }
+    case "right": {
+      return point + encode(1, 0)
+    }
+    case "up": {
+      if (py(point) === 0) return
+      return point - encode(0, 1)
+    }
+    case "down": {
+      return point + encode(0, 1)
+    }
   }
 }
 
