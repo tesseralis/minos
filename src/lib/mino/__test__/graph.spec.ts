@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { generateGraph } from "../graph"
+import { generateGraph } from "../enumerate"
 
 describe("graph", () => {
   it("generates correctly", () => {

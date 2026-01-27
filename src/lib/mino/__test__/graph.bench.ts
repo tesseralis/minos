@@ -1,5 +1,5 @@
 import { describe, bench } from "vitest"
-import { generateGraph } from "../graph"
+import { generateGraph } from "../enumerate"
 
 describe("graph", () => {
   bench(

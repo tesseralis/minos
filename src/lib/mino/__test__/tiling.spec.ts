@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { Polyomino } from "../internal"
-import { generateGraph } from "$lib/components/graph"
+import { generateGraph } from "../enumerate"
 
 // TODO (test) make sure translating by the basis gives something adjacent
 // TODO (test) make sure domains are connected but don't overlap
