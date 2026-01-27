@@ -73,7 +73,10 @@ function sortGeneration(minos: Polyomino[]) {
 export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
-const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, sortGeneration)
+const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, {
+  links: true,
+  sort: sortGeneration,
+})
 // console.log("Graph generated in: ", performance.now() - start)
 
 // These are hard coded for NUM_GENERATIONS = 8.
@@ -117,7 +120,7 @@ export function getSortedChildren(mino: Polyomino): RelativeLink[] {
  * Get the index of the mino within its generation
  */
 export function getIndex(mino: Polyomino) {
-  return indices.get(mino.transform.free()) ?? 0
+  return indices!.get(mino.transform.free()) ?? 0
 }
 
 /**

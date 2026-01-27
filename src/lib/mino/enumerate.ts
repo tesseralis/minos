@@ -1,11 +1,12 @@
 import type Polyomino from "./Polyomino"
 import { MONOMINO } from "./internal"
 
+interface GenerationOptions {
+  sort?(minos: Polyomino[]): Polyomino[]
+  links?: boolean
+}
 // Generate the genealogy graph of polyominoes
-export function generateGraph(
-  n: number,
-  sort?: (minos: Polyomino[]) => Polyomino[],
-) {
+export function generateGraph(n: number, options: GenerationOptions = {}) {
   const nodes: Polyomino[][] = []
   const links: [Polyomino, Polyomino][] = []
 
@@ -22,18 +23,25 @@ export function generateGraph(
           nextGen.push(child)
           visited.add(child)
         }
-        links.push([mino, child])
+        if (options.links) {
+          links.push([mino, child])
+        }
       }
     }
 
     nodes.push(currentGen)
     // currentGen = nextGen
-    currentGen = sort?.(nextGen) ?? nextGen
-    currentGen.forEach((mino, i) => {
-      indices.set(mino, i)
-    })
+    currentGen = options.sort?.(nextGen) ?? nextGen
+    if (options.links) {
+      currentGen.forEach((mino, i) => {
+        indices.set(mino, i)
+      })
+    }
   }
   nodes.push(currentGen)
 
-  return { nodes, links, indices }
+  if (options.links) {
+    return { nodes, links, indices }
+  }
+  return { nodes }
 }
