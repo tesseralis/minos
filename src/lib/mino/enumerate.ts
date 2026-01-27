@@ -17,6 +17,7 @@ export function generateGraph(n: number, options: GenerationOptions = {}) {
 
   while (nodes.length < n - 1) {
     const nextGen = []
+    const time = performance.now()
     for (const mino of currentGen) {
       for (const child of mino.freeChildren()) {
         if (!visited.has(child)) {
@@ -30,6 +31,9 @@ export function generateGraph(n: number, options: GenerationOptions = {}) {
     }
 
     nodes.push(currentGen)
+    console.log(
+      `Gen ${nodes.length + 1}: ${Math.round(performance.now() - time) / 1000}`,
+    )
     // currentGen = nextGen
     currentGen = options.sort?.(nextGen) ?? nextGen
     if (options.links) {

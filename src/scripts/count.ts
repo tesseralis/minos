@@ -1,4 +1,4 @@
-import { generateGraph } from "$lib/components/graph"
+import { generateGraph } from "$lib/mino/enumerate"
 import { countBy } from "lodash-es"
 
 // Currently 13 is the highest we can go
