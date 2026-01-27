@@ -231,19 +231,22 @@ export default class MinoClasses {
     let visited = new Set<PackedPoint>()
     for (const innerNbr of this.mino.innerRawNeighbors()) {
       if (visited.has(innerNbr)) continue
+      if (isAtBorder(innerNbr, this.mino.width, this.mino.height)) {
+        visited.add(innerNbr)
+        continue
+      }
 
       const queue = [innerNbr]
       let connectedToEdge = false
-      const currentVisited = new Set<PackedPoint>()
       while (queue.length > 0) {
         const p = queue.pop()!
-        currentVisited.add(p)
+        if (isAtBorder(p, this.mino.width, this.mino.height)) {
+          connectedToEdge = true
+          break
+        }
         for (const dir of directions) {
-          const nbr = move(p, dir, this.mino.width, this.mino.height)
-          if (nbr == null || visited.has(nbr)) {
-            connectedToEdge = true
-            break
-          } else if (this.mino.hasRaw(nbr) || currentVisited.has(nbr)) {
+          const nbr = move(p, dir)!
+          if (this.mino.hasRaw(nbr) || visited.has(nbr)) {
             continue
           } else {
             queue.push(nbr)
@@ -252,7 +255,6 @@ export default class MinoClasses {
         if (connectedToEdge) break
       }
       if (!connectedToEdge) return true
-      visited = visited.union(currentVisited)
     }
     return false
   }
@@ -445,4 +447,10 @@ function isOppositeSides(side1: Side, side2: Side) {
 
 function isAdjacentSides(side1: Side, side2: Side) {
   return !isOppositeSides(side1, side2)
+}
+
+function isAtBorder(p: PackedPoint, w: number, h: number) {
+  const x = px(p)
+  const y = py(p)
+  return x === 0 || x === w - 1 || y === 0 || y === h - 1
 }
