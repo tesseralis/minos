@@ -39,7 +39,7 @@ function getBoundaryFamily(mino: Polyomino) {
   } else if (mino.classes.isDirected()) {
     // Make sure directed minos are rooted in the bottom-left
     filtered = transforms.filter((f) =>
-      f.classes.isDirectedAtAnchor({ x: "start", y: "end" }),
+      f.classes.isCornerDirected({ x: "start", y: "end" }),
     )
   }
 
@@ -59,8 +59,7 @@ function getBoundaryFamily(mino: Polyomino) {
   ) {
     filtered = filtered.filter(
       (f) =>
-        f.classes.isSemiDirectedAtSide("bottom") &&
-        f.classes.isSemiDirectedAtSide("left"),
+        f.classes.isSideDirected("bottom") && f.classes.isSideDirected("left"),
     )
   }
 
@@ -69,7 +68,7 @@ function getBoundaryFamily(mino: Polyomino) {
     !mino.classes.isSemiConvex() &&
     mino.classes.isSemiDirected()
   ) {
-    filtered = filtered.filter((f) => f.classes.isSemiDirectedAtSide("bottom"))
+    filtered = filtered.filter((f) => f.classes.isSideDirected("bottom"))
   }
 
   const families = filtered.map((mino) => ({
