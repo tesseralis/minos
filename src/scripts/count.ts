@@ -1,13 +1,10 @@
 import { generateGraph } from "$lib/components/graph"
 import { countBy } from "lodash-es"
 
-const { nodes } = generateGraph(12)
+// Currently 13 is the highest we can go
+const { nodes } = generateGraph(13)
 
 console.log("Generated nodes")
-
-const classCounts = nodes.map((gen) =>
-  countBy(gen, (mino) => mino.classes.get().name),
-)
 
 for (let [i, gen] of nodes.entries()) {
   console.log(`Generation ${i + 1}`)

@@ -87,6 +87,7 @@ export function generateGraph(
   let currentGen = [MONOMINO]
 
   while (nodes.length < n - 1) {
+    let time = performance.now()
     const nextGen = []
     for (const mino of currentGen) {
       for (const child of mino.freeChildren()) {
@@ -104,6 +105,9 @@ export function generateGraph(
     currentGen.forEach((mino, i) => {
       indices.set(mino, i)
     })
+    console.log(
+      `Gen ${nodes.length + 1} generated in ${Math.round(performance.now() - time) / 1000}s`,
+    )
   }
   nodes.push(currentGen)
 
