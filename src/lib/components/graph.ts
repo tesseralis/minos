@@ -1,12 +1,7 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash-es"
 
-import {
-  Polyomino,
-  type RelativeLink,
-  type Symmetry,
-  MONOMINO,
-} from "$lib/mino"
+import { Polyomino, type RelativeLink, type Symmetry } from "$lib/mino"
 import { generateGraph } from "$lib/mino/enumerate"
 
 type Color = tinycolor.Instance

@@ -7,10 +7,8 @@ import PointSet from "$lib/PointSet"
 import {
   addAll,
   display,
-  getHeight,
   getKey,
   getNeighbors,
-  getWidth,
   encodeVec,
   decode,
   addSquare,
@@ -19,6 +17,7 @@ import {
   type Coord,
   type MinoData,
   type RelativeLink,
+  type PackedPoint,
   fromString,
   move,
   encode,
@@ -26,7 +25,6 @@ import {
   px,
   py,
 } from "./data"
-import type { Dims, PackedPoint } from "./data"
 import { flip, type Direction } from "./edges"
 
 // cache of all created minos
@@ -129,7 +127,7 @@ export default class Polyomino {
     }
     for (let y = 0; y < this.height; y++) {
       for (let x = 0; x < this.width; x++) {
-        let p = encode(x, y)
+        const p = encode(x, y)
         if (this.hasRaw(p) !== other.hasRaw(p)) {
           return +other.hasRaw(p) - +this.hasRaw(p)
         }

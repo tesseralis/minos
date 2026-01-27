@@ -16,7 +16,6 @@ import {
 import { getNeighbors } from "./data"
 import type { Dims, Coord } from "./data"
 import { getEdges } from "./outline"
-import { EdgeList } from "./edges"
 
 /**
  * Represents the placement of a single polyomino in a coordinate grid
