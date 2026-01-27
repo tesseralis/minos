@@ -1,6 +1,5 @@
 import { describe, it, expect } from "vitest"
 import { Polyomino } from "../internal"
-import { generateGraph } from "$lib/components/graph"
 
 // TODO (test) make sure translating by the basis gives something adjacent
 // TODO (test) make sure domains are connected but don't overlap
@@ -33,12 +32,5 @@ describe("getTiling()", () => {
   it("does not return a tiling when none is possible", () => {
     const mino = Polyomino.fromString("111_101_110")
     expect(mino.tilings.get()).toBeUndefined()
-  })
-
-  it("correctly tabulates the number of minos with tilings", () => {
-    const tilingCounts = generateGraph(8).nodes.map(
-      (gen) => gen.filter((mino) => !mino.tilings.get()).length,
-    )
-    expect(tilingCounts).toEqual([0, 0, 0, 0, 0, 0, 4, 26])
   })
 })

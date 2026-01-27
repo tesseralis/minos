@@ -97,13 +97,18 @@ export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
 export function move(
   point: PackedPoint,
   dir: Direction,
+  width?: number,
+  height?: number,
 ): PackedPoint | undefined {
+  const x = px(point)
+  const y = py(point)
   switch (dir) {
     case "left": {
-      if (px(point) === 0) return
+      if (x === 0) return
       return point - encode(1, 0)
     }
     case "right": {
+      if (width && x === width - 1) return
       return point + encode(1, 0)
     }
     case "up": {
@@ -111,6 +116,7 @@ export function move(
       return point - encode(0, 1)
     }
     case "down": {
+      if (height && y === height - 1) return
       return point + encode(0, 1)
     }
   }

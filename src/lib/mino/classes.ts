@@ -15,6 +15,8 @@ import {
   encode,
   px,
   py,
+  type Direction,
+  move,
 } from "./data"
 
 const axes = ["row", "column"] as const
@@ -38,7 +40,7 @@ export default class MinoClasses {
    */
   get() {
     const dirDiags = this.anchors().filter((anchor) =>
-      this.isDirectedAtAnchor(anchor),
+      this.isCornerDirected(anchor),
     )
     let diag: Level
     if (dirDiags.length === 2) {
@@ -53,7 +55,7 @@ export default class MinoClasses {
     const anchorSides = dirDiags.flatMap(getSidesForAnchor)
     const dirSides = sides.filter((side) => {
       if (anchorSides.includes(side)) return true
-      return this.isSemiDirectedAtSide(side)
+      return this.isSideDirected(side)
     })
     let ortho: Level
     if (dirSides.length === 2) {
@@ -159,7 +161,7 @@ export default class MinoClasses {
    * (i.e. has a concavity in at most one direction)
    */
   isCrescent() {
-    return sides.filter((side) => this.isSemiDirectedAtSide(side)).length >= 3
+    return sides.filter((side) => this.isSideDirected(side)).length >= 3
   }
 
   /**
@@ -259,10 +261,10 @@ export default class MinoClasses {
   }
 
   /** Returns whether the polyomino is directed at the given anchor */
-  isSemiDirectedAtSide(side: Side) {
+  isSideDirected(dir: Side) {
     // Get the three dimensions for the side
-    const directions = getDirectionsForSide(side)
-    const start = this.checkPointsAtSide(side)
+    const directions = getDirectionsForSide(dir)
+    const start = this.checkPointsAtSide(dir)
     if (start === undefined) {
       return false
     }
@@ -273,10 +275,10 @@ export default class MinoClasses {
     while (stack.length > 0) {
       const current = stack.pop()!
       for (const nbrDir of directions) {
-        if (nbrDir === "top" && py(current) === 0) continue
+        if (nbrDir === "up" && py(current) === 0) continue
         if (nbrDir === "left" && px(current) === 0) continue
-        const nbr = moveInDirection(current, nbrDir)
-        if (this.mino.hasRaw(nbr) && !visited.has(nbr)) {
+        const nbr = move(current, nbrDir)
+        if (nbr !== undefined && this.mino.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           stack.push(nbr)
         }
@@ -287,14 +289,14 @@ export default class MinoClasses {
   }
 
   /** Returns whether the polyomino is directed at the given anchor */
-  isDirectedAtAnchor(anchor: Anchor) {
-    if (!this.hasAnchor(anchor)) {
+  isCornerDirected(corner: Anchor) {
+    if (!this.hasAnchor(corner)) {
       return false
     }
     // Get the two directions of that corner
-    const xDir: Side = anchor.x === "end" ? "left" : "right"
-    const yDir: Side = anchor.y === "end" ? "top" : "bottom"
-    const start = this.pointAtAnchor(anchor)
+    const xDir: Direction = corner.x === "end" ? "left" : "right"
+    const yDir: Direction = corner.y === "end" ? "up" : "down"
+    const start = this.pointAtAnchor(corner)
     // Do BFS in the two orthogonal directions
     const visited = new Set<PackedPoint>()
     visited.add(start)
@@ -302,8 +304,8 @@ export default class MinoClasses {
     while (queue.length > 0) {
       const current = queue.pop()!
       for (const nbrDir of [yDir, xDir]) {
-        const nbr = moveInDirection(current, nbrDir)
-        if (this.mino.hasRaw(nbr) && !visited.has(nbr)) {
+        const nbr = move(current, nbrDir)
+        if (nbr !== undefined && this.mino.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           queue.push(nbr)
         }
@@ -315,7 +317,7 @@ export default class MinoClasses {
 
   /** Return all the anchors that this polyomino is directed at */
   directedAnchors() {
-    return this.anchors().filter((anchor) => this.isDirectedAtAnchor(anchor))
+    return this.anchors().filter((anchor) => this.isCornerDirected(anchor))
   }
 
   /**
@@ -324,7 +326,7 @@ export default class MinoClasses {
    * can be reached from that mino in going three directions but not the fourth
    */
   isSemiDirected() {
-    return sides.some((side) => this.isSemiDirectedAtSide(side))
+    return sides.some((side) => this.isSideDirected(side))
   }
 
   /**
@@ -332,7 +334,7 @@ export default class MinoClasses {
    * if it is semi-directed with respect to two adjacent directions.
    */
   isPreDirected() {
-    const semiDirSides = sides.filter((side) => this.isSemiDirectedAtSide(side))
+    const semiDirSides = sides.filter((side) => this.isSideDirected(side))
     if (semiDirSides.length < 2) return false
     if (semiDirSides.length >= 3) return true
     const [side1, side2] = semiDirSides
@@ -345,7 +347,7 @@ export default class MinoClasses {
    * can be reached from that mino by going in two orthogonal directions.
    */
   isDirected() {
-    return this.anchors().some((anchor) => this.isDirectedAtAnchor(anchor))
+    return this.anchors().some((anchor) => this.isCornerDirected(anchor))
   }
 
   /** Return whether this mino is a bar chart polyomino */
@@ -401,19 +403,17 @@ function getSidesForAnchor(anchor: Anchor): Side[] {
 }
 
 function getDirectionsForSide(side: Side) {
-  return sides.filter((s) => s !== side)
+  return sides.filter((s) => s !== side).map(sideToDirection)
 }
 
-function moveInDirection(coord: PackedPoint, direction: Side) {
-  switch (direction) {
+function sideToDirection(side: Side): Direction {
+  switch (side) {
     case "top":
-      return coord - encode(0, 1)
+      return "up"
     case "bottom":
-      return coord + encode(0, 1)
-    case "left":
-      return coord - encode(1, 0)
-    case "right":
-      return coord + encode(1, 0)
+      return "down"
+    default:
+      return side
   }
 }
 

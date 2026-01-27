@@ -1,12 +1,8 @@
 import tinycolor from "tinycolor2"
 import { uniqBy, sortBy, mapValues } from "lodash-es"
 
-import {
-  Polyomino,
-  type RelativeLink,
-  type Symmetry,
-  MONOMINO,
-} from "$lib/mino"
+import { Polyomino, type RelativeLink, type Symmetry } from "$lib/mino"
+import { generateGraph } from "$lib/mino/enumerate"
 
 type Color = tinycolor.Instance
 
@@ -74,50 +70,13 @@ function sortGeneration(minos: Polyomino[]) {
   )
 }
 
-export function generateGraph(
-  n: number,
-  sort?: (minos: Polyomino[]) => Polyomino[],
-) {
-  const nodes: Polyomino[][] = []
-  const links: [Polyomino, Polyomino][] = []
-
-  // mapping from each mino to its index in the generation
-  const indices = new Map<Polyomino, number>()
-  const visited = new Set<Polyomino>([MONOMINO])
-  let currentGen = [MONOMINO]
-
-  while (nodes.length < n - 1) {
-    let time = performance.now()
-    const nextGen = []
-    for (const mino of currentGen) {
-      for (const child of mino.freeChildren()) {
-        if (!visited.has(child)) {
-          nextGen.push(child)
-          visited.add(child)
-        }
-        links.push([mino, child])
-      }
-    }
-
-    nodes.push(currentGen)
-    // currentGen = nextGen
-    currentGen = sort?.(nextGen) ?? nextGen
-    currentGen.forEach((mino, i) => {
-      indices.set(mino, i)
-    })
-    console.log(
-      `Gen ${nodes.length + 1} generated in ${Math.round(performance.now() - time) / 1000}s`,
-    )
-  }
-  nodes.push(currentGen)
-
-  return { nodes, links, indices }
-}
-
 export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
-const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, sortGeneration)
+const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, {
+  links: true,
+  sort: sortGeneration,
+})
 // console.log("Graph generated in: ", performance.now() - start)
 
 // These are hard coded for NUM_GENERATIONS = 8.
@@ -161,7 +120,7 @@ export function getSortedChildren(mino: Polyomino): RelativeLink[] {
  * Get the index of the mino within its generation
  */
 export function getIndex(mino: Polyomino) {
-  return indices.get(mino.transform.free()) ?? 0
+  return indices!.get(mino.transform.free()) ?? 0
 }
 
 /**
