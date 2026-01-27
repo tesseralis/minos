@@ -17,6 +17,7 @@ import {
   py,
   type Direction,
   move,
+  directions,
 } from "./data"
 
 const axes = ["row", "column"] as const
@@ -227,21 +228,31 @@ export default class MinoClasses {
     if (this.mino.order < 7) {
       return false
     }
-    // TODO this will fail for holes larger than a single cell
-    for (const x of range(1, this.mino.width - 1)) {
-      for (const y of range(1, this.mino.height - 1)) {
-        // Has a hole if there is a point inside the mino that isn't contained in the mino
-        // but its neighbors are all in the mino.
-        // Note: this only works for order <= 8
-        const p = new Vector(x, y)
-        if (this.mino.contains(p)) {
-          continue
+    let visited = new Set<PackedPoint>()
+    for (const innerNbr of this.mino.innerRawNeighbors()) {
+      if (visited.has(innerNbr)) continue
+
+      const queue = [innerNbr]
+      let connectedToEdge = false
+      const currentVisited = new Set<PackedPoint>()
+      while (queue.length > 0) {
+        const p = queue.pop()!
+        currentVisited.add(p)
+        for (const dir of directions) {
+          const nbr = move(p, dir, this.mino.width, this.mino.height)
+          if (nbr == null || visited.has(nbr)) {
+            connectedToEdge = true
+            break
+          } else if (this.mino.hasRaw(nbr) || currentVisited.has(nbr)) {
+            continue
+          } else {
+            queue.push(nbr)
+          }
         }
-        const nbrs = [...getNeighbors(p)]
-        if (nbrs.every((nbr) => this.mino.contains(nbr))) {
-          return true
-        }
+        if (connectedToEdge) break
       }
+      if (!connectedToEdge) return true
+      visited = visited.union(currentVisited)
     }
     return false
   }

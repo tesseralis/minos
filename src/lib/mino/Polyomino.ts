@@ -24,6 +24,7 @@ import {
   getDims,
   px,
   py,
+  directions,
 } from "./data"
 import { flip, type Direction } from "./edges"
 
@@ -218,6 +219,19 @@ export default class Polyomino {
   /** Return the set of all free parents of this mino */
   freeParents() {
     return new Set(this.parents().map((p) => p.transform.free()))
+  }
+
+  /** Generator of inner neighbors of the polyomino as PackedPoints */
+  *innerRawNeighbors(): Generator<PackedPoint> {
+    const visited = new Set<PackedPoint>()
+    for (const p of this.data) {
+      for (const dir of directions) {
+        const p1 = move(p, dir)
+        if (p1 != null && !visited.has(p1) && !this.hasRaw(p1)) {
+          yield p1
+        }
+      }
+    }
   }
 
   private *iterNeighbors(): Generator<Coord> {

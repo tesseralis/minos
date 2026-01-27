@@ -34,9 +34,8 @@ test("tilings", () => {
 })
 
 test("holes", () => {
-  // TODO incorrect for n >= 9
-  const holeCounts = minos
-    .slice(0, 8)
-    .map((gen) => gen.filter((mino) => mino.classes.hasHole()).length)
+  const holeCounts = minos.map(
+    (gen) => gen.filter((mino) => mino.classes.hasHole()).length,
+  )
   expect(holeCounts).toMatchSnapshot()
 })

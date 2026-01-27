@@ -66,8 +66,13 @@ describe("MinoClasses", () => {
         Polyomino.fromString(str),
       )
       for (const mino of cases) {
-        expect(mino.classes.hasHole()).toBe(false)
+        expect(mino.classes.hasHole()).toBeFalsy()
       }
+    })
+
+    it("works for holes bigger than one cell", () => {
+      const mino = Polyomino.fromString("1111_1001_1110")
+      expect(mino.classes.hasHole()).toBeTruthy()
     })
   })
 

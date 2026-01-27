@@ -6,7 +6,8 @@ import PointSet from "$lib/PointSet"
 export type Dims = [number, number]
 export type Coord = Vector
 // TODO deduplicate with the definition in 'edges'
-export type Direction = "left" | "right" | "up" | "down"
+export const directions = ["left", "right", "up", "down"] as const
+export type Direction = (typeof directions)[number]
 
 export interface PossibleRelativeLink {
   mino?: Polyomino
