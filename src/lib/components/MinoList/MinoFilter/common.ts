@@ -3,8 +3,7 @@ import { DirClass, Polyomino, type Symmetry } from "$lib/mino"
 import type { HTMLInputAttributes } from "svelte/elements"
 
 export type YesNoValue = "yes" | "no"
-export type YesNoName = "hasHole" | "hasTiling" | "isBalanced"
-export type YesNoOptions = { [Name in YesNoName]?: YesNoValue }
+export type YesNoOptions = { [key: string]: YesNoValue }
 
 export type NumericValue = {
   comp?: Comparator
@@ -23,18 +22,18 @@ export interface FilterOptions {
   numeric?: NumericOptions
 }
 
-interface YesNoOption {
-  name: YesNoName
-  predicate(mino: Polyomino): boolean
-}
-
 export interface YesNoItem {
-  name: YesNoName
+  name: string
   display: string
   optDisplays?: {
     yes: string
     no: string
   }
+}
+
+interface YesNoOption {
+  name: string
+  predicate(mino: Polyomino): boolean
 }
 
 const yesNoOpts: YesNoOption[] = [
