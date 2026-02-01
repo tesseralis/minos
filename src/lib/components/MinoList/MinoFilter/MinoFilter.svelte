@@ -1,16 +1,15 @@
 <script lang="ts">
   import MdiFilter from "virtual:icons/mdi/filter"
   import ClassInput from "./ClassInput.svelte"
-  import type { FilterOptions } from "./common"
+  import { type FilterOptions } from "./common"
   import SymmetryInput from "./SymmetryInput.svelte"
   import YesNoInputs from "./YesNoInputs.svelte"
+  import NumericInputs from "./NumericInputs.svelte"
 
   interface Props {
     value: FilterOptions
   }
-  const {
-    value = $bindable({ symmetries: [], classes: [], yesNo: {} }),
-  }: Props = $props()
+  const { value = $bindable() }: Props = $props()
   let open = $state(false)
 </script>
 
@@ -19,6 +18,7 @@
   <form>
     <SymmetryInput bind:value={value.symmetries} />
     <ClassInput bind:value={value.classes} />
+    <NumericInputs bind:value={value.numeric} />
     <YesNoInputs bind:value={value.yesNo} />
   </form>
 </details>

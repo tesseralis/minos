@@ -3,12 +3,12 @@
   import MinoList from "$lib/components/MinoList"
   import { page } from "$app/state"
   import { type FilterOptions } from "$lib/components/MinoList/MinoFilter"
+  import { defaultValue } from "$lib/components/MinoList/MinoFilter/common"
 
   const { children } = $props()
   const mino = $derived(page.data.mino)
   let filter = $state<FilterOptions>({
-    symmetries: [],
-    classes: [],
+    ...defaultValue,
     yesNo: { hasTiling: "yes" },
   })
 </script>
