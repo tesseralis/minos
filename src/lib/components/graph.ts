@@ -73,7 +73,7 @@ function sortGeneration(minos: Polyomino[]) {
 export const NUM_GENERATIONS = 8
 
 // const start = performance.now()
-const { nodes, links, indices } = generateGraph(NUM_GENERATIONS, {
+const graphEntries = generateGraph(NUM_GENERATIONS, {
   links: true,
   sort: sortGeneration,
 })
@@ -94,7 +94,9 @@ export const MAX_NUM_PARENTS = 7
 // )
 // console.log({ MAX_NUM_CHILDREN, MAX_NUM_PARENTS })
 
-export { nodes, links }
+export const nodes = graphEntries.nodes
+export const links = graphEntries.links!
+export const indices = graphEntries.indices!
 
 function getUniqSorted(minos: RelativeLink[]): RelativeLink[] {
   const uniq = uniqBy([...minos], ({ mino }) => mino.transform.free())

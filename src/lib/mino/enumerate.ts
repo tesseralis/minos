@@ -5,6 +5,7 @@ interface GenerationOptions {
   sort?(minos: Polyomino[]): Polyomino[]
   links?: boolean
 }
+
 // Generate the genealogy graph of polyominoes
 export function generateGraph(n: number, options: GenerationOptions = {}) {
   const nodes: Polyomino[][] = []
