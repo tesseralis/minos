@@ -3,6 +3,7 @@
   import { nodes } from "../graph"
   import GenerationList from "./GenerationList.svelte"
   import MinoFilter, { applyFilter, type FilterOptions } from "./MinoFilter"
+  import { defaultValue } from "./MinoFilter/common"
 
   interface Props {
     selected: Polyomino | undefined
@@ -12,11 +13,7 @@
 
   const listMinos = nodes.map(Polyomino.sort)
 
-  let {
-    selected,
-    href,
-    filter = $bindable({ symmetries: [], classes: [], yesNo: {} }),
-  }: Props = $props()
+  let { selected, href, filter = $bindable(defaultValue) }: Props = $props()
   const minoSets = $derived(applyFilter(listMinos, filter))
 </script>
 
