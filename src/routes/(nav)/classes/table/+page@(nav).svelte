@@ -8,6 +8,20 @@
   import ClassRegex from "../ClassRegex.svelte"
   import ClassList from "../ClassList.svelte"
   import ClassSymbol from "../ClassSymbol.svelte"
+  import panzoom from "panzoom"
+  import StateDiagram from "../StateDiagram.svelte"
+
+  const rows = [
+    ["rectangle"],
+    ["wedge"],
+    ["staircase", "stack"],
+    ["fork", "bar chart"],
+    ["diamond", "wing"],
+    ["crescent", "antler"],
+    ["range chart", "bent tree"],
+    ["tree"],
+    ["other"],
+  ]
 
   const arrowPositions = [
     { row: 1, column: "4 / span 3" },
@@ -31,7 +45,17 @@
   ]
 </script>
 
-<div class="page">
+<div
+  class="page"
+  {@attach (el: HTMLDivElement) => {
+    const instance = panzoom(el, {
+      zoomSpeed: 0.075,
+    })
+    return () => {
+      instance.dispose()
+    }
+  }}
+>
   <Breadcrumbs
     paths={[
       ["Classes", "/classes"],
@@ -39,23 +63,27 @@
     ]}
   />
   <main>
-    <div class="info">
-      <Text />
-    </div>
-    {#each DirClass.all() as dirClass}
-      <section style:grid-area={dirClass.code()}>
-        <h2>
-          <a href="/classes/{escapeClass(dirClass.name())}">
-            {capitalize(dirClass.name())}
-          </a>
-          <ClassSymbol {dirClass} />
-        </h2>
-        <ClassRegex {dirClass} />
-        <ClassList {dirClass} />
-      </section>
-    {/each}
-    {#each arrowPositions as { row, column }}
-      <div class="arrow" style:grid-row={row} style:grid-column={column}></div>
+    {#each rows as row}
+      <div class="row">
+        {#each row as clsName}
+          {@const dirClass = DirClass.fromName(clsName)}
+          <section class={clsName.replace(" ", "-")}>
+            <div>
+              <h2>
+                <a href="/classes/{escapeClass(dirClass.name())}">
+                  {capitalize(dirClass.name())}
+                </a>
+                <ClassSymbol {dirClass} />
+              </h2>
+              <ClassRegex {dirClass} />
+              <StateDiagram {dirClass} />
+            </div>
+            <div class="class-list">
+              <ClassList {dirClass} />
+            </div>
+          </section>
+        {/each}
+      </div>
     {/each}
   </main>
 </div>
@@ -63,10 +91,30 @@
 <style>
   .page {
     padding: 2rem;
+    width: 3000px;
   }
 
   main {
-    min-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4rem;
+  }
+
+  .row {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .row:nth-child(3) {
+    translate: -12.5% 0;
+  }
+
+  .row:nth-child(5) {
+    translate: 25% 0;
+  }
+
+  /* main {
     display: grid;
     grid-gap: 1.5rem;
     grid-template-areas:
@@ -79,9 +127,9 @@
       "range range range btree btree btree"
       ".     tree  tree  tree  tree  ."
       ".     other other other other .";
-  }
+  } */
 
-  .info {
+  /* .info {
     grid-area: info;
     justify-self: start;
   }
@@ -91,13 +139,19 @@
   }
   .info :global(p) {
     font-size: 1rem;
-  }
+  } */
 
   section {
     border: 2px grey solid;
     padding: 1.5rem 1rem;
     border-radius: 2px;
     position: relative;
+    display: flex;
+    gap: 2rem;
+  }
+
+  section:nth-child(odd) {
+    flex-direction: row-reverse;
   }
 
   h2 {
@@ -106,7 +160,43 @@
     margin-bottom: 0.5rem;
   }
 
-  .arrow {
+  section.rectangle .class-list {
+    width: 350px;
+  }
+
+  section.wedge .class-list {
+    width: 600px;
+  }
+
+  section.staircase .class-list {
+    width: 1200px;
+  }
+
+  section.stack .class-list {
+    width: 575px;
+  }
+
+  section.antler .class-list {
+    width: 300px;
+  }
+
+  section.range-chart .class-list {
+    width: 500px;
+  }
+
+  section.bent-tree .class-list {
+    width: 200px;
+  }
+
+  section.tree .class-list {
+    width: 200px;
+  }
+
+  section.other .class-list {
+    width: 500px;
+  }
+
+  /* .arrow {
     align-self: end;
     justify-self: center;
     position: relative;
@@ -122,5 +212,5 @@
     padding: 13px;
     transform: rotate(45deg);
     background: var(--color-bg);
-  }
+  } */
 </style>
