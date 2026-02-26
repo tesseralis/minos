@@ -40,3 +40,17 @@ test("holes", () => {
     .map((gen) => gen.filter((mino) => mino.classes.hasHole()).length)
   expect(holeCounts).toMatchSnapshot()
 })
+
+test("longestLine", () => {
+  const longestLines = minos.map((gen) =>
+    countBy(gen, (mino) => mino.longestLine().max),
+  )
+  expect(longestLines).toMatchSnapshot()
+})
+
+test("longestWave", () => {
+  const longestWaves = minos.map((gen) =>
+    countBy(gen, (mino) => mino.longestWave().max),
+  )
+  expect(longestWaves).toMatchSnapshot()
+})
