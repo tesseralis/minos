@@ -83,6 +83,16 @@ export const numericOpts: NumericOption[] = [
       max: NUM_GENERATIONS,
     },
   },
+  // {
+  //   name: "maxLine",
+  //   display: "Max line",
+  //   key: (p) => p.longestLine().max,
+  // },
+  // {
+  //   name: "maxWave",
+  //   display: "Max wave",
+  //   key: (p) => p.longestWave().max,
+  // },
 ]
 
 export const defaultValue: FilterOptions = {

@@ -320,8 +320,8 @@ export default class Polyomino {
     let count = 0
     let p: PackedPoint | undefined = point
     while (p !== undefined && this.hasRaw(p)) {
-      count++
       p = move(p, count % 2 === 0 ? dir1 : dir2)
+      count++
     }
     return count
   }
