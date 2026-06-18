@@ -61,13 +61,45 @@ We can use these two definitions to categorize all the classes. A staircase is a
 
 We can reasonably stop here and be satisfied with our classification. But _I'm_ not. Why are _convexity_ and _directedness_ the two properties we care about? Why not symmetry and convexiy, or graphs and directedness? We must keep looking for more underlying principles.
 
-## Interlude I: Shapes Families
+## Interlude I: Shape Families
 
-<!-- TODO talk about families of polyiminoes and what they have in common -->
+Let's take a break and take another approach for organizing polyominoes. In particular, let's take a look at the ways polyominoes are named. There is a standard letter naming scheme for pentominoes by Solomon Golomb:
+
+<!-- TODO pentomino names -->
+
+A similar naming scheme exists for tetrominoes (or Tetris pieces):
+
+<!-- TODO tetromino names -->
+
+There isn't a standardized naming scheme for hexominoes, but one possible letter-based scheme is this:
+
+<!-- TODO hexomino names -->
+
+Can we formalize our intuition for what makes a mino "look like" a particular letter? Can we define mathematically what it means for something to be an "L-shaped" mino?
+
+Maybe we can say: a polyomino is L-shaped if it you can add or remove squares along a straight line. We can take all the minos that have this property and put them in an "L-shaped family" (which might include some minos that are named differently in these naming schemes):
+
+<!-- TODO L-shaped minos -->
+
+We can name other categories as well, such as I-shaped, T-shaped, S/Z shaped, and so on:
+
+<!-- TODO T-shaped, S/Z shaped, and so on -->
+
+It's alright if some minos don't actually look like the letters they were intended for. The point is to use informal concepts to create a more formal definition, and then see what shakes out of that definition.
+
+Our letter classification, I think, is pretty intuitive, but there are two problems. The first is that, like the graph classification, it expands unbounded and we have to keep adding more families as the size of mino increases. (In fact, each "letter family" is actually a subset of a graph type). The second is that it ever polyomino with 2x2s is stuck in its own category:
+
+<!-- TODO some 2x2 minos -->
+
+Having 2x2s is a pretty restrictive. Is there a way we could tie minos with 2x2s to minos without? We can look at our intuition again. In a certain sense, these minos with 2x2s seem "L-shaped":
+
+<!-- TODO L-shaped 2x2 minos -->
+
+Can we amend our letter family definition in order to include these? But for now, let's head back to our directedness-based approach.
 
 ## Orthogonal directedness
 
-One of the joys of math is to take a thing and loosen it up, expand it, ease up on restrictions, and see what mathematics comes out. We can do this with the notion of "directedness" to solve our conundrum. Instead of reaching any square by going right and up, what if we consider minos where you can reach any square by going left, right, or up? In our intuitive analogy, instead of hanging our mino by a corner we keep it loose and let a marble roll down:
+One of my favorite things in math is to take a thing and loosen it up, expand it, ease up on restrictions, and see what mathematics comes out. We can do this with the notion of "directedness" to solve our conundrum. Instead of reaching any square by going right and up, what if we consider minos where you can reach any square by going left, right, or up? In our intuitive analogy, instead of hanging our mino by a corner we keep it loose and let a marble roll down:
 
 <!-- TODO: note that a marble can "drift" to a side, like it richocheting off a wall. -->
 
@@ -81,15 +113,51 @@ But for now, we can replace our definitions on convexity with orthogonal directe
 
 ## Interlude II: Boundary Words
 
-Let's take a break and think about polyomino "families" again. One way we can formalize it is to think in terms of _boundary words_. That is, if you start at a point in a corner of a mino, and go around counterclockwise, denoting every independent direction that you go in until you reach the beginning again.
+Let's take a break and think about polyomino "families" again. Remember, we wanted to figure out a way to include minos with 2x2s in the informal notion of being "L-shaped", "T-shaped", and so on. One way we can formalize it is to think in terms of _boundary words_. That is, if you start at a point in a corner of a mino, and go around counterclockwise, denoting every independent direction that you go in until you reach the beginning again.
 
-<!-- TODO realization that boundary word families share the same class -->
+The simplest example of this is the "I-shaped" family, which goes `ruld`:
+
+<!-- TODO I-shaped family -->
+
+This includes minos we can reasonably think of as "I-shaped", but also includes some things like the monomino and the 2x2 square. Again, we use intuition to motivate formal definitions and let them take over. Let's define more families:
+
+<!-- TODO L, T, S -->
+
+The boundary word definition can lead to some surpising connections. For example, the following two hexominoes have the same boundary word, despite having different graphs and being counted differently under our previous definition:
+
+<!-- TODO the two wing hexominoes -->
+
+This solves one of our issues with the "letter-based" classification, because now our definition can group 2x2s with other polyominoes. We still have the issue of infinite groups. What can we do?
 
 ## Putting it Together
 
-<!-- TODO prove that members of a boundary family have same directedness -->
+I was staring at the different directedness classes of polyominoes I had created, trying to see if there was a way I could break them down further. I started to notice that many of the members of the same directedness class had the same "shape", and I wondered if there was an organized way to order them. It was here that I made an incredible discovery.
 
-<!-- TODO make regexes of boundary words -->
+**Thereom** Every member of a boundary group belongs to the same directedness class.
+
+We don't need to check every class. We can just show that if a mino is directed from one side or corner, every member of its directedness class can be too.
+
+_Proof_ Every member of a boundary family can be transformed into another by stretching or shrinking a segment. We will show that a single transformation will not change directedness status, and so any combination of these will not change the status.
+
+<!-- TODO continue proof that members of a boundary family have same directedness -->
+
+I want to take a minute to state how _cool_ finding this theorem was. It feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders. As I mentioned before, I've been obsessed with these things for decades. It's nearly impossible to find properties of minos that are in perfect correspondence.
+
+## Regular Expressions and State Machines
+
+Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition?
+
+We can do so using the language of _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for:
+
+<!-- TODO list them -->
+
+Once we get out of convex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
+
+<!-- TODO interactive list of regexes -->
+
+It's most apparent what's going on if you go up one step at a time and see what arrows are added or removed. For example, going from wings to antlers, a back-arrow from `ld` to `lu` is added.
+
+The proof of this consists of looking at each missing arrow and showing that it would break that direction's directedness. We won't do it for every class, but let's do it for a couple to get a gist of things.
 
 ## Dealing with Punctures
 
