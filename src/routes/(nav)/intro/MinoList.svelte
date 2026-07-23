@@ -14,7 +14,7 @@
 
 <div class="mino-list">
   {#each minos as minoStr}
-    {@const mino = Polyomino.fromString(minoStr)}
+    {const mino = Polyomino.fromString(minoStr)}
     <MinoLink {mino} href={`catalog/${mino.transform.free()}`} size={15} />
   {/each}
 </div>

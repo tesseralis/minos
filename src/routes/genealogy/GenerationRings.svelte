@@ -27,11 +27,11 @@
 </script>
 
 {#each graphMinos as minos, i}
-  {@const gen = i + 1}
+  {const gen = i + 1}
   {#if gen <= 6 || visible}
     <g in:fade>
       {#each minos as mino}
-        {@const coord = getCoords(mino)}
+        {const coord = getCoords(mino)}
         <SelectableMino
           {mino}
           {coord}

@@ -27,10 +27,10 @@
 
 <g>
   {#each links as link, i}
-    {@const [srcMino, tgtMino] = link}
-    {@const gen = srcMino.order}
-    {@const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2}
-    {@const isSelected = !!selected && link.includes(selected.transform.free())}
+    {const [srcMino, tgtMino] = link}
+    {const gen = srcMino.order}
+    {const strokeWidth = 4 / ((gen - 1) / 2 + 1) ** 2}
+    {const isSelected = !!selected && link.includes(selected.transform.free())}
     {#if visible || gen < 5}
       <path
         class:isSelected

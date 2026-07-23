@@ -13,7 +13,7 @@
   <InputTitle display="Classes" onclear={() => (value = [])} />
   <div class="grid">
     {#each DirClass.all() as cls}
-      {@const checked = value.includes(cls)}
+      {const checked = value.includes(cls)}
       <Tooltip>
         {#snippet trigger({ props })}
           <label {...props} style:grid-area={cls.code()}>

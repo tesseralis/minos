@@ -65,7 +65,7 @@
 </div>
 
 {#snippet catalogThumbnail()}
-  {@const pentominoes = nodes[5 - 1]}
+  {const pentominoes = nodes[5 - 1]}
   <div class="catalog">
     {#each pentominoes as mino}
       <MinoDiv {mino} size={10} --fill="none" --stroke="currentcolor" />
@@ -74,7 +74,7 @@
 {/snippet}
 
 {#snippet symmetryThumbnail()}
-  {@const minos = [
+  {const minos = [
     ["none", "0010_0110_1111_0100"],
     ["axis", "101_111_111"],
     ["diag", "110_111_111"],
@@ -86,9 +86,9 @@
   ] as const}
   <div class="symmetry">
     {#each minos as [symmetry, minoStr]}
-      {@const mino = Polyomino.of(minoStr)}
-      {@const color = getSymmetryColor(symmetry)}
-      {@const size = 12}
+      {const mino = Polyomino.of(minoStr)}
+      {const color = getSymmetryColor(symmetry)}
+      {const size = 12}
       <MinoDiv
         {mino}
         {size}
@@ -115,7 +115,7 @@
 {/snippet}
 
 {#snippet patternThumbnail()}
-  {@const pattern = `🟥🟩🟩🟧🟧🟧🟧🟨🟨🟨
+  {const pattern = `🟥🟩🟩🟧🟧🟧🟧🟨🟨🟨
 🟥🟩🟩🟪🟧🟦🟦🟦🟦🟨
 🟥🟩🟪🟪🟪🟥🟨🟨🟦🟨
 🟥🟦🟧🟪🟥🟥🟥🟨🟪🟪
@@ -131,14 +131,14 @@
 {/snippet}
 
 {#snippet genealogyThumbnail()}
-  {@const mino = Polyomino.of("10_11_10")}
-  {@const children = [...mino.freeChildren()]}
-  {@const radius = 30}
+  {const mino = Polyomino.of("10_11_10")}
+  {const children = [...mino.freeChildren()]}
+  {const radius = 30}
   <svg viewBox="-50 -10 100 50">
     {#each children as child, i}
-      {@const angle =
+      {const angle =
         (i / (children.length - 1)) * Math.PI * (22 / 24) + Math.PI / 24}
-      {@const coord = new Vector(
+      {const coord = new Vector(
         radius * Math.cos(angle),
         radius * Math.sin(angle),
       )}

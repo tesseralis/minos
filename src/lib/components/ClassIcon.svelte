@@ -109,10 +109,10 @@
     y?: number
   } = {},
 )}
-  {@const offset = size / 6}
-  {@const [vert, horiz] = anchor.split(" ")}
-  {@const ySign = vert === "top" ? -1 : 1}
-  {@const xSign = horiz === "left" ? -1 : 1}
+  {const offset = size / 6}
+  {const [vert, horiz] = anchor.split(" ")}
+  {const ySign = vert === "top" ? -1 : 1}
+  {const xSign = horiz === "left" ? -1 : 1}
   <line
     {...endpoints(
       [xSign * x, ySign * y],
@@ -139,10 +139,10 @@
     yOffset?: number
   } = {},
 )}
-  {@const offset = size / 4}
+  {const offset = size / 4}
   {#if anchor === "top" || anchor === "bottom"}
-    {@const ySign = anchor === "top" ? 1 : -1}
-    {@const radius = size / 15}
+    {const ySign = anchor === "top" ? 1 : -1}
+    {const radius = size / 15}
     <circle
       {...center([xOffset, yOffset])}
       r={radius}
@@ -154,7 +154,7 @@
       {...markerProps}
     />
   {:else}
-    {@const xSign = anchor === "left" ? 1 : -1}
+    {const xSign = anchor === "left" ? 1 : -1}
     <circle
       {...center([xOffset, yOffset])}
       r={1}

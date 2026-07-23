@@ -15,7 +15,7 @@
     <div class="nav-wrapper">
       <ul>
         {#each data.terms as term}
-          {@const path = `/glossary/${term}`}
+          {const path = `/glossary/${term}`}
           <li>
             <a href={path} class:active={path === page.url.pathname}>
               {term.replace("-", " ")}

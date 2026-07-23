@@ -18,9 +18,9 @@
 
 <div class="wrapper">
   {#each minos as [symmetry, minoStr]}
-    {@const mino = Polyomino.of(minoStr)}
-    {@const color = getSymmetryColor(symmetry)}
-    {@const size = 15}
+    {const mino = Polyomino.of(minoStr)}
+    {const color = getSymmetryColor(symmetry)}
+    {const size = 15}
     <MinoLink
       {mino}
       {size}

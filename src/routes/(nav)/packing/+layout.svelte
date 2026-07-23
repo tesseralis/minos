@@ -23,8 +23,8 @@
           </h2>
           <div>
             {#each shapes as shape}
-              {@const route = `/packing/${size}-${shape}`}
-              {@const isActive = page.url.pathname.startsWith(route)}
+              {const route = `/packing/${size}-${shape}`}
+              {const isActive = page.url.pathname.startsWith(route)}
               <a href={route} class:active={isActive}>
                 {getShapeText(shape)}
               </a>

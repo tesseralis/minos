@@ -13,7 +13,7 @@
   <InputTitle display="Symmetries" onclear={() => (value = [])} />
   <div class="grid">
     {#each symmetries as sym}
-      {@const checked = value.includes(sym)}
+      {const checked = value.includes(sym)}
       <Tooltip>
         {#snippet trigger({ props })}
           <label {...props} style:grid-area={sym}>

@@ -77,12 +77,12 @@
   reverse,
   ...props
 }: StrandsProps)}
-  {@const gen = links[0]?.mino.order}
-  {@const numMinos = links.length}
-  {@const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)}
-  {@const scaledSize = getBlockSize(gen) * sizeScale(numMinos)}
-  {@const scaledRadius = linkRadius + numMinos * 1.25}
-  {@const getAngle = getAngleScale({
+  {const gen = links[0]?.mino.order}
+  {const numMinos = links.length}
+  {const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)}
+  {const scaledSize = getBlockSize(gen) * sizeScale(numMinos)}
+  {const scaledRadius = linkRadius + numMinos * 1.25}
+  {const getAngle = getAngleScale({
     spread: getSpread(maxSpread, numMinos),
     start: spreadStart,
     count: numMinos,
@@ -90,7 +90,7 @@
   })}
   <g>
     {#each links as link, i}
-      {@const coord = Vector.fromPolar(scaledRadius, getAngle(i))}
+      {const coord = Vector.fromPolar(scaledRadius, getAngle(i))}
       {@render strand({
         ...props,
         link,
@@ -102,10 +102,10 @@
 {/snippet}
 
 {#snippet strand({ link, coord, size }: StrandProps)}
-  {@const hovered = context.relativeLink}
-  {@const isSelected =
+  {const hovered = context.relativeLink}
+  {const isSelected =
     !!hovered && hovered.mino.transform.equivalent(link.mino)}
-  {@const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))}
+  {const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))}
   <g class:isSelected>
     <path
       style:--color-src={getMinoColor(mino).fill}

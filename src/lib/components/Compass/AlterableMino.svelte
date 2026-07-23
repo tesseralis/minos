@@ -44,7 +44,7 @@
 {/snippet}
 
 {#snippet hole()}
-  {@const { size, transform } = getMinoSizeAndTransform(mino)}
+  {const { size, transform } = getMinoSizeAndTransform(mino)}
   <rect
     class="hole"
     {...point(transform(new Vector(1, 1)))}
