@@ -7,12 +7,17 @@
   import type { PageProps } from "./$types"
   import ClassSymbol from "../ClassSymbol.svelte"
   import StateDiagram from "../StateDiagram.svelte"
+  import { pageTitle } from "$lib/components/theme"
 
   const { data }: PageProps = $props()
   const Content = $derived(data.content)
   const className = $derived(data.dirClass)
   const dirClass = $derived(DirClass.fromName(className))
 </script>
+
+<svelte:head>
+  <title>{pageTitle(`${capitalize(className)} polyomino`)}</title>
+</svelte:head>
 
 <div class="container">
   <Breadcrumbs

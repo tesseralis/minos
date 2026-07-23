@@ -4,6 +4,7 @@
   import { page } from "$app/state"
   import { type FilterOptions } from "$lib/components/MinoList/MinoFilter"
   import { defaultValue } from "$lib/components/MinoList/MinoFilter/common"
+  import { pageTitle } from "$lib/components/theme"
 
   const { children } = $props()
   const mino = $derived(page.data.mino)
@@ -12,6 +13,10 @@
     yesNo: { hasTiling: "yes" },
   })
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Tiling")}</title>
+</svelte:head>
 
 <NavAndContent columns="24rem 1fr">
   {#snippet nav()}

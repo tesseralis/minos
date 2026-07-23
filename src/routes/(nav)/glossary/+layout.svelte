@@ -1,9 +1,14 @@
 <script lang="ts">
   import NavAndContent from "$lib/components/NavAndContent"
   import { page } from "$app/state"
+  import { pageTitle } from "$lib/components/theme.js"
 
   const { data, children } = $props()
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Glossary")}</title>
+</svelte:head>
 
 <NavAndContent columns="18rem 1fr">
   {#snippet nav()}
