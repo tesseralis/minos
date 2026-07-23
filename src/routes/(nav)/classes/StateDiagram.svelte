@@ -98,7 +98,7 @@
   <line {...endpoints([-nodeOffset, nodeOffset], [-nodeRadius, nodeOffset])} />
   <!-- Nodes -->
   {#each dirs as dir, i}
-    {const color = getDirColor(dir)}
+    {@const color = getDirColor(dir)}
     {#if i % 2 === 0 || (diagramData.lu && dir === "lu") || (diagramData.rd && dir === "rd")}
       <g
         transform="translate({nodeOffset *

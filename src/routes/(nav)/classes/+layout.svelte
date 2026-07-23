@@ -30,8 +30,8 @@
     <div class="nav">
       <div class="subsection-links">
         {#each DirClass.all() as cls}
-          {const route = `/classes/${escapeClass(cls.name())}`}
-          {const isActive = page.url.pathname === route}
+          {@const route = `/classes/${escapeClass(cls.name())}`}
+          {@const isActive = page.url.pathname === route}
           <a href={route} class:active={isActive} style:grid-area={cls.code()}>
             <ClassIcon
               class={cls}
@@ -47,7 +47,7 @@
         {/each}
         {#each range(1, 4) as col}
           {#each range(...rowRanges[col]) as row}
-            {const direction = (row + col) % 2 === 0 ? "up left" : "up right"}
+            {@const direction = (row + col) % 2 === 0 ? "up left" : "up right"}
             <div
               class="arrow"
               style:grid-area="{row} / {col} / span 2 / span 2"

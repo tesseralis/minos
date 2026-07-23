@@ -33,12 +33,12 @@
 
 <g>
   {#each range(4) as index}
-    {const shouldShow = index % (4 / order) === 0}
-    {const hovered =
+    {@const shouldShow = index % (4 / order) === 0}
+    {@const hovered =
       !!context.transform && (index - hoverIndex + 4) % (4 / order) === 0}
     {#if shouldShow || hovered}
-      {const chiral = mino?.transform.isOneSided()}
-      {const points: Point[] = [[0, size], [size, 0], chiral ? [0, 0] : [-size, 0]]}
+      {@const chiral = mino?.transform.isOneSided()}
+      {@const points: Point[] = [[0, size], [size, 0], chiral ? [0, 0] : [-size, 0]]}
       <polygon
         points={getPoints(points)}
         class:hovered

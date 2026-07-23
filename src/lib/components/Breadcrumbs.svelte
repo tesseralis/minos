@@ -16,7 +16,7 @@
 </nav>
 
 {#snippet breadcrumbPart(paths: CrumbPath[])}
-  {const [name, url] = paths[0]}
+  {@const [name, url] = paths[0]}
   <a href={url}>
     {#if typeof name === "string"}
       {name}

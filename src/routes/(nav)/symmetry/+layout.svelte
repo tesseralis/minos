@@ -34,14 +34,14 @@
     <div class="nav">
       <div class="subsection-links">
         {#each symmetries as symmetry}
-          {const route = `/symmetry/${symmetry}`}
-          {const isActive = page.url.pathname === route}
-          {const name = capitalize(printSymmetry(symmetry))}
+          {@const route = `/symmetry/${symmetry}`}
+          {@const isActive = page.url.pathname === route}
+          {@const name = capitalize(printSymmetry(symmetry))}
           <!--
           split into two lines based on where the first space is
           https://stackoverflow.com/a/4607799 (why is JS so bad)
            -->
-          {const [first, last] = name.split(/ (.*)/)}
+          {@const [first, last] = name.split(/ (.*)/)}
           <a
             href={route}
             style:grid-area={symmetry}

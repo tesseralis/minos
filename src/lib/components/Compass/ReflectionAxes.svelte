@@ -22,7 +22,7 @@
 
 <g>
   {#each reflectionOrder as reflection, i}
-    {const hovered = reflection === context.transform}
+    {@const hovered = reflection === context.transform}
     {#if mino.transform.hasSymmetry(reflection) || hovered}
       <line
         {...endpoints([-radius, 0], [radius, 0])}

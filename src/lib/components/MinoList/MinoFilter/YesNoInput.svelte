@@ -20,7 +20,7 @@
     <InputTitle {display} onclear={() => (value = undefined)} />
   </div>
   {#each ["yes", "no"] as const as val}
-    {const checked = value === val}
+    {@const checked = value === val}
     <label>
       <input
         type="radio"
