@@ -16,7 +16,9 @@
       ——
     {:else}
       {#each minos as mino}
-        {@const isSelected = !!selected && mino.transform.equivalent(selected)}
+        {const isSelected = $derived(
+          !!selected && mino.transform.equivalent(selected),
+        )}
         <div class:isSelected>
           <MinoLink {mino} size={getBlockSize(mino.order)} href={href(mino)} />
         </div>

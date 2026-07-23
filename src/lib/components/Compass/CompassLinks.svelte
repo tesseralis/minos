@@ -47,7 +47,6 @@
   }
 
   let { mino = $bindable() } = $props()
-  const context = $derived(getCompassContext())
 </script>
 
 <g>
@@ -77,20 +76,24 @@
   reverse,
   ...props
 }: StrandsProps)}
-  {@const gen = links[0]?.mino.order}
-  {@const numMinos = links.length}
-  {@const sizeScale = scaleLinear().domain([1, maxNumMinos]).range(scaleRange)}
-  {@const scaledSize = getBlockSize(gen) * sizeScale(numMinos)}
-  {@const scaledRadius = linkRadius + numMinos * 1.25}
-  {@const getAngle = getAngleScale({
-    spread: getSpread(maxSpread, numMinos),
-    start: spreadStart,
-    count: numMinos,
-    reverse,
-  })}
+  {const gen = $derived(links[0]?.mino.order)}
+  {const numMinos = $derived(links.length)}
+  {const sizeScale = $derived(
+    scaleLinear().domain([1, maxNumMinos]).range(scaleRange),
+  )}
+  {const scaledSize = $derived(getBlockSize(gen) * sizeScale(numMinos))}
+  {const scaledRadius = $derived(linkRadius + numMinos * 1.25)}
+  {const getAngle = $derived(
+    getAngleScale({
+      spread: getSpread(maxSpread, numMinos),
+      start: spreadStart,
+      count: numMinos,
+      reverse,
+    }),
+  )}
   <g>
     {#each links as link, i}
-      {@const coord = Vector.fromPolar(scaledRadius, getAngle(i))}
+      {const coord = $derived(Vector.fromPolar(scaledRadius, getAngle(i)))}
       {@render strand({
         ...props,
         link,
@@ -102,10 +105,14 @@
 {/snippet}
 
 {#snippet strand({ link, coord, size }: StrandProps)}
-  {@const hovered = context.relativeLink}
-  {@const isSelected =
-    !!hovered && hovered.mino.transform.equivalent(link.mino)}
-  {@const linkPath = getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2))}
+  {const context = $derived(getCompassContext())}
+  {const hovered = $derived(context.relativeLink)}
+  {const isSelected = $derived(
+    !!hovered && hovered.mino.transform.equivalent(link.mino),
+  )}
+  {const linkPath = $derived(
+    getArc(coord, Vector.ZERO, new Vector(0, -linkRadius * 2)),
+  )}
   <g class:isSelected>
     <path
       style:--color-src={getMinoColor(mino).fill}

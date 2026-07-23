@@ -24,8 +24,8 @@
       <p>No polyominoes match the given criteria.</p>
     {:else}
       {#each minoSets as minos, i}
-        {@const gen = i + 1}
-        {@const hasSelected = !!selected && selected.order === gen}
+        {const gen = $derived(i + 1)}
+        {const hasSelected = $derived(!!selected && selected.order === gen)}
         <GenerationList
           {minos}
           {gen}
