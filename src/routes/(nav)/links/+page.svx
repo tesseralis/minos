@@ -5,7 +5,7 @@ Links to other polyomino-related things.
 ## Books and Papers
 
 - [Polyominoes: Puzzles, Patterns, Problems, and Packings](https://press.princeton.edu/books/paperback/9780691024448/polyominoes) by Solomon Golomb. The canonical source on polyominoes.
-- [Tiling with Polyominoes](https://core.ac.uk/download/pdf/82068433.pdf) by Samuel Golomb. Further information on the "hierarchy of tiling" for polyominoes.
+- [Tiling with Polyominoes](https://www.sciencedirect.com/science/article/pii/S0021980066800339) by Samuel Golomb. Further information on the "hierarchy of tiling" for polyominoes.
 - [Polyominoes](http://code-spot.co.za/downloads/polyominoes/Polyominoes.pdf) by Herman Tulleken. An invaluable resource on polyomino properties.
 
 ## Websites and Webpages
