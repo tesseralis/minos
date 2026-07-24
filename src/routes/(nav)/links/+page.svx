@@ -20,7 +20,7 @@ Links to other polyomino-related things.
 - [Pentomino Facts](https://www.youtube.com/watch?v=LPDAzHpSyAo) by Deckard. A rundown of various facts about pentominoes.
 - [The Snakey Hexomino](https://youtu.be/ouTE-GYGIA8?si=bdGSXq4ByvadsKAm) by Numberphile feat. Sophie Maclean. An unsolved problem involving playing Tic-Tac-Toe with polyominoes.
 - [How to design a POLYOMINO board game](https://youtu.be/Ra36ogUFmdo?si=XVYoWaeL6majkA-x) by Adam In Wales. Tips for board game designers on creating polyomino-based games.
-- [Polyominoes](https://www.youtube.com/watch?v=9imS9K8uuZ0) and [Polyominoes: Revisited](https://www.youtube.com/watch?v=kzHGfvULI9w) by galactika. Two different naming schemas for polyominoes, the second referencing the Labyrinth's [directedness hiearchy](/classes)!
+- [Polyominoes](https://www.youtube.com/watch?v=9imS9K8uuZ0) and [Polyominoes: Revisited](https://www.youtube.com/watch?v=kzHGfvULI9w) by galactika. Two different naming schemas for polyominoes, the second referencing the Labyrinth's [directedness hierarchy](/classes)!
 
 ## Games and Puzzles
 
