@@ -22,8 +22,6 @@
     align-items: center;
     width: max-content;
     flex-grow: 1;
-  }
-  section:not(:last-child) {
     border-bottom: 1px var(--color-fg) solid;
   }
 

@@ -3,6 +3,7 @@
   import { printSymmetry, type Symmetry } from "$lib/mino"
   import { capitalize } from "lodash-es"
   import MinoList from "../MinoList.svelte"
+  import { pageTitle } from "$lib/components/theme"
 
   const longName: Record<Symmetry, string> = {
     all: "Full symmetry",
@@ -19,6 +20,10 @@
   const Content = $derived(data.content)
   const symmetry = $derived(data.symmetry)
 </script>
+
+<svelte:head>
+  <title>{pageTitle(longName[symmetry])}</title>
+</svelte:head>
 
 <Breadcrumbs
   paths={[

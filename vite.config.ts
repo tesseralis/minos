@@ -3,7 +3,6 @@ import { sveltekit } from "@sveltejs/kit/vite"
 import { defineConfig } from "vite"
 import "vitest/config"
 import Icons from "unplugin-icons/vite"
-import fs from "fs"
 // import { visualizer } from "rollup-plugin-visualizer"
 
 export default defineConfig({
@@ -20,13 +19,15 @@ export default defineConfig({
   build: {
     rollupOptions: {
       output: {
-        manualChunks: {
-          // The `mino` directory contains a lot of recursive references,
-          // and needs to be bundled together to work.
-          mino: fs
-            .readdirSync("./src/lib/mino")
-            .filter((name) => name.endsWith(".ts"))
-            .map((name) => `/src/lib/mino/${name}`),
+        codeSplitting: {
+          groups: [
+            // The `mino` directory contains a lot of recursive references,
+            // and needs to be bundled together to work.
+            {
+              test: /src\/lib\/mino/,
+              name: "mino",
+            },
+          ],
         },
       },
     },

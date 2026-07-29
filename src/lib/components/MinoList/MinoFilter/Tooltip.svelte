@@ -17,7 +17,8 @@
   </Tooltip.Trigger>
   <Tooltip.Portal>
     <Tooltip.Content class="mino-filter-tooltip-content">
-      {@render children?.()}
+      <!-- casting because of bad types on Bits UI -->
+      {@render children?.({} as any)}
     </Tooltip.Content>
   </Tooltip.Portal>
 </Tooltip.Root>

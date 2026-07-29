@@ -1,12 +1,17 @@
 <script lang="ts">
   import Logo from "$lib/components/Logo.svelte"
   import Pattern from "$lib/components/Pattern.svelte"
+  import { SITE_TITLE } from "$lib/components/theme"
   import EnterLink from "./EnterLink.svelte"
   import Nav from "./Nav.svelte"
   import Title from "./Title.svelte"
 
   const { data } = $props()
 </script>
+
+<svelte:head>
+  <title>{SITE_TITLE}</title>
+</svelte:head>
 
 <div class="home">
   <div class="pattern-wrapper">

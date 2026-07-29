@@ -46,7 +46,6 @@
   />
   {#if diagramData.lu_rd}
     <line
-      class="backward"
       {...endpoints(
         [-nodeOffset + nodeRadius, 0],
         [nodeOffset - nodeRadius, 0],

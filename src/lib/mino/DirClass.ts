@@ -161,6 +161,7 @@ const stateDiagrams: Record<string, StateDiagramData> = {
   tree: {
     lu: true,
     rd: true,
+    lu_rd: true,
     repeats: ["ru", "lu", "ld", "rd"],
     backward: ["ru", "lu", "ld"],
   },
