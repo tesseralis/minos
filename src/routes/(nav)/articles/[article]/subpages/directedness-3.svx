@@ -1,0 +1,13 @@
+## Dealing with Punctures
+
+Note though, that this theorem only works if the polyomino only has an _outer_ boundary word: that is, it doesn't have punctures. Now all that's left to do is to extend our theorem to punctures. We can try generating a bunch of minos of different classes and see what their punctures look like:
+
+(some examples)
+
+All the punctures look like they're the same class of mino, rotated 180 degrees. Let's try to prove this!
+
+**Theorem** A punctured polyomino is directed iff its hull is directed and all its punctures are directed in the opposite direction.
+
+This theorem, I think, ties the whole thing together. It doesn't feel like "punctures" are a separate thing that we just happen to add in anymore: they're an integral part of the definition for a directedness class.
+
+## Next steps

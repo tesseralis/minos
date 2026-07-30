@@ -1,0 +1,28 @@
+# Directedness: A Classification of Polyominoes
+
+When I was creating this Labyrinth, a very, very important question percolated in my mind: what do I color the polyominoes? Obviously I can't leave them just one color; that would be too boring. I can't just make them _random_ either. I'm a dataviz girlie: I want whatever coloring scheme I use to _mean_ something. Something that seems fundamental to the structure of these minos. But what?
+
+Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia uses][]:
+
+I've been familiar with this color scheme since high school, and it's been seared into my head ever since. It's a sensible one. Human brains are wired to see symmetry and pattern and equate it to beauty. And so I [added symmetry](/symmetry) to the labyrinth. But if we move up to the heptominoes and octominoes, we see a problem:
+
+(wikipedia images for heptominoes and octominoes)
+
+Most of these minos are boring ol' grey! And the problem gets worse with bigger sizes of polyominoes:
+
+(table for larger sizes)
+
+We can also try classifying polyominoes using [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can color every mino based on the "best" shape it can tile. But these criteria also have their own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't *know* the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge?
+
+Another fun possibility I tried was classifying minos by _graph_. putting a point in the center of each square, joining adjacent squares by lines, and throwing away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections".
+
+But there is another problem with this. The number of graphs, or graph families, grows unbounded with the size of the mino. Each successive size introduces new classes of graphs, and even though there are a plethora of colors, there really aren't that many we can tell apart well.
+
+Let's formalize our criteria. We want a classification of polyominoes that:
+
+1. Meaningfully encodes some interesting property of them.
+2. Is fixed, and does not grow unbounded as the size $n$ increases (like symmetry but unlike graphs).
+3. Has an interesting "spread" (i.e. is not mostly grey) for our desired size of $n \le 8$ (like graphs but unlike symmetry).
+4. Is "easy" to intuit just by looking at a mino (like symmetry but unlike tiling).
+
+So I went on a search for a classification scheme with these criteria.

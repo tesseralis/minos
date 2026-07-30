@@ -1,0 +1,59 @@
+## Boundaries
+
+Let's take a break from this quandary and look at what we do have right now with our punctureless friends. In particular, I started noticing that a lot of our categories are getting a little unwieldy:
+
+(TODO: list of a single class)
+
+Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes *further*, but how? I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
+
+(I shaped)
+
+The "L-shaped" minos are all Ferrers diagrams:
+
+(L shaped)
+
+The S/Z-shaped ones are all staircases:
+
+(S / Z minos)
+
+The T-shaped ones are stacks:
+
+(T minos)
+
+The U-shaped ones are bar graphs:
+
+(U minos)
+
+It seems like these directedness classes are pretty related to these "families" of polyominoes! But is there a way we can formalize what it means for a polyomino to be a certain shape? Is the 2x4 rectangle an "I" mino?
+
+(TODO naive attempt with lengthening)
+
+(TODO introduce boundary word idea)
+
+## Putting it Together
+
+**Thereom** Every member of a boundary group belongs to the same directedness class.
+
+We don't need to check every class. We can just show that if a mino is directed from one side or corner, every member of its directedness class can be too.
+
+_Proof_ Every member of a boundary family can be transformed into another by stretching or shrinking a segment. We will show that a single transformation will not change directedness status, and so any combination of these will not change the status.
+
+<!-- TODO continue proof that members of a boundary family have same directedness -->
+
+I want to take a minute to state how _cool_ finding this theorem was. It feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders. As I mentioned before, I've been obsessed with these things for decades. It's nearly impossible to find properties of minos that are in perfect correspondence.
+
+## Regular Expressions and State Machines
+
+Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition?
+
+We can do so using the language of _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for:
+
+<!-- TODO list them -->
+
+Once we get out of convex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
+
+<!-- TODO interactive list of regexes -->
+
+It's most apparent what's going on if you go up one step at a time and see what arrows are added or removed. For example, going from wings to antlers, a back-arrow from `ld` to `lu` is added.
+
+The proof of this consists of looking at each missing arrow and showing that it would break that direction's directedness. We won't do it for every class, but let's do it for a couple to get a gist of things.
