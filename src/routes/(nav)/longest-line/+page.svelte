@@ -20,7 +20,11 @@
     }
     return table
   }
+
+  let showMinos = $state(false)
 </script>
+
+<input type="checkbox" bind:checked={showMinos} />
 
 {#each nodes as gen}
   <div class="gen">
@@ -37,9 +41,12 @@
     {#each Object.entries(table) as [l, row]}
       {#each Object.entries(row) as [w, minos]}
         <div class="cell" style:grid-row={l} style:grid-column={w}>
-          {#each minos as mino}
-            <MinoDiv {mino} size={8} />
-          {/each}
+          <div>({l},{w}) - {minos.length}</div>
+          {#if showMinos}
+            {#each minos as mino}
+              <MinoDiv {mino} size={8} />
+            {/each}
+          {/if}
         </div>
       {/each}
     {/each}

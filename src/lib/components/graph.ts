@@ -61,8 +61,10 @@ function sortGeneration(minos: Polyomino[]) {
   // Secondarily sort by the *number* of those families, and then by dimensions.
   return sortBy(
     minos,
-    (mino) => -mino.longestLine().max,
-    (mino) => mino.longestWave().max,
+    (mino) => -mino.longestLine().max + mino.longestWave().max,
+    (mino) =>
+      (mino.longestLine().max >= mino.longestWave().max ? -1 : 1) *
+      mino.longestLine().max,
     (mino) => -mino.longestLine().maxCount,
     (mino) => mino.longestWave().maxCount,
     (mino) => -Math.max(...mino.dims),
