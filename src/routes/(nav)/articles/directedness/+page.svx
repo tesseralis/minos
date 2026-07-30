@@ -2,13 +2,17 @@
 
 When I was creating this Labyrinth, a very, very important question percolated in my mind: what do I color the polyominoes? Obviously I can't leave them just one color; that would be too boring. I can't just make them _random_ either. I'm a dataviz girlie: I want whatever coloring scheme I use to _mean_ something. Something that seems fundamental to the structure of these minos. But what?
 
-The closest thing to "canonical" we can use is symmetry. It's what [Wikipedia uses][]:
+Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia uses][]:
 
 I've been familiar with this color scheme since high school, and it's been seared into my head ever since. It's a sensible one. Human brains are wired to see symmetry and pattern and equate it to beauty. And so I [added symmetry](/symmetry) to the labyrinth. But if we move up to the heptominoes and octominoes, we see a problem:
+
+(wikipedia images for heptominoes and octominoes)
 
 Most of these minos are boring ol' grey! And the problem gets worse with bigger sizes of polyominoes:
 
 (table for larger sizes)
+
+We can also try classifying polyominoes using [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can color every mino based on the "best" shape it can tile. But these criteria also have their own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't *know* the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge?
 
 Another fun possibility I tried was classifying minos by _graph_. putting a point in the center of each square, joining adjacent squares by lines, and throwing away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections".
 
@@ -16,20 +20,24 @@ But there is another problem with this. The number of graphs, or graph families,
 
 Let's formalize our criteria. We want a classification of polyominoes that:
 
-1. Meaningfully encodes some interesting property of them
-2. Is fixed, and does not grow unbounded as the size $n$ increases (unlike graphs)
-3. Has an interesting "spread" (i.e. is not mostly grey) for our desired size of $n \le 8$ (unlike symmetry)
+1. Meaningfully encodes some interesting property of them.
+2. Is fixed, and does not grow unbounded as the size $n$ increases (like symmetry but unlike graphs).
+3. Has an interesting "spread" (i.e. is not mostly grey) for our desired size of $n \le 8$ (like graphs but unlike symmetry).
+4. Is "easy" to intuit just by looking at a mino (like symmetry but unlike tiling).
 
-It's always a good idea to check on prior work, so let's do so and see what we find!
+So I went on a search for a classification scheme with these criteria.
 
 ## The Mathworld Classification
 
-Let's do the lazy student's research technique: we'll follow the Wikipedia links for "Polyomino" and see what shows up. It seems that [Wolfram Mathworld] has a couple of articles related to polyominoes:
+Let's do the lazy student's research technique: we'll follow the Wikipedia links for "Polyomino" and see what shows up. It seems that [Wolfram Mathworld](https://mathworld.wolfram.com/Polyomino.html) has a couple of articles related to polyominoes. If we look up the topic ["Lattice Polygons"](https://mathworld.wolfram.com/topics/LatticePolygons.html), we come across some interesting articles:
 
-<!-- TODO: list all the articles -->
-
-- [Convex Directed Polyomino]
-- ...
+- [Convex Polyomino](https://mathworld.wolfram.com/ConvexPolyomino.html)
+- [Column-](https://mathworld.wolfram.com/Column-ConvexPolyomino.html) and [Row-Convex Polyomino](https://mathworld.wolfram.com/Row-ConvexPolyomino.html)
+- [Directed Convex Polyomino](https://mathworld.wolfram.com/DirectedConvexPolyomino.html)
+- [Stack Polyomino](https://mathworld.wolfram.com/StackPolyomino.html)
+- [Staircase Polygon](https://mathworld.wolfram.com/StaircasePolygon.html)
+- [Bar Graph Polygon](https://mathworld.wolfram.com/BarGraphPolygon.html)
+- [Ferrers Graph Polygon](https://mathworld.wolfram.com/FerrersGraphPolygon.html)
 
 These articles seem to specify different groups of polyominoes, so maybe that's what we're looking for? We could just plop in the colors from these articles and call it a day. But we run into some problems:
 
@@ -47,7 +55,7 @@ It's not too hard to show that, for example, a mino that is both a staircase and
 
 The third condition is a little bit harder. After all, we could just add one of our symmetry classes to this list and that's a new color we can add (and it'll invalidate Point 2 as well).
 
-Our previous two classification attempts had a nice ring to them: you could describe each class as some configuration of a universal property. "These are all the ways that a polyomino can be symmetric". "These are all the ways that a mino can be topologically equivalent". The classes are related by a common feature. Now we just need to do that for our Mathworld classes.
+Our previous classification attempts had a nice ring to them: you could describe each class as some configuration of a universal property. "These are all the ways that a polyomino can be symmetric". "These are all the ways that a mino can be topologically equivalent". The classes are related by a common feature. Now we just need to do that for our Mathworld classes.
 
 ### Systemitization: Convexity and Directedness
 
@@ -55,63 +63,51 @@ A couple of words keep coming up in these definitions: _convex_ and _directed_.
 
 A convex polyomino is easy to intuit: it's a polyomino where there aren't any "horseshoe" segments, or concavities. Formally, you can draw a line through any column or row and it will not cut through two different segments of the mino. We can use "row-convex" or "column-convex" (or generally, "semi-convex") to denote a polyomino that you can draw that line in one direction, or another.
 
-"Directed" is a tougher nut to crack. The Mathworld articles don't directly state it, but it means that every cell of the polyomino can be reached by going right or up from a starting square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without breaking the law of gravity.
+"Directed" is a tougher to intuitively define. The Mathworld articles don't directly state it, but it means that every cell of the polyomino can be reached by going right or up from a starting square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without breaking the law of gravity.
 
-We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on.
+(TODO: definition of directed and marble dropping example)
 
-We can reasonably stop here and be satisfied with our classification. But _I'm_ not. Why are _convexity_ and _directedness_ the two properties we care about? Why not symmetry and convexiy, or graphs and directedness? We must keep looking for more underlying principles.
+We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on. If we use directedness and semi-convexity to define a hierarchy:
 
-## Interlude I: Shape Families
+(TODO: hierarchy with directedness / semi-convexity)
 
-Let's take a break and take another approach for organizing polyominoes. In particular, let's take a look at the ways polyominoes are named. There is a standard letter naming scheme for pentominoes by Solomon Golomb:
-
-<!-- TODO pentomino names -->
-
-A similar naming scheme exists for tetrominoes (or Tetris pieces):
-
-<!-- TODO tetromino names -->
-
-There isn't a standardized naming scheme for hexominoes, but one possible letter-based scheme is this:
-
-<!-- TODO hexomino names -->
-
-Can we formalize our intuition for what makes a mino "look like" a particular letter? Can we define mathematically what it means for something to be an "L-shaped" mino?
-
-Maybe we can say: a polyomino is L-shaped if it you can add or remove squares along a straight line. We can take all the minos that have this property and put them in an "L-shaped family" (which might include some minos that are named differently in these naming schemes):
-
-<!-- TODO L-shaped minos -->
-
-We can name other categories as well, such as I-shaped, T-shaped, S/Z shaped, and so on:
-
-<!-- TODO T-shaped, S/Z shaped, and so on -->
-
-It's alright if some minos don't actually look like the letters they were intended for. The point is to use informal concepts to create a more formal definition, and then see what shakes out of that definition.
-
-Our letter classification, I think, is pretty intuitive, but there are two problems. The first is that, like the graph classification, it expands unbounded and we have to keep adding more families as the size of mino increases. (In fact, each "letter family" is actually a subset of a graph type). The second is that it ever polyomino with 2x2s is stuck in its own category:
-
-<!-- TODO some 2x2 minos -->
-
-Having 2x2s is a pretty restrictive. Is there a way we could tie minos with 2x2s to minos without? We can look at our intuition again. In a certain sense, these minos with 2x2s seem "L-shaped":
-
-<!-- TODO L-shaped 2x2 minos -->
-
-Can we amend our letter family definition in order to include these? But for now, let's head back to our directedness-based approach.
+We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not symmetry and convexiy, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
 
 ## Orthogonal directedness
 
 One of my favorite things in math is to take a thing and loosen it up, expand it, ease up on restrictions, and see what mathematics comes out. We can do this with the notion of "directedness" to solve our conundrum. Instead of reaching any square by going right and up, what if we consider minos where you can reach any square by going left, right, or up? In our intuitive analogy, instead of hanging our mino by a corner we keep it loose and let a marble roll down:
 
-<!-- TODO: note that a marble can "drift" to a side, like it richocheting off a wall. -->
+(TODO: image of a marble run of a mino on its side)
 
-**Theorem** A [punctureless](/glossary/puncture) polyomino that is orthogonally directed from two opposite sides is semi-convex.
+Let's call our old form of directedness _diagonally directed_ and define this new one as _orthogonally directed_:
 
-<!-- TODO prove theorem -->
+**Definition** A polyomino is _orthogonally directed_ if every cell can be reached from a root cell by going only three directions (say, left, right and up).
 
-Note that we specify _punctureless_: that is, a mino with no internal holes. We'll deal with punctured minos later.
+We can ask minos be diagonally directed from different sides and see what they look like:
 
-But for now, we can replace our definitions on convexity with orthogonal directedness. We can use the notation $Dir_{o}^{d}$ where $o$ denotes the number of sides a mino is orthogonally directed from, and $d$ denotes the number of corners. When $o$ or $d = 2$, we specify $c$ (for cis-) for two adjacent sides/corners or $t$ (for trans-) for opposite sides/corners. We now have a hierarchy that relies only only on one concept ("how many directions do you need to reach every cell"). But our classification still relies on two definitions: the allegory of convexity only applies to minos without punctures. How can we generalize this to _every_ mino?
+(TODO: some examples of minos directed from multiple sides):
 
-## Interlude II: Boundary Words
+It seems like, when a mino doesn't have holes, a semi-convex mino is one that's side-directed from two opposite sides!
+
+**Theorem** A polyomino polyomino is is semi-convex if and only if it is [punctureless](/glossary/punctureless) and orthogonally directed from two opposite sides.
+
+(TODO: theorem proof)
+
+Note that we specify _punctureless_: that is, a mino with no internal holes. For the purposes of the labyrinth, we can set aside punctured polyominoes, since the only punctured polyomino is the "O" octomino:
+
+(TODO: O octomino)
+
+But for now, we can replace our definitions on convexity with orthogonal directedness. We can use the notation $Dir_{o}^{d}$ where $o$ denotes the number of sides a mino is orthogonally directed from, and $d$ denotes the number of corners. When $o$ or $d = 2$, we specify $c$ (for cis-) for two adjacent sides/corners or $t$ (for trans-) for opposite sides/corners. We now have a hierarchy that relies only only on one concept ("how many directions do you need to reach every cell").
+
+(TODO: normal hierarchy, but with the "semi-convex" definitions)
+
+Now that we have a finer-grained definition, we have more classes than before! In particular, we have some additional classes that the definitions of semi-convexity weren't granular enough to encode.
+
+But this is only the classification for _punctureless_ polyominoes. There's still a second concept of "holes" that we haven't dealt with. In a way, we're still in the same place as before: instead of "semi-convex" and "directedness", we have "directedness" and "punctures" as two interconnected concepts. We still need to find a way to relate the idea of holes to directedness _somehow_.
+
+## Boundary Words
+
+Let's take a break
 
 Let's take a break and think about polyomino "families" again. Remember, we wanted to figure out a way to include minos with 2x2s in the informal notion of being "L-shaped", "T-shaped", and so on. One way we can formalize it is to think in terms of _boundary words_. That is, if you start at a point in a corner of a mino, and go around counterclockwise, denoting every independent direction that you go in until you reach the beginning again.
 
