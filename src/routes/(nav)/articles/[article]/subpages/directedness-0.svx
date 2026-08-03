@@ -1,5 +1,10 @@
 <script lang="ts">
   import wikiHex from '../images/wiki-hexominoes.png'
+  import graphs from "../images/graphs.png"
+  import symTable from "../images/symmetry-table.png"
+
+  import MinoDiv from "$lib/components/MinoDiv.svelte"
+  import { nodes } from "$lib/components/graph"
 </script>
 # Directedness: A Classification of Polyominoes
 
@@ -11,17 +16,19 @@ Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia
 
 I've been familiar with this color scheme since high school, and it's been seared into my head ever since. It's a sensible one. Human brains are wired to see symmetry and pattern and equate it to beauty. And so I [added symmetry](/symmetry) to the labyrinth. But if we move up to the heptominoes and octominoes, we see a problem:
 
-(wikipedia images for heptominoes and octominoes)
+{@render minoList(nodes[7])}
 
-Most of these minos are boring ol' grey! And the problem gets worse with bigger sizes of polyominoes:
+Most of these minos are boring ol' grey! That is, these are minos with [no symmetry](/symmetry/none) And the problem gets worse with bigger sizes of polyominoes:
 
-(table for larger sizes)
+![table of symmetries for polyominoes up to 12]({symTable})
 
 We can also try classifying polyominoes using [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can color every mino based on the "best" shape it can tile. But these criteria also have their own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't *know* the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge?
 
-Another fun possibility I tried was classifying minos by _graph_. putting a point in the center of each square, joining adjacent squares by lines, and throwing away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections".
+Another fun possibility I tried was classifying minos by _graph_. Putting a point in the center of each square, joining adjacent squares by lines, and throwing away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections" (formally, we say that these graphs are [homeomorphic](https://en.wikipedia.org/wiki/Homeomorphism_(graph_theory))). I like this classification because it is hierarchial--you can organize minos that have the same exact graph, and you can organize those graphs by their families.
 
-But there is another problem with this. The number of graphs, or graph families, grows unbounded with the size of the mino. Each successive size introduces new classes of graphs, and even though there are a plethora of colors, there really aren't that many we can tell apart well.
+![the octominoes, categorized by graph]({graphs})
+
+But there is a problem with this classification: the number of types of graphs, or graph families, grows unbounded with the size of the mino. Ever new size of polyomino introduces a new family of graphs, and even for the octominoes, there are too many families to pick out reasonable colors for them.
 
 Let's formalize our criteria. We want a meaningful classification of polyominoes that:
 
@@ -30,6 +37,16 @@ Let's formalize our criteria. We want a meaningful classification of polyominoes
 3. Is "easy" to intuit just by looking at a mino (like symmetry and graphs, but unlike tiling).
 
 So I went on a search for a classification scheme with these criteria.
+
+{#snippet minoList(minos)}
+  <div>
+    {#each minos as mino}
+      <span style:--fill={'grey'}>
+        <MinoDiv {mino} size={8} />
+      </span>
+    {/each}
+  </div>
+{/snippet}
 
 <style>
   img {
