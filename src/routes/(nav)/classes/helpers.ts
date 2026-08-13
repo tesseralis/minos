@@ -112,14 +112,15 @@ function groupBoundaryFamilies(minoClass: Polyomino[]) {
   const groups = Object.entries(
     groupBy(minoClass.map(getBoundaryFamily), (mc) => mc.family),
   ).map(([family, minos]) => ({ family, minos }))
-  return sortBy(groups, ({ minos }) => -minos.length).map(
-    ({ family, minos }) => {
-      return {
-        family,
-        minos: groupAndSortFamily(minos.map((item) => item.mino)),
-      }
-    },
-  )
+  return sortBy(groups, [
+    ({ family }) => family.length,
+    ({ minos }) => -minos.length,
+  ]).map(({ family, minos }) => {
+    return {
+      family,
+      minos: groupAndSortFamily(minos.map((item) => item.mino)),
+    }
+  })
 }
 
 // Group family by size and sort by width and height

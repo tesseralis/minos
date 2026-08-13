@@ -1,6 +1,12 @@
 <script lang="ts">
+  import { pageTitle } from "$lib/components/theme"
+
   const { children } = $props()
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Links")}</title>
+</svelte:head>
 
 <div class="container">
   <div class="text-wrapper">

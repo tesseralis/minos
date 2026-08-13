@@ -39,4 +39,11 @@ describe("mino", () => {
       expect(actual).toEqual(expected)
     })
   })
+
+  describe.only("longestWave", () => {
+    it("works", () => {
+      const mino = Polyomino.fromString("111_100_100")
+      expect(mino.longestWave().max).toEqual(3)
+    })
+  })
 })

@@ -7,9 +7,14 @@
   import MinoLinks from "./MinoLinks.svelte"
   import type { Polyomino } from "$lib/mino"
   import onClickOnly from "$lib/components/onClickOnly"
+  import { pageTitle } from "$lib/components/theme"
 
   let selected: Polyomino | undefined = $state()
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Genealogy")}</title>
+</svelte:head>
 
 <div class="container">
   <FullScreenSvg width={1100}>
