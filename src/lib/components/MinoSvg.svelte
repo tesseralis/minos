@@ -54,9 +54,36 @@ Style props:
   const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
   const outlinePoints = $derived(scaledOutline.map(translate))
 
+  // FIXME still broken for bigger holes
+  const inlinePoints = $derived.by(() => {
+    return mino.innerBoundaries().map((boundary) => {
+      return boundary.outline().map(scale).map(translate)
+    })
+  })
+
+  const outlinePath = $derived.by(() => {
+    const path = d3path()
+    const [p0, ...ps] = outlinePoints
+    path.moveTo(p0.x, p0.y)
+    for (const point of ps) {
+      path.lineTo(point.x, point.y)
+    }
+    path.closePath()
+
+    for (const inline of inlinePoints) {
+      const [p0, ...ps] = inline
+      path.moveTo(p0.x, p0.y)
+      for (const point of ps) {
+        path.lineTo(point.x, point.y)
+      }
+      path.closePath()
+    }
+    return path
+  })
+
   const minoPoints = $derived(mino.coords())
   const points = $derived(minoPoints.map(scale).map(translate))
-  const path = $derived.by(() => {
+  const gridPath = $derived.by(() => {
     const path = d3path()
     for (const point of points) {
       path.moveTo(point.x, point.y + size)
@@ -74,24 +101,16 @@ Style props:
   style:--derived-fill="var(--fill, {fill})"
 >
   <g {onclick} {...onHover(onhover)}>
-    <polygon
+    <path
       class="outline"
-      points={getPoints(outlinePoints)}
+      d={outlinePath.toString()}
       stroke-width={strokeWidth}
+      fill-rule="evenodd"
     />
-    {#if mino.equals(O_OCTOMINO)}
-      <rect
-        class="hole"
-        {...point(translate(scale(new Vector(1, 1))))}
-        width={size}
-        height={size}
-        stroke-width={strokeWidth}
-      />
-    {/if}
     {#if gridStyle !== "none"}
       <path
         class="grid"
-        d={path.toString()}
+        d={gridPath.toString()}
         opacity={gridStyle === "thick" ? 1 : 0.25}
         stroke-width={gridStrokeWidth}
       />

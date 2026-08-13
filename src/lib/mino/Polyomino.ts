@@ -167,6 +167,10 @@ export default class Polyomino {
     return getEdges(this.coords())
   }
 
+  innerBoundaries() {
+    return this.punctures().map(getEdges)
+  }
+
   // Return the holes in this polyomino, as sets of coordinates
   *punctures() {
     if (this.order < 7) return
