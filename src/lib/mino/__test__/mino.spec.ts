@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
-import { Polyomino } from ".."
+import { O_OCTOMINO, Polyomino } from ".."
+import { generateGraph } from "../enumerate"
 
 describe("mino", () => {
   describe("strings", () => {
@@ -40,10 +41,21 @@ describe("mino", () => {
     })
   })
 
-  describe.only("longestWave", () => {
+  describe("longestWave", () => {
     it("works", () => {
       const mino = Polyomino.fromString("111_100_100")
       expect(mino.longestWave().max).toEqual(3)
+    })
+  })
+
+  describe.only("holes", () => {
+    it("works", () => {
+      for (const mino of generateGraph(8).nodes[7]) {
+        console.log(mino.display())
+        if (!mino.equals(O_OCTOMINO)) {
+          expect(mino.punctures().toArray()).toHaveLength(0)
+        }
+      }
     })
   })
 })

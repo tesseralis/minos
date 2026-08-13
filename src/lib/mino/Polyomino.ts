@@ -1,4 +1,4 @@
-import { partition } from "lodash-es"
+import { partition, size } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges } from "./outline"
 // Import relative to the index to avoid circular dependency
@@ -25,6 +25,7 @@ import {
   px,
   py,
   directions,
+  getKingwiseNeighbors,
 } from "./data"
 import { flip, type Direction } from "./edges"
 
@@ -166,6 +167,47 @@ export default class Polyomino {
     return getEdges(this.coords())
   }
 
+  // Return the holes in this polyomino, as sets of coordinates
+  *punctures() {
+    if (this.order < 7) return
+    const visited = new Set()
+    const nbrs = [...this.innerRawNeighbors()]
+    while (nbrs.length > 0) {
+      let current
+      do {
+        current = nbrs.pop()
+      } while (visited.has(current))
+      visited.add(current)
+      const currentHole = [new Vector(...decode(current!))]
+      let isHole = true
+      let stack = [...currentHole]
+      while (stack.length > 0) {
+        const nbr = stack.pop()!
+        if (
+          nbr.x === 0 ||
+          nbr.y === 0 ||
+          nbr.x === this.width - 1 ||
+          nbr.y === this.height - 1
+        ) {
+          // If we reach the edge of the mino, break
+          isHole = false
+        }
+        if (visited.has(encode(nbr.x, nbr.y))) {
+          continue
+        }
+        if (this.has(nbr.x, nbr.y)) {
+          continue
+        }
+        visited.add(encode(nbr.x, nbr.y))
+        stack.push(...getKingwiseNeighbors(nbr))
+        currentHole.push(nbr)
+      }
+      if (isHole) {
+        yield currentHole
+      }
+    }
+  }
+
   /** Return the perimeter of this polyomino */
   perimeter() {
     const perim = this.boundary().length
@@ -227,8 +269,15 @@ export default class Polyomino {
     for (const p of this.data) {
       for (const dir of directions) {
         const p1 = move(p, dir)
-        if (p1 != null && !visited.has(p1) && !this.hasRaw(p1)) {
+        if (
+          p1 != null &&
+          !visited.has(p1) &&
+          !this.hasRaw(p1) &&
+          px(p1) < this.width &&
+          py(p1) < this.height
+        ) {
           yield p1
+          visited.add(p1)
         }
       }
     }
@@ -350,7 +399,7 @@ export default class Polyomino {
 
   /** Pretty-printed representation of the mino */
   display() {
-    return display(this.data, ", ", ", ", "\n") + "\n"
+    return display(this.data, "[]", "  ", "\n") + "\n"
   }
 }
 
