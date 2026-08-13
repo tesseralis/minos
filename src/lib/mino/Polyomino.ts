@@ -219,6 +219,58 @@ export default class Polyomino {
     return !!this.punctures().next().value
   }
 
+  // Return the holes in this polyomino, as sets of coordinates
+  *holes() {
+    if (this.order < 6) return
+    const visited = new Set()
+    const nbrs = [...this.innerRawNeighbors()]
+    while (nbrs.length > 0) {
+      let current
+      do {
+        current = nbrs.pop()
+      } while (visited.has(current))
+      const currentHole = [new Vector(...decode(current!))]
+      let isHole = true
+      let stack = [...currentHole]
+      while (stack.length > 0) {
+        const nbr = stack.pop()!
+        if (
+          nbr.x <= 0 ||
+          nbr.y <= 0 ||
+          nbr.x >= this.width - 1 ||
+          nbr.y >= this.height - 1
+        ) {
+          // If we reach the edge of the mino, break
+          isHole = false
+        }
+        if (visited.has(encode(nbr.x, nbr.y))) {
+          continue
+        }
+        if (this.has(nbr.x, nbr.y)) {
+          continue
+        }
+        visited.add(encode(nbr.x, nbr.y))
+        stack.push(
+          ...getNeighbors(nbr).filter(
+            (n2) =>
+              !this.has(n2.x, n2.y) &&
+              nbr.x > 0 &&
+              nbr.y > 0 &&
+              nbr.x < this.width &&
+              nbr.y < this.height,
+          ),
+        )
+      }
+      if (isHole) {
+        yield currentHole
+      }
+    }
+  }
+
+  hasHole() {
+    return !!this.holes().next().value
+  }
+
   /** Return the perimeter of this polyomino */
   perimeter() {
     const perim = this.boundary().length

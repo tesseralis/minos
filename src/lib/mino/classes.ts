@@ -224,39 +224,7 @@ export default class MinoClasses {
 
   /** Return whether the polyomino contains a hole */
   hasHole() {
-    // First mino with a hole is a heptomino
-    if (this.mino.order < 7) {
-      return false
-    }
-    let visited = new Set<PackedPoint>()
-    for (const innerNbr of this.mino.innerRawNeighbors()) {
-      if (visited.has(innerNbr)) continue
-      if (isAtBorder(innerNbr, this.mino.width, this.mino.height)) {
-        visited.add(innerNbr)
-        continue
-      }
-
-      const queue = [innerNbr]
-      let connectedToEdge = false
-      while (queue.length > 0) {
-        const p = queue.pop()!
-        if (isAtBorder(p, this.mino.width, this.mino.height)) {
-          connectedToEdge = true
-          break
-        }
-        for (const dir of directions) {
-          const nbr = move(p, dir)!
-          if (this.mino.hasRaw(nbr) || visited.has(nbr)) {
-            continue
-          } else {
-            queue.push(nbr)
-          }
-        }
-        if (connectedToEdge) break
-      }
-      if (!connectedToEdge) return true
-    }
-    return false
+    return this.mino.hasHole()
   }
 
   // Get all the corner points of this polyomino that are contained in it
