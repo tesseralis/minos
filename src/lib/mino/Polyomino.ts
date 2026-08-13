@@ -177,17 +177,19 @@ export default class Polyomino {
       do {
         current = nbrs.pop()
       } while (visited.has(current))
-      visited.add(current)
+      // visited.add(current)
       const currentHole = [new Vector(...decode(current!))]
       let isHole = true
       let stack = [...currentHole]
+      console.log("testing ", currentHole[0])
       while (stack.length > 0) {
+        console.log("stack: ", stack)
         const nbr = stack.pop()!
         if (
-          nbr.x === 0 ||
-          nbr.y === 0 ||
-          nbr.x === this.width - 1 ||
-          nbr.y === this.height - 1
+          nbr.x <= 0 ||
+          nbr.y <= 0 ||
+          nbr.x >= this.width - 1 ||
+          nbr.y >= this.height - 1
         ) {
           // If we reach the edge of the mino, break
           isHole = false
@@ -202,6 +204,7 @@ export default class Polyomino {
         stack.push(...getKingwiseNeighbors(nbr))
         currentHole.push(nbr)
       }
+      console.log("current hole is", currentHole, "is hole: ", isHole)
       if (isHole) {
         yield currentHole
       }
