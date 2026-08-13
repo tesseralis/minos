@@ -5,23 +5,26 @@ Links to other polyomino-related things.
 ## Books and Papers
 
 - [Polyominoes: Puzzles, Patterns, Problems, and Packings](https://press.princeton.edu/books/paperback/9780691024448/polyominoes) by Solomon Golomb. The canonical source on polyominoes.
-- [Tiling with Polyominoes](https://core.ac.uk/download/pdf/82068433.pdf) by Samuel Golomb. Further information on the "hierarchy of tiling" for polyominoes.
+- [Tiling with Polyominoes](https://www.sciencedirect.com/science/article/pii/S0021980066800339) by Samuel Golomb. Further information on the "hierarchy of tiling" for polyominoes.
 - [Polyominoes](http://code-spot.co.za/downloads/polyominoes/Polyominoes.pdf) by Herman Tulleken. An invaluable resource on polyomino properties.
 
-## Websites
+## Websites and Webpages
 
 - [Polyform curiosities](https://sicherman.net/polycur.html) by George Sicherman. Of particular interest are the pages on [polyform compatibility](https://sicherman.net/rosp.html) and [Baiocchi figures](https://sicherman.net/nbaiocchi/index.html).
 - [Math Magic Archive](https://erich-friedman.github.io/mathmagic/) by Erich Friedman. A series of monthly recreational mathematics puzzles, many of which involve polyominoes.
 - [The Poly pages](http://www.recmath.com/PolyPages/index.htm) by Andrew L. Clarke. Contains many more packings of polyominoes.
+- [a naming scheme for polyominoes](https://www.seximal.net/polyomino) by Jan Misali.
 
 ## Videos
 
 - [Pentomino Facts](https://www.youtube.com/watch?v=LPDAzHpSyAo) by Deckard. A rundown of various facts about pentominoes.
 - [The Snakey Hexomino](https://youtu.be/ouTE-GYGIA8?si=bdGSXq4ByvadsKAm) by Numberphile feat. Sophie Maclean. An unsolved problem involving playing Tic-Tac-Toe with polyominoes.
 - [How to design a POLYOMINO board game](https://youtu.be/Ra36ogUFmdo?si=XVYoWaeL6majkA-x) by Adam In Wales. Tips for board game designers on creating polyomino-based games.
+- [Polyominoes](https://www.youtube.com/watch?v=9imS9K8uuZ0) and [Polyominoes: Revisited](https://www.youtube.com/watch?v=kzHGfvULI9w) by galactika. Two different naming schemas for polyominoes, the second referencing the Labyrinth's [directedness hierarchy](/classes)!
 
 ## Games and Puzzles
 
 - Various pencil puzzle genres that involve polyominoes: [Fillomino](https://puzz.link/db/?type=fillomino), [LITS](https://puzz.link/db/?type=lits), [Pentominous](https://puzz.link/db/?type=pentominous), [Pentopia](https://puzz.link/db/?type=pentopia), [Heteromino](https://puzz.link/db/?type=heteromino), [Statue Park](https://puzz.link/db/?type=statuepark).
 - [Platformerly](https://marcosd.itch.io/platformerly) by Marcos Donnantuoni. A cute little game where you try to take snapshots of pentominoes.
 - [Polyominoes](https://boardgamegeek.com/boardgamefamily/24571/components-polyominoes) on Board Game Geek. Catalog of games with polyominoes as components.
+- [The Artisan of Glimmith](https://store.steampowered.com/app/4160210/The_Artisan_of_Glimmith/), by Lunarch Studios. A region-division puzzle game with plenty of polyomino-based rules that I contributed a couple puzzles to.

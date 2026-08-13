@@ -34,6 +34,7 @@
 
 <div class="boundary-word">
   {#each segments as { dir, count }, index}
+    <!-- TODO figure out what ARIA role or property these hovers are supposed to be -->
     <span
       style:color={index === currentIndex ? "white" : getDirColor(dir)}
       onpointerover={() => {

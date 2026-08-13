@@ -9,6 +9,7 @@
   import { escapeClass } from "./helpers"
   import type { LayoutProps } from "./$types"
   import ClassSymbol from "./ClassSymbol.svelte"
+  import { pageTitle } from "$lib/components/theme"
 
   const { children }: LayoutProps = $props()
 
@@ -19,6 +20,10 @@
     [3, 7],
   ]
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Directedness Classes")}</title>
+</svelte:head>
 
 <NavAndContent columns="20rem 1fr">
   {#snippet nav()}

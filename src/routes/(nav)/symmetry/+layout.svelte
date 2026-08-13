@@ -6,6 +6,7 @@
   import SymmetryIcon from "$lib/components/SymmetryIcon.svelte"
   import { getSymmetryColor } from "$lib/components/graph"
   import HierachyArrow from "$lib/components/HierachyArrow.svelte"
+  import { pageTitle } from "$lib/components/theme"
 
   const { children } = $props()
 
@@ -23,6 +24,10 @@
     [["rot", "d"], "up right"],
   ]
 </script>
+
+<svelte:head>
+  <title>{pageTitle("Symmetries and Transformations")}</title>
+</svelte:head>
 
 <NavAndContent columns="20rem 1fr">
   {#snippet nav()}
