@@ -268,6 +268,21 @@ exports[`longestWave 1`] = `
 ]
 `;
 
+exports[`punctures 1`] = `
+[
+  1,
+  1,
+  2,
+  5,
+  12,
+  35,
+  108,
+  369,
+  1285,
+  4655,
+]
+`;
+
 exports[`symmetries 1`] = `
 [
   {

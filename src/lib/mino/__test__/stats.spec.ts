@@ -33,9 +33,9 @@ test("tilings", () => {
   expect(tilingCounts).toMatchSnapshot()
 })
 
-test("holes", () => {
+test("punctures", () => {
   const holeCounts = minos.map(
-    (gen) => gen.filter((mino) => mino.classes.hasHole()).length,
+    (gen) => gen.filter((mino) => mino.hasPuncture()).length,
   )
   expect(holeCounts).toMatchSnapshot()
 })

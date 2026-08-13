@@ -177,13 +177,10 @@ export default class Polyomino {
       do {
         current = nbrs.pop()
       } while (visited.has(current))
-      // visited.add(current)
       const currentHole = [new Vector(...decode(current!))]
       let isHole = true
       let stack = [...currentHole]
-      console.log("testing ", currentHole[0])
       while (stack.length > 0) {
-        console.log("stack: ", stack)
         const nbr = stack.pop()!
         if (
           nbr.x <= 0 ||
@@ -201,14 +198,25 @@ export default class Polyomino {
           continue
         }
         visited.add(encode(nbr.x, nbr.y))
-        stack.push(...getKingwiseNeighbors(nbr))
-        currentHole.push(nbr)
+        stack.push(
+          ...getKingwiseNeighbors(nbr).filter(
+            (n2) =>
+              !this.has(n2.x, n2.y) &&
+              nbr.x > 0 &&
+              nbr.y > 0 &&
+              nbr.x < this.width &&
+              nbr.y < this.height,
+          ),
+        )
       }
-      console.log("current hole is", currentHole, "is hole: ", isHole)
       if (isHole) {
         yield currentHole
       }
     }
+  }
+
+  hasPuncture() {
+    return !!this.punctures().next().value
   }
 
   /** Return the perimeter of this polyomino */

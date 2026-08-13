@@ -47,15 +47,4 @@ describe("mino", () => {
       expect(mino.longestWave().max).toEqual(3)
     })
   })
-
-  describe.only("holes", () => {
-    it("works", () => {
-      for (const mino of generateGraph(8).nodes[7]) {
-        console.log(mino.display())
-        if (!mino.equals(O_OCTOMINO)) {
-          expect(mino.punctures().toArray()).toHaveLength(0)
-        }
-      }
-    })
-  })
 })
