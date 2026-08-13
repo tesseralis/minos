@@ -4,7 +4,10 @@
   import { capitalize } from "lodash-es"
   import MinoList from "../MinoList.svelte"
   import { pageTitle } from "$lib/components/theme"
-  import { possibleClassesForSymmetry } from "$lib/mino/class-symmetry"
+  import {
+    possibleClassesForSymmetry,
+    possibleOnlyIfPunctured,
+  } from "$lib/mino/class-symmetry"
   import ClassIcon from "$lib/components/ClassIcon.svelte"
   import { getClassColor } from "$lib/components/graph"
 
@@ -48,6 +51,9 @@
         fill="none"
         stroke={getClassColor(dirClass.name())}
       />
+      {#if possibleOnlyIfPunctured(dirClass, symmetry)}
+        <span title="punctured only">*</span>
+      {/if}
     </a>
   {/each}
 </div>
@@ -66,5 +72,11 @@
     gap: 1rem;
     margin-top: 0.5rem;
     margin-bottom: 2rem;
+  }
+
+  .class-list a {
+    display: flex;
+    text-decoration: none;
+    gap: 0.25rem;
   }
 </style>

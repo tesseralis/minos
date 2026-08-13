@@ -8,7 +8,10 @@
   import ClassSymbol from "../ClassSymbol.svelte"
   import StateDiagram from "../StateDiagram.svelte"
   import { pageTitle } from "$lib/components/theme"
-  import { possibleSymmetriesForClass } from "$lib/mino/class-symmetry"
+  import {
+    possibleOnlyIfPunctured,
+    possibleSymmetriesForClass,
+  } from "$lib/mino/class-symmetry"
   import SymmetryIcon from "$lib/components/SymmetryIcon.svelte"
   import { getSymmetryColor } from "$lib/components/graph"
 
@@ -55,6 +58,9 @@
                   stroke={getSymmetryColor(symmetry)}
                   size={28}
                 />
+                {#if possibleOnlyIfPunctured(dirClass, symmetry)}
+                  <span title="punctured only">*</span>
+                {/if}
               </a>
             {/each}
           </div>
@@ -105,6 +111,12 @@
   .class-data .symmetry-list {
     display: flex;
     gap: 1rem;
+  }
+
+  .symmetry-list a {
+    display: flex;
+    text-decoration: none;
+    gap: 0.25rem;
   }
 
   .class-data h2,

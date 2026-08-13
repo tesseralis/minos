@@ -2,11 +2,16 @@
 
 import { groupBy, mapValues } from "lodash-es"
 import DirClass from "./DirClass"
-import type { Symmetry } from "./transform"
+import { symmetries, type Symmetry } from "./transform"
 
 const pairs: [string, Symmetry][] = [
   ["rectangle", "all"],
   ["rectangle", "axis2"],
+  ["rectangle", "rot2"],
+  ["rectangle", "diag2"],
+  ["rectangle", "axis"],
+  ["rectangle", "rot"],
+  ["rectangle", "diag"],
   ["wedge", "diag"],
   ["staircase", "rot"],
   ["staircase", "diag"],
@@ -15,11 +20,11 @@ const pairs: [string, Symmetry][] = [
   ["fork", "diag"],
   ["bar chart", "axis"],
   ["diamond", "all"],
-  ["diamond", "rot2"],
   ["diamond", "axis2"],
+  ["diamond", "rot2"],
   ["diamond", "diag2"],
-  ["diamond", "rot"],
   ["diamond", "axis"],
+  ["diamond", "rot"],
   ["diamond", "diag"],
   ["crescent", "axis"],
   ["antler", "diag"],
@@ -41,6 +46,9 @@ const classesForSym = mapValues(
 )
 
 export function possibleSymmetriesForClass(cls: DirClass): Symmetry[] {
+  if (cls.name() === "other") {
+    return [...symmetries]
+  }
   return [...(symsForClass?.[cls.name()] ?? []), "none"]
 }
 
@@ -48,5 +56,9 @@ export function possibleClassesForSymmetry(sym: Symmetry): DirClass[] {
   if (sym === "none") {
     return DirClass.all()
   }
-  return classesForSym[sym]
+  return [...classesForSym[sym], DirClass.fromName("other")]
+}
+
+export function possibleOnlyIfPunctured(cls: DirClass, sym: Symmetry) {
+  return cls.name() === "rectangle" && !["all", "axis2"].includes(sym)
 }
