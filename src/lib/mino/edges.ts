@@ -1,7 +1,6 @@
 import { range } from "lodash-es"
 import { type VectorLike } from "$lib/vector"
-import { add, encode, encodeVec, type PackedPoint } from "./data"
-type Coord = PackedPoint
+import { add, encode, encodeVec, type Coord } from "./data"
 
 // Directions
 // ==========
@@ -22,7 +21,7 @@ export function flip(d: Direction) {
 }
 
 /** Move a point in the given direction */
-export function move(p: PackedPoint, dir: Direction): PackedPoint {
+export function move(p: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
       return add(p, encode(-1, 0))
@@ -61,7 +60,7 @@ function splitAt<T>(array: T[], indices: number | number[]): T[][] {
 // EdgeList class
 // ==============
 
-export type Edge = { dir: Direction; start: PackedPoint }
+export type Edge = { dir: Direction; start: Coord }
 type EdgeLike = { dir: Direction; start: VectorLike }
 
 /**

@@ -14,17 +14,16 @@ import {
 } from "./internal"
 import {
   encode,
-  type PackedPoint,
   px,
   py,
   neighbors,
   sub,
   encodeVec,
   add,
+  type Coord,
 } from "./data"
 import type { Dims } from "./data"
 import { getEdges } from "./outline"
-type Coord = PackedPoint
 
 /**
  * Represents the placement of a single polyomino in a coordinate grid
@@ -53,7 +52,7 @@ function* allCoords([w, h]: Dims) {
   }
 }
 
-function inBounds(p: PackedPoint, [w, h]: Dims) {
+function inBounds(p: Coord, [w, h]: Dims) {
   const x = px(p)
   const y = py(p)
   return x >= 0 && x < w && y >= 0 && y < h
@@ -71,7 +70,7 @@ export function parsePattern(patternStr: string): PatternData {
   const width = grid[0].length
   const dims: Dims = [width, height]
   const pattern: PatternData = []
-  const visited = new Set<PackedPoint>()
+  const visited = new Set<Coord>()
   for (const coord of allCoords(dims)) {
     if (visited.has(coord)) {
       continue
@@ -83,8 +82,8 @@ export function parsePattern(patternStr: string): PatternData {
       continue
     }
     // Select the next point in the grid that hasn't been visited yet
-    const queue: PackedPoint[] = [coord]
-    const minoCoords: PackedPoint[] = []
+    const queue: Coord[] = [coord]
+    const minoCoords: Coord[] = []
 
     // Find all the valid points
     while (queue.length > 0) {
