@@ -26,6 +26,7 @@ import {
   py,
   directions,
   getKingwiseNeighbors,
+  rawNeighbors,
 } from "./data"
 import { flip, type Direction } from "./edges"
 
@@ -316,11 +317,11 @@ export default class Polyomino {
     }
   }
 
-  private *iterNeighbors(): Generator<Coord> {
-    const visited = new PointSet()
-    for (const coord of this.coords()) {
-      for (const nbr of getNeighbors(coord)) {
-        if (!this.contains(nbr) && !visited.has(nbr)) {
+  private *iterNeighbors(): Generator<PackedPoint> {
+    const visited = new Set()
+    for (const coord of this.data) {
+      for (const nbr of rawNeighbors(coord)) {
+        if (!this.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           yield nbr
         }
@@ -335,7 +336,7 @@ export default class Polyomino {
   enumerateChildren() {
     return this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
-      coord,
+      coord: Vector.fromArray(decode(coord)),
     }))
   }
 

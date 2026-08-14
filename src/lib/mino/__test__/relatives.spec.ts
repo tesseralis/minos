@@ -1,24 +1,24 @@
 import { describe, it, expect } from "vitest"
-import { fromString, isValid, addSquare, removeSquare } from "../data"
+import { fromString, isValid, addSquare, removeSquare, encode } from "../data"
 
 describe("modify", () => {
   describe("addSquare", () => {
     // L tetromino
     const mino = fromString("111_001")
     it("works correctly on an inner coordinate", () => {
-      expect(addSquare(mino, [1, 1])).toEqual(fromString("111_011"))
+      expect(addSquare(mino, encode(1, 1))).toEqual(fromString("111_011"))
     })
 
     it("works correctly when i < 0", () => {
-      expect(addSquare(mino, [-1, 0])).toEqual(fromString("100_111_001"))
+      expect(addSquare(mino, encode(-1, 0))).toEqual(fromString("100_111_001"))
     })
 
     it("works correctly when j < 0", () => {
-      expect(addSquare(mino, [0, -1])).toEqual(fromString("1111_0001"))
+      expect(addSquare(mino, encode(0, -1))).toEqual(fromString("1111_0001"))
     })
 
     it("works correctly when j === width", () => {
-      expect(addSquare(mino, [0, 3])).toEqual(fromString("1111_0010"))
+      expect(addSquare(mino, encode(0, 3))).toEqual(fromString("1111_0010"))
     })
   })
 
