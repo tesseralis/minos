@@ -63,8 +63,11 @@ function turnRight(dir: Direction) {
 // Pick a start point for the given coordinates
 // such that going "down" from the point is a valid edge
 function getStartPoint(coords: Set<PackedPoint>) {
-  const minY = Math.min(...[...coords].map(py))
-  const topRow = [...coords].filter((p) => py(p) === minY)
+  const minY = Math.min(...coords.values().map(py))
+  const topRow = coords
+    .values()
+    .filter((p) => py(p) === minY)
+    .toArray()
   return minBy(topRow, px)!
 }
 
