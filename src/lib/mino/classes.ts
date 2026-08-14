@@ -361,9 +361,3 @@ function isOppositeSides(side1: Side, side2: Side) {
 function isAdjacentSides(side1: Side, side2: Side) {
   return !isOppositeSides(side1, side2)
 }
-
-function isAtBorder(p: PackedPoint, w: number, h: number) {
-  const x = px(p)
-  const y = py(p)
-  return x === 0 || x === w - 1 || y === 0 || y === h - 1
-}
