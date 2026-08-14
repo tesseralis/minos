@@ -171,9 +171,7 @@ export default class Polyomino {
     return this.punctures().map(getEdges)
   }
 
-  // Return the holes in this polyomino, as sets of coordinates
-  *punctures() {
-    if (this.order < 7) return
+  *getHolesOrPunctures(nbrFn: (coord: Coord) => Generator<Coord>) {
     const visited = new Set()
     const nbrs = [...this.innerRawNeighbors()]
     while (nbrs.length > 0) {
@@ -181,35 +179,36 @@ export default class Polyomino {
       do {
         current = nbrs.pop()
       } while (visited.has(current))
-      const currentHole = [new Vector(...decode(current!))]
+      const stack = [new Vector(...decode(current!))]
       let isHole = true
-      let stack = [...currentHole]
+      const currentHole = []
       while (stack.length > 0) {
-        const nbr = stack.pop()!
+        const current = stack.pop()!
         if (
-          nbr.x <= 0 ||
-          nbr.y <= 0 ||
-          nbr.x >= this.width - 1 ||
-          nbr.y >= this.height - 1
+          current.x <= 0 ||
+          current.y <= 0 ||
+          current.x >= this.width - 1 ||
+          current.y >= this.height - 1
         ) {
           // If we reach the edge of the mino, break
           isHole = false
         }
-        if (visited.has(encode(nbr.x, nbr.y))) {
+        if (visited.has(encode(current.x, current.y))) {
           continue
         }
-        if (this.has(nbr.x, nbr.y)) {
+        if (this.has(current.x, current.y)) {
           continue
         }
-        visited.add(encode(nbr.x, nbr.y))
+        currentHole.push(current)
+        visited.add(encode(current.x, current.y))
         stack.push(
-          ...getKingwiseNeighbors(nbr).filter(
+          ...nbrFn(current).filter(
             (n2) =>
               !this.has(n2.x, n2.y) &&
-              nbr.x > 0 &&
-              nbr.y > 0 &&
-              nbr.x < this.width &&
-              nbr.y < this.height,
+              n2.x >= 0 &&
+              n2.y >= 0 &&
+              n2.x <= this.width - 1 &&
+              n2.y <= this.height - 1,
           ),
         )
       }
@@ -217,6 +216,12 @@ export default class Polyomino {
         yield currentHole
       }
     }
+  }
+
+  // Return the punctures in this polyomino, as sets of coordinates
+  *punctures() {
+    if (this.order < 7) return
+    yield* this.getHolesOrPunctures((coord) => getKingwiseNeighbors(coord))
   }
 
   hasPuncture() {
@@ -226,49 +231,7 @@ export default class Polyomino {
   // Return the holes in this polyomino, as sets of coordinates
   *holes() {
     if (this.order < 6) return
-    const visited = new Set()
-    const nbrs = [...this.innerRawNeighbors()]
-    while (nbrs.length > 0) {
-      let current
-      do {
-        current = nbrs.pop()
-      } while (visited.has(current))
-      const currentHole = [new Vector(...decode(current!))]
-      let isHole = true
-      let stack = [...currentHole]
-      while (stack.length > 0) {
-        const nbr = stack.pop()!
-        if (
-          nbr.x <= 0 ||
-          nbr.y <= 0 ||
-          nbr.x >= this.width - 1 ||
-          nbr.y >= this.height - 1
-        ) {
-          // If we reach the edge of the mino, break
-          isHole = false
-        }
-        if (visited.has(encode(nbr.x, nbr.y))) {
-          continue
-        }
-        if (this.has(nbr.x, nbr.y)) {
-          continue
-        }
-        visited.add(encode(nbr.x, nbr.y))
-        stack.push(
-          ...getNeighbors(nbr).filter(
-            (n2) =>
-              !this.has(n2.x, n2.y) &&
-              nbr.x > 0 &&
-              nbr.y > 0 &&
-              nbr.x < this.width &&
-              nbr.y < this.height,
-          ),
-        )
-      }
-      if (isHole) {
-        yield currentHole
-      }
-    }
+    yield* this.getHolesOrPunctures((coord) => getNeighbors(coord))
   }
 
   hasHole() {
