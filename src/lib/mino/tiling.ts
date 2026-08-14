@@ -45,7 +45,7 @@ export default class MinoTilings {
 
   /** Get the tiling of this mino */
   get() {
-    if (this.mino.classes.hasHole()) {
+    if (this.mino.hasHole()) {
       return undefined
     }
     if (transPairMap.has(this.mino)) {

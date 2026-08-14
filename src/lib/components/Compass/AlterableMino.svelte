@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { O_OCTOMINO } from "$lib/mino"
   import Vector from "$lib/vector"
   import { getMinoColor, NUM_GENERATIONS } from "../graph"
   import { point } from "../svgUtils"
@@ -12,9 +11,11 @@
 
 <g>
   {#key mino}
-    {#if mino.equals(O_OCTOMINO)}
-      {@render hole()}
-    {/if}
+    {#each mino.punctures() as puncture}
+      {#each puncture as coord}
+        {@render hole(coord)}
+      {/each}
+    {/each}
     {@render innerSquares(highlight)}
     {@render outerSquares()}
   {/key}
@@ -43,14 +44,9 @@
   {/if}
 {/snippet}
 
-{#snippet hole()}
+{#snippet hole(coord: Vector)}
   {@const { size, transform } = getMinoSizeAndTransform(mino)}
-  <rect
-    class="hole"
-    {...point(transform(new Vector(1, 1)))}
-    width={size}
-    height={size}
-  />
+  <rect class="hole" {...point(transform(coord))} width={size} height={size} />
 {/snippet}
 
 <style>

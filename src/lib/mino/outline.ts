@@ -89,9 +89,31 @@ function* iterEdges(coords: Coord[]): Generator<Edge> {
   } while (!isEqual(pos, origin))
 }
 
+function* iterEdgesInner(coords: Coord[]): Generator<Edge> {
+  const origin = getStartPoint(coords)
+  let pos = origin
+  let dir: Direction = "down"
+  const coordSet = new PointSet()
+  coordSet.addAll(coords)
+  do {
+    if (isBlocked(coordSet, pos, dir)) {
+      dir = turnRight(dir)
+    } else if (canTurn(coordSet, pos, dir)) {
+      dir = turnLeft(dir)
+    } else {
+      yield { start: pos, dir }
+      pos = move(pos, dir)
+    }
+  } while (!isEqual(pos, origin))
+}
+
 /**
  * Get the boundary of a polyomino
  */
 export function getEdges(coords: Coord[]) {
   return EdgeList.of(iterEdges(coords))
+}
+
+export function getEdgesInner(coords: Coord[]) {
+  return EdgeList.of(iterEdgesInner(coords))
 }

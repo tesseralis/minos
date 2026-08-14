@@ -40,10 +40,45 @@ describe("mino", () => {
     })
   })
 
-  describe.only("longestWave", () => {
+  describe("longestWave", () => {
     it("works", () => {
       const mino = Polyomino.fromString("111_100_100")
       expect(mino.longestWave().max).toEqual(3)
+    })
+  })
+
+  describe(".hasHole()", () => {
+    it("returns true for all holey cases", () => {
+      const cases = [
+        "111_101_110",
+        "111_101_111",
+        "0111_0101_1110",
+        "0111_1101_0110",
+      ].map(Polyomino.fromString)
+      for (const mino of cases) {
+        expect(mino.hasHole()).toBeTruthy()
+      }
+    })
+
+    it("returns false for non-holey cases", () => {
+      const cases = ["111_111_110", "111_101", "010_111_010"].map((str) =>
+        Polyomino.fromString(str),
+      )
+      for (const mino of cases) {
+        expect(mino.hasHole()).toBeFalsy()
+      }
+    })
+
+    it("works for holes bigger than one cell", () => {
+      const mino = Polyomino.fromString("1111_1001_1110")
+      expect(mino.hasHole()).toBeTruthy()
+    })
+  })
+
+  describe(".punctures()", () => {
+    it("works for multi-hole minos", () => {
+      const mino = Polyomino.fromString("111_101_101_111")
+      expect(mino.punctures().toArray()[0]).toHaveLength(2)
     })
   })
 })
