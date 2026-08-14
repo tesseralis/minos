@@ -8,9 +8,9 @@
   import { getPoints } from "$lib/components/svgUtils"
 
   function getPathSegments(mino: Polyomino, size: number) {
-    const outline = mino.boundary().outline().map(Vector.fromPacked)
+    const outline = mino.boundary().outlineVec()
     const scale = (v: Vector) => v.scale(size)
-    const scaledOutline = outline.map(scale)
+    const scaledOutline = outline.map(scale).toArray()
     const anchorPoint = getAnchor(scaledOutline, "center center")
 
     const translate = (v: Vector) => v.sub(anchorPoint)

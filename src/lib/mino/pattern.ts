@@ -179,6 +179,6 @@ export class MinoPattern {
 
   /** Get the outer edges of this mino pattern */
   edges() {
-    return getEdges([...this.coords()])
+    return getEdges(this.coords())
   }
 }

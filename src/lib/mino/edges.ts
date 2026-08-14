@@ -1,5 +1,5 @@
 import { range } from "lodash-es"
-import { type VectorLike } from "$lib/vector"
+import Vector, { type VectorLike } from "$lib/vector"
 import { add, Directions, encode, encodeVec, type Coord } from "./data"
 
 // Directions
@@ -102,7 +102,7 @@ export class EdgeList {
     }
   }
 
-  private *iterOutline() {
+  *outline() {
     let currentDir
     for (const edge of this.data) {
       // Only yield coordinates when we turn
@@ -114,8 +114,8 @@ export class EdgeList {
   }
 
   /** Return the coordinates of each corner of this boundary */
-  outline() {
-    return [...this.iterOutline()]
+  *outlineVec() {
+    yield* this.outline().map(Vector.fromPacked)
   }
 
   /**

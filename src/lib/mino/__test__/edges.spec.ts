@@ -76,7 +76,12 @@ describe("EdgeList", () => {
         [1, 2],
         [1, 0],
       ]
-      expect(edges.outline().map((p) => decode(p))).toEqual(expected)
+      expect(
+        edges
+          .outline()
+          .map((p) => decode(p))
+          .toArray(),
+      ).toEqual(expected)
     })
   })
 })
