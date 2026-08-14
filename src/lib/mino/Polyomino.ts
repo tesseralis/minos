@@ -1,6 +1,6 @@
 import { partition, size } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import { getEdges } from "./outline"
+import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
 import PointSet from "$lib/PointSet"
@@ -168,7 +168,7 @@ export default class Polyomino {
   }
 
   innerBoundaries() {
-    return this.punctures().map(getEdges)
+    return this.punctures().map(getEdgesInner)
   }
 
   *getHolesOrPunctures(nbrFn: (coord: Coord) => Generator<Coord>) {
