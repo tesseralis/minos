@@ -3,18 +3,15 @@ import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings } from "./internal"
-import PointSet from "$lib/PointSet"
 import {
   addAll,
   display,
   getKey,
-  getNeighbors,
   encodeVec,
   decode,
   addSquare,
   removeSquare,
   isValid,
-  type Coord,
   type MinoData,
   type RelativeLink,
   type PackedPoint,
@@ -25,8 +22,8 @@ import {
   px,
   py,
   directions,
-  getKingwiseNeighbors,
-  rawNeighbors,
+  neighbors,
+  kingwiseNeighbors,
 } from "./data"
 import { flip, type Direction } from "./edges"
 
@@ -173,7 +170,7 @@ export default class Polyomino {
   }
 
   // TODO (perf) this is probably inefficient since we're using vectors instead of packed points
-  *getHolesOrPunctures(nbrFn: (coord: Coord) => Generator<Coord>) {
+  *getHolesOrPunctures(nbrFn: (coord: PackedPoint) => Generator<PackedPoint>) {
     const visited = new Set()
     const nbrs = [...this.innerRawNeighbors()]
     while (nbrs.length > 0) {
@@ -181,41 +178,38 @@ export default class Polyomino {
       do {
         current = nbrs.pop()
       } while (visited.has(current))
-      const stack = [new Vector(...decode(current!))]
+      const stack = [current]
       let isHole = true
       const currentHole = []
       while (stack.length > 0) {
         const current = stack.pop()!
-        if (
-          current.x <= 0 ||
-          current.y <= 0 ||
-          current.x >= this.width - 1 ||
-          current.y >= this.height - 1
-        ) {
+        const x = px(current)
+        const y = py(current)
+        if (x <= 0 || y <= 0 || x >= this.width - 1 || y >= this.height - 1) {
           // If we reach the edge of the mino, break
           isHole = false
         }
-        if (visited.has(encode(current.x, current.y))) {
+        if (visited.has(current)) {
           continue
         }
-        if (this.has(current.x, current.y)) {
+        if (this.hasRaw(current)) {
           continue
         }
         currentHole.push(current)
-        visited.add(encode(current.x, current.y))
+        visited.add(current)
         stack.push(
           ...nbrFn(current).filter(
             (n2) =>
-              !this.has(n2.x, n2.y) &&
-              n2.x >= 0 &&
-              n2.y >= 0 &&
-              n2.x <= this.width - 1 &&
-              n2.y <= this.height - 1,
+              !this.hasRaw(n2) &&
+              px(n2) >= 0 &&
+              py(n2) >= 0 &&
+              px(n2) <= this.width - 1 &&
+              py(n2) <= this.height - 1,
           ),
         )
       }
       if (isHole) {
-        yield currentHole
+        yield currentHole.map((coord) => Vector.fromArray(decode(coord)))
       }
     }
   }
@@ -223,7 +217,7 @@ export default class Polyomino {
   // Return the punctures in this polyomino, as sets of coordinates
   *punctures() {
     if (this.order < 8) return
-    yield* this.getHolesOrPunctures((coord) => getKingwiseNeighbors(coord))
+    yield* this.getHolesOrPunctures(kingwiseNeighbors)
   }
 
   hasPuncture() {
@@ -233,7 +227,7 @@ export default class Polyomino {
   // Return the holes in this polyomino, as sets of coordinates
   *holes() {
     if (this.order < 7) return
-    yield* this.getHolesOrPunctures((coord) => getNeighbors(coord))
+    yield* this.getHolesOrPunctures(neighbors)
   }
 
   hasHole() {
@@ -320,7 +314,7 @@ export default class Polyomino {
   private *iterNeighbors(): Generator<PackedPoint> {
     const visited = new Set()
     for (const coord of this.data) {
-      for (const nbr of rawNeighbors(coord)) {
+      for (const nbr of neighbors(coord)) {
         if (!this.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           yield nbr

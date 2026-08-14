@@ -207,7 +207,7 @@ export function isValid(mino: MinoData): boolean {
     if (visited.has(p)) continue
     visited.add(p)
 
-    for (const nbr of rawNeighbors(p)) {
+    for (const nbr of neighbors(p)) {
       if (!mino.has(nbr)) continue
       queue.push(nbr)
     }
@@ -216,28 +216,25 @@ export function isValid(mino: MinoData): boolean {
   return visited.size === mino.size
 }
 
-export function* rawNeighbors(p: PackedPoint): Generator<PackedPoint> {
+export function add(a: PackedPoint, b: PackedPoint) {
+  return encode(px(a) + px(b), py(a) + py(b))
+}
+
+export function sub(a: PackedPoint, b: PackedPoint) {
+  return encode(px(a) - px(b), py(a) - py(b))
+}
+
+export function* neighbors(p: PackedPoint): Generator<PackedPoint> {
   yield p + 1 // down
   yield encode(px(p), py(p) - 1) // up
   yield p + (1 << INT_WIDTH) // right
   yield encode(px(p) - 1, py(p)) // left
 }
 
-/** Return the neighbors of the coord [i,j] */
-export function* getNeighbors(p: Coord): Generator<Coord> {
-  // TODO it turns out this order greatly impacts the order of the minos
-  // either standardize it or sort the minos independently
-  yield p.add(Vector.DOWN)
-  yield p.add(Vector.UP)
-  yield p.add(Vector.RIGHT)
-  yield p.add(Vector.LEFT)
-}
-
-/** Iterate over the orthogonal and diagonal neighbors of p */
-export function* getKingwiseNeighbors(p: Coord): Generator<Coord> {
-  yield* getNeighbors(p)
-  yield p.add([1, 1])
-  yield p.add([1, -1])
-  yield p.add([-1, -1])
-  yield p.add([-1, 1])
+export function* kingwiseNeighbors(p: PackedPoint): Generator<PackedPoint> {
+  yield* neighbors(p)
+  yield p + encode(1, 1)
+  yield encode(px(p) + 1, py(p) - 1)
+  yield encode(px(p) - 1, py(p) - 1)
+  yield encode(px(p) - 1, py(p) + 1)
 }

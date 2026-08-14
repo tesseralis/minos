@@ -4,7 +4,6 @@
 
 import {} from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import PointSet from "$lib/PointSet"
 import { type MinoLike } from "./Polyomino"
 import {
   Polyomino,
@@ -13,7 +12,15 @@ import {
   transformAnchor,
   transformCoord,
 } from "./internal"
-import { getNeighbors } from "./data"
+import {
+  encode,
+  decode,
+  type PackedPoint,
+  px,
+  py,
+  neighbors,
+  sub,
+} from "./data"
 import type { Dims, Coord } from "./data"
 import { getEdges } from "./outline"
 
@@ -38,13 +45,16 @@ export type PatternData = MinoPlacement[]
 function* allCoords([w, h]: Dims) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      yield new Vector(x, y)
+      yield encode(x, y)
+      // yield new Vector(x, y)
     }
   }
 }
 
-function inBounds(p: Coord, [w, h]: Dims) {
-  return p.x >= 0 && p.x < w && p.y >= 0 && p.y < h
+function inBounds(p: PackedPoint, [w, h]: Dims) {
+  const x = px(p)
+  const y = py(p)
+  return x >= 0 && x < w && y >= 0 && y < h
 }
 
 // we use this one because a black/white square has two code points and can't be split easily
@@ -59,30 +69,31 @@ export function parsePattern(patternStr: string): PatternData {
   const width = grid[0].length
   const dims: Dims = [width, height]
   const pattern: PatternData = []
-  const visited = new PointSet()
+  // const visited = new PointSet()
+  const visited = new Set<PackedPoint>()
   for (const coord of allCoords(dims)) {
     if (visited.has(coord)) {
       continue
     }
-    const color = grid[coord.y][coord.x]
+    const color = grid[py(coord)][px(coord)]
     // ignore holes
     if (color === holeColor) {
       visited.add(coord)
       continue
     }
     // Select the next point in the grid that hasn't been visited yet
-    const queue: Coord[] = [coord]
-    const minoCoords: Coord[] = []
+    const queue: PackedPoint[] = [coord]
+    const minoCoords: PackedPoint[] = []
 
     // Find all the valid points
     while (queue.length > 0) {
       const current = queue.pop()
       minoCoords.push(current!)
       visited.add(current!)
-      for (const nbr of getNeighbors(current!)) {
+      for (const nbr of neighbors(current!)) {
         if (
           inBounds(nbr, dims) &&
-          grid[nbr.y]?.[nbr.x] === color &&
+          grid[py(nbr)]?.[px(nbr)] === color &&
           !visited.has(nbr)
         ) {
           queue.push(nbr)
@@ -90,11 +101,11 @@ export function parsePattern(patternStr: string): PatternData {
       }
     }
     // get the coordinates of the mino
-    const xMin = Math.min(...minoCoords.map((p) => p.x))
-    const yMin = Math.min(...minoCoords.map((p) => p.y))
-    const min = new Vector(xMin, yMin)
-    const mino = Polyomino.fromCoords(minoCoords.map((p) => p.sub(min)))
-    pattern.push({ mino, coord: min })
+    const xMin = Math.min(...minoCoords.map(px))
+    const yMin = Math.min(...minoCoords.map(py))
+    const min = encode(xMin, yMin)
+    const mino = Polyomino.fromData(new Set(minoCoords.map((p) => sub(p, min))))
+    pattern.push({ mino, coord: Vector.fromArray(decode(min)) })
   }
 
   return pattern
