@@ -56,7 +56,7 @@ export default class Polyomino {
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
     this.data = data
-    this.order = data.size
+    this.order = data.length
     this.rawDims = getDims(data)
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
@@ -131,11 +131,11 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords() {
-    return [...this.data.values().map((v) => Vector.fromPacked(v))]
+    return this.data.map((v) => Vector.fromPacked(v))
   }
 
   hasRaw(point: PackedPoint) {
-    return this.data.has(point)
+    return this.data.includes(point)
   }
 
   has(x: number, y: number) {
@@ -236,7 +236,7 @@ export default class Polyomino {
    */
   isBalanced() {
     const [white, black] = partition(
-      [...this.data],
+      this.data,
       (c) => (px(c) + py(c)) % 2 === 0,
     )
     if (this.order % 2 === 0) {
@@ -251,7 +251,7 @@ export default class Polyomino {
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
   possibleParents() {
-    return [...this.data].map((coord) => {
+    return this.data.map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
         mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
@@ -310,10 +310,13 @@ export default class Polyomino {
   }
 
   enumerateChildren() {
-    return this.neighbors().map((coord) => ({
-      mino: Polyomino.fromData(addSquare(this.data, coord)),
-      coord,
-    }))
+    return this.neighbors().map((coord) => {
+      const mino = Polyomino.fromData(addSquare(this.data, coord))
+      return {
+        mino,
+        coord,
+      }
+    })
   }
 
   /** Return the list of all children of this mino */
@@ -333,7 +336,7 @@ export default class Polyomino {
   longestLine() {
     let max = 0
     let maxCount = 0
-    for (const point of this.data.values()) {
+    for (const point of this.data) {
       for (const dir of ["right", "down"] as const) {
         const opposite = move(point, flip(dir))
         if (opposite === undefined || !this.hasRaw(opposite)) {
@@ -357,7 +360,7 @@ export default class Polyomino {
   longestWave() {
     let max = 0
     let maxCount = 0
-    for (const point of this.data.values()) {
+    for (const point of this.data) {
       for (const [dir1, dir2] of [
         ["down", "right"],
         ["right", "down"],

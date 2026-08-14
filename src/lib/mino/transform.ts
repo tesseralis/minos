@@ -57,9 +57,7 @@ export default class MinoTransform {
     const [w, h] = this.mino.dims
     if (trans === "identity") return this.mino
     return Polyomino.fromData(
-      new Set(
-        this.mino.data.values().map((m) => transformMinoMask(m, w, h, trans)),
-      ),
+      this.mino.data.map((m) => transformMinoMask(m, w, h, trans)),
     )
   }
 
