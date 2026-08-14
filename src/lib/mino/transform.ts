@@ -2,7 +2,6 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import Vector, { type Point } from "$lib/vector"
 import type { Coord } from "./data"
 import { Polyomino } from "./internal"
 import { encode, px, py } from "./data"
