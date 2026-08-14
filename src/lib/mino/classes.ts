@@ -9,7 +9,6 @@ import {
   type Level,
 } from "./internal"
 import {
-  getNeighbors,
   getKingwiseNeighbors,
   type PackedPoint,
   encode,
@@ -17,7 +16,6 @@ import {
   py,
   type Direction,
   move,
-  directions,
 } from "./data"
 
 const axes = ["row", "column"] as const
@@ -220,11 +218,6 @@ export default class MinoClasses {
       }
     }
     return punctures
-  }
-
-  /** Return whether the polyomino contains a hole */
-  hasHole() {
-    return this.mino.hasHole()
   }
 
   // Get all the corner points of this polyomino that are contained in it

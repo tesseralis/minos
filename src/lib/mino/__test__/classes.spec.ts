@@ -48,34 +48,6 @@ describe("MinoClasses", () => {
     })
   })
 
-  describe(".hasHole()", () => {
-    it("returns true for all holey cases", () => {
-      const cases = [
-        "111_101_110",
-        "111_101_111",
-        "0111_0101_1110",
-        "0111_1101_0110",
-      ].map(Polyomino.fromString)
-      for (const mino of cases) {
-        expect(mino.classes.hasHole()).toBeTruthy()
-      }
-    })
-
-    it("returns false for non-holey cases", () => {
-      const cases = ["111_111_110", "111_101", "010_111_010"].map((str) =>
-        Polyomino.fromString(str),
-      )
-      for (const mino of cases) {
-        expect(mino.classes.hasHole()).toBeFalsy()
-      }
-    })
-
-    it("works for holes bigger than one cell", () => {
-      const mino = Polyomino.fromString("1111_1001_1110")
-      expect(mino.classes.hasHole()).toBeTruthy()
-    })
-  })
-
   describe("isDirected", () => {
     it("works for positive cases", () => {
       const cases = ["11", "011_110", "0111_1101"].map(Polyomino.fromString)
