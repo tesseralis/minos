@@ -46,7 +46,9 @@ Style props:
   const strokeWidth = $derived(_strokeWidth ?? size / 8)
   const gridStrokeWidth = $derived(_gridStrokeWidth ?? strokeWidth / 2)
 
-  const outline = $derived(mino.boundary().outline())
+  const outline = $derived(
+    mino.boundary().outline().map(Vector.fromPackedPoint),
+  )
   const scale = (v: Vector) => v.scale(size)
   const scaledOutline = $derived(outline.map(scale))
   const anchorPoint = $derived(getAnchor(scaledOutline, anchor))
@@ -58,7 +60,11 @@ Style props:
     return mino
       .innerBoundaries()
       .map((boundary) => {
-        return boundary.outline().map(scale).map(translate)
+        return boundary
+          .outline()
+          .map(Vector.fromPackedPoint)
+          .map(scale)
+          .map(translate)
       })
       .toArray()
   })

@@ -1,6 +1,6 @@
 import { range, zip, maxBy } from "lodash-es"
 import Vector from "$lib/vector"
-import { type Coord } from "./data"
+import { add, decode, encodeVec, sub, type PackedPoint } from "./data"
 import { EdgeList } from "./edges"
 import {
   Polyomino,
@@ -11,6 +11,7 @@ import {
   transforms,
 } from "./internal"
 
+type Coord = PackedPoint
 export type Basis = [u: Coord, v: Coord]
 
 /**
@@ -70,7 +71,7 @@ export default class MinoTilings {
 function transSegmentDist([startList, endList]: SegmentPair): Coord {
   // It suffices to compare two counterpart points
   // (e.g. the start of one segment and the end of the other)
-  return startList.start().sub(endList.end())
+  return sub(startList.start(), endList.end())
 }
 
 // Translation Criterion
@@ -178,7 +179,7 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
   // If O is our coordinate, then:
   // O' = 2M - O
   //    = A + Z - O
-  return segment.start().add(segment.end()).sub(coord)
+  return sub(add(segment.start(), segment.end()), coord)
 }
 
 // Flip the given mino placement over the given palindromic segment
@@ -187,10 +188,16 @@ function flipPlacement(
   segment: EdgeList,
 ): MinoPlacement {
   const { mino, coord } = placement
-  const minoBotRight = getAnchor(mino, { x: "end", y: "end" }).add(coord)
+  const minoBotRight = add(
+    encodeVec(getAnchor(mino, { x: "end", y: "end" })),
+    coord,
+  )
   // Flip that point over the segment to get the new coordinate
   const newCoord = flipPoint(minoBotRight, segment)
-  return { mino: mino.transform.apply("rotateHalf"), coord: newCoord }
+  return {
+    mino: mino.transform.apply("rotateHalf"),
+    coord: newCoord,
+  }
 }
 
 type ConwaySegments = {
@@ -221,7 +228,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
           const palindromePairs = getPalindromePairs(bc, ef)
           if (palindromePairs) {
             return {
-              transDistance: transSegmentDist([a, d]),
+              transDistance: Vector.fromArray(decode(transSegmentDist([a, d]))),
               palindromePairs,
             }
           }
@@ -242,7 +249,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       if (palindromePairs) {
         return {
           // Use the distance between the empty A-D segments
-          transDistance: ef.start().sub(bc.start()),
+          transDistance: Vector.fromArray(decode(sub(ef.start(), bc.start()))),
           palindromePairs,
         }
       }
@@ -268,7 +275,7 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
   const flipped = pattern.data.map((placement) =>
     flipPlacement(placement, longestSegment),
   )
-  const domain = MinoPattern.of(pattern.data.concat(flipped))
+  const domain = new MinoPattern(pattern.data.concat(flipped))
 
   // Use the distance between the translated pair as one axis
   const u = transDistance
@@ -279,8 +286,8 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
 
   // flip the end of the other segment over
   const endpoint = flipPoint(otherSegment.end(), longestSegment)
-  const v = endpoint.sub(otherSegment.start())
-  return { domain, basis: [u, v] }
+  const v = sub(endpoint, otherSegment.start())
+  return { domain, basis: [encodeVec(u), v] }
 }
 
 // Tiling Pairs

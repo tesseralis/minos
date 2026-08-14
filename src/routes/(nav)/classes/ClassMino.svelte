@@ -1,6 +1,6 @@
 <script module lang="ts">
   import type { Polyomino } from "$lib/mino"
-  import type Vector from "$lib/vector"
+  import Vector from "$lib/vector"
   import { getAnchor } from "$lib/components/utils"
   import { minBy } from "lodash-es"
   import MinoLink from "$lib/components/MinoLink.svelte"
@@ -8,7 +8,7 @@
   import { getPoints } from "$lib/components/svgUtils"
 
   function getPathSegments(mino: Polyomino, size: number) {
-    const outline = mino.boundary().outline()
+    const outline = mino.boundary().outline().map(Vector.fromPackedPoint)
     const scale = (v: Vector) => v.scale(size)
     const scaledOutline = outline.map(scale)
     const anchorPoint = getAnchor(scaledOutline, "center center")

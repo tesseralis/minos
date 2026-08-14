@@ -1,6 +1,7 @@
 import { range } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import { type Coord } from "./data"
+import { add, encode, encodeVec, type PackedPoint } from "./data"
+type Coord = PackedPoint
 
 // Directions
 // ==========
@@ -21,16 +22,16 @@ export function flip(d: Direction) {
 }
 
 /** Move a point in the given direction */
-export function move(p: Coord, dir: Direction): Coord {
+export function move(p: PackedPoint, dir: Direction): PackedPoint {
   switch (dir) {
     case "left":
-      return p.add(Vector.LEFT)
+      return add(p, encode(-1, 0))
     case "right":
-      return p.add(Vector.RIGHT)
+      return add(p, encode(1, 0))
     case "down":
-      return p.add(Vector.DOWN)
+      return add(p, encode(0, 1))
     case "up":
-      return p.add(Vector.UP)
+      return add(p, encode(0, -1))
   }
 }
 
@@ -60,7 +61,7 @@ function splitAt<T>(array: T[], indices: number | number[]): T[][] {
 // EdgeList class
 // ==============
 
-export type Edge = { dir: Direction; start: Coord }
+export type Edge = { dir: Direction; start: PackedPoint }
 type EdgeLike = { dir: Direction; start: VectorLike }
 
 /**
@@ -70,14 +71,14 @@ export class EdgeList {
   data: Edge[]
   length: number
 
-  private constructor(data: Edge[]) {
+  constructor(data: Edge[]) {
     this.data = data
     this.length = data.length
   }
 
   static of(data: Iterable<EdgeLike>) {
     return new EdgeList(
-      [...data].map(({ dir, start }) => ({ dir, start: Vector.of(start) })),
+      [...data].map(({ dir, start }) => ({ dir, start: encodeVec(start) })),
     )
   }
 

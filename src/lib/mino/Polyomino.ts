@@ -144,7 +144,7 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords() {
-    return [...this.data.values().map((v) => Vector.fromArray(decode(v)))]
+    return [...this.data.values().map(Vector.fromPackedPoint)]
   }
 
   hasRaw(point: PackedPoint) {
@@ -162,7 +162,7 @@ export default class Polyomino {
 
   /** Return the edge list for this mino */
   boundary() {
-    return getEdges(this.coords())
+    return getEdges(this.data)
   }
 
   *innerBoundaries() {
@@ -209,7 +209,7 @@ export default class Polyomino {
         )
       }
       if (isHole) {
-        yield currentHole.map((coord) => Vector.fromArray(decode(coord)))
+        yield currentHole
       }
     }
   }

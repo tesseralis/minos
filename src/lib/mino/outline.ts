@@ -1,36 +1,36 @@
 import { isEqual, minBy } from "lodash-es"
 
-import PointSet from "$lib/PointSet"
-
-import { type Coord } from "./data"
+import { encode, px, py, sub, type PackedPoint } from "./data"
 import { type Edge, type Direction, EdgeList, move } from "./edges"
+
+type PointSet = Set<PackedPoint>
 
 /**
  * Return whether, given a set of coordinates, starting at  point v,
  * we can move in the given direction dir while moving counterclockwise.
  */
-function canTurn(points: PointSet, v: Coord, dir: Direction) {
+function canTurn(points: PointSet, v: PackedPoint, dir: Direction) {
   switch (dir) {
     case "left":
-      return !points.has(v.add([-1, 0]))
+      return !points.has(sub(v, encode(1, 0)))
     case "down":
       return !points.has(v)
     case "right":
-      return !points.has(v.add([0, -1]))
+      return !points.has(sub(v, encode(0, 1)))
     case "up":
-      return !points.has(v.add([-1, -1]))
+      return !points.has(sub(v, encode(1, 1)))
   }
 }
-function isBlocked(points: PointSet, v: Coord, dir: Direction) {
+function isBlocked(points: PointSet, v: PackedPoint, dir: Direction) {
   switch (dir) {
     case "up":
-      return points.has(v.add([0, -1]))
+      return points.has(sub(v, encode(0, 1)))
     case "right":
       return points.has(v)
     case "down":
-      return points.has(v.add([-1, 0]))
+      return points.has(sub(v, encode(1, 0)))
     case "left":
-      return points.has(v.add([-1, -1]))
+      return points.has(sub(v, encode(1, 1)))
   }
 }
 
@@ -62,21 +62,20 @@ function turnRight(dir: Direction) {
 
 // Pick a start point for the given coordinates
 // such that going "down" from the point is a valid edge
-function getStartPoint(coords: Coord[]) {
-  const minY = Math.min(...coords.map((coord) => coord.y))
-  const topRow = coords.filter((p) => p.y === minY)
-  return minBy(topRow, (p) => p.x)!
+function getStartPoint(coords: Set<PackedPoint>) {
+  const minY = Math.min(...[...coords].map(py))
+  const topRow = [...coords].filter((p) => py(p) === minY)
+  return minBy(topRow, px)!
 }
 
 /**
  * Return the edges of a mino.
  */
-function* iterEdges(coords: Coord[]): Generator<Edge> {
-  const origin = getStartPoint(coords)
-  let pos = origin
+function* iterEdges(coords: Iterable<PackedPoint>): Generator<Edge> {
   let dir: Direction = "down"
-  const coordSet = new PointSet()
-  coordSet.addAll(coords)
+  const coordSet = new Set<PackedPoint>(coords)
+  const origin = getStartPoint(coordSet)
+  let pos = origin
   do {
     if (canTurn(coordSet, pos, dir)) {
       dir = turnLeft(dir)
@@ -89,12 +88,12 @@ function* iterEdges(coords: Coord[]): Generator<Edge> {
   } while (!isEqual(pos, origin))
 }
 
-function* iterEdgesInner(coords: Coord[]): Generator<Edge> {
-  const origin = getStartPoint(coords)
-  let pos = origin
+function* iterEdgesInner(coords: Iterable<PackedPoint>): Generator<Edge> {
   let dir: Direction = "down"
-  const coordSet = new PointSet()
-  coordSet.addAll(coords)
+  const coordSet = new Set<PackedPoint>(coords)
+  const origin = getStartPoint(coordSet)
+  let pos = origin
+
   do {
     if (isBlocked(coordSet, pos, dir)) {
       dir = turnRight(dir)
@@ -104,16 +103,16 @@ function* iterEdgesInner(coords: Coord[]): Generator<Edge> {
       yield { start: pos, dir }
       pos = move(pos, dir)
     }
-  } while (!isEqual(pos, origin))
+  } while (pos !== origin)
 }
 
 /**
  * Get the boundary of a polyomino
  */
-export function getEdges(coords: Coord[]) {
-  return EdgeList.of(iterEdges(coords))
+export function getEdges(coords: Iterable<PackedPoint>) {
+  return new EdgeList(iterEdges(coords).toArray())
 }
 
-export function getEdgesInner(coords: Coord[]) {
-  return EdgeList.of(iterEdgesInner(coords))
+export function getEdgesInner(coords: Iterable<PackedPoint>) {
+  return new EdgeList(iterEdgesInner(coords).toArray())
 }
