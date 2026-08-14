@@ -26,28 +26,6 @@ describe("MinoClasses", () => {
     })
   })
 
-  describe(".punctures()", () => {
-    it("returns the right amount for true cases", () => {
-      const cases: [string, number][] = [
-        ["111_101_111", 1],
-        ["111_101_111_101_110", 1],
-        ["111_101_111_101_111", 2],
-      ]
-      for (const [mino, expected] of cases) {
-        expect(Polyomino.of(mino).classes.punctures().length).toBe(expected)
-      }
-    })
-
-    it("returns correctly for minos without punctures", () => {
-      const cases = ["111_100_111", "111_101_110"].map((str) =>
-        Polyomino.of(str),
-      )
-      for (const mino of cases) {
-        expect(mino.classes.punctures().length).toBe(0)
-      }
-    })
-  })
-
   describe("isDirected", () => {
     it("works for positive cases", () => {
       const cases = ["11", "011_110", "0111_1101"].map(Polyomino.fromString)

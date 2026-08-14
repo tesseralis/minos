@@ -1,8 +1,8 @@
-import { partition, size, sum } from "lodash-es"
+import { partition, sum } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
-import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
+import { MinoTransform, MinoClasses, MinoTilings } from "./internal"
 import PointSet from "$lib/PointSet"
 import {
   addAll,
@@ -171,6 +171,7 @@ export default class Polyomino {
     yield* this.punctures().map(getEdgesInner)
   }
 
+  // TODO (perf) this is probably inefficient since we're using vectors instead of packed points
   *getHolesOrPunctures(nbrFn: (coord: Coord) => Generator<Coord>) {
     const visited = new Set()
     const nbrs = [...this.innerRawNeighbors()]
