@@ -26,9 +26,9 @@ Style props:
   import { path as d3path } from "d3-path"
 
   import Vector from "$lib/vector"
-  import { Polyomino, O_OCTOMINO } from "$lib/mino"
+  import { Polyomino } from "$lib/mino"
   import { getAnchor } from "./utils"
-  import { getPoints, onHover, point } from "./svgUtils"
+  import { onHover } from "./svgUtils"
   import { getMinoColor } from "./graph"
 
   const {

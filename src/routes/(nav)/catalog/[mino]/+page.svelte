@@ -56,9 +56,6 @@
   <div class="header">
     <MinoDiv {mino} size={250 / (mino.order + 4)} />
   </div>
-  {#each mino.punctures() as puncture}
-    {puncture.map((p) => `(${p.x},${p.y})`).join(" ")}
-  {/each}
   <dl>
     {#each minoData as [name, display]}
       <div style:grid-area={name}>

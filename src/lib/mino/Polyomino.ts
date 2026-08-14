@@ -1,4 +1,4 @@
-import { partition, size } from "lodash-es"
+import { partition, size, sum } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
@@ -240,12 +240,14 @@ export default class Polyomino {
 
   /** Return the perimeter of this polyomino */
   perimeter() {
-    const perim = this.boundary().length
-    // TODO handle larger minos more generally
-    if (this.equals(O_OCTOMINO)) {
-      return perim + 4
-    }
-    return perim
+    return (
+      this.boundary().length +
+      sum(
+        this.innerBoundaries()
+          .map((bound) => bound.length)
+          .toArray(),
+      )
+    )
   }
 
   /**
