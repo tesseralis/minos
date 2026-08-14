@@ -1,5 +1,5 @@
 import { partition, sum } from "lodash-es"
-import { type VectorLike } from "$lib/vector"
+import Vector, { type VectorLike } from "$lib/vector"
 import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings } from "./internal"
@@ -127,6 +127,11 @@ export default class Polyomino {
   equals(other: Polyomino) {
     // Just do identity equality since everything is cached
     return this === other
+  }
+
+  /** Return the coordinate of the mino's squares */
+  coords() {
+    return [...this.data.values().map((v) => Vector.fromPackedPoint(v))]
   }
 
   hasRaw(point: PackedPoint) {
