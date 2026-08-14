@@ -1,6 +1,6 @@
 import { range } from "lodash-es"
 import { type VectorLike } from "$lib/vector"
-import { add, encode, encodeVec, type Coord } from "./data"
+import { add, Directions, encode, encodeVec, type Coord } from "./data"
 
 // Directions
 // ==========
@@ -24,13 +24,13 @@ export function flip(d: Direction) {
 export function move(p: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
-      return add(p, encode(-1, 0))
+      return add(p, Directions.LEFT)
     case "right":
-      return add(p, encode(1, 0))
+      return add(p, Directions.RIGHT)
     case "down":
-      return add(p, encode(0, 1))
+      return add(p, Directions.DOWN)
     case "up":
-      return add(p, encode(0, -1))
+      return add(p, Directions.UP)
   }
 }
 

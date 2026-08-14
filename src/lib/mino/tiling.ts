@@ -1,5 +1,5 @@
 import { range, zip, maxBy } from "lodash-es"
-import { add, encode, sub, type PackedPoint } from "./data"
+import { add, Directions, encode, sub, type PackedPoint } from "./data"
 import { EdgeList } from "./edges"
 import {
   Polyomino,
@@ -54,7 +54,9 @@ export default class MinoTilings {
     if (conwayPairMap.has(this.mino)) {
       return getConwayTiling(conwayPairMap.get(this.mino)!)
     }
-    const pattern = new MinoPattern([{ mino: this.mino, coord: encode(0, 0) }])
+    const pattern = new MinoPattern([
+      { mino: this.mino, coord: Directions.ZERO },
+    ])
 
     const transTiling = getTransTiling(pattern)
     if (transTiling) {
@@ -299,7 +301,7 @@ function getPairsMapping(pairs: TilingPair[]): Map<Polyomino, MinoPattern> {
   for (const [minoStr, pairTransform, [x, y]] of pairs) {
     const mino = Polyomino.fromString(minoStr)
     const pattern = new MinoPattern([
-      { mino, coord: encode(0, 0) },
+      { mino, coord: Directions.ZERO },
       { mino: mino.transform.apply(pairTransform), coord: encode(x, y) },
     ])
     for (const transform of transforms) {

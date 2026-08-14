@@ -8,6 +8,12 @@ export const directions = ["left", "right", "up", "down"] as const
 export type Direction = (typeof directions)[number]
 
 const INT_WIDTH = 16
+
+/*
+ * A 32-bit integer representing two packed 16 bit integers.
+ * We're going to be using integer coordinates a lot, and being able to manipulate them as numbers
+ * instead of creating objects avoids a lot of allocation and GC.
+ */
 export type PackedPoint = number
 export type Coord = PackedPoint
 
@@ -20,7 +26,7 @@ export type RelativeLink = Required<PossibleRelativeLink>
 
 /**
  * The underlying representation for a polyomino, a set of coordinates,
- * but because JavaScript is silly we're packing the coordinates as 16-bit unsigned integers.
+ * but because JavaScript is silly we're packing the coordinates as 16-bit signed integers.
  */
 export type MinoData = Set<PackedPoint>
 
@@ -93,6 +99,7 @@ export function getKey(data: MinoData) {
   return xs.join(",")
 }
 
+// Assumes positive coord
 export function move(
   point: PackedPoint,
   dir: Direction,
@@ -104,19 +111,19 @@ export function move(
   switch (dir) {
     case "left": {
       if (x === 0) return
-      return point - encode(1, 0)
+      return point - Directions.RIGHT
     }
     case "right": {
       if (width && x === width - 1) return
-      return point + encode(1, 0)
+      return point + Directions.RIGHT
     }
     case "up": {
       if (py(point) === 0) return
-      return point - encode(0, 1)
+      return point - Directions.DOWN
     }
     case "down": {
       if (height && y === height - 1) return
-      return point + encode(0, 1)
+      return point + Directions.DOWN
     }
   }
 }
@@ -161,11 +168,11 @@ export function addSquare(mino: MinoData, p: PackedPoint) {
   const x = px(p)
   const y = py(p)
   if (x < 0) {
-    const result = new Set(mino.values().map((m) => m + encode(1, 0)))
+    const result = new Set(mino.values().map((m) => m + Directions.RIGHT))
     result.add(encode(0, y))
     return result
   } else if (y < 0) {
-    const result = new Set(mino.values().map((m) => m + encode(0, 1)))
+    const result = new Set(mino.values().map((m) => m + Directions.DOWN))
     result.add(encode(x, 0))
     return result
   } else {
@@ -218,11 +225,19 @@ export function sub(a: PackedPoint, b: PackedPoint) {
   return encode(px(a) - px(b), py(a) - py(b))
 }
 
+export const Directions = {
+  ZERO: 0,
+  DOWN: encode(0, 1),
+  UP: encode(0, -1),
+  LEFT: encode(-1, 0),
+  RIGHT: encode(1, 0),
+}
+
 export function* neighbors(p: PackedPoint): Generator<PackedPoint> {
-  yield p + 1 // down
-  yield encode(px(p), py(p) - 1) // up
-  yield p + (1 << INT_WIDTH) // right
-  yield encode(px(p) - 1, py(p)) // left
+  yield p + Directions.DOWN
+  yield add(p, Directions.UP)
+  yield p + Directions.RIGHT
+  yield add(p, Directions.LEFT)
 }
 
 export function* kingwiseNeighbors(p: PackedPoint): Generator<PackedPoint> {
