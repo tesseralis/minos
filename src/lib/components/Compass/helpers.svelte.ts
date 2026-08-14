@@ -2,7 +2,6 @@ import type { Polyomino, RelativeLink, Transform } from "$lib/mino"
 import { getContext, setContext } from "svelte"
 import { getAnchor } from "../utils"
 import Vector from "$lib/vector"
-import { decode } from "$lib/mino/data"
 
 // Radii for various components of the compass
 export const innerRingRadius = 50
