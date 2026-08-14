@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest"
-import Vector from "$lib/vector"
 import { MinoPattern } from "../internal"
 import { decode, encode } from "../data"
 

@@ -1,5 +1,4 @@
 import { describe, it, expect } from "vitest"
-import Vector from "$lib/vector"
 import { getEdges, getEdgesInner } from "../outline"
 import { encodeVec } from "../data"
 

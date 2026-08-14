@@ -1,5 +1,5 @@
 import { range } from "lodash-es"
-import Vector, { type VectorLike } from "$lib/vector"
+import { type VectorLike } from "$lib/vector"
 import { add, encode, encodeVec, type PackedPoint } from "./data"
 type Coord = PackedPoint
 

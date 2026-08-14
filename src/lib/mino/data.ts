@@ -3,7 +3,6 @@ import Vector, { type VectorLike } from "../vector"
 import type Polyomino from "./Polyomino"
 
 export type Dims = [number, number]
-export type Coord = Vector
 // TODO deduplicate with the definition in 'edges'
 export const directions = ["left", "right", "up", "down"] as const
 export type Direction = (typeof directions)[number]
@@ -17,6 +16,7 @@ export type RelativeLink = Required<PossibleRelativeLink>
 
 const INT_WIDTH = 16
 export type PackedPoint = number
+export type Coord = PackedPoint
 
 /**
  * The underlying representation for a polyomino, a set of coordinates,

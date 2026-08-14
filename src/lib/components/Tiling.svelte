@@ -59,7 +59,7 @@
           const p = Vector.fromPackedPoint(u)
             .scale(i)
             .add(Vector.fromPackedPoint(v).scale(j))
-            .add(coord)
+            .add(Vector.fromPackedPoint(coord))
           // Only add the tile if some point in the mino is visible within the grid
           if (mino.coords().some((c) => inBox(p.add(c), size))) {
             yield {

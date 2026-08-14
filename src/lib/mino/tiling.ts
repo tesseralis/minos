@@ -188,10 +188,7 @@ function flipPlacement(
   segment: EdgeList,
 ): MinoPlacement {
   const { mino, coord } = placement
-  const minoBotRight = add(
-    encodeVec(getAnchor(mino, { x: "end", y: "end" })),
-    coord,
-  )
+  const minoBotRight = add(getAnchor(mino, { x: "end", y: "end" }), coord)
   // Flip that point over the segment to get the new coordinate
   const newCoord = flipPoint(minoBotRight, segment)
   return {

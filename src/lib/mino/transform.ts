@@ -127,7 +127,7 @@ export function* getAnchors(): Generator<Anchor> {
 export function getAnchor(mino: Polyomino, anchor: Anchor): Coord {
   const x = anchor.x === "start" ? 0 : mino.width
   const y = anchor.y === "start" ? 0 : mino.height
-  return new Vector(x, y)
+  return encode(x, y)
 }
 
 /**
@@ -155,15 +155,17 @@ export function transformAnchor(transform: Transform): Anchor {
  * Execute the given transform on the provided point.
  */
 export function transformCoord(p: Coord, transform: Transform) {
+  const x = px(p)
+  const y = py(p)
   const transforms: Record<Transform, Point> = {
-    identity: [p.x, p.y],
-    rotateLeft: [p.y, -p.x],
-    rotateHalf: [-p.x, -p.y],
-    rotateRight: [-p.y, p.x],
-    flipHoriz: [-p.x, p.y],
-    flipVert: [p.x, -p.y],
-    flipMainDiag: [p.y, p.x],
-    flipMinorDiag: [-p.y, -p.x],
+    identity: [x, y],
+    rotateLeft: [y, -x],
+    rotateHalf: [-x, -y],
+    rotateRight: [-y, x],
+    flipHoriz: [-x, y],
+    flipVert: [x, -y],
+    flipMainDiag: [y, x],
+    flipMinorDiag: [-y, -x],
   }
   return Vector.fromArray(transforms[transform])
 }

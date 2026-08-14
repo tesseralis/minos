@@ -3,7 +3,7 @@
  */
 
 import {} from "lodash-es"
-import Vector, { type VectorLike } from "$lib/vector"
+import { type VectorLike } from "$lib/vector"
 import { type MinoLike } from "./Polyomino"
 import {
   Polyomino,
@@ -115,12 +115,9 @@ export function parsePattern(patternStr: string): PatternData {
 function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   const newAnchor = transformAnchor(transform)
   // Get the *current* position of the coord that will be the new top-left anchor
-  const newAnchorCoord = add(coord, encodeVec(getAnchor(mino, newAnchor)))
+  const newAnchorCoord = add(coord, getAnchor(mino, newAnchor))
 
-  const newCoord = transformCoord(
-    Vector.fromPackedPoint(newAnchorCoord),
-    transform,
-  )
+  const newCoord = transformCoord(newAnchorCoord, transform)
   return { mino: mino.transform.apply(transform), coord: encodeVec(newCoord) }
 }
 
