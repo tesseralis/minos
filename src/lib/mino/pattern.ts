@@ -118,7 +118,7 @@ function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   const newAnchorCoord = add(coord, getAnchor(mino, newAnchor))
 
   const newCoord = transformCoord(newAnchorCoord, transform)
-  return { mino: mino.transform.apply(transform), coord: encodeVec(newCoord) }
+  return { mino: mino.transform.apply(transform), coord: newCoord }
 }
 
 // Get the difference between the maximum and minimum of the given numbers

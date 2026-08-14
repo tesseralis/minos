@@ -1,6 +1,5 @@
 import { range, zip, maxBy } from "lodash-es"
-import Vector from "$lib/vector"
-import { add, decode, encodeVec, sub, type PackedPoint } from "./data"
+import { add, encode, sub, type PackedPoint } from "./data"
 import { EdgeList } from "./edges"
 import {
   Polyomino,
@@ -55,7 +54,7 @@ export default class MinoTilings {
     if (conwayPairMap.has(this.mino)) {
       return getConwayTiling(conwayPairMap.get(this.mino)!)
     }
-    const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
+    const pattern = new MinoPattern([{ mino: this.mino, coord: encode(0, 0) }])
 
     const transTiling = getTransTiling(pattern)
     if (transTiling) {
@@ -199,7 +198,7 @@ function flipPlacement(
 
 type ConwaySegments = {
   // The distance between the two segments that are translations of each other
-  transDistance: Vector
+  transDistance: Coord
   // The segment pairs that each contain two palindromic segments
   palindromePairs: SegmentPair[]
 }
@@ -225,7 +224,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
           const palindromePairs = getPalindromePairs(bc, ef)
           if (palindromePairs) {
             return {
-              transDistance: Vector.fromArray(decode(transSegmentDist([a, d]))),
+              transDistance: transSegmentDist([a, d]),
               palindromePairs,
             }
           }
@@ -246,7 +245,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       if (palindromePairs) {
         return {
           // Use the distance between the empty A-D segments
-          transDistance: Vector.fromArray(decode(sub(ef.start(), bc.start()))),
+          transDistance: sub(ef.start(), bc.start()),
           palindromePairs,
         }
       }
@@ -284,7 +283,7 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
   // flip the end of the other segment over
   const endpoint = flipPoint(otherSegment.end(), longestSegment)
   const v = sub(endpoint, otherSegment.start())
-  return { domain, basis: [encodeVec(u), v] }
+  return { domain, basis: [u, v] }
 }
 
 // Tiling Pairs
@@ -297,11 +296,11 @@ type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
 function getPairsMapping(pairs: TilingPair[]): Map<Polyomino, MinoPattern> {
   const result: Map<Polyomino, MinoPattern> = new Map()
-  for (const [minoStr, pairTransform, coord] of pairs) {
+  for (const [minoStr, pairTransform, [x, y]] of pairs) {
     const mino = Polyomino.fromString(minoStr)
-    const pattern = MinoPattern.of([
-      { mino, coord: Vector.ZERO },
-      { mino: mino.transform.apply(pairTransform), coord },
+    const pattern = new MinoPattern([
+      { mino, coord: encode(0, 0) },
+      { mino: mino.transform.apply(pairTransform), coord: encode(x, y) },
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)

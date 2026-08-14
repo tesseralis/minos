@@ -120,7 +120,7 @@ export default class MinoClasses {
       let foundFirst = false
       let inside = false
       for (const y of range(0, isRow ? h : w)) {
-        if (this.mino.contains(isRow ? [x, y] : [y, x])) {
+        if (this.mino.hasRaw(isRow ? encode(x, y) : encode(y, x))) {
           // If we've already found a connected set of points befor
           // this is not convex
           if (foundFirst && !inside) {

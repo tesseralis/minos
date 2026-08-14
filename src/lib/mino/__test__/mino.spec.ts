@@ -27,19 +27,6 @@ describe("mino", () => {
     })
   })
 
-  describe("fromCoords", () => {
-    it("correctly creates an L tetromino", () => {
-      const actual = Polyomino.fromCoords([
-        [0, 0],
-        [0, 1],
-        [1, 1],
-        [2, 1],
-      ])
-      const expected = Polyomino.fromString("11_01_01")
-      expect(actual).toEqual(expected)
-    })
-  })
-
   describe("longestWave", () => {
     it("works", () => {
       const mino = Polyomino.fromString("111_100_100")

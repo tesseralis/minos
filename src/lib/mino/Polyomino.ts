@@ -4,11 +4,8 @@ import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
 import { MinoTransform, MinoClasses, MinoTilings } from "./internal"
 import {
-  addAll,
   display,
   getKey,
-  encodeVec,
-  decode,
   addSquare,
   removeSquare,
   isValid,
@@ -83,15 +80,6 @@ export default class Polyomino {
     return cache[key]
   }
 
-  /**
-   * Return the mino represented by the given coordinates
-   */
-  static fromCoords(coords: VectorLike[]) {
-    const set = new Set<number>()
-    addAll(set, coords)
-    return Polyomino.fromData(set)
-  }
-
   static fromString(str: string) {
     return Polyomino.fromData(fromString(str))
   }
@@ -103,8 +91,7 @@ export default class Polyomino {
     if (typeof mino === "string") {
       return Polyomino.fromString(mino)
     }
-    // Otherwise it's a list of coordinates
-    return Polyomino.fromCoords(mino)
+    throw new Error("no minolike determined")
   }
 
   // Static methods
@@ -153,11 +140,6 @@ export default class Polyomino {
 
   has(x: number, y: number) {
     return this.hasRaw(encode(x, y))
-  }
-
-  /** Return whether this mino contains the coordinate */
-  contains(coord: VectorLike) {
-    return this.data.has(encodeVec(coord))
   }
 
   /** Return the edge list for this mino */
@@ -269,7 +251,7 @@ export default class Polyomino {
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
   possibleParents() {
-    return this.coords().map((coord) => {
+    return [...this.data].map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
         mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
@@ -330,7 +312,7 @@ export default class Polyomino {
   enumerateChildren() {
     return this.neighbors().map((coord) => ({
       mino: Polyomino.fromData(addSquare(this.data, coord)),
-      coord: Vector.fromArray(decode(coord)),
+      coord,
     }))
   }
 

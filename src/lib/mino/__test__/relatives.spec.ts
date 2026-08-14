@@ -26,19 +26,19 @@ describe("modify", () => {
     // X pentomino
     const mino = fromString("010_111_010")
     it("works correctly when adjustments not needed", () => {
-      expect(removeSquare(mino, [2, 1])).toEqual(fromString("010_111"))
+      expect(removeSquare(mino, encode(2, 1))).toEqual(fromString("010_111"))
     })
 
     it("works correctly when a downshift is needed", () => {
-      expect(removeSquare(mino, [0, 1])).toEqual(fromString("111_010"))
+      expect(removeSquare(mino, encode(0, 1))).toEqual(fromString("111_010"))
     })
 
     it("works correctly when left shift is needed", () => {
-      expect(removeSquare(mino, [1, 0])).toEqual(fromString("10_11_10"))
+      expect(removeSquare(mino, encode(1, 0))).toEqual(fromString("10_11_10"))
     })
 
     it("works correctly when decreasing width is needed", () => {
-      expect(removeSquare(mino, [1, 2])).toEqual(fromString("01_11_01"))
+      expect(removeSquare(mino, encode(1, 2))).toEqual(fromString("01_11_01"))
     })
   })
 

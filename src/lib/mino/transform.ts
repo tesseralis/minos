@@ -157,17 +157,17 @@ export function transformAnchor(transform: Transform): Anchor {
 export function transformCoord(p: Coord, transform: Transform) {
   const x = px(p)
   const y = py(p)
-  const transforms: Record<Transform, Point> = {
-    identity: [x, y],
-    rotateLeft: [y, -x],
-    rotateHalf: [-x, -y],
-    rotateRight: [-y, x],
-    flipHoriz: [-x, y],
-    flipVert: [x, -y],
-    flipMainDiag: [y, x],
-    flipMinorDiag: [-y, -x],
+  const transforms: Record<Transform, Coord> = {
+    identity: encode(x, y),
+    rotateLeft: encode(y, -x),
+    rotateHalf: encode(-x, -y),
+    rotateRight: encode(-y, x),
+    flipHoriz: encode(-x, y),
+    flipVert: encode(x, -y),
+    flipMainDiag: encode(y, x),
+    flipMinorDiag: encode(-y, -x),
   }
-  return Vector.fromArray(transforms[transform])
+  return transforms[transform]
 }
 
 function transformMinoMask(

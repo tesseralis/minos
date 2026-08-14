@@ -1,5 +1,5 @@
 import { range } from "lodash-es"
-import Vector, { type VectorLike } from "../vector"
+import { type VectorLike } from "../vector"
 import type Polyomino from "./Polyomino"
 
 export type Dims = [number, number]
@@ -7,16 +7,16 @@ export type Dims = [number, number]
 export const directions = ["left", "right", "up", "down"] as const
 export type Direction = (typeof directions)[number]
 
-export interface PossibleRelativeLink {
-  mino?: Polyomino
-  coord: Vector
-}
-
-export type RelativeLink = Required<PossibleRelativeLink>
-
 const INT_WIDTH = 16
 export type PackedPoint = number
 export type Coord = PackedPoint
+
+export interface PossibleRelativeLink {
+  mino?: Polyomino
+  coord: Coord
+}
+
+export type RelativeLink = Required<PossibleRelativeLink>
 
 /**
  * The underlying representation for a polyomino, a set of coordinates,
@@ -91,12 +91,6 @@ export function getHeight(mino: MinoData) {
 export function getKey(data: MinoData) {
   const xs = [...data.values()].sort()
   return xs.join(",")
-}
-
-export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
-  for (const p of items) {
-    mino.add(encodeVec(p))
-  }
 }
 
 export function move(
@@ -181,9 +175,9 @@ export function addSquare(mino: MinoData, p: PackedPoint) {
   }
 }
 
-export function removeSquare(mino: MinoData, [x, y]: VectorLike) {
+export function removeSquare(mino: MinoData, p: Coord) {
   const clone = new Set(mino)
-  clone.delete(encode(x, y))
+  clone.delete(p)
   if (!hasX(clone, 0)) {
     return new Set(clone.values().map((m) => m - encode(1, 0)))
   }
