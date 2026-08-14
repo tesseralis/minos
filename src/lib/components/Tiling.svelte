@@ -56,10 +56,10 @@
       for (const j of range(-size, size)) {
         for (const k of range(domain.data.length)) {
           const { coord, mino } = domain.data[k]
-          const p = Vector.fromPackedPoint(u)
+          const p = Vector.fromPacked(u)
             .scale(i)
-            .add(Vector.fromPackedPoint(v).scale(j))
-            .add(Vector.fromPackedPoint(coord))
+            .add(Vector.fromPacked(v).scale(j))
+            .add(Vector.fromPacked(coord))
           // Only add the tile if some point in the mino is visible within the grid
           if (mino.coords().some((c) => inBox(p.add(c), size))) {
             yield {

@@ -32,7 +32,7 @@ export default class Vector {
     return new Vector(x, y)
   }
 
-  static fromPackedPoint(p: PackedPoint) {
+  static fromPacked(p: PackedPoint) {
     return Vector.fromArray(decode(p))
   }
 

@@ -22,7 +22,7 @@
     data-selectable={!!mino}
     data-selected={isSelected}
     class={[!!mino && "selectable"]}
-    {...point(transform(Vector.fromPackedPoint(coord)))}
+    {...point(transform(Vector.fromPacked(coord)))}
     width={size}
     height={size}
     stroke-width={(size / 8) * 0.75}

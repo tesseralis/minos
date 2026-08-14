@@ -18,7 +18,7 @@ export function getMinoSizeAndTransform(mino: Polyomino) {
   const size = getBlockSize(mino.order)
   const outline = mino.boundary().outline()
   const anchor = getAnchor(
-    outline.map((v) => Vector.fromPackedPoint(v).scale(size)),
+    outline.map((v) => Vector.fromPacked(v).scale(size)),
     "center center",
   )
   const transform = (p: Vector) => p.scale(size).sub(anchor)
