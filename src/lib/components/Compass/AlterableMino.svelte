@@ -1,11 +1,17 @@
 <script lang="ts">
+  import type { Coord, Polyomino } from "$lib/mino"
   import Vector from "$lib/vector"
   import { getMinoColor, NUM_GENERATIONS } from "../graph"
   import { point } from "../svgUtils"
   import { getMinoSizeAndTransform } from "./helpers.svelte"
   import SelectableSquare from "./SelectableSquare.svelte"
 
-  let { highlight, mino = $bindable() } = $props()
+  interface Props {
+    highlight: boolean
+    mino: Polyomino
+  }
+
+  let { highlight, mino = $bindable() }: Props = $props()
   const { fill, stroke } = $derived(getMinoColor(mino))
 </script>
 
@@ -44,9 +50,14 @@
   {/if}
 {/snippet}
 
-{#snippet hole(coord: Vector)}
+{#snippet hole(coord: Coord)}
   {@const { size, transform } = getMinoSizeAndTransform(mino)}
-  <rect class="hole" {...point(transform(coord))} width={size} height={size} />
+  <rect
+    class="hole"
+    {...point(transform(Vector.fromPacked(coord)))}
+    width={size}
+    height={size}
+  />
 {/snippet}
 
 <style>
