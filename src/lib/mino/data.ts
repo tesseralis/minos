@@ -1,33 +1,42 @@
 import { range } from "lodash-es"
-import Vector, { type VectorLike } from "../vector"
+import { type VectorLike } from "../vector"
 import type Polyomino from "./Polyomino"
-import PointSet from "$lib/PointSet"
 
 export type Dims = [number, number]
-export type Coord = Vector
 // TODO deduplicate with the definition in 'edges'
 export const directions = ["left", "right", "up", "down"] as const
 export type Direction = (typeof directions)[number]
 
+const INT_WIDTH = 16
+
+/*
+ * A 32-bit integer representing two packed 16 bit integers.
+ * We're going to be using integer coordinates a lot, and being able to manipulate them as numbers
+ * instead of creating objects avoids a lot of allocation and GC.
+ */
+export type PackedPoint = number
+export type Coord = PackedPoint
+
 export interface PossibleRelativeLink {
   mino?: Polyomino
-  coord: Vector
+  coord: Coord
 }
 
 export type RelativeLink = Required<PossibleRelativeLink>
 
-const INT_WIDTH = 16
-export type PackedPoint = number
-
 /**
  * The underlying representation for a polyomino, a set of coordinates,
- * but because JavaScript is silly we're packing the coordinates as 16-bit unsigned integers.
+ * but because JavaScript is silly we're packing the coordinates as 16-bit signed integers.
  */
 export type MinoData = Set<PackedPoint>
 
+function toi16(n: number) {
+  return n & ((1 << INT_WIDTH) - 1)
+}
+
 /** Encode a pair of coordinates */
 export function encode(x: number, y: number) {
-  return (x << INT_WIDTH) | y
+  return (toi16(x) << INT_WIDTH) | toi16(y)
 }
 
 /** Encode an array, tuple, or vector */
@@ -40,7 +49,8 @@ export function px(p: PackedPoint) {
   return p >> INT_WIDTH
 }
 export function py(p: PackedPoint) {
-  return p % (1 << INT_WIDTH)
+  let y = p & ((1 << INT_WIDTH) - 1)
+  return y & (1 << (INT_WIDTH - 1)) ? y | (-1 << 16) : y
 }
 
 /** Decode a packed point into its x and y components */
@@ -89,12 +99,7 @@ export function getKey(data: MinoData) {
   return xs.join(",")
 }
 
-export function addAll(mino: MinoData, items: Iterable<VectorLike>) {
-  for (const p of items) {
-    mino.add(encodeVec(p))
-  }
-}
-
+// Assumes positive coord
 export function move(
   point: PackedPoint,
   dir: Direction,
@@ -106,19 +111,19 @@ export function move(
   switch (dir) {
     case "left": {
       if (x === 0) return
-      return point - encode(1, 0)
+      return point - Directions.RIGHT
     }
     case "right": {
       if (width && x === width - 1) return
-      return point + encode(1, 0)
+      return point + Directions.RIGHT
     }
     case "up": {
       if (py(point) === 0) return
-      return point - encode(0, 1)
+      return point - Directions.DOWN
     }
     case "down": {
       if (height && y === height - 1) return
-      return point + encode(0, 1)
+      return point + Directions.DOWN
     }
   }
 }
@@ -159,25 +164,27 @@ export function hasY(mino: MinoData, y: number) {
   return mino.values().some((v) => py(v) === y)
 }
 
-export function addSquare(mino: MinoData, [x, y]: VectorLike) {
+export function addSquare(mino: MinoData, p: PackedPoint) {
+  const x = px(p)
+  const y = py(p)
   if (x < 0) {
-    const result = new Set(mino.values().map((m) => m + encode(1, 0)))
+    const result = new Set(mino.values().map((m) => m + Directions.RIGHT))
     result.add(encode(0, y))
     return result
   } else if (y < 0) {
-    const result = new Set(mino.values().map((m) => m + encode(0, 1)))
+    const result = new Set(mino.values().map((m) => m + Directions.DOWN))
     result.add(encode(x, 0))
     return result
   } else {
     const result = new Set(mino)
-    result.add(encode(x, y))
+    result.add(p)
     return result
   }
 }
 
-export function removeSquare(mino: MinoData, [x, y]: VectorLike) {
+export function removeSquare(mino: MinoData, p: Coord) {
   const clone = new Set(mino)
-  clone.delete(encode(x, y))
+  clone.delete(p)
   if (!hasX(clone, 0)) {
     return new Set(clone.values().map((m) => m - encode(1, 0)))
   }
@@ -194,38 +201,49 @@ export function isValid(mino: MinoData): boolean {
   if (p0 == null) return false
   const queue = [p0]
 
-  const visited = new PointSet()
+  const visited = new Set()
 
   while (queue.length) {
     const p = queue.pop()!
-    const v = Vector.of(decode(p))
-    if (visited.has(v)) continue
-    visited.add(v)
+    if (visited.has(p)) continue
+    visited.add(p)
 
-    for (const nbr of getNeighbors(v)) {
-      if (!mino.has(encodeVec(nbr))) continue
-      queue.push(encodeVec(nbr))
+    for (const nbr of neighbors(p)) {
+      if (!mino.has(nbr)) continue
+      queue.push(nbr)
     }
   }
   // True if we have visited all the squares in the mino
   return visited.size === mino.size
 }
 
-/** Return the neighbors of the coord [i,j] */
-export function* getNeighbors(p: Coord): Generator<Coord> {
-  // TODO it turns out this order greatly impacts the order of the minos
-  // either standardize it or sort the minos independently
-  yield p.add(Vector.DOWN)
-  yield p.add(Vector.UP)
-  yield p.add(Vector.RIGHT)
-  yield p.add(Vector.LEFT)
+export function add(a: PackedPoint, b: PackedPoint) {
+  return encode(px(a) + px(b), py(a) + py(b))
 }
 
-/** Iterate over the orthogonal and diagonal neighbors of p */
-export function* getKingwiseNeighbors(p: Coord): Generator<Coord> {
-  yield* getNeighbors(p)
-  yield p.add([1, 1])
-  yield p.add([1, -1])
-  yield p.add([-1, -1])
-  yield p.add([-1, 1])
+export function sub(a: PackedPoint, b: PackedPoint) {
+  return encode(px(a) - px(b), py(a) - py(b))
+}
+
+export const Directions = {
+  ZERO: 0,
+  DOWN: encode(0, 1),
+  UP: encode(0, -1),
+  LEFT: encode(-1, 0),
+  RIGHT: encode(1, 0),
+}
+
+export function* neighbors(p: PackedPoint): Generator<PackedPoint> {
+  yield p + Directions.DOWN
+  yield add(p, Directions.UP)
+  yield p + Directions.RIGHT
+  yield add(p, Directions.LEFT)
+}
+
+export function* kingwiseNeighbors(p: PackedPoint): Generator<PackedPoint> {
+  yield* neighbors(p)
+  yield p + encode(1, 1)
+  yield encode(px(p) + 1, py(p) - 1)
+  yield encode(px(p) - 1, py(p) - 1)
+  yield encode(px(p) - 1, py(p) + 1)
 }

@@ -1,7 +1,7 @@
 import type { Polyomino, RelativeLink, Transform } from "$lib/mino"
 import { getContext, setContext } from "svelte"
 import { getAnchor } from "../utils"
-import type Vector from "$lib/vector"
+import Vector from "$lib/vector"
 
 // Radii for various components of the compass
 export const innerRingRadius = 50
@@ -16,9 +16,9 @@ function getBlockSize(gen: number) {
 
 export function getMinoSizeAndTransform(mino: Polyomino) {
   const size = getBlockSize(mino.order)
-  const outline = mino.boundary().outline()
+  const outline = mino.boundary().outlineVec()
   const anchor = getAnchor(
-    outline.map((v) => v.scale(size)),
+    outline.map((v) => v.scale(size)).toArray(),
     "center center",
   )
   const transform = (p: Vector) => p.scale(size).sub(anchor)

@@ -3,8 +3,7 @@
  */
 
 import {} from "lodash-es"
-import Vector, { type VectorLike } from "$lib/vector"
-import PointSet from "$lib/PointSet"
+import { type VectorLike } from "$lib/vector"
 import { type MinoLike } from "./Polyomino"
 import {
   Polyomino,
@@ -13,8 +12,17 @@ import {
   transformAnchor,
   transformCoord,
 } from "./internal"
-import { getNeighbors } from "./data"
-import type { Dims, Coord } from "./data"
+import {
+  encode,
+  px,
+  py,
+  neighbors,
+  sub,
+  encodeVec,
+  add,
+  type Coord,
+} from "./data"
+import type { Dims } from "./data"
 import { getEdges } from "./outline"
 
 /**
@@ -38,13 +46,16 @@ export type PatternData = MinoPlacement[]
 function* allCoords([w, h]: Dims) {
   for (let y = 0; y < h; y++) {
     for (let x = 0; x < w; x++) {
-      yield new Vector(x, y)
+      yield encode(x, y)
+      // yield new Vector(x, y)
     }
   }
 }
 
 function inBounds(p: Coord, [w, h]: Dims) {
-  return p.x >= 0 && p.x < w && p.y >= 0 && p.y < h
+  const x = px(p)
+  const y = py(p)
+  return x >= 0 && x < w && y >= 0 && y < h
 }
 
 // we use this one because a black/white square has two code points and can't be split easily
@@ -59,12 +70,12 @@ export function parsePattern(patternStr: string): PatternData {
   const width = grid[0].length
   const dims: Dims = [width, height]
   const pattern: PatternData = []
-  const visited = new PointSet()
+  const visited = new Set<Coord>()
   for (const coord of allCoords(dims)) {
     if (visited.has(coord)) {
       continue
     }
-    const color = grid[coord.y][coord.x]
+    const color = grid[py(coord)][px(coord)]
     // ignore holes
     if (color === holeColor) {
       visited.add(coord)
@@ -79,10 +90,10 @@ export function parsePattern(patternStr: string): PatternData {
       const current = queue.pop()
       minoCoords.push(current!)
       visited.add(current!)
-      for (const nbr of getNeighbors(current!)) {
+      for (const nbr of neighbors(current!)) {
         if (
           inBounds(nbr, dims) &&
-          grid[nbr.y]?.[nbr.x] === color &&
+          grid[py(nbr)]?.[px(nbr)] === color &&
           !visited.has(nbr)
         ) {
           queue.push(nbr)
@@ -90,10 +101,10 @@ export function parsePattern(patternStr: string): PatternData {
       }
     }
     // get the coordinates of the mino
-    const xMin = Math.min(...minoCoords.map((p) => p.x))
-    const yMin = Math.min(...minoCoords.map((p) => p.y))
-    const min = new Vector(xMin, yMin)
-    const mino = Polyomino.fromCoords(minoCoords.map((p) => p.sub(min)))
+    const xMin = Math.min(...minoCoords.map(px))
+    const yMin = Math.min(...minoCoords.map(py))
+    const min = encode(xMin, yMin)
+    const mino = Polyomino.fromData(new Set(minoCoords.map((p) => sub(p, min))))
     pattern.push({ mino, coord: min })
   }
 
@@ -103,7 +114,7 @@ export function parsePattern(patternStr: string): PatternData {
 function transformMino({ mino, coord }: MinoPlacement, transform: Transform) {
   const newAnchor = transformAnchor(transform)
   // Get the *current* position of the coord that will be the new top-left anchor
-  const newAnchorCoord = coord.add(getAnchor(mino, newAnchor))
+  const newAnchorCoord = add(coord, getAnchor(mino, newAnchor))
 
   const newCoord = transformCoord(newAnchorCoord, transform)
   return { mino: mino.transform.apply(transform), coord: newCoord }
@@ -119,7 +130,7 @@ function getRange(nums: number[]) {
 export class MinoPattern {
   data: PatternData
 
-  private constructor(data: PatternData) {
+  constructor(data: PatternData) {
     this.data = data
   }
 
@@ -127,7 +138,7 @@ export class MinoPattern {
     return new MinoPattern(
       data.map(({ mino, coord }) => ({
         mino: Polyomino.of(mino),
-        coord: Vector.of(coord),
+        coord: encodeVec(coord),
       })),
     )
   }
@@ -144,7 +155,7 @@ export class MinoPattern {
     return new MinoPattern(
       this.data.map(({ mino, coord }) => ({
         mino,
-        coord: coord.sub(newOrigin),
+        coord: sub(coord, newOrigin),
       })),
     )
   }
@@ -152,8 +163,8 @@ export class MinoPattern {
   /** Iterate over the coordinates of this mino pattern */
   *coords(): Generator<Coord> {
     for (const { mino, coord } of this.data) {
-      for (const p of mino.coords()) {
-        yield p.add(coord)
+      for (const p of mino.data) {
+        yield add(p, coord)
       }
     }
   }
@@ -161,13 +172,13 @@ export class MinoPattern {
   /** Get the width and height of the pattern */
   dims(): Dims {
     const coords = [...this.coords()]
-    const xs = coords.map((p) => p.x)
-    const ys = coords.map((p) => p.y)
+    const xs = coords.map(px)
+    const ys = coords.map(py)
     return [getRange(xs), getRange(ys)]
   }
 
   /** Get the outer edges of this mino pattern */
   edges() {
-    return getEdges([...this.coords()])
+    return getEdges(this.coords())
   }
 }

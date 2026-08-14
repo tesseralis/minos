@@ -2,7 +2,6 @@
  * Methods to apply transformations to polyominoes.
  */
 
-import Vector, { type Point } from "$lib/vector"
 import type { Coord } from "./data"
 import { Polyomino } from "./internal"
 import { encode, px, py } from "./data"
@@ -127,7 +126,7 @@ export function* getAnchors(): Generator<Anchor> {
 export function getAnchor(mino: Polyomino, anchor: Anchor): Coord {
   const x = anchor.x === "start" ? 0 : mino.width
   const y = anchor.y === "start" ? 0 : mino.height
-  return new Vector(x, y)
+  return encode(x, y)
 }
 
 /**
@@ -155,17 +154,19 @@ export function transformAnchor(transform: Transform): Anchor {
  * Execute the given transform on the provided point.
  */
 export function transformCoord(p: Coord, transform: Transform) {
-  const transforms: Record<Transform, Point> = {
-    identity: [p.x, p.y],
-    rotateLeft: [p.y, -p.x],
-    rotateHalf: [-p.x, -p.y],
-    rotateRight: [-p.y, p.x],
-    flipHoriz: [-p.x, p.y],
-    flipVert: [p.x, -p.y],
-    flipMainDiag: [p.y, p.x],
-    flipMinorDiag: [-p.y, -p.x],
+  const x = px(p)
+  const y = py(p)
+  const transforms: Record<Transform, Coord> = {
+    identity: encode(x, y),
+    rotateLeft: encode(y, -x),
+    rotateHalf: encode(-x, -y),
+    rotateRight: encode(-y, x),
+    flipHoriz: encode(-x, y),
+    flipVert: encode(x, -y),
+    flipMainDiag: encode(y, x),
+    flipMinorDiag: encode(-y, -x),
   }
-  return Vector.fromArray(transforms[transform])
+  return transforms[transform]
 }
 
 function transformMinoMask(

@@ -1,6 +1,6 @@
 import { describe, it, expect } from "vitest"
-import Vector from "$lib/vector"
 import { getEdges, getEdgesInner } from "../outline"
+import { encodeVec } from "../data"
 
 describe("polyomino outline", () => {
   describe("getEdges()", () => {
@@ -11,7 +11,7 @@ describe("polyomino outline", () => {
         [1, 1],
         [2, 1],
       ]
-      const edges = getEdges(coords.map(Vector.fromArray))
+      const edges = getEdges(coords.map(encodeVec))
       const expected = [
         "down",
         "left",
@@ -34,7 +34,7 @@ describe("polyomino outline", () => {
         [0, 0],
         [1, 1],
       ]
-      const edges = getEdgesInner(coords.map(Vector.fromArray))
+      const edges = getEdgesInner(coords.map(encodeVec))
       const expected = [
         "down",
         "right",

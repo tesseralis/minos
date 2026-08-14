@@ -1,5 +1,6 @@
 <script lang="ts">
   import { parsePattern } from "$lib/mino"
+  import Vector from "$lib/vector"
   import PatternMino from "./PatternMino.svelte"
 
   interface Props {
@@ -30,7 +31,7 @@
   style:aspect-ratio="{width} / {height}"
 >
   {#each pattern as { mino, coord }}
-    <PatternMino {mino} {coord} {blockSize} />
+    <PatternMino {mino} coord={Vector.fromPacked(coord)} {blockSize} />
   {/each}
 </svg>
 

@@ -1,6 +1,5 @@
 import { range, zip, maxBy } from "lodash-es"
-import Vector from "$lib/vector"
-import { type Coord } from "./data"
+import { add, Directions, encode, sub, type PackedPoint } from "./data"
 import { EdgeList } from "./edges"
 import {
   Polyomino,
@@ -11,6 +10,7 @@ import {
   transforms,
 } from "./internal"
 
+type Coord = PackedPoint
 export type Basis = [u: Coord, v: Coord]
 
 /**
@@ -54,7 +54,9 @@ export default class MinoTilings {
     if (conwayPairMap.has(this.mino)) {
       return getConwayTiling(conwayPairMap.get(this.mino)!)
     }
-    const pattern = MinoPattern.of([{ mino: this.mino, coord: Vector.ZERO }])
+    const pattern = new MinoPattern([
+      { mino: this.mino, coord: Directions.ZERO },
+    ])
 
     const transTiling = getTransTiling(pattern)
     if (transTiling) {
@@ -70,7 +72,7 @@ export default class MinoTilings {
 function transSegmentDist([startList, endList]: SegmentPair): Coord {
   // It suffices to compare two counterpart points
   // (e.g. the start of one segment and the end of the other)
-  return startList.start().sub(endList.end())
+  return sub(startList.start(), endList.end())
 }
 
 // Translation Criterion
@@ -178,7 +180,7 @@ function flipPoint(coord: Coord, segment: EdgeList): Coord {
   // If O is our coordinate, then:
   // O' = 2M - O
   //    = A + Z - O
-  return segment.start().add(segment.end()).sub(coord)
+  return sub(add(segment.start(), segment.end()), coord)
 }
 
 // Flip the given mino placement over the given palindromic segment
@@ -187,15 +189,18 @@ function flipPlacement(
   segment: EdgeList,
 ): MinoPlacement {
   const { mino, coord } = placement
-  const minoBotRight = getAnchor(mino, { x: "end", y: "end" }).add(coord)
+  const minoBotRight = add(getAnchor(mino, { x: "end", y: "end" }), coord)
   // Flip that point over the segment to get the new coordinate
   const newCoord = flipPoint(minoBotRight, segment)
-  return { mino: mino.transform.apply("rotateHalf"), coord: newCoord }
+  return {
+    mino: mino.transform.apply("rotateHalf"),
+    coord: newCoord,
+  }
 }
 
 type ConwaySegments = {
   // The distance between the two segments that are translations of each other
-  transDistance: Vector
+  transDistance: Coord
   // The segment pairs that each contain two palindromic segments
   palindromePairs: SegmentPair[]
 }
@@ -242,7 +247,7 @@ function getConwaySegments(edges: EdgeList): ConwaySegments | undefined {
       if (palindromePairs) {
         return {
           // Use the distance between the empty A-D segments
-          transDistance: ef.start().sub(bc.start()),
+          transDistance: sub(ef.start(), bc.start()),
           palindromePairs,
         }
       }
@@ -268,7 +273,7 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
   const flipped = pattern.data.map((placement) =>
     flipPlacement(placement, longestSegment),
   )
-  const domain = MinoPattern.of(pattern.data.concat(flipped))
+  const domain = new MinoPattern(pattern.data.concat(flipped))
 
   // Use the distance between the translated pair as one axis
   const u = transDistance
@@ -279,7 +284,7 @@ function getConwayTiling(pattern: MinoPattern): Tiling | undefined {
 
   // flip the end of the other segment over
   const endpoint = flipPoint(otherSegment.end(), longestSegment)
-  const v = endpoint.sub(otherSegment.start())
+  const v = sub(endpoint, otherSegment.start())
   return { domain, basis: [u, v] }
 }
 
@@ -293,11 +298,11 @@ type TilingPair = [mino: string, transform: Transform, coord: [number, number]]
 
 function getPairsMapping(pairs: TilingPair[]): Map<Polyomino, MinoPattern> {
   const result: Map<Polyomino, MinoPattern> = new Map()
-  for (const [minoStr, pairTransform, coord] of pairs) {
+  for (const [minoStr, pairTransform, [x, y]] of pairs) {
     const mino = Polyomino.fromString(minoStr)
-    const pattern = MinoPattern.of([
-      { mino, coord: Vector.ZERO },
-      { mino: mino.transform.apply(pairTransform), coord },
+    const pattern = new MinoPattern([
+      { mino, coord: Directions.ZERO },
+      { mino: mino.transform.apply(pairTransform), coord: encode(x, y) },
     ])
     for (const transform of transforms) {
       const transformedPattern = pattern.transform(transform)
