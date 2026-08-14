@@ -1,6 +1,4 @@
 import { range } from "lodash-es"
-import Vector from "$lib/vector"
-import PointSet from "$lib/PointSet"
 import {
   type Polyomino,
   type Anchor,
@@ -8,15 +6,7 @@ import {
   DirClass,
   type Level,
 } from "./internal"
-import {
-  getKingwiseNeighbors,
-  type PackedPoint,
-  encode,
-  px,
-  py,
-  type Direction,
-  move,
-} from "./data"
+import { type PackedPoint, encode, px, py, type Direction, move } from "./data"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]
