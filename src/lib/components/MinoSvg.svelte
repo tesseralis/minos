@@ -54,11 +54,13 @@ Style props:
   const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
   const outlinePoints = $derived(scaledOutline.map(translate))
 
-  // FIXME still broken for bigger holes
   const inlinePoints = $derived.by(() => {
-    return mino.innerBoundaries().map((boundary) => {
-      return boundary.outline().map(scale).map(translate)
-    })
+    return mino
+      .innerBoundaries()
+      .map((boundary) => {
+        return boundary.outline().map(scale).map(translate)
+      })
+      .toArray()
   })
 
   const outlinePath = $derived.by(() => {

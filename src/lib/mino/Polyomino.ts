@@ -167,8 +167,8 @@ export default class Polyomino {
     return getEdges(this.coords())
   }
 
-  innerBoundaries() {
-    return this.punctures().map(getEdgesInner)
+  *innerBoundaries() {
+    yield* this.punctures().map(getEdgesInner)
   }
 
   *getHolesOrPunctures(nbrFn: (coord: Coord) => Generator<Coord>) {
@@ -220,7 +220,7 @@ export default class Polyomino {
 
   // Return the punctures in this polyomino, as sets of coordinates
   *punctures() {
-    if (this.order < 7) return
+    if (this.order < 8) return
     yield* this.getHolesOrPunctures((coord) => getKingwiseNeighbors(coord))
   }
 
@@ -230,7 +230,7 @@ export default class Polyomino {
 
   // Return the holes in this polyomino, as sets of coordinates
   *holes() {
-    if (this.order < 6) return
+    if (this.order < 7) return
     yield* this.getHolesOrPunctures((coord) => getNeighbors(coord))
   }
 
