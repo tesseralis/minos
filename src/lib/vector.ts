@@ -1,3 +1,5 @@
+import { decode, type PackedPoint } from "./mino/data"
+
 /** An unwrapped vector */
 export type Point = [number, number]
 
@@ -28,6 +30,10 @@ export default class Vector {
 
   static fromArray([x, y]: Point) {
     return new Vector(x, y)
+  }
+
+  static fromPacked(p: PackedPoint) {
+    return Vector.fromArray(decode(p))
   }
 
   static of(v: VectorLike) {

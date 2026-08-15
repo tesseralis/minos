@@ -4,13 +4,15 @@ import { countBy } from "lodash-es"
 import { generateGraph } from "../enumerate"
 import { expect, test } from "vitest"
 
-const { nodes: minos } = generateGraph(10)
+const { nodes: minos } = generateGraph(11)
 
+// https://oeis.org/A000105
 test("counts", () => {
   const counts = minos.map((gen) => gen.length)
   expect(counts).toMatchSnapshot()
 })
 
+// https://oeis.org/A006749 and others
 test("symmetries", () => {
   const symCounts = minos.map((gen) =>
     countBy(gen, (mino) => mino.transform.symmetry()),
@@ -25,6 +27,7 @@ test("classes", () => {
   expect(clsCounts).toMatchSnapshot()
 })
 
+// https://oeis.org/A054359
 test("tilings", () => {
   // TODO incorrect for n >= 9
   const tilingCounts = minos
@@ -33,11 +36,19 @@ test("tilings", () => {
   expect(tilingCounts).toMatchSnapshot()
 })
 
+// https://oeis.org/A001419
 test("holes", () => {
-  // TODO incorrect for n >= 9
-  const holeCounts = minos
-    .slice(0, 8)
-    .map((gen) => gen.filter((mino) => mino.classes.hasHole()).length)
+  const holeCounts = minos.map(
+    (gen) => gen.filter((mino) => mino.hasHole()).length,
+  )
+  expect(holeCounts).toMatchSnapshot()
+})
+
+// https://oeis.org/A359519
+test("punctures", () => {
+  const holeCounts = minos.map(
+    (gen) => gen.filter((mino) => mino.hasPuncture()).length,
+  )
   expect(holeCounts).toMatchSnapshot()
 })
 

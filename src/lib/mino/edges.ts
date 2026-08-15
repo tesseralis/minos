@@ -1,6 +1,6 @@
 import { range } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import { type Coord } from "./data"
+import { add, Directions, encode, encodeVec, type Coord } from "./data"
 
 // Directions
 // ==========
@@ -24,13 +24,13 @@ export function flip(d: Direction) {
 export function move(p: Coord, dir: Direction): Coord {
   switch (dir) {
     case "left":
-      return p.add(Vector.LEFT)
+      return add(p, Directions.LEFT)
     case "right":
-      return p.add(Vector.RIGHT)
+      return add(p, Directions.RIGHT)
     case "down":
-      return p.add(Vector.DOWN)
+      return add(p, Directions.DOWN)
     case "up":
-      return p.add(Vector.UP)
+      return add(p, Directions.UP)
   }
 }
 
@@ -70,14 +70,14 @@ export class EdgeList {
   data: Edge[]
   length: number
 
-  private constructor(data: Edge[]) {
+  constructor(data: Edge[]) {
     this.data = data
     this.length = data.length
   }
 
   static of(data: Iterable<EdgeLike>) {
     return new EdgeList(
-      [...data].map(({ dir, start }) => ({ dir, start: Vector.of(start) })),
+      [...data].map(({ dir, start }) => ({ dir, start: encodeVec(start) })),
     )
   }
 
@@ -102,7 +102,7 @@ export class EdgeList {
     }
   }
 
-  private *iterOutline() {
+  *outline() {
     let currentDir
     for (const edge of this.data) {
       // Only yield coordinates when we turn
@@ -114,8 +114,8 @@ export class EdgeList {
   }
 
   /** Return the coordinates of each corner of this boundary */
-  outline() {
-    return [...this.iterOutline()]
+  *outlineVec() {
+    yield* this.outline().map(Vector.fromPacked)
   }
 
   /**

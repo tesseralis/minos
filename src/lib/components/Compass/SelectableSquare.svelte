@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Polyomino, PossibleRelativeLink } from "$lib/mino"
+  import Vector from "$lib/vector"
   import { onHover, point } from "../svgUtils"
   import { getCompassContext, getMinoSizeAndTransform } from "./helpers.svelte"
 
@@ -13,7 +14,7 @@
   const context = $derived(getCompassContext())
   const relative = $derived(context.relativeLink)
   const { size, transform } = $derived(getMinoSizeAndTransform(selected))
-  const isSelected = $derived(relative?.coord.equals(coord))
+  const isSelected = $derived(relative?.coord === coord)
 </script>
 
 <g>
@@ -21,7 +22,7 @@
     data-selectable={!!mino}
     data-selected={isSelected}
     class={[!!mino && "selectable"]}
-    {...point(transform(coord))}
+    {...point(transform(Vector.fromPacked(coord)))}
     width={size}
     height={size}
     stroke-width={(size / 8) * 0.75}
