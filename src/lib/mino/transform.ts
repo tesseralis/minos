@@ -17,6 +17,7 @@ export const reflections = [
 ] as const
 
 export const transforms = ["identity", ...rotations, ...reflections] as const
+const sameDims = ["identity", "flipHoriz", "flipVert", "rotateHalf"] as const
 
 export type Rotation = (typeof rotations)[number]
 export type Reflection = (typeof reflections)[number]
@@ -72,6 +73,10 @@ export default class MinoTransform {
     return transforms.map((t) => this.apply(t))
   }
 
+  sameDims() {
+    return sameDims.map((t) => this.apply(t))
+  }
+
   /** true if this mino is symmetric wrt the given transform */
   hasSymmetry(t: Transform) {
     return this.mino.equals(this.apply(t))
@@ -90,10 +95,20 @@ export default class MinoTransform {
   /** Get the free polyomino corresponding to this mino */
   free() {
     if (!this._free) {
-      const transforms = this.all()
+      let transforms
+      if (this.mino.width === this.mino.height) {
+        transforms = this.all()
+      } else if (this.mino.height > this.mino.width) {
+        // If height > width, only need to compare transforms that keep those same dimensions
+        transforms = this.sameDims()
+      } else {
+        // Otherwise, flip the dimensions and check those
+        transforms = this.apply("flipMainDiag").transform.sameDims()
+      }
       const free = minWith(transforms, (a, b) => a.cmp(b))
       // populate the free polyomino for all the transforms
       // so we don't have to re-calculate
+      this._free = free
       for (const trans of transforms) {
         trans.transform._free = free
       }
