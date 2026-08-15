@@ -72,7 +72,7 @@ function sortGeneration(minos: Polyomino[]) {
   )
 }
 
-export const NUM_GENERATIONS = 8
+export const NUM_GENERATIONS = 11
 
 // const start = performance.now()
 const graphEntries = generateGraph(NUM_GENERATIONS, {
