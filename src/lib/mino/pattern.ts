@@ -88,7 +88,9 @@ export function parsePattern(patternStr: string): PatternData {
     // Find all the valid points
     while (queue.length > 0) {
       const current = queue.pop()
-      minoCoords.push(current!)
+      if (!visited.has(current!)) {
+        minoCoords.push(current!)
+      }
       visited.add(current!)
       for (const nbr of neighbors(current!)) {
         if (
