@@ -193,7 +193,7 @@ export function removeSquare(mino: MinoData, p: Coord) {
 
 /** Whether this set represnts a valid polyomino. */
 export function isValid(mino: MinoData): boolean {
-  const p0 = mino.values().next().value
+  const p0 = mino[0]
   // the null-omino is not a valid polyomino
   if (p0 == null) return false
   const queue = [p0]
