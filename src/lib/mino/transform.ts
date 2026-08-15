@@ -5,6 +5,7 @@
 import type { Coord } from "./data"
 import { Polyomino } from "./internal"
 import { encode, px, py } from "./data"
+import { minWith } from "$lib"
 
 export const rotations = ["rotateLeft", "rotateHalf", "rotateRight"] as const
 
@@ -90,7 +91,7 @@ export default class MinoTransform {
   free() {
     if (!this._free) {
       const transforms = this.all()
-      const free = Polyomino.sort(transforms)[0]
+      const free = minWith(transforms, (a, b) => a.cmp(b))
       // populate the free polyomino for all the transforms
       // so we don't have to re-calculate
       for (const trans of transforms) {
