@@ -32,6 +32,7 @@ export type MinoLike = string | VectorLike[] | Polyomino
 
 export default class Polyomino {
   data: MinoData
+  dataSet: Set<PackedPoint>
   /** The number of squares in this polyomino */
   order: number
 
@@ -56,6 +57,7 @@ export default class Polyomino {
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
     this.data = data
+    this.dataSet = new Set(data)
     this.order = data.length
     this.rawDims = getDims(data)
     this.classes = new MinoClasses(this)
@@ -135,7 +137,7 @@ export default class Polyomino {
   }
 
   hasRaw(point: PackedPoint) {
-    return this.data.includes(point)
+    return this.dataSet.has(point)
   }
 
   has(x: number, y: number) {
