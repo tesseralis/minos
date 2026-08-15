@@ -323,7 +323,9 @@ export default class Polyomino {
 
   /** Return the list of all children of this mino */
   children() {
-    return this.enumerateChildren().map((link) => link.mino)
+    return this.neighbors().map((coord) => {
+      return Polyomino.fromData(addSquare(this.data, coord))
+    })
   }
 
   /** Return the set of all free parents of this mino */
