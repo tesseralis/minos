@@ -28,7 +28,7 @@ export type RelativeLink = Required<PossibleRelativeLink>
  * The underlying representation for a polyomino, a set of coordinates,
  * but because JavaScript is silly we're packing the coordinates as 16-bit signed integers.
  */
-export type MinoData = Set<PackedPoint>
+export type MinoData = PackedPoint[]
 
 function toi16(n: number) {
   return n & ((1 << INT_WIDTH) - 1)
@@ -63,7 +63,7 @@ export function getDims(mino: MinoData) {
   let xMax = -Infinity
   let yMin = Infinity
   let yMax = -Infinity
-  for (const value of mino.values()) {
+  for (const value of mino) {
     xMin = Math.min(xMin, px(value))
     xMax = Math.max(xMax, px(value))
     yMin = Math.min(yMin, py(value))
@@ -75,7 +75,7 @@ export function getDims(mino: MinoData) {
 export function getWidth(mino: MinoData) {
   let min = Infinity
   let max = -Infinity
-  for (const value of mino.values()) {
+  for (const value of mino) {
     min = Math.min(min, px(value))
     max = Math.max(max, px(value))
   }
@@ -85,7 +85,7 @@ export function getWidth(mino: MinoData) {
 export function getHeight(mino: MinoData) {
   let min = Infinity
   let max = -Infinity
-  for (const value of mino.values()) {
+  for (const value of mino) {
     min = Math.min(min, py(value))
     max = Math.max(max, py(value))
   }
@@ -95,7 +95,7 @@ export function getHeight(mino: MinoData) {
 // Get a unique key for the encoded data.
 // Used for caching polyominoes.
 export function getKey(data: MinoData) {
-  const xs = [...data.values()].sort()
+  const xs = data.toSorted()
   return xs.join(",")
 }
 
@@ -130,11 +130,11 @@ export function move(
 
 export function fromString(str: string) {
   const rows = str.split("_")
-  const set = new Set<number>()
+  const set = []
   for (const [x, row] of rows.entries()) {
     for (let y = 0; y < row.length; y++) {
       if (row[y] === "1") {
-        set.add(encode(x, y))
+        set.push(encode(x, y))
       }
     }
   }
@@ -150,53 +150,50 @@ export function display(
   return range(getWidth(mino))
     .map((x) => {
       return range(getHeight(mino))
-        .map((y) => (mino.has(encode(x, y)) ? entry : empty))
+        .map((y) => (mino.includes(encode(x, y)) ? entry : empty))
         .join("")
     })
     .join(delimiter)
 }
 
 export function hasX(mino: MinoData, x: number) {
-  return mino.values().some((v) => px(v) === x)
+  return mino.some((v) => px(v) === x)
 }
 
 export function hasY(mino: MinoData, y: number) {
-  return mino.values().some((v) => py(v) === y)
+  return mino.some((v) => py(v) === y)
 }
 
 export function addSquare(mino: MinoData, p: PackedPoint) {
   const x = px(p)
   const y = py(p)
   if (x < 0) {
-    const result = new Set(mino.values().map((m) => m + Directions.RIGHT))
-    result.add(encode(0, y))
+    const result = mino.map((m) => m + Directions.RIGHT)
+    result.push(encode(0, y))
     return result
   } else if (y < 0) {
-    const result = new Set(mino.values().map((m) => m + Directions.DOWN))
-    result.add(encode(x, 0))
+    const result = mino.map((m) => m + Directions.DOWN)
+    result.push(encode(x, 0))
     return result
   } else {
-    const result = new Set(mino)
-    result.add(p)
-    return result
+    return [...mino, p]
   }
 }
 
 export function removeSquare(mino: MinoData, p: Coord) {
-  const clone = new Set(mino)
-  clone.delete(p)
+  const clone = mino.filter((c) => c !== p)
   if (!hasX(clone, 0)) {
-    return new Set(clone.values().map((m) => m - encode(1, 0)))
+    return clone.map((m) => m - encode(1, 0))
   }
   if (!hasY(clone, 0)) {
-    return new Set(clone.values().map((m) => m - encode(0, 1)))
+    return clone.map((m) => m - encode(0, 1))
   }
   return clone
 }
 
 /** Whether this set represnts a valid polyomino. */
 export function isValid(mino: MinoData): boolean {
-  const p0 = mino.values().next().value
+  const p0 = mino[0]
   // the null-omino is not a valid polyomino
   if (p0 == null) return false
   const queue = [p0]
@@ -209,12 +206,12 @@ export function isValid(mino: MinoData): boolean {
     visited.add(p)
 
     for (const nbr of neighbors(p)) {
-      if (!mino.has(nbr)) continue
+      if (!mino.includes(nbr)) continue
       queue.push(nbr)
     }
   }
   // True if we have visited all the squares in the mino
-  return visited.size === mino.size
+  return visited.size === mino.length
 }
 
 export function add(a: PackedPoint, b: PackedPoint) {

@@ -88,7 +88,9 @@ export function parsePattern(patternStr: string): PatternData {
     // Find all the valid points
     while (queue.length > 0) {
       const current = queue.pop()
-      minoCoords.push(current!)
+      if (!visited.has(current!)) {
+        minoCoords.push(current!)
+      }
       visited.add(current!)
       for (const nbr of neighbors(current!)) {
         if (
@@ -104,7 +106,7 @@ export function parsePattern(patternStr: string): PatternData {
     const xMin = Math.min(...minoCoords.map(px))
     const yMin = Math.min(...minoCoords.map(py))
     const min = encode(xMin, yMin)
-    const mino = Polyomino.fromData(new Set(minoCoords.map((p) => sub(p, min))))
+    const mino = Polyomino.fromData(minoCoords.map((p) => sub(p, min)))
     pattern.push({ mino, coord: min })
   }
 
