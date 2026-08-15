@@ -95,7 +95,7 @@ export function getHeight(mino: MinoData) {
 // Get a unique key for the encoded data.
 // Used for caching polyominoes.
 export function getKey(data: MinoData) {
-  const xs = [...data].sort()
+  const xs = data.toSorted()
   return xs.join(",")
 }
 
