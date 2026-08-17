@@ -1,5 +1,6 @@
 <script lang="ts">
   import { nodes } from "$lib/components/graph"
+  import LongestMarkers from "$lib/components/LongestMarkers.svelte"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
 
@@ -42,9 +43,16 @@
             ({l},{w}) - {minos.length}
             <input type="checkbox" bind:checked={show} />
           </div>
-          {#if show}
+          {#if true}
             {#each minos as mino}
-              <MinoDiv {mino} size={8} />
+              <MinoDiv {mino} size={12}>
+                <LongestMarkers
+                  {mino}
+                  size={12}
+                  stroke="white"
+                  stroke-width="2"
+                />
+              </MinoDiv>
             {/each}
           {/if}
         </div>

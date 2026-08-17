@@ -333,6 +333,52 @@ export default class Polyomino {
     return new Set(this.children().map((c) => c.transform.free()))
   }
 
+  longestLines() {
+    let max = 0
+    let lines: PackedPoint[][] = []
+    for (const point of this.data) {
+      for (const dir of ["right", "down"] as const) {
+        const opposite = move(point, flip(dir))
+        if (opposite === undefined || !this.hasRaw(opposite)) {
+          const newLine = this.getLine(point, dir)
+          if (newLine.length > max) {
+            max = newLine.length
+            lines = [newLine]
+          } else if (newLine.length === max) {
+            lines.push(newLine)
+          }
+        }
+      }
+    }
+    return lines
+  }
+
+  longestWaves() {
+    let max = 0
+    let waves: PackedPoint[][] = []
+    for (const point of this.data) {
+      for (const [dir1, dir2] of [
+        ["down", "right"],
+        ["right", "down"],
+        ["down", "left"],
+        ["left", "down"],
+      ] as const) {
+        const opposite = move(point, flip(dir2))
+        if (opposite === undefined || !this.hasRaw(opposite)) {
+          const newWave = this.getWave(point, dir1, dir2)
+          // const newMax = this.getWaveLength(point, dir1, dir2)
+          if (newWave.length > max) {
+            max = newWave.length
+            waves = [newWave]
+          } else if (newWave.length === max) {
+            waves.push(newWave)
+          }
+        }
+      }
+    }
+    return waves
+  }
+
   /**
    * Get the longest straight line mino contained in this one,
    * and the number of times it occurs.
@@ -384,6 +430,26 @@ export default class Polyomino {
       }
     }
     return { max, maxCount }
+  }
+
+  private getLine(point: PackedPoint, dir: Direction) {
+    const line = []
+    let p: PackedPoint | undefined = point
+    while (p !== undefined && this.hasRaw(p)) {
+      line.push(p)
+      p = move(p, dir)
+    }
+    return line
+  }
+
+  private getWave(point: PackedPoint, dir1: Direction, dir2: Direction) {
+    const wave = []
+    let p: PackedPoint | undefined = point
+    while (p !== undefined && this.hasRaw(p)) {
+      wave.push(p)
+      p = move(p, wave.length % 2 !== 0 ? dir1 : dir2)
+    }
+    return wave
   }
 
   private getLineLength(point: PackedPoint, dir: Direction) {
