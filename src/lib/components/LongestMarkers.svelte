@@ -18,22 +18,26 @@
 </script>
 
 {#each mino.longestLines() as line}
-  <line
-    {...svgProps}
-    {...endpoints(
-      mapPoint(Vector.fromPacked(line[0])),
-      mapPoint(Vector.fromPacked(line.at(-1)!)),
-    )}
-  />
+  {#if line.length > 3}
+    <line
+      {...svgProps}
+      {...endpoints(
+        mapPoint(Vector.fromPacked(line[0])),
+        mapPoint(Vector.fromPacked(line.at(-1)!)),
+      )}
+    />
+  {/if}
 {/each}
 {#each mino.longestWaves() as wave}
-  <line
-    {...svgProps}
-    {...endpoints(
-      mapPoint(Vector.fromPacked(wave[0])),
-      mapPoint(Vector.fromPacked(wave.at(-1)!)),
-    )}
-  />
+  {#if wave.length > 3}
+    <line
+      {...svgProps}
+      {...endpoints(
+        mapPoint(Vector.fromPacked(wave[0])),
+        mapPoint(Vector.fromPacked(wave.at(-1)!)),
+      )}
+    />
+  {/if}
 {/each}
 
 <style>
