@@ -6,8 +6,6 @@
   const { params } = $props()
   const { n, l, w } = $derived(params)
 
-  console.log(n, l, w)
-
   const minos = $derived(
     nodes[+n - 1].filter(
       (mino) => mino.longestLine().max === +l && mino.longestWave().max === +w,
