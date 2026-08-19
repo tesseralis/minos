@@ -333,57 +333,66 @@ export default class Polyomino {
     return new Set(this.children().map((c) => c.transform.free()))
   }
 
+  _longestLine?: { max: number; maxCount: number } = undefined
+
   /**
    * Get the longest straight line mino contained in this one,
    * and the number of times it occurs.
    */
   longestLine() {
-    let max = 0
-    let maxCount = 0
-    for (const point of this.data) {
-      for (const dir of ["right", "down"] as const) {
-        const opposite = move(point, flip(dir))
-        if (opposite === undefined || !this.hasRaw(opposite)) {
-          const newMax = this.getLineLength(point, dir)
-          if (newMax > max) {
-            max = newMax
-            maxCount = 1
-          } else {
-            maxCount++
+    if (!this._longestLine) {
+      let max = 0
+      let maxCount = 0
+      for (const point of this.data) {
+        for (const dir of ["right", "down"] as const) {
+          const opposite = move(point, flip(dir))
+          if (opposite === undefined || !this.hasRaw(opposite)) {
+            const newMax = this.getLineLength(point, dir)
+            if (newMax > max) {
+              max = newMax
+              maxCount = 1
+            } else if (newMax === max) {
+              maxCount++
+            }
           }
         }
       }
+      this._longestLine = { max, maxCount }
     }
-    return { max, maxCount }
+    return this._longestLine
   }
 
+  _longestWave?: { max: number; maxCount: number } = undefined
   /**
    * Get the longest wave/zigzag mino contained in this one,
    * and the number of times it occurs.
    */
   longestWave() {
-    let max = 0
-    let maxCount = 0
-    for (const point of this.data) {
-      for (const [dir1, dir2] of [
-        ["down", "right"],
-        ["right", "down"],
-        ["down", "left"],
-        ["left", "down"],
-      ] as const) {
-        const opposite = move(point, flip(dir2))
-        if (opposite === undefined || !this.hasRaw(opposite)) {
-          const newMax = this.getWaveLength(point, dir1, dir2)
-          if (newMax > max) {
-            max = newMax
-            maxCount = 1
-          } else {
-            maxCount++
+    if (!this._longestWave) {
+      let max = 0
+      let maxCount = 0
+      for (const point of this.data) {
+        for (const [dir1, dir2] of [
+          ["down", "right"],
+          ["right", "down"],
+          ["down", "left"],
+          ["left", "down"],
+        ] as const) {
+          const opposite = move(point, flip(dir2))
+          if (opposite === undefined || !this.hasRaw(opposite)) {
+            const newMax = this.getWaveLength(point, dir1, dir2)
+            if (newMax > max) {
+              max = newMax
+              maxCount = 1
+            } else if (newMax === max) {
+              maxCount++
+            }
           }
         }
       }
+      this._longestWave = { max, maxCount }
     }
-    return { max, maxCount }
+    return this._longestWave
   }
 
   private getLineLength(point: PackedPoint, dir: Direction) {
