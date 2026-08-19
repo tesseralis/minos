@@ -106,7 +106,9 @@ export function parsePattern(patternStr: string): PatternData {
     const xMin = Math.min(...minoCoords.map(px))
     const yMin = Math.min(...minoCoords.map(py))
     const min = encode(xMin, yMin)
-    const mino = Polyomino.fromData(minoCoords.map((p) => sub(p, min)))
+    const mino = Polyomino.fromData(
+      new Int32Array(minoCoords.map((p) => sub(p, min))),
+    )
     pattern.push({ mino, coord: min })
   }
 

@@ -28,7 +28,7 @@ export type RelativeLink = Required<PossibleRelativeLink>
  * The underlying representation for a polyomino, a set of coordinates,
  * but because JavaScript is silly we're packing the coordinates as 16-bit signed integers.
  */
-export type MinoData = PackedPoint[]
+export type MinoData = Int32Array
 
 function toi16(n: number) {
   return n & ((1 << INT_WIDTH) - 1)
@@ -138,7 +138,7 @@ export function fromString(str: string) {
       }
     }
   }
-  return set
+  return new Int32Array(set)
 }
 
 export function display(
@@ -168,15 +168,27 @@ export function addSquare(mino: MinoData, p: PackedPoint) {
   const x = px(p)
   const y = py(p)
   if (x < 0) {
-    const result = mino.map((m) => m + Directions.RIGHT)
-    result.push(encode(0, y))
+    const result = new Int32Array(mino.length + 1)
+    for (let i = 0; i < mino.length; i++) {
+      result[i] = mino[i] + Directions.RIGHT
+    }
+    // const result = mino.map((m) => m + Directions.RIGHT)
+    result[mino.length] = encode(0, y)
     return result
   } else if (y < 0) {
-    const result = mino.map((m) => m + Directions.DOWN)
-    result.push(encode(x, 0))
+    const result = new Int32Array(mino.length + 1)
+    for (let i = 0; i < mino.length; i++) {
+      result[i] = mino[i] + Directions.DOWN
+    }
+    result[mino.length] = encode(x, 0)
     return result
   } else {
-    return [...mino, p]
+    const result = new Int32Array(mino.length + 1)
+    for (let i = 0; i < mino.length; i++) {
+      result[i] = mino[i]
+    }
+    result[mino.length] = p
+    return result
   }
 }
 

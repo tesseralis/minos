@@ -133,7 +133,7 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords() {
-    return this.data.map((v) => Vector.fromPacked(v))
+    return this.data.values().map((v) => Vector.fromPacked(v))
   }
 
   hasRaw(point: PackedPoint) {
@@ -253,7 +253,7 @@ export default class Polyomino {
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
   possibleParents() {
-    return this.data.map((coord) => {
+    return [...this.data].map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
         mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
