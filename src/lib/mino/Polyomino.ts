@@ -133,7 +133,7 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords() {
-    return this.data.values().map((v) => Vector.fromPacked(v))
+    return [...this.data].map((v) => Vector.fromPacked(v))
   }
 
   hasRaw(point: PackedPoint) {
