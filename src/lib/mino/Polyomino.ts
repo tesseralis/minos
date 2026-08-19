@@ -34,7 +34,6 @@ export default class Polyomino {
   data: MinoData
   dataSet: Set<PackedPoint>
   /** The number of squares in this polyomino */
-  order: number
 
   /** Polyomino dimensions */
   rawDims: PackedPoint
@@ -58,12 +57,14 @@ export default class Polyomino {
   private constructor(data: MinoData) {
     this.data = data
     this.dataSet = new Set(data)
-    this.order = data.length
     this.rawDims = getDims(data)
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
+  get order() {
+    return this.data.length
+  }
   get width() {
     return px(this.rawDims)
   }
