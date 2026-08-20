@@ -18,7 +18,7 @@ function countLetters(s: string) {
  * Get the boundary family for this polyomino and the transform
  * we want to use to represent it in the class diagram.
  */
-function getBoundaryFamily(mino: Polyomino) {
+export function getBoundaryFamily(mino: Polyomino) {
   const transforms = mino.transform.all()
 
   // If the mino is convex, filter out transforms based on locations of anchors
