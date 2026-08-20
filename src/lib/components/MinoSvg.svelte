@@ -43,6 +43,8 @@ Style props:
     gridStrokeWidth: _gridStrokeWidth,
   }: Props = $props()
 
+  const id = $props.id()
+
   const strokeWidth = $derived(_strokeWidth ?? size / 8)
   const gridStrokeWidth = $derived(_gridStrokeWidth ?? strokeWidth / 2)
 
@@ -84,17 +86,6 @@ Style props:
     return path
   })
 
-  const minoPoints = $derived(mino.coords())
-  const points = $derived(minoPoints.map(scale).map(translate))
-  const gridPath = $derived.by(() => {
-    const path = d3path()
-    for (const point of points) {
-      path.moveTo(point.x, point.y + size)
-      path.lineTo(point.x, point.y)
-      path.lineTo(point.x + size, point.y)
-    }
-    return path
-  })
   const { stroke, fill } = $derived(getMinoColor(mino))
 </script>
 
@@ -104,36 +95,32 @@ Style props:
   style:--derived-fill="var(--fill, {fill})"
 >
   <g {onclick} {...onHover(onhover)}>
+    <defs>
+      <pattern id="{id}-mask" width={1 / mino.width} height={1 / mino.height}>
+        <rect
+          x="0"
+          y="0"
+          width={size}
+          height={size}
+          fill="var(--derived-fill)"
+          stroke="var(--derived-stroke)"
+          stroke-width={gridStrokeWidth}
+          stroke-opacity={gridStyle === "thick" ? 1 : 0.25}
+        />
+      </pattern>
+    </defs>
     <path
       class="outline"
       d={outlinePath.toString()}
       stroke-width={strokeWidth}
+      fill={gridStyle !== "none" ? `url(#${id}-mask)` : "var(--derived-fill)"}
       fill-rule="evenodd"
     />
-    {#if gridStyle !== "none"}
-      <path
-        class="grid"
-        d={gridPath.toString()}
-        opacity={gridStyle === "thick" ? 1 : 0.25}
-        stroke-width={gridStrokeWidth}
-      />
-    {/if}
   </g>
 </g>
 
 <style>
   .outline {
-    fill: var(--derived-fill);
-    stroke: var(--derived-stroke);
-  }
-
-  .grid {
-    stroke: var(--derived-stroke);
-    fill: none;
-  }
-
-  .hole {
-    fill: var(--color-bg);
     stroke: var(--derived-stroke);
   }
 
