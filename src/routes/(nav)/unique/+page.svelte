@@ -65,7 +65,10 @@
 
 <p>Potential sorting criteria:</p>
 <ul>
-  <li>Graphs (mostly useless for tree-graph minos)</li>
+  <li>
+    Exact Graphs (including bends) (useful, since we're differentiating by size
+    anyways)
+  </li>
   <li>Oriented bounding box (i.e. in relation to directedness class)</li>
 </ul>
 
