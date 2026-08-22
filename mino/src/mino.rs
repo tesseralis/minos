@@ -1,6 +1,5 @@
 use std::{
     cmp::Ordering::{self, Equal, Greater, Less},
-    collections::BTreeSet,
     hash::{Hash, Hasher},
 };
 
@@ -9,8 +8,9 @@ use crate::{
     transform::Transformable,
 };
 use itertools::Itertools;
+use rustc_hash::FxBuildHasher;
 
-type MinoData = BTreeSet<Point>;
+type MinoData = Vec<Point>;
 
 #[derive(PartialEq, Eq, Clone)]
 pub struct Polyomino {
@@ -20,9 +20,10 @@ pub struct Polyomino {
 }
 
 impl Polyomino {
-    pub fn new(data: MinoData) -> Self {
+    pub fn new(mut data: MinoData) -> Self {
         let width = data.iter().map(|p| p.x).max().unwrap() + 1;
         let height = data.iter().map(|p| p.y).max().unwrap() + 1;
+        data.sort();
         Polyomino {
             data,
             width,
@@ -55,7 +56,7 @@ impl Polyomino {
             .iter()
             .flat_map(|p| p.neighbors())
             .filter(|p| !self.has(p))
-            .unique()
+            .unique_with_hasher(FxBuildHasher)
     }
 
     pub fn children(&self) -> impl Iterator<Item = Polyomino> + '_ {
@@ -64,7 +65,9 @@ impl Polyomino {
     }
 
     pub fn free_children(&self) -> impl Iterator<Item = Polyomino> + '_ {
-        self.children().map(|child| child.free()).unique()
+        self.children()
+            .map(|child| child.free())
+            .unique_with_hasher(FxBuildHasher)
     }
 }
 
@@ -117,15 +120,15 @@ fn num_to_ord(n: i16) -> Ordering {
 fn add_square(data: &MinoData, p: Point) -> MinoData {
     if p.x < 0 {
         let mut mapped: MinoData = data.iter().map(|p| *p + RIGHT).collect();
-        mapped.insert(Point::new(0, p.y));
+        mapped.push(Point::new(0, p.y));
         mapped
     } else if p.y < 0 {
         let mut mapped: MinoData = data.iter().map(|p| *p + DOWN).collect();
-        mapped.insert(Point::new(p.x, 0));
+        mapped.push(Point::new(p.x, 0));
         mapped
     } else {
         let mut mapped: MinoData = data.clone();
-        mapped.insert(p);
+        mapped.push(p);
         mapped
     }
 }
