@@ -20,18 +20,24 @@ impl Polyomino {
     pub fn size(&self) -> usize {
         self.data.len()
     }
+
     pub fn width(&self) -> i16 {
         self.data.iter().map(|p| p.x).max().unwrap() + 1
     }
+
     pub fn height(&self) -> i16 {
         self.data.iter().map(|p| p.y).max().unwrap() + 1
     }
+
+    pub fn has(&self, item: &Point) -> bool {
+        self.data.contains(item)
+    }
+
     pub fn neighbors(&self) -> impl Iterator<Item = Point> + '_ {
         self.data
-            .clone()
-            .into_iter()
+            .iter()
             .flat_map(|p| p.neighbors())
-            .filter(|p| !self.data.contains(p))
+            .filter(|p| !self.has(p))
             .unique()
     }
 
@@ -56,8 +62,8 @@ impl Ord for Polyomino {
             for y in 0..self.height() {
                 for x in 0..self.width() {
                     let p = Point::new(x, y);
-                    if self.data.contains(&p) != other.data.contains(&p) {
-                        if other.data.contains(&p) && !self.data.contains(&p) {
+                    if self.has(&p) != other.has(&p) {
+                        if other.has(&p) && !self.has(&p) {
                             return Greater;
                         } else {
                             return Less;

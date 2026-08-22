@@ -1,5 +1,6 @@
 use crate::mino::Polyomino;
 use crate::point::Point;
+use crate::transform::Transform::FlipMainDiag;
 
 #[derive(Copy, Clone)]
 pub enum Transform {
@@ -28,6 +29,11 @@ impl Transform {
         ]
         .into_iter()
     }
+
+    fn same_dims() -> impl Iterator<Item = Transform> {
+        use Transform::*;
+        vec![Identity, RotateHalf, FlipHoriz, FlipVert].into_iter()
+    }
 }
 
 pub trait Transformable {
@@ -38,6 +44,13 @@ pub trait Transformable {
         Self: Sized,
     {
         Transform::all().map(|trans| self.apply(trans))
+    }
+
+    fn same_dims(&self) -> impl Iterator<Item = Self>
+    where
+        Self: Sized,
+    {
+        Transform::same_dims().map(|trans| self.apply(trans))
     }
 
     fn free(&self) -> Self
@@ -56,6 +69,19 @@ impl Transformable for Polyomino {
                 .iter()
                 .map(|p| transform_point(*p, self.width(), self.height(), trans))
                 .collect(),
+        }
+    }
+
+    fn free(&self) -> Self
+    where
+        Self: Sized + Ord,
+    {
+        if self.height() > self.width() {
+            self.same_dims().min().unwrap()
+        } else if self.width() > self.height() {
+            self.apply(FlipMainDiag).free()
+        } else {
+            self.all().min().unwrap()
         }
     }
 }
