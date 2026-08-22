@@ -136,19 +136,3 @@ fn num_to_ord(n: i16) -> Ordering {
         Equal
     }
 }
-
-fn add_square(data: &MinoData, p: Point) -> MinoData {
-    if p.x < 0 {
-        let mut mapped: MinoData = data.iter().map(|p| *p + RIGHT).collect();
-        mapped.push(Point::new(0, p.y));
-        mapped
-    } else if p.y < 0 {
-        let mut mapped: MinoData = data.iter().map(|p| *p + DOWN).collect();
-        mapped.push(Point::new(p.x, 0));
-        mapped
-    } else {
-        let mut mapped: MinoData = data.clone();
-        mapped.push(p);
-        mapped
-    }
-}
