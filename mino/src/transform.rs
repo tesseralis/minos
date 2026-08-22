@@ -17,7 +17,7 @@ pub enum Transform {
 impl Transform {
     fn all() -> impl Iterator<Item = Transform> {
         use Transform::*;
-        vec![
+        [
             Identity,
             RotateLeft,
             RotateHalf,
@@ -32,7 +32,7 @@ impl Transform {
 
     fn same_dims() -> impl Iterator<Item = Transform> {
         use Transform::*;
-        vec![Identity, RotateHalf, FlipHoriz, FlipVert].into_iter()
+        [Identity, RotateHalf, FlipHoriz, FlipVert].into_iter()
     }
 }
 

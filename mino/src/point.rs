@@ -17,8 +17,8 @@ impl Point {
         Point { x, y }
     }
 
-    pub fn neighbors(&self) -> Vec<Point> {
-        return vec![*self + UP, *self + DOWN, *self + LEFT, *self + RIGHT];
+    pub fn neighbors(&self) -> impl Iterator<Item = Point> {
+        return [*self + UP, *self + DOWN, *self + LEFT, *self + RIGHT].into_iter();
     }
 }
 
