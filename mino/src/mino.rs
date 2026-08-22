@@ -1,6 +1,7 @@
 use std::{
     cmp::Ordering::{self, Equal, Greater, Less},
     hash::{Hash, Hasher},
+    iter::zip,
 };
 
 use crate::{
@@ -84,15 +85,13 @@ impl Ord for Polyomino {
         } else if self.width() != other.width() {
             num_to_ord(other.width() - self.width())
         } else {
-            for y in 0..self.height() {
-                for x in 0..self.width() {
-                    let p = Point::new(x, y);
-                    if self.has(&p) != other.has(&p) {
-                        if other.has(&p) && !self.has(&p) {
-                            return Greater;
-                        } else {
-                            return Less;
-                        }
+            // This relies on the mino data being sorted
+            for (x, y) in zip(self.coords(), other.coords()) {
+                if x != y {
+                    if x > y {
+                        return Greater;
+                    } else {
+                        return Less;
                     }
                 }
             }
