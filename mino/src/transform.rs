@@ -63,13 +63,11 @@ pub trait Transformable {
 
 impl Transformable for Polyomino {
     fn apply(&self, trans: Transform) -> Self {
-        Polyomino {
-            data: self
-                .data
-                .iter()
+        Polyomino::new(
+            self.coords()
                 .map(|p| transform_point(*p, self.width(), self.height(), trans))
                 .collect(),
-        }
+        )
     }
 
     fn free(&self) -> Self

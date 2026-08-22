@@ -4,9 +4,7 @@ use mino::point::Point;
 use std::collections::BTreeSet;
 
 fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
-    let monomino: Polyomino = Polyomino {
-        data: BTreeSet::from([Point::new(0, 0)]),
-    };
+    let monomino: Polyomino = Polyomino::new(BTreeSet::from([Point::new(0, 0)]));
 
     let mut nodes = vec![];
 
@@ -36,7 +34,7 @@ fn main() {
     // println!("free: {:?}", children[1].free().data);
     // println!("free: {:?}", children[2].free().data);
 
-    let nodes = generate_graph(10);
+    let nodes = generate_graph(11);
     for gen in nodes {
         println!("found {} minos", gen.len());
     }

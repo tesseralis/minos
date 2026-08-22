@@ -1,6 +1,7 @@
 use std::{
     cmp::Ordering::{self, Equal, Greater, Less},
     collections::BTreeSet,
+    hash::{Hash, Hasher},
 };
 
 use crate::{
@@ -11,22 +12,38 @@ use itertools::Itertools;
 
 type MinoData = BTreeSet<Point>;
 
-#[derive(PartialEq, Eq, Hash, Clone)]
+#[derive(PartialEq, Eq, Clone)]
 pub struct Polyomino {
-    pub data: MinoData,
+    data: MinoData,
+    width: i16,
+    height: i16,
 }
 
 impl Polyomino {
+    pub fn new(data: MinoData) -> Self {
+        let width = data.iter().map(|p| p.x).max().unwrap() + 1;
+        let height = data.iter().map(|p| p.y).max().unwrap() + 1;
+        Polyomino {
+            data,
+            width,
+            height,
+        }
+    }
+
     pub fn size(&self) -> usize {
         self.data.len()
     }
 
     pub fn width(&self) -> i16 {
-        self.data.iter().map(|p| p.x).max().unwrap() + 1
+        self.width
     }
 
     pub fn height(&self) -> i16 {
-        self.data.iter().map(|p| p.y).max().unwrap() + 1
+        self.height
+    }
+
+    pub fn coords(&self) -> impl Iterator<Item = &Point> {
+        self.data.iter()
     }
 
     pub fn has(&self, item: &Point) -> bool {
@@ -42,13 +59,18 @@ impl Polyomino {
     }
 
     pub fn children(&self) -> impl Iterator<Item = Polyomino> + '_ {
-        self.neighbors().map(|p| Polyomino {
-            data: add_square(&self.data, p),
-        })
+        self.neighbors()
+            .map(|p| Polyomino::new(add_square(&self.data, p)))
     }
 
     pub fn free_children(&self) -> impl Iterator<Item = Polyomino> + '_ {
         self.children().map(|child| child.free()).unique()
+    }
+}
+
+impl Hash for Polyomino {
+    fn hash<H: Hasher>(&self, state: &mut H) {
+        self.data.hash(state);
     }
 }
 
