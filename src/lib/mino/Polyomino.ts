@@ -75,7 +75,10 @@ export default class Polyomino {
     return [this.width, this.height]
   }
 
-  static fromData(data: MinoData) {
+  static fromData(data: MinoData, presorted = false) {
+    if (!presorted) {
+      data.sort()
+    }
     const key = getKey(data)
     if (!cache[key]) {
       cache[key] = new Polyomino(data)
@@ -115,12 +118,9 @@ export default class Polyomino {
     if (this.width !== other.width) {
       return other.width - this.width
     }
-    for (let y = 0; y < this.height; y++) {
-      for (let x = 0; x < this.width; x++) {
-        const p = encode(x, y)
-        if (this.hasRaw(p) !== other.hasRaw(p)) {
-          return +other.hasRaw(p) - +this.hasRaw(p)
-        }
+    for (let i = 0; i < this.data.length; i++) {
+      if (this.data[i] !== other.data[i]) {
+        return other.data[i] - this.data[i]
       }
     }
     return 0
