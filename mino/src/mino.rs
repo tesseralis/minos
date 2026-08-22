@@ -1,5 +1,5 @@
 use std::{
-    cmp::Ordering::{self, Equal, Greater, Less},
+    cmp::Ordering::{self, Equal},
     hash::{Hash, Hasher},
     iter::zip,
 };
@@ -101,19 +101,17 @@ impl Hash for Polyomino {
 
 impl Ord for Polyomino {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
-        if self.height() != other.height() {
-            num_to_ord(other.height() - self.height())
+        if self.size() != other.size() {
+            other.size().cmp(&self.size())
+        } else if self.height() != other.height() {
+            other.height().cmp(&self.height())
         } else if self.width() != other.width() {
-            num_to_ord(other.width() - self.width())
+            other.width().cmp(&self.width())
         } else {
             // This relies on the mino data being sorted
             for (x, y) in zip(self.coords(), other.coords()) {
                 if x != y {
-                    if x > y {
-                        return Greater;
-                    } else {
-                        return Less;
-                    }
+                    return x.cmp(y);
                 }
             }
             Equal
@@ -124,15 +122,5 @@ impl Ord for Polyomino {
 impl PartialOrd for Polyomino {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
-    }
-}
-
-fn num_to_ord(n: i16) -> Ordering {
-    if n > 0 {
-        Greater
-    } else if n < 0 {
-        Less
-    } else {
-        Equal
     }
 }
