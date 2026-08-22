@@ -1,6 +1,12 @@
-use std::collections::BTreeSet;
+use std::{
+    cmp::Ordering::{self, Equal, Greater, Less},
+    collections::BTreeSet,
+};
 
-use crate::point::{Point, DOWN, RIGHT};
+use crate::{
+    point::{Point, DOWN, RIGHT},
+    transform::Transformable,
+};
 use itertools::Itertools;
 
 type MinoData = BTreeSet<Point>;
@@ -18,7 +24,7 @@ impl Polyomino {
         self.data.iter().map(|p| p.x).max().unwrap() + 1
     }
     pub fn height(&self) -> i16 {
-        self.data.iter().map(|p| p.y).min().unwrap() + 1
+        self.data.iter().map(|p| p.y).max().unwrap() + 1
     }
     pub fn neighbors(&self) -> impl Iterator<Item = Point> + '_ {
         self.data
@@ -33,6 +39,50 @@ impl Polyomino {
         self.neighbors().map(|p| Polyomino {
             data: add_square(&self.data, p),
         })
+    }
+
+    pub fn free_children(&self) -> impl Iterator<Item = Polyomino> + '_ {
+        self.children().map(|child| child.free()).unique()
+    }
+}
+
+impl Ord for Polyomino {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        if self.height() != other.height() {
+            num_to_ord(other.height() - self.height())
+        } else if self.width() != other.width() {
+            num_to_ord(other.width() - self.width())
+        } else {
+            for y in 0..self.height() {
+                for x in 0..self.width() {
+                    let p = Point::new(x, y);
+                    if self.data.contains(&p) != other.data.contains(&p) {
+                        if other.data.contains(&p) && !self.data.contains(&p) {
+                            return Greater;
+                        } else {
+                            return Less;
+                        }
+                    }
+                }
+            }
+            Equal
+        }
+    }
+}
+
+impl PartialOrd for Polyomino {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        Some(self.cmp(other))
+    }
+}
+
+fn num_to_ord(n: i16) -> Ordering {
+    if n > 0 {
+        Greater
+    } else if n < 0 {
+        Less
+    } else {
+        Equal
     }
 }
 

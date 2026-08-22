@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use mino::mino::Polyomino;
 use mino::point::Point;
+use mino::transform::*;
 use std::collections::BTreeSet;
 
 fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
@@ -15,7 +16,7 @@ fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
     while nodes.len() < n - 1 {
         let next_gen: Vec<Polyomino> = current_gen
             .iter()
-            .flat_map(|mino| mino.children())
+            .flat_map(|mino| mino.free_children())
             .unique()
             .collect_vec();
         nodes.push(current_gen);
@@ -29,8 +30,14 @@ fn main() {
     // let monomino: Polyomino = Polyomino {
     //     data: BTreeSet::from([Point::new(0, 0)]),
     // };
-    // let children = monomino.children().collect_vec();
-    let nodes = generate_graph(10);
+    // let domino: Polyomino = Polyomino {
+    //     data: BTreeSet::from([Point::new(0, 0), Point::new(0, 1)]),
+    // };
+    // let children = domino.free_children().collect_vec();
+    // println!("free: {:?}", children[1].free().data);
+    // println!("free: {:?}", children[2].free().data);
+
+    let nodes = generate_graph(9);
     for gen in nodes {
         println!("found {} minos", gen.len());
     }

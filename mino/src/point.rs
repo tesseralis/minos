@@ -29,3 +29,11 @@ impl ops::Add<Point> for Point {
         Point::new(self.x + p.x, self.y + p.y)
     }
 }
+
+impl ops::Sub<Point> for Point {
+    type Output = Point;
+
+    fn sub(self, p: Point) -> Point {
+        Point::new(self.x - p.x, self.y - p.y)
+    }
+}
