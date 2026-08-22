@@ -21,15 +21,19 @@ pub struct Polyomino {
 }
 
 impl Polyomino {
-    pub fn new(mut data: MinoData) -> Self {
-        let width = data.iter().map(|p| p.x).max().unwrap() + 1;
-        let height = data.iter().map(|p| p.y).max().unwrap() + 1;
+    pub fn new_with_dims(mut data: MinoData, width: i16, height: i16) -> Self {
         data.sort();
         Polyomino {
             data,
             width,
             height,
         }
+    }
+
+    pub fn new(data: MinoData) -> Self {
+        let width = data.iter().map(|p| p.x).max().unwrap() + 1;
+        let height = data.iter().map(|p| p.y).max().unwrap() + 1;
+        Self::new_with_dims(data, width, height)
     }
 
     pub fn size(&self) -> usize {
@@ -61,14 +65,31 @@ impl Polyomino {
     }
 
     pub fn children(&self) -> impl Iterator<Item = Polyomino> + '_ {
-        self.neighbors()
-            .map(|p| Polyomino::new(add_square(&self.data, p)))
+        self.neighbors().map(|p| self.add_square(p))
     }
 
     pub fn free_children(&self) -> impl Iterator<Item = Polyomino> + '_ {
         self.children()
             .map(|child| child.free())
             .unique_with_hasher(FxBuildHasher)
+    }
+
+    fn add_square(&self, p: Point) -> Polyomino {
+        if p.x < 0 {
+            let mut mapped: MinoData = self.coords().map(|p| *p + RIGHT).collect();
+            mapped.push(Point::new(0, p.y));
+            Polyomino::new_with_dims(mapped, self.width() + 1, self.height())
+        } else if p.y < 0 {
+            let mut mapped: MinoData = self.coords().map(|p| *p + DOWN).collect();
+            mapped.push(Point::new(p.x, 0));
+            Polyomino::new_with_dims(mapped, self.width(), self.height() + 1)
+        } else {
+            let mut mapped: MinoData = self.data.clone();
+            mapped.push(p);
+            let width = self.width() + if p.x >= self.width() { 1 } else { 0 };
+            let height = self.height() + if p.y >= self.height() { 1 } else { 0 };
+            Polyomino::new_with_dims(mapped, width, height)
+        }
     }
 }
 

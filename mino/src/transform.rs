@@ -2,7 +2,7 @@ use crate::mino::Polyomino;
 use crate::point::Point;
 use crate::transform::Transform::FlipMainDiag;
 
-#[derive(Copy, Clone)]
+#[derive(Copy, Clone, PartialEq, Eq)]
 pub enum Transform {
     Identity,
     RotateLeft,
@@ -14,25 +14,28 @@ pub enum Transform {
     FlipMinorDiag,
 }
 
+use Transform::*;
+
+static ALL_TRANSFORMS: [Transform; 8] = [
+    Identity,
+    RotateLeft,
+    RotateHalf,
+    RotateRight,
+    FlipHoriz,
+    FlipVert,
+    FlipMainDiag,
+    FlipMinorDiag,
+];
+
+static SAME_DIMS: [Transform; 4] = [Identity, RotateHalf, FlipHoriz, FlipVert];
+
 impl Transform {
     fn all() -> impl Iterator<Item = Transform> {
-        use Transform::*;
-        [
-            Identity,
-            RotateLeft,
-            RotateHalf,
-            RotateRight,
-            FlipHoriz,
-            FlipVert,
-            FlipMainDiag,
-            FlipMinorDiag,
-        ]
-        .into_iter()
+        ALL_TRANSFORMS.into_iter()
     }
 
     fn same_dims() -> impl Iterator<Item = Transform> {
-        use Transform::*;
-        [Identity, RotateHalf, FlipHoriz, FlipVert].into_iter()
+        SAME_DIMS.into_iter()
     }
 }
 
@@ -63,10 +66,21 @@ pub trait Transformable {
 
 impl Transformable for Polyomino {
     fn apply(&self, trans: Transform) -> Self {
-        Polyomino::new(
+        let is_same_dims = SAME_DIMS.contains(&trans);
+        Polyomino::new_with_dims(
             self.coords()
                 .map(|p| transform_point(*p, self.width(), self.height(), trans))
                 .collect(),
+            if is_same_dims {
+                self.width()
+            } else {
+                self.height()
+            },
+            if is_same_dims {
+                self.height()
+            } else {
+                self.width()
+            },
         )
     }
 
