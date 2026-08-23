@@ -93,7 +93,7 @@ impl Transformable for Polyomino {
     }
 }
 
-fn transform_point(p: Point, w: i16, h: i16, trans: Transform) -> Point {
+fn transform_point(p: Point<i16>, w: i16, h: i16, trans: Transform) -> Point<i16> {
     use Transform::*;
     match trans {
         Identity => p,

@@ -164,7 +164,7 @@ impl GetDirClass for Polyomino {
     }
 }
 
-fn point_at_corner(corner: Corner, dims: Point) -> Point {
+fn point_at_corner(corner: Corner, dims: Point<i16>) -> Point<i16> {
     let x = match corner.x {
         AnchorPos::Start => 0,
         AnchorPos::End => dims.x - 1,
@@ -176,7 +176,7 @@ fn point_at_corner(corner: Corner, dims: Point) -> Point {
     Point::new(x, y)
 }
 
-fn check_points_at_side(mino: &Polyomino, dir: Direction) -> Option<Point> {
+fn check_points_at_side(mino: &Polyomino, dir: Direction) -> Option<Point<i16>> {
     match dir {
         Right | Left => {
             let x = if dir == Right { 0 } else { mino.width() - 1 };

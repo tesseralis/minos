@@ -6,12 +6,13 @@ use std::{
 
 use crate::{
     direction::Direction::{Down, Right},
-    point::Point,
+    point::Point as BasePoint,
     transform::Transformable,
 };
 use itertools::Itertools;
 use rustc_hash::FxBuildHasher;
 
+type Point = BasePoint<i16>;
 type MinoData = Vec<Point>;
 
 #[derive(PartialEq, Eq, Clone)]
