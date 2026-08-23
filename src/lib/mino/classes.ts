@@ -206,29 +206,23 @@ export default class MinoClasses {
 
   /** Returns whether the polyomino is directed at the given anchor */
   isCornerDirected(corner: Anchor) {
-    if (!this.hasAnchor(corner)) {
+    const start = this.pointAtAnchor(corner)
+    if (!this.mino.hasRaw(start)) {
       return false
     }
     // Get the two directions of that corner
-    const xDir: Direction = corner.x === "end" ? "left" : "right"
-    const yDir: Direction = corner.y === "end" ? "up" : "down"
-    const start = this.pointAtAnchor(corner)
-    // Do BFS in the two orthogonal directions
-    const visited = new Set<PackedPoint>()
-    visited.add(start)
-    const queue = [start]
-    while (queue.length > 0) {
-      const current = queue.pop()!
-      for (const nbrDir of [yDir, xDir]) {
-        const nbr = move(current, nbrDir)
-        if (nbr !== undefined && this.mino.hasRaw(nbr) && !visited.has(nbr)) {
-          visited.add(nbr)
-          queue.push(nbr)
-        }
-      }
-    }
-    // If at the end, we visited all cells, it's directed
-    return visited.size === this.mino.order
+    const xDir: Direction = corner.x === "end" ? "right" : "left"
+    const yDir: Direction = corner.y === "end" ? "down" : "up"
+
+    return this.mino.data.every((point) => {
+      return (
+        point === start ||
+        [xDir, yDir].some((dir) => {
+          const nbr = move(point, dir)
+          return nbr !== undefined && this.mino.hasRaw(nbr)
+        })
+      )
+    })
   }
 
   /** Return all the anchors that this polyomino is directed at */
