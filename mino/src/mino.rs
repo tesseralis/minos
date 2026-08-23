@@ -5,7 +5,10 @@ use std::{
 };
 
 use crate::{
-    point::{Point, DOWN, RIGHT},
+    point::{
+        Direction::{Down, Right},
+        Point,
+    },
     transform::Transformable,
 };
 use itertools::Itertools;
@@ -76,11 +79,11 @@ impl Polyomino {
 
     fn add_square(&self, p: Point) -> Polyomino {
         if p.x < 0 {
-            let mut mapped: MinoData = self.coords().map(|p| *p + RIGHT).collect();
+            let mut mapped: MinoData = self.coords().map(|p| p.move_dir(Right)).collect();
             mapped.push(Point::new(0, p.y));
             Polyomino::new_with_dims(mapped, self.width() + 1, self.height())
         } else if p.y < 0 {
-            let mut mapped: MinoData = self.coords().map(|p| *p + DOWN).collect();
+            let mut mapped: MinoData = self.coords().map(|p| p.move_dir(Down)).collect();
             mapped.push(Point::new(p.x, 0));
             Polyomino::new_with_dims(mapped, self.width(), self.height() + 1)
         } else {

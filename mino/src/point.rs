@@ -1,24 +1,38 @@
 use std::ops;
 
+#[derive(Copy, Clone)]
+pub enum Direction {
+    Left,
+    Right,
+    Up,
+    Down,
+}
+use Direction::*;
+
+const DIRECTIONS: [Direction; 4] = [Left, Right, Up, Down];
+
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Point {
     pub x: i16,
     pub y: i16,
 }
 
-pub static ZERO: Point = Point::new(0, 0);
-pub static UP: Point = Point::new(0, -1);
-pub static DOWN: Point = Point::new(0, 1);
-pub static LEFT: Point = Point::new(-1, 0);
-pub static RIGHT: Point = Point::new(1, 0);
-
 impl Point {
     pub const fn new(x: i16, y: i16) -> Self {
         Point { x, y }
     }
 
-    pub fn neighbors(&self) -> impl Iterator<Item = Point> {
-        return [*self + UP, *self + DOWN, *self + LEFT, *self + RIGHT].into_iter();
+    pub fn neighbors(&self) -> impl Iterator<Item = Point> + use<'_> {
+        DIRECTIONS.iter().map(|dir| self.move_dir(*dir))
+    }
+
+    pub fn move_dir(&self, dir: Direction) -> Point {
+        match dir {
+            Left => Point::new(self.x - 1, self.y),
+            Right => Point::new(self.x + 1, self.y),
+            Up => Point::new(self.x, self.y - 1),
+            Down => Point::new(self.x, self.y + 1),
+        }
     }
 }
 
