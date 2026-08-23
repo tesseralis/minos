@@ -19,24 +19,19 @@ type MinoData = Vec<Point>;
 #[derive(PartialEq, Eq, Clone)]
 pub struct Polyomino {
     data: MinoData,
-    width: i16,
-    height: i16,
+    pub dims: Point,
 }
 
 impl Polyomino {
-    pub fn new_with_dims(mut data: MinoData, width: i16, height: i16) -> Self {
+    pub fn new_with_dims(mut data: MinoData, dims: Point) -> Self {
         data.sort();
-        Polyomino {
-            data,
-            width,
-            height,
-        }
+        Polyomino { data, dims }
     }
 
     pub fn new(data: MinoData) -> Self {
         let width = data.iter().map(|p| p.x).max().unwrap() + 1;
         let height = data.iter().map(|p| p.y).max().unwrap() + 1;
-        Self::new_with_dims(data, width, height)
+        Self::new_with_dims(data, Point::new(width, height))
     }
 
     pub fn size(&self) -> usize {
@@ -44,11 +39,11 @@ impl Polyomino {
     }
 
     pub fn width(&self) -> i16 {
-        self.width
+        self.dims.x
     }
 
     pub fn height(&self) -> i16 {
-        self.height
+        self.dims.y
     }
 
     pub fn coords(&self) -> impl Iterator<Item = &Point> {
@@ -81,17 +76,22 @@ impl Polyomino {
         if p.x < 0 {
             let mut mapped: MinoData = self.coords().map(|p| p.move_dir(Right)).collect();
             mapped.push(Point::new(0, p.y));
-            Polyomino::new_with_dims(mapped, self.width() + 1, self.height())
+            Polyomino::new_with_dims(mapped, self.dims.move_dir(Right))
         } else if p.y < 0 {
             let mut mapped: MinoData = self.coords().map(|p| p.move_dir(Down)).collect();
             mapped.push(Point::new(p.x, 0));
-            Polyomino::new_with_dims(mapped, self.width(), self.height() + 1)
+            Polyomino::new_with_dims(mapped, self.dims.move_dir(Down))
         } else {
             let mut mapped: MinoData = self.data.clone();
             mapped.push(p);
-            let width = self.width() + if p.x >= self.width() { 1 } else { 0 };
-            let height = self.height() + if p.y >= self.height() { 1 } else { 0 };
-            Polyomino::new_with_dims(mapped, width, height)
+            let new_dims = if p.x >= self.width() {
+                self.dims.move_dir(Right)
+            } else if p.y >= self.height() {
+                self.dims.move_dir(Down)
+            } else {
+                self.dims
+            };
+            Polyomino::new_with_dims(mapped, new_dims)
         }
     }
 }

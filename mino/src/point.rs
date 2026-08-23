@@ -34,6 +34,10 @@ impl Point {
             Down => Point::new(self.x, self.y + 1),
         }
     }
+
+    pub fn flip(&self) -> Point {
+        Point::new(self.y, self.x)
+    }
 }
 
 impl ops::Add<Point> for Point {

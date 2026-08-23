@@ -72,14 +72,9 @@ impl Transformable for Polyomino {
                 .map(|p| transform_point(*p, self.width(), self.height(), trans))
                 .collect(),
             if is_same_dims {
-                self.width()
+                self.dims
             } else {
-                self.height()
-            },
-            if is_same_dims {
-                self.height()
-            } else {
-                self.width()
+                self.dims.flip()
             },
         )
     }

@@ -37,7 +37,7 @@ fn main() {
     // println!("free: {:?}", children[1].free().data);
     // println!("free: {:?}", children[2].free().data);
 
-    let nodes = generate_graph(12);
+    let nodes = generate_graph(13);
     for gen in nodes {
         println!("found {} minos", gen.len());
     }
