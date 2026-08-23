@@ -1,6 +1,7 @@
 use itertools::Itertools;
 use mino::mino::Polyomino;
 use mino::point::Point;
+use mino::transform::Transformable;
 use rustc_hash::FxBuildHasher;
 
 fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
@@ -13,7 +14,9 @@ fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
     while nodes.len() < n - 1 {
         let next_gen = current_gen
             .iter()
-            .flat_map(|mino| mino.free_children())
+            .flat_map(|mino| mino.children())
+            .unique_with_hasher(FxBuildHasher)
+            .map(|child| child.free())
             .unique_with_hasher(FxBuildHasher)
             .collect();
         nodes.push(current_gen);
