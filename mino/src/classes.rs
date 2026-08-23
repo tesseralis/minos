@@ -123,8 +123,9 @@ impl GetDirClass for Polyomino {
         if !self.has(&point) {
             return false;
         }
-        let found = bfs(self, &corner_directions(corner).collect_vec(), point);
-        found.len() == self.size()
+        let directions: Vec<_> = corner_directions(corner).map(|dir| dir.flip()).collect();
+        self.coords()
+            .all(|p| *p == point || (directions.iter().any(|dir| self.has(&p.move_dir(*dir)))))
     }
 
     fn is_side_directed(&self, dir: Direction) -> bool {
