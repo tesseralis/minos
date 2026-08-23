@@ -5,10 +5,8 @@ use std::{
 };
 
 use crate::{
-    point::{
-        Direction::{Down, Right},
-        Point,
-    },
+    direction::Direction::{Down, Right},
+    point::Point,
     transform::Transformable,
 };
 use itertools::Itertools;

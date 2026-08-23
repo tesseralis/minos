@@ -1,43 +1,6 @@
 use std::ops;
 
-#[derive(Copy, Clone, PartialEq, Eq)]
-pub enum Direction {
-    Left,
-    Right,
-    Up,
-    Down,
-}
-
-impl Direction {
-    pub fn turn_right(&self) -> Direction {
-        match self {
-            Left => Up,
-            Up => Right,
-            Right => Down,
-            Down => Left,
-        }
-    }
-
-    pub fn turn_left(&self) -> Direction {
-        match self {
-            Left => Down,
-            Up => Left,
-            Right => Up,
-            Down => Right,
-        }
-    }
-    pub fn flip(&self) -> Direction {
-        match self {
-            Left => Right,
-            Up => Down,
-            Right => Left,
-            Down => Up,
-        }
-    }
-}
-
-use Direction::*;
-pub const DIRECTIONS: [Direction; 4] = [Left, Right, Up, Down];
+use crate::direction::Direction;
 
 #[derive(Debug, Copy, Clone, PartialEq, Eq, Hash, PartialOrd, Ord)]
 pub struct Point {
@@ -51,15 +14,15 @@ impl Point {
     }
 
     pub fn neighbors(&self) -> impl Iterator<Item = Point> + use<'_> {
-        DIRECTIONS.iter().map(|dir| self.move_dir(*dir))
+        Direction::all().map(|dir| self.move_dir(dir))
     }
 
     pub fn move_dir(&self, dir: Direction) -> Point {
         match dir {
-            Left => Point::new(self.x - 1, self.y),
-            Right => Point::new(self.x + 1, self.y),
-            Up => Point::new(self.x, self.y - 1),
-            Down => Point::new(self.x, self.y + 1),
+            Direction::Left => Point::new(self.x - 1, self.y),
+            Direction::Right => Point::new(self.x + 1, self.y),
+            Direction::Up => Point::new(self.x, self.y - 1),
+            Direction::Down => Point::new(self.x, self.y + 1),
         }
     }
 

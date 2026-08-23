@@ -4,9 +4,9 @@ use itertools::Itertools;
 use rustc_hash::FxBuildHasher;
 
 use crate::classes::DirClassLevel::TwoOpp;
+use crate::direction::Direction::{self, *};
 use crate::mino::Polyomino;
-use crate::point::Direction::{self, *};
-use crate::point::{Point, DIRECTIONS};
+use crate::point::Point;
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 enum AnchorPos {
@@ -97,9 +97,8 @@ pub trait GetDirClass {
             .flat_map(|corner| corner_directions(*corner))
             .collect_vec();
 
-        let dir_sides = DIRECTIONS
-            .iter()
-            .map(|dir| *dir)
+        let dir_sides = Direction::all()
+            .map(|dir| dir)
             .filter(|dir| {
                 if anchor_sides.contains(dir) {
                     true
