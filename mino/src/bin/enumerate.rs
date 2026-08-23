@@ -1,3 +1,5 @@
+use std::env;
+
 use itertools::Itertools;
 use mino::mino::Polyomino;
 use mino::point::Point;
@@ -36,8 +38,10 @@ fn main() {
     // let children = domino.free_children().collect_vec();
     // println!("free: {:?}", children[1].free().data);
     // println!("free: {:?}", children[2].free().data);
+    let args: Vec<String> = env::args().collect();
+    let n: usize = args[1].parse().expect("Requires an integer");
 
-    let nodes = generate_graph(13);
+    let nodes = generate_graph(n);
     for gen in nodes {
         println!("found {} minos", gen.len());
     }
