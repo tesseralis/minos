@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use itertools::Itertools;
-use rustc_hash::FxBuildHasher;
+use rustc_hash::{FxBuildHasher, FxHashSet};
 
 use crate::classes::DirClassLevel::TwoOpp;
 use crate::direction::Direction::{self, *};
@@ -22,7 +22,7 @@ pub struct Corner {
 
 impl Corner {}
 
-static CORNERS: [Corner; 4] = [
+const CORNERS: [Corner; 4] = [
     Corner {
         x: AnchorPos::Start,
         y: AnchorPos::Start,
@@ -80,9 +80,9 @@ pub struct DirClass {
 pub trait GetDirClass {
     fn get_dir_class(&self) -> DirClass {
         let dir_diags = CORNERS
-            .iter()
-            .filter(|corner| self.is_corner_directed(**corner))
-            .map(|p| *p)
+            .into_iter()
+            .filter(|corner| self.is_corner_directed(*corner))
+            .map(|p| p)
             .collect_vec();
 
         let diag = DirClassLevel::new(dir_diags.len(), has_opposite_corners(&dir_diags));
@@ -93,8 +93,8 @@ pub trait GetDirClass {
             };
         }
         let anchor_sides = dir_diags
-            .iter()
-            .flat_map(|corner| corner_directions(*corner))
+            .into_iter()
+            .flat_map(|corner| corner_directions(corner))
             .collect_vec();
 
         let dir_sides = Direction::all()
@@ -123,21 +123,8 @@ impl GetDirClass for Polyomino {
         if !self.has(&point) {
             return false;
         }
-        let mut visited = HashSet::with_hasher(FxBuildHasher);
-        visited.insert(point);
-        let mut queue = vec![point];
-        while queue.len() > 0 {
-            let current = queue.pop().unwrap();
-            for nbr_dir in corner_directions(corner) {
-                let nbr = current.move_dir(nbr_dir);
-                if self.has(&nbr) && !visited.contains(&nbr) {
-                    visited.insert(nbr);
-                    queue.push(nbr);
-                }
-            }
-        }
-
-        visited.len() == self.size()
+        let found = bfs(self, &corner_directions(corner).collect_vec(), point);
+        found.len() == self.size()
     }
 
     fn is_side_directed(&self, dir: Direction) -> bool {
@@ -145,20 +132,8 @@ impl GetDirClass for Polyomino {
         match start {
             None => false,
             Some(start) => {
-                let mut visited = HashSet::with_hasher(FxBuildHasher);
-                visited.insert(start);
-                let mut stack = vec![start];
-                while stack.len() > 0 {
-                    let current = stack.pop().unwrap();
-                    for nbr_dir in [dir, dir.turn_left(), dir.turn_right()] {
-                        let nbr = current.move_dir(nbr_dir);
-                        if self.has(&nbr) && !visited.contains(&nbr) {
-                            visited.insert(nbr);
-                            stack.push(nbr);
-                        }
-                    }
-                }
-                visited.len() == self.size()
+                let found = bfs(self, &[dir, dir.turn_left(), dir.turn_right()], start);
+                found.len() == self.size()
             }
         }
     }
@@ -174,6 +149,22 @@ fn point_at_corner(corner: Corner, dims: Point<i16>) -> Point<i16> {
         AnchorPos::End => dims.y - 1,
     };
     Point::new(x, y)
+}
+
+fn bfs(mino: &Polyomino, nbrs: &[Direction], start: Point<i16>) -> FxHashSet<Point<i16>> {
+    let mut visited = HashSet::with_hasher(FxBuildHasher);
+    visited.insert(start);
+    let mut stack = vec![start];
+    while let Some(current) = stack.pop() {
+        for nbr_dir in nbrs.into_iter() {
+            let nbr = current.move_dir(*nbr_dir);
+            if mino.has(&nbr) && !visited.contains(&nbr) {
+                visited.insert(nbr);
+                stack.push(nbr);
+            }
+        }
+    }
+    visited
 }
 
 fn check_points_at_side(mino: &Polyomino, dir: Direction) -> Option<Point<i16>> {
@@ -216,26 +207,18 @@ fn check_points_at_side(mino: &Polyomino, dir: Direction) -> Option<Point<i16>> 
 }
 
 fn has_opposite_corners(corners: &[Corner]) -> bool {
-    if corners.len() > 2 {
-        true
-    } else if corners.len() < 2 {
-        false
-    } else {
-        let first = corners.get(0).unwrap();
-        let second = corners.get(1).unwrap();
-        first.x != second.x && first.y != second.y
+    match corners {
+        [_, _, _, ..] => true,
+        [first, second] => first.x != second.x && first.y != second.y,
+        _ => false,
     }
 }
 
 fn has_opposite_sides(sides: &[Direction]) -> bool {
-    if sides.len() > 2 {
-        true
-    } else if sides.len() < 2 {
-        false
-    } else {
-        let first = sides.get(0).unwrap();
-        let second = sides.get(1).unwrap();
-        first.flip() == *second
+    match sides {
+        [_, _, _, ..] => true,
+        [first, second] => first.flip() == *second,
+        _ => false,
     }
 }
 
