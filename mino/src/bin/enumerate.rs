@@ -1,6 +1,7 @@
 use std::env;
 
 use itertools::Itertools;
+use mino::classes::GetDirClass;
 use mino::mino::Polyomino;
 use mino::point::Point;
 use mino::transform::Transformable;
@@ -29,20 +30,16 @@ fn generate_graph(n: usize) -> Vec<Vec<Polyomino>> {
 }
 
 fn main() {
-    // let monomino: Polyomino = Polyomino {
-    //     data: BTreeSet::from([Point::new(0, 0)]),
-    // };
-    // let domino: Polyomino = Polyomino {
-    //     data: BTreeSet::from([Point::new(0, 0), Point::new(0, 1)]),
-    // };
-    // let children = domino.free_children().collect_vec();
-    // println!("free: {:?}", children[1].free().data);
-    // println!("free: {:?}", children[2].free().data);
     let args: Vec<String> = env::args().collect();
     let n: usize = args[1].parse().expect("Requires an integer");
 
     let nodes = generate_graph(n);
     for gen in nodes {
-        println!("found {} minos", gen.len());
+        // println!("{:?}", gen.len());
+        println!("");
+        let counts = gen.into_iter().counts_by(|mino| mino.get_dir_class());
+        for (cls, count) in counts.iter() {
+            println!("{:?}: {}", cls, count);
+        }
     }
 }
