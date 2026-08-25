@@ -2,6 +2,8 @@ use std::{
     cmp::Ordering::{self, Equal},
     hash::{Hash, Hasher},
     iter::zip,
+    str::FromStr,
+    string::ParseError,
 };
 
 use crate::{
@@ -124,5 +126,34 @@ impl Ord for Polyomino {
 impl PartialOrd for Polyomino {
     fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
         Some(self.cmp(other))
+    }
+}
+
+impl ToString for Polyomino {
+    fn to_string(&self) -> String {
+        (0..self.width())
+            .map(|x| {
+                (0..self.height())
+                    .map(|y| if self.has(&Point::new(x, y)) { 1 } else { 0 })
+                    .join("")
+            })
+            .join("_")
+    }
+}
+
+impl FromStr for Polyomino {
+    type Err = ParseError;
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let rows = s.split("_");
+        let mut data = vec![];
+        for (x, row) in rows.enumerate() {
+            for (y, char) in row.chars().enumerate() {
+                if char == '1' {
+                    data.push(Point::new(x as i16, y as i16));
+                }
+            }
+        }
+        Ok(Polyomino::new(data))
     }
 }

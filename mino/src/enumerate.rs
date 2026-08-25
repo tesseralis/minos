@@ -3,7 +3,7 @@ use rustc_hash::FxBuildHasher;
 
 use crate::{mino::Polyomino, point::Point, transform::Transformable};
 
-fn generate_children(minos: &Vec<Polyomino>) -> Vec<Polyomino> {
+pub fn generate_children(minos: &Vec<Polyomino>) -> Vec<Polyomino> {
     minos
         .iter()
         .flat_map(|mino| mino.children())
