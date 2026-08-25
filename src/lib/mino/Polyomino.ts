@@ -120,7 +120,7 @@ export default class Polyomino {
     }
     for (let i = 0; i < this.data.length; i++) {
       if (this.data[i] !== other.data[i]) {
-        return other.data[i] - this.data[i]
+        return this.data[i] - other.data[i]
       }
     }
     return 0
