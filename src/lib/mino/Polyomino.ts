@@ -118,9 +118,12 @@ export default class Polyomino {
     if (this.width !== other.width) {
       return other.width - this.width
     }
-    for (let i = 0; i < this.data.length; i++) {
-      if (this.data[i] !== other.data[i]) {
-        return this.data[i] - other.data[i]
+    for (let y = 0; y < this.height; y++) {
+      for (let x = 0; x < this.width; x++) {
+        const p = encode(x, y)
+        if (this.hasRaw(p) !== other.hasRaw(p)) {
+          return +other.hasRaw(p) - +this.hasRaw(p)
+        }
       }
     }
     return 0
