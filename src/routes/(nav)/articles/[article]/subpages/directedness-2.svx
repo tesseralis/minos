@@ -4,7 +4,7 @@ Let's take a break from this quandary and look at what we do have right now with
 
 (TODO: list of a single class)
 
-Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes *further*, but how? I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
+Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes _further_, but how? I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
 
 (I shaped)
 

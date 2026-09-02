@@ -47,7 +47,7 @@ As a final attempt, we can try classifying polyominoes using [Golomb's tiling hi
 
 (TODO version of the hierarchy)
 
-But, as with the other attempts, tiling also carries its own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't _know_ the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge? But most importantly, it's hard to intuit just by looking at a polyomino and its color what that color is supposed to represent. We have our final criterion:
+But, as with the other attempts, tiling also carries its own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't _know_ the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge? The symmetry hierarchy above is complete: every single polyomino will have one of these symmetry classes, no matter how big it gets. But most importantly, it's hard to intuit just by looking at a polyomino and its color what that color is supposed to represent. We have our final criterion:
 
 > It should be relatively easy for people to understand on inspection why a polyomino is colored the way it is.
 
