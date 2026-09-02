@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { EdgeList } from "../edges"
+import { decode } from "../data"
 
 describe("EdgeList", () => {
   describe(".isInverse()", () => {
@@ -75,7 +76,12 @@ describe("EdgeList", () => {
         [1, 2],
         [1, 0],
       ]
-      expect(edges.outline().map((p) => p.toArray())).toEqual(expected)
+      expect(
+        edges
+          .outline()
+          .map((p) => decode(p))
+          .toArray(),
+      ).toEqual(expected)
     })
   })
 })

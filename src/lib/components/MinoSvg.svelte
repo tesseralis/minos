@@ -26,9 +26,9 @@ Style props:
   import { path as d3path } from "d3-path"
 
   import Vector from "$lib/vector"
-  import { Polyomino, O_OCTOMINO } from "$lib/mino"
+  import { Polyomino } from "$lib/mino"
   import { getAnchor } from "./utils"
-  import { getPoints, onHover, point } from "./svgUtils"
+  import { onHover } from "./svgUtils"
   import { getMinoColor } from "./graph"
 
   const {
@@ -43,28 +43,49 @@ Style props:
     gridStrokeWidth: _gridStrokeWidth,
   }: Props = $props()
 
+  const id = $props.id()
+
   const strokeWidth = $derived(_strokeWidth ?? size / 8)
   const gridStrokeWidth = $derived(_gridStrokeWidth ?? strokeWidth / 2)
 
-  const outline = $derived(mino.boundary().outline())
   const scale = (v: Vector) => v.scale(size)
-  const scaledOutline = $derived(outline.map(scale))
+  const scaledOutline = $derived(
+    mino.boundary().outlineVec().map(scale).toArray(),
+  )
   const anchorPoint = $derived(getAnchor(scaledOutline, anchor))
 
   const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
   const outlinePoints = $derived(scaledOutline.map(translate))
 
-  const minoPoints = $derived(mino.coords())
-  const points = $derived(minoPoints.map(scale).map(translate))
-  const path = $derived.by(() => {
+  const inlinePoints = $derived.by(() => {
+    return mino
+      .innerBoundaries()
+      .map((boundary) => {
+        return boundary.outlineVec().map(scale).map(translate).toArray()
+      })
+      .toArray()
+  })
+
+  const outlinePath = $derived.by(() => {
     const path = d3path()
-    for (const point of points) {
-      path.moveTo(point.x, point.y + size)
+    const [p0, ...ps] = outlinePoints
+    path.moveTo(p0.x, p0.y)
+    for (const point of ps) {
       path.lineTo(point.x, point.y)
-      path.lineTo(point.x + size, point.y)
+    }
+    path.closePath()
+
+    for (const inline of inlinePoints) {
+      const [p0, ...ps] = inline
+      path.moveTo(p0.x, p0.y)
+      for (const point of ps) {
+        path.lineTo(point.x, point.y)
+      }
+      path.closePath()
     }
     return path
   })
+
   const { stroke, fill } = $derived(getMinoColor(mino))
 </script>
 
@@ -74,44 +95,32 @@ Style props:
   style:--derived-fill="var(--fill, {fill})"
 >
   <g {onclick} {...onHover(onhover)}>
-    <polygon
+    <defs>
+      <pattern id="{id}-mask" width={1 / mino.width} height={1 / mino.height}>
+        <rect
+          x="0"
+          y="0"
+          width={size}
+          height={size}
+          fill="var(--derived-fill)"
+          stroke="var(--derived-stroke)"
+          stroke-width={gridStrokeWidth}
+          stroke-opacity={gridStyle === "thick" ? 1 : 0.25}
+        />
+      </pattern>
+    </defs>
+    <path
       class="outline"
-      points={getPoints(outlinePoints)}
+      d={outlinePath.toString()}
       stroke-width={strokeWidth}
+      fill={gridStyle !== "none" ? `url(#${id}-mask)` : "var(--derived-fill)"}
+      fill-rule="evenodd"
     />
-    {#if mino.equals(O_OCTOMINO)}
-      <rect
-        class="hole"
-        {...point(translate(scale(new Vector(1, 1))))}
-        width={size}
-        height={size}
-        stroke-width={strokeWidth}
-      />
-    {/if}
-    {#if gridStyle !== "none"}
-      <path
-        class="grid"
-        d={path.toString()}
-        opacity={gridStyle === "thick" ? 1 : 0.25}
-        stroke-width={gridStrokeWidth}
-      />
-    {/if}
   </g>
 </g>
 
 <style>
   .outline {
-    fill: var(--derived-fill);
-    stroke: var(--derived-stroke);
-  }
-
-  .grid {
-    stroke: var(--derived-stroke);
-    fill: none;
-  }
-
-  .hole {
-    fill: var(--color-bg);
     stroke: var(--derived-stroke);
   }
 

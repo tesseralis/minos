@@ -1,24 +1,32 @@
 import { describe, it, expect } from "vitest"
-import { fromString, isValid, addSquare, removeSquare } from "../data"
+import { fromString, isValid, addSquare, removeSquare, encode } from "../data"
 
 describe("modify", () => {
   describe("addSquare", () => {
     // L tetromino
     const mino = fromString("111_001")
     it("works correctly on an inner coordinate", () => {
-      expect(addSquare(mino, [1, 1])).toEqual(fromString("111_011"))
+      expect(new Set(addSquare(mino, encode(1, 1)))).toEqual(
+        new Set(fromString("111_011")),
+      )
     })
 
     it("works correctly when i < 0", () => {
-      expect(addSquare(mino, [-1, 0])).toEqual(fromString("100_111_001"))
+      expect(new Set(addSquare(mino, encode(-1, 0)))).toEqual(
+        new Set(fromString("100_111_001")),
+      )
     })
 
     it("works correctly when j < 0", () => {
-      expect(addSquare(mino, [0, -1])).toEqual(fromString("1111_0001"))
+      expect(new Set(addSquare(mino, encode(0, -1)))).toEqual(
+        new Set(fromString("1111_0001")),
+      )
     })
 
     it("works correctly when j === width", () => {
-      expect(addSquare(mino, [0, 3])).toEqual(fromString("1111_0010"))
+      expect(new Set(addSquare(mino, encode(0, 3)))).toEqual(
+        new Set(fromString("1111_0010")),
+      )
     })
   })
 
@@ -26,19 +34,19 @@ describe("modify", () => {
     // X pentomino
     const mino = fromString("010_111_010")
     it("works correctly when adjustments not needed", () => {
-      expect(removeSquare(mino, [2, 1])).toEqual(fromString("010_111"))
+      expect(removeSquare(mino, encode(2, 1))).toEqual(fromString("010_111"))
     })
 
     it("works correctly when a downshift is needed", () => {
-      expect(removeSquare(mino, [0, 1])).toEqual(fromString("111_010"))
+      expect(removeSquare(mino, encode(0, 1))).toEqual(fromString("111_010"))
     })
 
     it("works correctly when left shift is needed", () => {
-      expect(removeSquare(mino, [1, 0])).toEqual(fromString("10_11_10"))
+      expect(removeSquare(mino, encode(1, 0))).toEqual(fromString("10_11_10"))
     })
 
     it("works correctly when decreasing width is needed", () => {
-      expect(removeSquare(mino, [1, 2])).toEqual(fromString("01_11_01"))
+      expect(removeSquare(mino, encode(1, 2))).toEqual(fromString("01_11_01"))
     })
   })
 
