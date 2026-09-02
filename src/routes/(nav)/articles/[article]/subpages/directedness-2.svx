@@ -4,7 +4,7 @@ Let's take a break from this quandary and look at what we do have right now with
 
 (TODO: list of a single class)
 
-Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes _further_, but how? I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
+Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes _further_, the same way we can subdivide polyomino graphs into homeomorphism classes. I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
 
 (I shaped)
 
@@ -24,23 +24,31 @@ The U-shaped ones are bar graphs:
 
 (U minos)
 
-It seems like these directedness classes are pretty related to these "families" of polyominoes! But is there a way we can formalize what it means for a polyomino to be a certain shape? Is the 2x4 rectangle an "I" mino?
+It seems like these directedness classes are pretty related to these "families" of polyominoes! But is there a way we can formalize what it means for a polyomino to be a certain shape? Is (the 2x4 rectangle) an "I" mino? Is (fat L heptomino) an "L"?
 
-(TODO naive attempt with lengthening)
+One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments, which I was inspired by [this puzzle](https://erich-friedman.github.io/mathmagic/0609.html) in Erich Friedman's Math Magic archive. This is a nice start, but it leaves polyominoes with 2x2s in their own classes, which is undesirable. It really seems (at least to me) that thicker rectangles, or doubled-up versions of each mino, should be part of the same family!
 
-(TODO introduce boundary word idea)
+**Definition** A _boundary word_ is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ consists of all polyominoes that share the same boundary word (for some given reflection or rotation).
+
+(TODO simple example)
+
+Categorizing polyominoes by boundary words, we get all the groupings we desire: every I is a rectangle, every L is a Ferrers diagram. But there are some surprising ones:
+
+(TODO the two wing hexominoes).
+
+These two polyominoes belong to the same family, which is fine! Often creating formal definitions leads us to unexpected results. With this formal definition, we can now prove our main theorem.
 
 ## Putting it Together
 
-**Thereom** Every member of a boundary group belongs to the same directedness class.
+**Thereom** Every member of a boundary family belongs to the same directedness class.
 
-We don't need to check every class. We can just show that if a mino is directed from one side or corner, every member of its directedness class can be too.
+We don't need to check every class. We can just show that if a mino is directed from one side or corner, every member of its directedness class is too.
 
 _Proof_ Every member of a boundary family can be transformed into another by stretching or shrinking a segment. We will show that a single transformation will not change directedness status, and so any combination of these will not change the status.
 
 <!-- TODO continue proof that members of a boundary family have same directedness -->
 
-I want to take a minute to state how _cool_ finding this theorem was. It feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders. As I mentioned before, I've been obsessed with these things for decades. It's nearly impossible to find properties of minos that are in perfect correspondence.
+I want to take a minute to state how _cool_ finding this theorem was. It feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders. As I mentioned before, it's difficult to find properties of polyominoes that are in perfect correspondence.
 
 ## Regular Expressions and State Machines
 
@@ -56,4 +64,8 @@ Once we get out of convex territory though, things start to become cumbersome. I
 
 It's most apparent what's going on if you go up one step at a time and see what arrows are added or removed. For example, going from wings to antlers, a back-arrow from `ld` to `lu` is added.
 
-The proof of this consists of looking at each missing arrow and showing that it would break that direction's directedness. We won't do it for every class, but let's do it for a couple to get a gist of things.
+At the lowest level, it's easier to say what _can't_ be done. A polyomino is `u`-directed if its (counterclockwise) boundary word does not contain the sequence `urd`. (And similarly for other directions). A polyomino is `ru`-directed if its boundary word does not contain `rd`.
+
+(TODO prove this)
+
+With the relationship between boundary families and directedness, we can now see why punctures are fit naturally within the directedness schema: a punctured polyomino is one with an internal boundary word (or multiple). We will relate these to directedness in the next section.

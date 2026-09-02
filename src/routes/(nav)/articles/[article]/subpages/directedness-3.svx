@@ -1,13 +1,43 @@
 ## Dealing with Punctures
 
-Note though, that this theorem only works if the polyomino only has an _outer_ boundary word: that is, it doesn't have punctures. Now all that's left to do is to extend our theorem to punctures. We can try generating a bunch of minos of different classes and see what their punctures look like:
+To answer the question of how punctures relate to boundary words, we can try generating a bunch of minos of different classes and see what their punctures look like:
 
 (some examples)
 
 All the punctures look like they're the same class of mino, rotated 180 degrees. Let's try to prove this!
 
-**Theorem** A punctured polyomino is directed iff its hull is directed and all its punctures are directed in the opposite direction.
+**Theorem** A punctured polyomino is $d$-directed iff its outer hull is $d$-directed and all its punctures are $-d$-directed.
 
-This theorem, I think, ties the whole thing together. It doesn't feel like "punctures" are a separate thing that we just happen to add in anymore: they're an integral part of the definition for a directedness class.
+(TODO proof)
 
-## Next steps
+## Cleaning up the hierarchy
+
+With this, we have a full classification system for polyominoes:
+
+(TODO do the full list)
+
+Note that we have renamed some classes with more fanciful names. Instead of "convex", we call $\text{Dir}^0_4$ "diamonds", since punctured members of that class are obviously not convex. A convex polyomino is an unpunctured diamond. Let us remind ourselves of our criteria and see if this hierarchy fits the bill:
+
+### 1. Interesting Spread
+
+This is true up to octominoes. In fact, we won't have examples of any of the lower classes, or a completely undirected polyomino, until $n = 11$, which is not ideal, but at least we can provide the smallest examples of those kinds. In fact, directedness classes scale incredibly well. This is the distribution of classes for $n = 16$:
+
+(TODO class table)
+
+I conjecture that, like many other polyomino properties, the number of undirected polyominoes will eventually overtake directed ones, but for any reasonable size to display, they're still good.
+
+### 2. Finiteness
+
+There is a hierarchy of fourteen classes, each some valid combination of corner- and side-directedness. All possible classes are exhausted, and it is impossible to add a new one. Each class can be divided into boundary families, which do grow unbounded, but we can use fourteen colors for the main classes.
+
+### 3. Intuitive
+
+This one is hard to validate, but I hope it's pretty clear how (non-) directedness corresponds to having a concavity only on one side of a polyomino. To test whether any of this makes sense, I made a little puzzle including some polyomino properties (including symmetry and graphs) and tested it out with some friends:
+
+(TODO minoan tesserae puzzle)
+
+Through several group playthroughs, though people generally were not able to name the exact definition of "directedness", they were able to intuit the properties of concavities.
+
+---
+
+So with that, we have our desired hierarchy. But as with any interesting mathematics, every solved question brings forth a flurry of interesting new questions. We will discuss some of these avenues in the next section.
