@@ -1,10 +1,9 @@
 <script lang="ts">
-  import wikiHex from '../images/wiki-hexominoes.png'
   import graphs from "../images/graphs.png"
   import symTable from "../images/symmetry-table.png"
 
   import MinoDiv from "$lib/components/MinoDiv.svelte"
-  import { nodes } from "$lib/components/graph"
+  import { nodes, getSymmetryColor } from "$lib/components/graph"
 </script>
 
 # Directedness: A Classification of Polyominoes
@@ -17,9 +16,9 @@ And in this process of creation, a seemingly superficial question percolated in 
 
 Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia uses](https://en.wikipedia.org/wiki/Polyomino) on most of its articles relating to polyominoes:
 
-![the 35 hexominoes]({wikiHex})
+{@render minoList(nodes[5])}
 
-I've been familiar with this color scheme since high school, and it's been seared into my head ever since. It's a sensible one. Human brains are wired to see symmetry and pattern and equate it to beauty, and for polyominoes in particular, their symmetries must be accounted for when counting them. And so I [added symmetry](/symmetry) to the labyrinth. But if we move up to the heptominoes and octominoes, we see a problem:
+It's a sensible color scheme. Human brains are wired to see symmetry and pattern and equate it to beauty, and for polyominoes in particular, their symmetries must be accounted for when counting them. The classes of symmetries also forms a nice hierarchy: a polymino that is [symmetric by two axes](/symmetry/axis-2) is necessarily [symmetric by one axis](/symmetry/axis) but also [rotationally symmetric](/symmetry/rot). But if we move up to the heptominoes and octominoes, we see a problem:
 
 {@render minoList(nodes[7])}
 
@@ -29,7 +28,7 @@ Most of these minos are boring ol' grey! That is, these are minos with [no symme
 
 And so we derive our first guideline for an ideal coloring:
 
-> The coloring must have a nice "spread": for the size we are going up to ($n = 8$), most minos must have an "interesting" property, and not just the "default".
+> The coloring must have a nice "spread": for the size we are going up to ($n = 8$)^1, most minos must have an "interesting" property, and not just the "default".
 
 ---
 
@@ -59,10 +58,12 @@ Let's formalize our criteria. We want a meaningful classification of polyominoes
 
 So with these criteria in mind, I went on a search for a classification scheme, and in doing so, discovered some very interesting mathematics.
 
+[^1]: Funnily enough, the reason I chose $n=8$ as the limit is mostly because of symmetry: it is the first size where every symmetry class is possible.
+
 {#snippet minoList(minos)}
   <div>
     {#each minos as mino}
-      <span style:--fill={'grey'}>
+      <span class="mino" style:--fill={getSymmetryColor(mino.transform.symmetry())}>
         <MinoDiv {mino} size={8} />
       </span>
     {/each}
@@ -76,5 +77,9 @@ So with these criteria in mind, I went on a search for a classification scheme, 
 
   blockquote {
     font-style: italic;
+  }
+
+  .mino {
+    margin: 0.5rem;
   }
 </style>
