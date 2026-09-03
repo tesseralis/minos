@@ -1,6 +1,7 @@
 <script lang="ts">
   import graphs from "../images/graphs.png"
   import symTable from "../images/symmetry-table.png"
+  import tilingHierarchy from "../images/tiling-hierarchy.png"
 
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { nodes, getSymmetryColor } from "$lib/components/graph"
@@ -12,15 +13,15 @@ I'd always been fascinated with polyominoes since I was young. They always seeme
 
 And in this process of creation, a seemingly superficial question percolated in my mind: what do I color the polyominoes? It felt too boring to just have everything be one color, and it seemed like a waste to just choose random colors. I wanted whatever coloring scheme I use to _mean_ something. Something that seems fundamental to the structure of these minos.
 
----
+## Attempt 1: Symmetry
 
 Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia uses](https://en.wikipedia.org/wiki/Polyomino) on most of its articles relating to polyominoes:
 
-{@render minoList(nodes[5])}
+{@render minoList(nodes[5], 12)}
 
 It's a sensible color scheme. Human brains are wired to see symmetry and pattern and equate it to beauty, and for polyominoes in particular, their symmetries must be accounted for when counting them. The classes of symmetries also forms a nice hierarchy: a polymino that is [symmetric by two axes](/symmetry/axis-2) is necessarily [symmetric by one axis](/symmetry/axis) but also [rotationally symmetric](/symmetry/rot). But if we move up to the heptominoes and octominoes, we see a problem:
 
-{@render minoList(nodes[7])}
+{@render minoList(nodes[7], 6)}
 
 Most of these minos are boring ol' grey! That is, these are minos with [no symmetry](/symmetry/none) And the problem gets worse with bigger sizes of polyominoes:
 
@@ -30,7 +31,7 @@ And so we derive our first guideline for an ideal coloring:
 
 > The coloring must have a nice "spread": for the size we are going up to ($n = 8$)^1, most minos must have an "interesting" property, and not just the "default".
 
----
+## Attempt 2: Graphs
 
 Another fun possibility is classifying minos as [_graphs_](<https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>): put a node in the center of each square, join adjacent nodes by lines, and throw away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections" (formally, we say that these graphs are [homeomorphic](<https://en.wikipedia.org/wiki/Homeomorphism_(graph_theory)>)). I like this classification because it is multileveled--you can organize minos that have the same exact graph, and you can organize those graphs by their families for different levels of granularity.
 
@@ -40,15 +41,17 @@ But there is a problem with this classification: the number of types of graphs, 
 
 > The classification must order polyominoes into finitely many categories: around 12 or less.
 
----
+## Attempt 3: Tiling
 
 As a final attempt, we can try classifying polyominoes using [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can color every mino based on the "best" shape it can tile. Some polyominoes can tile rectangles, some can tile shapes like strips or half-planes, some can only tile the plane, and others cannot tile the plane at all. This fits our first two criteria: at size 8, only 26/369 octominoes do not tile the plane, which means most polyominoes fit at least somewhere on the hierarchy. It is a finite set with only 10 classes, meaning we have plenty of colors to choose from.
 
-(TODO version of the hierarchy)
+![Golomb's tiling hierarchy]({tilingHierarchy})
 
 But, as with the other attempts, tiling also carries its own problems. It's not easy to tell just by looking at a mino what it can tile. Also, for some polyominoes we just don't _know_ the best shape that it can tile, meaning that this hierarchy is incomplete, and may have to be updated in the future. This also raises a question in me in _why_ these particular regions are chosen. Why not have a tiling region that is a diagonal edge? The symmetry hierarchy above is complete: every single polyomino will have one of these symmetry classes, no matter how big it gets. But most importantly, it's hard to intuit just by looking at a polyomino and its color what that color is supposed to represent. We have our final criterion:
 
 > It should be relatively easy for people to understand on inspection why a polyomino is colored the way it is.
+
+---
 
 Let's formalize our criteria. We want a meaningful classification of polyominoes that:
 
@@ -60,11 +63,11 @@ So with these criteria in mind, I went on a search for a classification scheme, 
 
 [^1]: Funnily enough, the reason I chose $n=8$ as the limit is mostly because of symmetry: it is the first size where every symmetry class is possible.
 
-{#snippet minoList(minos)}
+{#snippet minoList(minos, size)}
   <div>
     {#each minos as mino}
       <span class="mino" style:--fill={getSymmetryColor(mino.transform.symmetry())}>
-        <MinoDiv {mino} size={8} />
+        <MinoDiv {mino} {size} />
       </span>
     {/each}
   </div>
