@@ -1,14 +1,31 @@
+<script lang="ts">
+  import MinoDiv from "$lib/components/MinoDiv.svelte"
+  import { Polyomino } from "$lib/mino"
+</script>
+
 ## Dealing with Punctures
+
+**Definition** An internal boundary word is a string from the alphabet `lrud` going counterclockwise surrounding each puncture of a polyomino.
+
+Note that punctures may be _polykings_: squares joined by diagonals and not necessarily edges. For example, the following polyomino:
+
+<MinoDiv mino={Polyomino.fromString("1110_1011_1101_0111")} size={16} />
 
 To answer the question of how punctures relate to boundary words, we can try generating a bunch of minos of different classes and see what their punctures look like:
 
 (some examples)
 
-All the punctures look like they're the same class of mino, rotated 180 degrees. Let's try to prove this!
+contains one puncture with boundary word `ru lu ld rd`, and not two punctures with boundary words `ru ld` each.
 
-**Theorem** A punctured polyomino is $d$-directed iff its outer hull is $d$-directed and all its punctures are $-d$-directed.
+After some inspection, you might notice that for every class, it seems like the holes are also members of the same class, but rotated 180 degrees!
 
-(TODO proof)
+**Theorem** A punctured polyomino $M$ is `u`-directed iff its outer boundary word is `u`-directed and all its punctures are `d`-directed. In particular, its outer boundary word does not contain the string `urd` and none of its inner boundary words contain the string `dlu`.
+
+_Proof_ Assume a punctured polyomino's outer boundary word contains `urd`. Then by the same argument as before, this implies that the `urd` is the boundary of a puncture. But this contradicts our assumption that it is part of the outer boundary word.
+
+Assume there is an inner boundary word that contains `dlu`. Let $c \in M$ be a cell directly above the `l` segment. It is clear that $c$ is not in the bottom row of the polyomino, so it is not a root cell as defined by directedness. It is easy to see that it is impossible to reach $c$ from the root cell without a `d` move.
+
+(TODO diagram, maybe more formal proof)
 
 ## Cleaning up the hierarchy
 
