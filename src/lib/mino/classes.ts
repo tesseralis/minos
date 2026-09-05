@@ -6,7 +6,8 @@ import {
   DirClass,
   type Level,
 } from "./internal"
-import { type PackedPoint, encode, px, py, type Direction, move } from "./data"
+import { type PackedPoint, encode, px, py, move } from "./data"
+import { type Direction } from "$lib"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]

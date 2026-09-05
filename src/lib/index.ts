@@ -1,5 +1,8 @@
 // place files you want to import through the `$lib` alias in this folder.
 
+export const directions = ["left", "right", "up", "down"] as const
+export type Direction = (typeof directions)[number]
+
 export function minWith<T>(xs: Iterable<T>, cmp: (a: T, b: T) => number) {
   let min = null
   for (const x of xs) {
