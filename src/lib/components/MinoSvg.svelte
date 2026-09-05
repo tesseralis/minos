@@ -8,6 +8,11 @@ Style props:
 
  -->
 <script lang="ts" module>
+  export interface MarkingOpts {
+    // Get the coordinate of the given anchor
+    anchor(anchor: string): Vector
+  }
+
   export interface Props {
     mino: Polyomino
     coord: Vector
@@ -19,6 +24,7 @@ Style props:
     gridStyle?: "thick" | "thin" | "none"
     onclick?(): void
     onhover?(hovered: boolean): void
+    markings?: Snippet<[MarkingOpts]>
   }
 </script>
 
@@ -27,9 +33,10 @@ Style props:
 
   import Vector from "$lib/vector"
   import { Polyomino } from "$lib/mino"
-  import { getAnchor } from "./utils"
+  import { getAnchor, getAnchorPoint } from "./utils"
   import { onHover } from "./svgUtils"
   import { getMinoColor } from "./graph"
+  import type { Snippet } from "svelte"
 
   const {
     mino,
@@ -41,6 +48,7 @@ Style props:
     onhover,
     strokeWidth: _strokeWidth,
     gridStrokeWidth: _gridStrokeWidth,
+    markings,
   }: Props = $props()
 
   const id = $props.id()
@@ -87,6 +95,9 @@ Style props:
   })
 
   const { stroke, fill } = $derived(getMinoColor(mino))
+  const anchorFn = (a: string) => {
+    return translate(getAnchorPoint(a, mino.width * size, mino.height * size))
+  }
 </script>
 
 <g
@@ -117,6 +128,7 @@ Style props:
       fill-rule="evenodd"
     />
   </g>
+  {@render markings?.({ anchor: anchorFn })}
 </g>
 
 <style>
