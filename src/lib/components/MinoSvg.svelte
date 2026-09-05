@@ -11,6 +11,7 @@ Style props:
   export interface MarkingOpts {
     // Get the coordinate of the given anchor
     anchor(anchor: string): Vector
+    transform(point: Vector): Vector
   }
 
   export interface Props {
@@ -31,7 +32,7 @@ Style props:
 <script lang="ts">
   import { path as d3path } from "d3-path"
 
-  import Vector from "$lib/vector"
+  import Vector, { type VectorLike } from "$lib/vector"
   import { Polyomino } from "$lib/mino"
   import { getAnchor, getAnchorPoint } from "./utils"
   import { onHover } from "./svgUtils"
@@ -63,6 +64,7 @@ Style props:
   const anchorPoint = $derived(getAnchor(scaledOutline, anchor))
 
   const translate = (v: Vector) => v.sub(anchorPoint).add(coord)
+  const transform = (v: Vector) => translate(scale(v))
   const outlinePoints = $derived(scaledOutline.map(translate))
 
   const inlinePoints = $derived.by(() => {
@@ -128,7 +130,7 @@ Style props:
       fill-rule="evenodd"
     />
   </g>
-  {@render markings?.({ anchor: anchorFn })}
+  {@render markings?.({ anchor: anchorFn, transform })}
 </g>
 
 <style>
