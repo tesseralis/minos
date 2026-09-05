@@ -1,6 +1,6 @@
 <script lang="ts">
+  import { type Direction } from "$lib"
   import { DirClass, Polyomino } from "$lib/mino"
-  import { type Direction } from "$lib/mino/data"
   import Vector from "$lib/vector"
   import MinoDiv from "./MinoDiv.svelte"
   import { center, endpoints } from "./svgUtils"

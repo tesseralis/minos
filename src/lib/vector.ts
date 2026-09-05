@@ -1,4 +1,5 @@
-import { decode, type Direction, type PackedPoint } from "./mino/data"
+import { decode, type PackedPoint } from "./mino/data"
+import { type Direction } from "$lib"
 
 /** An unwrapped vector */
 export type Point = [number, number]
@@ -39,6 +40,10 @@ export default class Vector {
       case "down":
         return this.DOWN
     }
+  }
+
+  static diagonal([x, y]: [Direction, Direction]) {
+    return this.direction(x).add(this.direction(y))
   }
 
   static fromArray([x, y]: Point) {

@@ -18,11 +18,11 @@ import {
   getDims,
   px,
   py,
-  directions,
   neighbors,
   kingwiseNeighbors,
 } from "./data"
-import { flip, type Direction } from "./edges"
+import { type Direction, directions } from "$lib"
+import { flip } from "./edges"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
