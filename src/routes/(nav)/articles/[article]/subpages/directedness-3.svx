@@ -1,6 +1,7 @@
 <script lang="ts">
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
+  import { classTable } from "../../helpers.svelte"
 </script>
 
 ## Dealing with Punctures
@@ -37,9 +38,9 @@ Note that we have renamed some classes with more fanciful names. Instead of "con
 
 ### 1. Interesting Spread
 
-This is true up to octominoes. In fact, we won't have examples of any of the lower classes, or a completely undirected polyomino, until $n = 11$, which is not ideal, but at least we can provide the smallest examples of those kinds. In fact, directedness classes scale incredibly well. This is the distribution of classes for $n = 16$:
+This is true up to octominoes. In fact, we won't have examples of any of the lower classes, or a completely undirected polyomino, until $n = 11$, which is not ideal, but at least we can provide the smallest examples of those kinds. In fact, directedness classes scale incredibly well. This is the distribution of classes up to $n = 16$:
 
-(TODO class table)
+{@render classTable()}
 
 I conjecture that, like many other polyomino properties, the number of undirected polyominoes will eventually overtake directed ones, but for any reasonable size to display, they're still good.
 
