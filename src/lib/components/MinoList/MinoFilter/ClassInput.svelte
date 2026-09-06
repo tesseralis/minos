@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ClassIcon from "$lib/components/ClassIcon.svelte"
+  import ClassIcon from "$lib/components/classes/ClassIcon.svelte"
   import { getClassColor } from "$lib/components/graph"
   import { DirClass } from "$lib/mino"
   import InputTitle from "./InputTitle.svelte"

@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Polyomino } from "$lib/mino"
-  import BoundaryWord from "./BoundaryWord.svelte"
-  import ClassMino from "./ClassMino.svelte"
+  import BoundaryWord from "$lib/components/classes/BoundaryWord.svelte"
+  import ClassMino from "$lib/components/classes/ClassMino.svelte"
 
   interface Props {
     family: string
