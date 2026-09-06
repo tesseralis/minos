@@ -1,5 +1,7 @@
 <script lang="ts">
   import pentominoNames from "../images/pentomino-names.png"
+  import MinoDiv from "$lib/components/MinoDiv.svelte"
+  import { Polyomino } from "$lib/mino"
 </script>
 
 # Boundaries
@@ -44,7 +46,8 @@ This is a nice start, but it leaves polyominoes with 2x2s in their own groups, w
 
 Categorizing polyominoes by boundary words, we get all the groupings we desire: every I is a rectangle, every L is a Ferrers diagram. But there are some surprising ones:
 
-(TODO the two wing hexominoes).
+<MinoDiv mino={Polyomino.fromString("001_111_101")} size={12} />
+<MinoDiv mino={Polyomino.fromString("0111_1101")} size={12} />
 
 These two polyominoes belong to the same family, which is fine! Often creating formal definitions leads us to unexpected results. With this formal definition, we can now prove our main theorem.
 
@@ -80,11 +83,9 @@ I want to take a second to state how _cool_ finding this theorem was. As I menti
 
 Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition?
 
-We can do so using _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for:
+We can do so using _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for. A rectangle is just `ru ld`. A Ferrer's diagram is a repeating sequence of `ru` followed by `ld`, or in regex notation, `(ru)+ld`. A staircase is a set of `ru`s followed by a sequence of `ld`s (`(ru)+(ld)+`).
 
-<!-- TODO list them -->
-
-Once we get out of convex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
+Once we get out of nonconvex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
 
 <!-- TODO interactive list of regexes and state machines -->
 
