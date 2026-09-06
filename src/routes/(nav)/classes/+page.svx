@@ -6,7 +6,7 @@
 
 # Directedness Classes
 
-What are the ways that we can categorize and group polyominoes together? We could do it by [symmetry](/symmetry), but for larger sizes of polyominoes, most of them just end up being [asymmetric](/symmetry/none). We could try to classify polyominoes with similar "shapes", like "in the shape of an L". But how do we say this formally? We can classify polyominoes that are [convex](/glossary/convex) or have [holes](/glossary/hole), or are already well-studied in mathematics such as [Ferrers diagrams]. But can we find some sort of unifying thing to group them by?
+What are the ways that we can categorize and group polyominoes together? We could do it by [symmetry](/symmetry), but for larger sizes of polyominoes, most of them just end up being [asymmetric](/symmetry/none). We could try to classify polyominoes with similar "shapes", like "in the shape of an L". But how do we say this formally? We can classify polyominoes that are [convex](/glossary/convex) or have [holes](/glossary/hole), or are already well-studied in mathematics such as [Ferrers diagrams]. But can we find some sort of unifying property to group them by?
 
 There _is_ a property that gives us such a hierarchy, called _directedness_:
 
@@ -17,7 +17,7 @@ A polyomino can be directed in more than one direction, and so we can build a hi
 
 Diagonally directed and convex polyominoes [have been studied] extensively, but the work of creating a hierarchy of classes is my own. In particular, while we don't have a general formula or [generating function] for all the polyominoes, we have generating functions for some of these restricted classes, and I hope that my classification aids that effort.
 
-[have been studied]: https://www.sciencedirect.com/science/article/pii/0012365X9500003F
+[have been studied]: https://arxiv.org/abs/math/9908123
 [generating function]: https://en.wikipedia.org/wiki/Generating_function
 [ferrers diagrams]: https://en.wikipedia.org/wiki/Partition_(number_theory)#Ferrers_diagram
 [cis-trans isomerism]: https://en.wikipedia.org/wiki/Cis%E2%80%93trans_isomerism
