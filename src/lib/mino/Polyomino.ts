@@ -1,20 +1,14 @@
-import { partition } from "lodash-es"
+import { partition, sum } from "lodash-es"
 import Vector, { type VectorLike } from "$lib/vector"
-import { getEdges } from "./outline"
+import { getEdges, getEdgesInner } from "./outline"
 // Import relative to the index to avoid circular dependency
-import { MinoTransform, MinoClasses, MinoTilings, O_OCTOMINO } from "./internal"
-import PointSet from "$lib/PointSet"
+import { MinoTransform, MinoClasses, MinoTilings } from "./internal"
 import {
-  addAll,
   display,
   getKey,
-  getNeighbors,
-  encodeVec,
-  decode,
   addSquare,
   removeSquare,
   isValid,
-  type Coord,
   type MinoData,
   type RelativeLink,
   type PackedPoint,
@@ -24,8 +18,11 @@ import {
   getDims,
   px,
   py,
+  neighbors,
+  kingwiseNeighbors,
 } from "./data"
-import { flip, type Direction } from "./edges"
+import { type Direction, directions } from "$lib"
+import { flip } from "./edges"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -35,8 +32,8 @@ export type MinoLike = string | VectorLike[] | Polyomino
 
 export default class Polyomino {
   data: MinoData
+  dataSet: Set<PackedPoint>
   /** The number of squares in this polyomino */
-  order: number
 
   /** Polyomino dimensions */
   rawDims: PackedPoint
@@ -59,12 +56,15 @@ export default class Polyomino {
   // Private constructor -- we want to make sure any mino we create is cached
   private constructor(data: MinoData) {
     this.data = data
-    this.order = data.size
+    this.dataSet = new Set(data)
     this.rawDims = getDims(data)
     this.classes = new MinoClasses(this)
     this.transform = new MinoTransform(this)
   }
 
+  get order() {
+    return this.data.length
+  }
   get width() {
     return px(this.rawDims)
   }
@@ -75,21 +75,15 @@ export default class Polyomino {
     return [this.width, this.height]
   }
 
-  static fromData(data: MinoData) {
+  static fromData(data: MinoData, presorted = false) {
+    if (!presorted) {
+      data.sort()
+    }
     const key = getKey(data)
     if (!cache[key]) {
       cache[key] = new Polyomino(data)
     }
     return cache[key]
-  }
-
-  /**
-   * Return the mino represented by the given coordinates
-   */
-  static fromCoords(coords: VectorLike[]) {
-    const set = new Set<number>()
-    addAll(set, coords)
-    return Polyomino.fromData(set)
   }
 
   static fromString(str: string) {
@@ -103,8 +97,7 @@ export default class Polyomino {
     if (typeof mino === "string") {
       return Polyomino.fromString(mino)
     }
-    // Otherwise it's a list of coordinates
-    return Polyomino.fromCoords(mino)
+    throw new Error("no minolike determined")
   }
 
   // Static methods
@@ -144,35 +137,101 @@ export default class Polyomino {
 
   /** Return the coordinate of the mino's squares */
   coords() {
-    return [...this.data.values().map((v) => Vector.fromArray(decode(v)))]
+    return [...this.data].map((v) => Vector.fromPacked(v))
   }
 
   hasRaw(point: PackedPoint) {
-    return this.data.has(point)
+    return this.dataSet.has(point)
   }
 
   has(x: number, y: number) {
     return this.hasRaw(encode(x, y))
   }
 
-  /** Return whether this mino contains the coordinate */
-  contains(coord: VectorLike) {
-    return this.data.has(encodeVec(coord))
-  }
-
   /** Return the edge list for this mino */
   boundary() {
-    return getEdges(this.coords())
+    return getEdges(this.data)
+  }
+
+  *innerBoundaries() {
+    yield* this.punctures().map(getEdgesInner)
+  }
+
+  // TODO (perf) this is probably inefficient since we're using vectors instead of packed points
+  *getHolesOrPunctures(nbrFn: (coord: PackedPoint) => Generator<PackedPoint>) {
+    const visited = new Set()
+    const nbrs = [...this.innerRawNeighbors()]
+    while (nbrs.length > 0) {
+      let current
+      do {
+        current = nbrs.pop()
+      } while (visited.has(current))
+      const stack = [current]
+      let isHole = true
+      const currentHole = []
+      while (stack.length > 0) {
+        const current = stack.pop()!
+        const x = px(current)
+        const y = py(current)
+        if (x <= 0 || y <= 0 || x >= this.width - 1 || y >= this.height - 1) {
+          // If we reach the edge of the mino, break
+          isHole = false
+        }
+        if (visited.has(current)) {
+          continue
+        }
+        if (this.hasRaw(current)) {
+          continue
+        }
+        currentHole.push(current)
+        visited.add(current)
+        stack.push(
+          ...nbrFn(current).filter(
+            (n2) =>
+              !this.hasRaw(n2) &&
+              px(n2) >= 0 &&
+              py(n2) >= 0 &&
+              px(n2) <= this.width - 1 &&
+              py(n2) <= this.height - 1,
+          ),
+        )
+      }
+      if (isHole) {
+        yield currentHole
+      }
+    }
+  }
+
+  // Return the punctures in this polyomino, as sets of coordinates
+  *punctures() {
+    if (this.order < 8) return
+    yield* this.getHolesOrPunctures(kingwiseNeighbors)
+  }
+
+  hasPuncture() {
+    return !!this.punctures().next().value
+  }
+
+  // Return the holes in this polyomino, as sets of coordinates
+  *holes() {
+    if (this.order < 7) return
+    yield* this.getHolesOrPunctures(neighbors)
+  }
+
+  hasHole() {
+    return !!this.holes().next().value
   }
 
   /** Return the perimeter of this polyomino */
   perimeter() {
-    const perim = this.boundary().length
-    // TODO handle larger minos more generally
-    if (this.equals(O_OCTOMINO)) {
-      return perim + 4
-    }
-    return perim
+    return (
+      this.boundary().length +
+      sum(
+        this.innerBoundaries()
+          .map((bound) => bound.length)
+          .toArray(),
+      )
+    )
   }
 
   /**
@@ -183,8 +242,8 @@ export default class Polyomino {
    */
   isBalanced() {
     const [white, black] = partition(
-      this.coords(),
-      (c) => (c.x + c.y) % 2 === 0,
+      this.data,
+      (c) => (px(c) + py(c)) % 2 === 0,
     )
     if (this.order % 2 === 0) {
       return white.length === black.length
@@ -198,7 +257,7 @@ export default class Polyomino {
 
   /** Iterate over all points of this mino along with the possible parent associated with it. */
   possibleParents() {
-    return this.coords().map((coord) => {
+    return [...this.data].map((coord) => {
       const parent = removeSquare(this.data, coord)
       return {
         mino: isValid(parent) ? Polyomino.fromData(parent) : undefined,
@@ -220,11 +279,31 @@ export default class Polyomino {
     return new Set(this.parents().map((p) => p.transform.free()))
   }
 
-  private *iterNeighbors(): Generator<Coord> {
-    const visited = new PointSet()
-    for (const coord of this.coords()) {
-      for (const nbr of getNeighbors(coord)) {
-        if (!this.contains(nbr) && !visited.has(nbr)) {
+  /** Generator of inner neighbors of the polyomino as PackedPoints */
+  *innerRawNeighbors(): Generator<PackedPoint> {
+    const visited = new Set<PackedPoint>()
+    for (const p of this.data) {
+      for (const dir of directions) {
+        const p1 = move(p, dir)
+        if (
+          p1 != null &&
+          !visited.has(p1) &&
+          !this.hasRaw(p1) &&
+          px(p1) < this.width &&
+          py(p1) < this.height
+        ) {
+          yield p1
+          visited.add(p1)
+        }
+      }
+    }
+  }
+
+  private *iterNeighbors(): Generator<PackedPoint> {
+    const visited = new Set()
+    for (const coord of this.data) {
+      for (const nbr of neighbors(coord)) {
+        if (!this.hasRaw(nbr) && !visited.has(nbr)) {
           visited.add(nbr)
           yield nbr
         }
@@ -237,15 +316,20 @@ export default class Polyomino {
   }
 
   enumerateChildren() {
-    return this.neighbors().map((coord) => ({
-      mino: Polyomino.fromData(addSquare(this.data, coord)),
-      coord,
-    }))
+    return this.neighbors().map((coord) => {
+      const mino = Polyomino.fromData(addSquare(this.data, coord))
+      return {
+        mino,
+        coord,
+      }
+    })
   }
 
   /** Return the list of all children of this mino */
   children() {
-    return this.enumerateChildren().map((link) => link.mino)
+    return this.neighbors().map((coord) => {
+      return Polyomino.fromData(addSquare(this.data, coord))
+    })
   }
 
   /** Return the set of all free parents of this mino */
@@ -253,57 +337,66 @@ export default class Polyomino {
     return new Set(this.children().map((c) => c.transform.free()))
   }
 
+  _longestLine?: { max: number; maxCount: number } = undefined
+
   /**
    * Get the longest straight line mino contained in this one,
    * and the number of times it occurs.
    */
   longestLine() {
-    let max = 0
-    let maxCount = 0
-    for (const point of this.data.values()) {
-      for (const dir of ["right", "down"] as const) {
-        const opposite = move(point, flip(dir))
-        if (opposite === undefined || !this.hasRaw(opposite)) {
-          const newMax = this.getLineLength(point, dir)
-          if (newMax > max) {
-            max = newMax
-            maxCount = 1
-          } else {
-            maxCount++
+    if (!this._longestLine) {
+      let max = 0
+      let maxCount = 0
+      for (const point of this.data) {
+        for (const dir of ["right", "down"] as const) {
+          const opposite = move(point, flip(dir))
+          if (opposite === undefined || !this.hasRaw(opposite)) {
+            const newMax = this.getLineLength(point, dir)
+            if (newMax > max) {
+              max = newMax
+              maxCount = 1
+            } else if (newMax === max) {
+              maxCount++
+            }
           }
         }
       }
+      this._longestLine = { max, maxCount }
     }
-    return { max, maxCount }
+    return this._longestLine
   }
 
+  _longestWave?: { max: number; maxCount: number } = undefined
   /**
    * Get the longest wave/zigzag mino contained in this one,
    * and the number of times it occurs.
    */
   longestWave() {
-    let max = 0
-    let maxCount = 0
-    for (const point of this.data.values()) {
-      for (const [dir1, dir2] of [
-        ["down", "right"],
-        ["right", "down"],
-        ["down", "left"],
-        ["left", "down"],
-      ] as const) {
-        const opposite = move(point, flip(dir2))
-        if (opposite === undefined || !this.hasRaw(opposite)) {
-          const newMax = this.getWaveLength(point, dir1, dir2)
-          if (newMax > max) {
-            max = newMax
-            maxCount = 1
-          } else {
-            maxCount++
+    if (!this._longestWave) {
+      let max = 0
+      let maxCount = 0
+      for (const point of this.data) {
+        for (const [dir1, dir2] of [
+          ["down", "right"],
+          ["right", "down"],
+          ["down", "left"],
+          ["left", "down"],
+        ] as const) {
+          const opposite = move(point, flip(dir2))
+          if (opposite === undefined || !this.hasRaw(opposite)) {
+            const newMax = this.getWaveLength(point, dir1, dir2)
+            if (newMax > max) {
+              max = newMax
+              maxCount = 1
+            } else if (newMax === max) {
+              maxCount++
+            }
           }
         }
       }
+      this._longestWave = { max, maxCount }
     }
-    return { max, maxCount }
+    return this._longestWave
   }
 
   private getLineLength(point: PackedPoint, dir: Direction) {
@@ -336,7 +429,7 @@ export default class Polyomino {
 
   /** Pretty-printed representation of the mino */
   display() {
-    return display(this.data, ", ", ", ", "\n") + "\n"
+    return display(this.data, "[]", "  ", "\n") + "\n"
   }
 }
 

@@ -37,7 +37,7 @@ interface YesNoOption {
 }
 
 const yesNoOpts: YesNoOption[] = [
-  { name: "hasHole", predicate: (p) => p.classes.hasHole() },
+  { name: "hasHole", predicate: (p) => p.hasHole() },
   { name: "hasTiling", predicate: (p) => p.tilings.has() },
   { name: "isBalanced", predicate: (p) => p.isBalanced() },
 ]

@@ -1,6 +1,4 @@
 import { range } from "lodash-es"
-import Vector from "$lib/vector"
-import PointSet from "$lib/PointSet"
 import {
   type Polyomino,
   type Anchor,
@@ -8,16 +6,8 @@ import {
   DirClass,
   type Level,
 } from "./internal"
-import {
-  getNeighbors,
-  getKingwiseNeighbors,
-  type PackedPoint,
-  encode,
-  px,
-  py,
-  type Direction,
-  move,
-} from "./data"
+import { type PackedPoint, encode, px, py, move } from "./data"
+import { type Direction } from "$lib"
 
 const axes = ["row", "column"] as const
 type Axis = (typeof axes)[number]
@@ -131,7 +121,7 @@ export default class MinoClasses {
       let foundFirst = false
       let inside = false
       for (const y of range(0, isRow ? h : w)) {
-        if (this.mino.contains(isRow ? [x, y] : [y, x])) {
+        if (this.mino.hasRaw(isRow ? encode(x, y) : encode(y, x))) {
           // If we've already found a connected set of points befor
           // this is not convex
           if (foundFirst && !inside) {
@@ -171,79 +161,6 @@ export default class MinoClasses {
    */
   isConvex() {
     return axes.every((axis) => this.isConvexAtAxis(axis))
-  }
-
-  /**
-   * Return true if the polyomino has a puncture.
-   */
-  punctures() {
-    // Iterate over all internal cells and see what's not in the mino
-    // If one is found, do BFS and traverse until queue runs out or we get to the edge
-    // If we get to the edge, it's not a puncture.
-    const visited = new PointSet()
-    const punctures = []
-    for (let i = 1; i < this.mino.width - 1; i++) {
-      for (let j = 1; j < this.mino.height - 1; j++) {
-        const cell = Vector.of([i, j])
-        if (!this.mino.contains(cell) && !visited.has(cell)) {
-          const queue = [cell]
-          const current = new PointSet()
-          let connectedToEdge = false
-          while (queue.length) {
-            const currentCell = queue.shift()!
-            current.add(currentCell)
-            visited.add(currentCell)
-            if (
-              currentCell.x === 0 ||
-              currentCell.x === this.mino.width - 1 ||
-              currentCell.y === 0 ||
-              currentCell.y === this.mino.height - 1
-            ) {
-              connectedToEdge = true
-            }
-            for (const nbr of getKingwiseNeighbors(currentCell)) {
-              const inRange =
-                nbr.x >= 0 &&
-                nbr.x < this.mino.width &&
-                nbr.y >= 0 &&
-                nbr.y < this.mino.height
-              if (inRange && !current.has(nbr) && !this.mino.contains(nbr)) {
-                queue.push(nbr)
-              }
-            }
-          }
-          if (!connectedToEdge) {
-            punctures.push(current)
-          }
-        }
-      }
-    }
-    return punctures
-  }
-
-  /** Return whether the polyomino contains a hole */
-  hasHole() {
-    // First mino with a hole is a heptomino
-    if (this.mino.order < 7) {
-      return false
-    }
-    // TODO this will fail for holes larger than a single cell
-    for (const x of range(1, this.mino.width - 1)) {
-      for (const y of range(1, this.mino.height - 1)) {
-        // Has a hole if there is a point inside the mino that isn't contained in the mino
-        // but its neighbors are all in the mino.
-        // Note: this only works for order <= 8
-        const p = new Vector(x, y)
-        if (this.mino.contains(p)) {
-          continue
-        }
-        const nbrs = [...getNeighbors(p)]
-        if (nbrs.every((nbr) => this.mino.contains(nbr))) {
-          return true
-        }
-      }
-    }
-    return false
   }
 
   // Get all the corner points of this polyomino that are contained in it
@@ -290,29 +207,23 @@ export default class MinoClasses {
 
   /** Returns whether the polyomino is directed at the given anchor */
   isCornerDirected(corner: Anchor) {
-    if (!this.hasAnchor(corner)) {
+    const start = this.pointAtAnchor(corner)
+    if (!this.mino.hasRaw(start)) {
       return false
     }
     // Get the two directions of that corner
-    const xDir: Direction = corner.x === "end" ? "left" : "right"
-    const yDir: Direction = corner.y === "end" ? "up" : "down"
-    const start = this.pointAtAnchor(corner)
-    // Do BFS in the two orthogonal directions
-    const visited = new Set<PackedPoint>()
-    visited.add(start)
-    const queue = [start]
-    while (queue.length > 0) {
-      const current = queue.pop()!
-      for (const nbrDir of [yDir, xDir]) {
-        const nbr = move(current, nbrDir)
-        if (nbr !== undefined && this.mino.hasRaw(nbr) && !visited.has(nbr)) {
-          visited.add(nbr)
-          queue.push(nbr)
-        }
-      }
-    }
-    // If at the end, we visited all cells, it's directed
-    return visited.size === this.mino.order
+    const xDir: Direction = corner.x === "end" ? "right" : "left"
+    const yDir: Direction = corner.y === "end" ? "down" : "up"
+
+    return this.mino.data.every((point) => {
+      return (
+        point === start ||
+        [xDir, yDir].some((dir) => {
+          const nbr = move(point, dir)
+          return nbr !== undefined && this.mino.hasRaw(nbr)
+        })
+      )
+    })
   }
 
   /** Return all the anchors that this polyomino is directed at */

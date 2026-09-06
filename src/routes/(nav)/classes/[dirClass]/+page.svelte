@@ -8,6 +8,12 @@
   import ClassSymbol from "../ClassSymbol.svelte"
   import StateDiagram from "../StateDiagram.svelte"
   import { pageTitle } from "$lib/components/theme"
+  import {
+    possibleOnlyIfPunctured,
+    possibleSymmetriesForClass,
+  } from "$lib/mino/class-symmetry"
+  import SymmetryIcon from "$lib/components/SymmetryIcon.svelte"
+  import { getSymmetryColor } from "$lib/components/graph"
 
   const { data }: PageProps = $props()
   const Content = $derived(data.content)
@@ -41,6 +47,24 @@
             <ClassRegex {dirClass} />
           </div>
         {/if}
+        <div>
+          <h2>Symmetries</h2>
+          <div class="symmetry-list">
+            {#each possibleSymmetriesForClass(dirClass) as symmetry}
+              <a href="/symmetry/{symmetry}" title={symmetry}>
+                <SymmetryIcon
+                  {symmetry}
+                  fill="none"
+                  stroke={getSymmetryColor(symmetry)}
+                  size={28}
+                />
+                {#if possibleOnlyIfPunctured(dirClass, symmetry)}
+                  <span title="punctured only">*</span>
+                {/if}
+              </a>
+            {/each}
+          </div>
+        </div>
       </div>
     </div>
     {#if dirClass.name() !== "other"}
@@ -79,7 +103,20 @@
 
   .class-data {
     display: flex;
-    gap: 2rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .class-data .symmetry-list {
+    display: flex;
+    gap: 1rem;
+  }
+
+  .symmetry-list a {
+    display: flex;
+    text-decoration: none;
+    gap: 0.25rem;
   }
 
   .class-data h2,

@@ -104,7 +104,6 @@ const minos = nodes
     Polyomino.fromString("0101_1111_1010_0111"),
     Polyomino.fromString("0111_1010_1111_1010"),
     Polyomino.fromString("0111_1010_1111_1001"),
-    Polyomino.fromString("0111_1010_1111_0101"),
   ])
 const classes = groupBy(minos, (mino) => mino.classes.get().name())
 

@@ -29,7 +29,7 @@
     <g
       {@attach (el: SVGGElement) => {
         const instance = panzoom(el, {
-          minZoom: 0.25,
+          minZoom: 0.275,
           maxZoom: 2,
           zoomSpeed: 0.075,
           smoothScroll: false,

@@ -1,20 +1,27 @@
 <script lang="ts">
-  import { O_OCTOMINO } from "$lib/mino"
+  import type { Coord, Polyomino } from "$lib/mino"
   import Vector from "$lib/vector"
   import { getMinoColor, NUM_GENERATIONS } from "../graph"
   import { point } from "../svgUtils"
   import { getMinoSizeAndTransform } from "./helpers.svelte"
   import SelectableSquare from "./SelectableSquare.svelte"
 
-  let { highlight, mino = $bindable() } = $props()
+  interface Props {
+    highlight: boolean
+    mino: Polyomino
+  }
+
+  let { highlight, mino = $bindable() }: Props = $props()
   const { fill, stroke } = $derived(getMinoColor(mino))
 </script>
 
 <g>
   {#key mino}
-    {#if mino.equals(O_OCTOMINO)}
-      {@render hole()}
-    {/if}
+    {#each mino.punctures() as puncture}
+      {#each puncture as coord}
+        {@render hole(coord)}
+      {/each}
+    {/each}
     {@render innerSquares(highlight)}
     {@render outerSquares()}
   {/key}
@@ -43,11 +50,11 @@
   {/if}
 {/snippet}
 
-{#snippet hole()}
+{#snippet hole(coord: Coord)}
   {@const { size, transform } = getMinoSizeAndTransform(mino)}
   <rect
     class="hole"
-    {...point(transform(new Vector(1, 1)))}
+    {...point(transform(Vector.fromPacked(coord)))}
     width={size}
     height={size}
   />

@@ -1,30 +1,21 @@
 <script module lang="ts">
   import type { Polyomino } from "$lib/mino"
-  import type Vector from "$lib/vector"
-  import { getAnchor } from "$lib/components/utils"
+  import Vector from "$lib/vector"
   import { minBy } from "lodash-es"
   import MinoLink from "$lib/components/MinoLink.svelte"
   import { getDirColor } from "./helpers"
   import { getPoints } from "$lib/components/svgUtils"
 
   function getPathSegments(mino: Polyomino, size: number) {
-    const outline = mino.boundary().outline()
-    const scale = (v: Vector) => v.scale(size)
-    const scaledOutline = outline.map(scale)
-    const anchorPoint = getAnchor(scaledOutline, "center center")
-
-    const translate = (v: Vector) => v.sub(anchorPoint)
-    const outlinePoints = scaledOutline.map(translate)
+    const outline = mino.boundary().outlineVec().toArray()
     // get the bottom-right point of the outline
-    const bottomRow = outlinePoints.filter(
-      (point) => point.y === Math.max(...outlinePoints.map((p) => p.y)),
+    const bottomRow = outline.filter(
+      (point) => point.y === Math.max(...outline.map((p) => p.y)),
     )
     const startPoint = minBy(bottomRow, (p) => p.x)!
     // shift so we start with the bottom right
-    const index = outlinePoints.findIndex((p) => p.equals(startPoint))
-    const cycledOutline = outlinePoints
-      .slice(index)
-      .concat(outlinePoints.slice(0, index))
+    const index = outline.findIndex((p) => p.equals(startPoint))
+    const cycledOutline = outline.slice(index).concat(outline.slice(0, index))
 
     // group the segments together
     const groups = []
@@ -94,13 +85,15 @@
     gridStrokeWidth={1}
     gridStyle="thin"
   >
-    {#each segments as { dir, points }, index}
-      <polyline
-        class:selected={currentIndex === index}
-        points={getPoints(points)}
-        stroke="hsl(from {getDirColor(dir)} h s calc(l - 15))"
-      />
-    {/each}
+    {#snippet markings({ transform })}
+      {#each segments as { dir, points }, index}
+        <polyline
+          class:selected={currentIndex === index}
+          points={getPoints(points.map(transform))}
+          stroke="hsl(from {getDirColor(dir)} h s calc(l - 15))"
+        />
+      {/each}
+    {/snippet}
   </MinoLink>
 </div>
 
