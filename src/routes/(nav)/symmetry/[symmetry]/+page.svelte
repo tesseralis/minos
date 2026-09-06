@@ -1,6 +1,6 @@
 <script lang="ts">
   import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
-  import { DirClass, printSymmetry, type Symmetry } from "$lib/mino"
+  import { printSymmetry, type Symmetry } from "$lib/mino"
   import { capitalize } from "lodash-es"
   import MinoList from "../MinoList.svelte"
   import { pageTitle } from "$lib/components/theme"
@@ -8,7 +8,7 @@
     possibleClassesForSymmetry,
     possibleOnlyIfPunctured,
   } from "$lib/mino/class-symmetry"
-  import ClassIcon from "$lib/components/ClassIcon.svelte"
+  import ClassIcon from "$lib/components/classes/ClassIcon.svelte"
   import { getClassColor } from "$lib/components/graph"
 
   const longName: Record<Symmetry, string> = {

@@ -2,8 +2,8 @@
   import { type Direction } from "$lib"
   import { DirClass, Polyomino } from "$lib/mino"
   import Vector from "$lib/vector"
-  import MinoDiv from "./MinoDiv.svelte"
-  import { center, endpoints } from "./svgUtils"
+  import MinoDiv from "../MinoDiv.svelte"
+  import { center, endpoints } from "../svgUtils"
 
   interface Props {
     class: DirClass

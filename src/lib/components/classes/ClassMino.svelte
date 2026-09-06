@@ -6,7 +6,7 @@
   import { getDirColor } from "./helpers"
   import { getPoints } from "$lib/components/svgUtils"
 
-  function getPathSegments(mino: Polyomino, size: number) {
+  function getPathSegments(mino: Polyomino) {
     const outline = mino.boundary().outlineVec().toArray()
     // get the bottom-right point of the outline
     const bottomRow = outline.filter(
@@ -73,7 +73,7 @@
   }
 
   const { mino, size, currentIndex }: Props = $props()
-  const segments = $derived(getPathSegments(mino, size))
+  const segments = $derived(getPathSegments(mino))
 </script>
 
 <div>
