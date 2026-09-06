@@ -1,6 +1,14 @@
-## The Mathworld Classification
+<script lang="ts">
+  import chart1 from '../images/dir-chart-1.jpeg'
+  import chart2 from "../images/dir-chart-2.jpeg"
+  import chart3 from "../images/dir-chart-3.jpeg"
+  import MinoDiv from "$lib/components/MinoDiv.svelte"
+  import { Polyomino } from "$lib/mino"
+</script>
 
-Let's do the lazy student's research technique: we'll follow the Wikipedia links for "Polyomino" and see what shows up. It seems that [Wolfram Mathworld](https://mathworld.wolfram.com/Polyomino.html) has a couple of articles related to polyominoes. If we look up the topic ["Lattice Polygons"](https://mathworld.wolfram.com/topics/LatticePolygons.html), we come across some interesting articles:
+# The Mathworld Classification and Directedness
+
+While doing research for the labyrinth, I came across a set of interesting articles from [Wolfram Mathworld](https://mathworld.wolfram.com/Polyomino.html). If we look up the topic ["Lattice Polygons"](https://mathworld.wolfram.com/topics/LatticePolygons.html), we come across a collection of curious special cases of polyominoes:
 
 - [Convex Polyomino](https://mathworld.wolfram.com/ConvexPolyomino.html)
 - [Column-](https://mathworld.wolfram.com/Column-ConvexPolyomino.html) and [Row-Convex Polyomino](https://mathworld.wolfram.com/Row-ConvexPolyomino.html)
@@ -10,39 +18,43 @@ Let's do the lazy student's research technique: we'll follow the Wikipedia links
 - [Bar Graph Polygon](https://mathworld.wolfram.com/BarGraphPolygon.html)
 - [Ferrers Graph Polygon](https://mathworld.wolfram.com/FerrersGraphPolygon.html)
 
-These articles seem to specify different groups of polyominoes, so maybe that's what we're looking for? We could just plop in the colors from these articles and call it a day. But we run into some problems:
+These articles seem to specify different groups of polyominoes, so maybe that's what we're looking for? We could just assign a different color to each type of polyomino mentioned in one of these articles and call it a day. But I'm not satisfied with just an arbitrary categorization without understanding what it means. I had a couple of questions:
 
-1. Why _these_ classes?
+<!-- TODO I feel like I should go into more detail; either put definitions in there or something. -->
+
+1. Why _these_ classes? What makes them mathematically interesting?
 2. What if a polyomino belongs in two different classes?
-3. What if someone discovers (or defines) a new class? Would we need to amend our list?
+3. Is this categorization complete? What if someone discovers (or defines) a new class? Would we need to amend our list or move stuff around?
 
-For the first question, we have to go back to one of the fundamental things that makes polyominoes so fascinating: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find formulas (more specifically: generating functions) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles list the (obscenely complicated) generating functions of the classes they describe.
+For the first question, we have to go back to one of the fundamental things that makes polyominoes so fascinating: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find a kind of formula (more specifically: [generating function](https://en.wikipedia.org/wiki/Generating_function)) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles, and the [paper](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) they come from, list the (obscenely complicated) generating functions of the classes they describe.
 
 For the second question... well, it's true. A directed convex polyomino is always convex, a convex polyomino is always column- and row-convex, and so on. But if we create a _hierarchy_ of classes, we can list a polyomino as belonging to the class of the "highest" condition it satisfies, just like symmetry:
 
-<!-- TODO diagram of the wolfram alpha classes -->
+![the hierachy of mathworld classes]({chart1})
 
 It's not too hard to show that, for example, a mino that is both a staircase and a stack necessarily has to be a Ferrers diagram polyomino.
 
-The third condition is a little bit harder. After all, we could just add one of our symmetry classes to this list and that's a new color we can add (and it'll invalidate Point 2 as well).
+The third condition is a little bit harder. After all, we could just add one of our symmetry classes to this list and that's a new color we can add. We want to some way to say that all these classes are related somehow. That they are the only possible categorizations based on some property of polyominoes, like with symmetry. And to do that, we need to look deeper at the definitions of these classes.
 
-Our previous classification attempts had a nice ring to them: you could describe each class as some configuration of a universal property. "These are all the ways that a polyomino can be symmetric". "These are all the ways that a mino can be topologically equivalent". The classes are related by a common feature. Now we just need to do that for our Mathworld classes.
-
-### Systemitization: Convexity and Directedness
+### Convexity and Directedness
 
 A couple of words keep coming up in these definitions: _convex_ and _directed_.
 
 A convex polyomino is easy to intuit: it's a polyomino where there aren't any "horseshoe" segments, or concavities. Formally, you can draw a line through any column or row and it will not cut through two different segments of the mino. We can use "row-convex" or "column-convex" (or generally, "semi-convex") to denote a polyomino that you can draw that line in one direction, or another.
 
-"Directed" is a tougher to intuitively define. The Mathworld articles don't directly state it, but it means that every cell of the polyomino can be reached by going right or up from a starting square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without breaking the law of gravity.
+(TODO: example of each kind)
+
+"Directed" is tougher to define. It means that every cell of the polyomino can be reached by going right or up from a starting square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without going against gravity.
 
 (TODO: definition of directed and marble dropping example)
 
-We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on. If we use directedness and semi-convexity to define a hierarchy:
+If we want to specify directions (say, $v$, $h$), we can say a polyomino is $vh$-directed.
 
-(TODO: hierarchy with directedness / semi-convexity)
+We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on. We can use directedness and semi-convexity to refine our hierarchy from before:
 
-We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not symmetry and convexiy, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
+![the hierachy of mathworld classes]({chart2})
+
+We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexiy, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
 
 ## Orthogonal directedness
 
@@ -52,26 +64,43 @@ One of my favorite things in math is to take a thing and loosen it up, expand it
 
 Let's call our old form of directedness _diagonally directed_ and define this new one as _orthogonally directed_:
 
-**Definition** A polyomino is _orthogonally directed_ if every cell can be reached from a root cell by going only three directions (say, left, right and up).
+**Definition** A polyomino is _orthogonally directed_ if every cell can be reached from a root cell by going only three directions (say, left, right and up). A polyomino is $d$-directed in a direction $d$ if it is orthogonally directed (it never goes in the opposite direction of $d$).
+
+<MinoDiv mino={Polyomino.fromString("011_101_111_101")} size={16} />
 
 We can ask minos be diagonally directed from different sides and see what they look like:
 
-(TODO: some examples of minos directed from multiple sides):
+(TODO: some examples of minos directed from multiple sides)
 
 It seems like, when a mino doesn't have holes, a semi-convex mino is one that's side-directed from two opposite sides!
 
-**Theorem** A polyomino polyomino is is semi-convex if and only if it is [punctureless](/glossary/punctureless) and orthogonally directed from two opposite sides.
+**Theorem** A polyomino is semi-convex iff it is [punctureless](/glossary/punctureless) and orthogonally directed from two opposite sides.
 
-(TODO: theorem proof)
+_Proof_ Assume a polyomino is row-convex. Then every row is a contiguous set of cells. The mino cannot have a puncture, since that would break up the row that the hole is in. We proceed by induction. Every cell in the bottom row can be reached by a series of `l` and `r` moves, since the row is contiguous. Assume all rows below can be reached, and consider a cell $c$ in a row. Ther is a cell $c'$ in the same row that can be reached from a cell $c''$ row below by using a `u` move. By the inductive hypothesis, $c''$ can be reached using `l`, `r`, and `u` moves, and so $c$ can be reached by going `u` to $c'$ then either `l` or `r`. A similar argument by replacing "below" with "above", and `u` with `d` shows that it is `d` directed as well, and rotating everything by 90deg will work for column-convex minos.
+
+For the converse, Let $M$ be a mino that is is `u`-directed and `d`-directed and does not contain punctures. Assume for the sake of contradiction that $M$ is not row-convex. That is, there are cells $c_1$ and $c_2$ in the same row of $M$ that are separated by a hole cell $h \notin M$. By definition of directedness, there is a cell $c_d$ on the top row of the mino that is connected by a path to $c_1$ and $c_2$, and similarly a cell $c_u$ on the bottom row. Then the path that goes through $c_u$, $c_1$, $c_d$, $c_2$ forms a loop that surrounds $h$, which means that $h$ is a puncture, which is a contradiction.
+
+**Corollary** A polyomino is convex iff it is punctureless and orthogonally directed from all four sides.
 
 Note that we specify _punctureless_: that is, a mino with no internal holes. For the purposes of the labyrinth, we can set aside punctured polyominoes, since the only punctured polyomino is the "O" octomino:
 
-(TODO: O octomino)
+<MinoDiv mino={Polyomino.fromString("111_101_111")} size={16} />
 
-But for now, we can replace our definitions on convexity with orthogonal directedness. We can use the notation $Dir_{o}^{d}$ where $o$ denotes the number of sides a mino is orthogonally directed from, and $d$ denotes the number of corners. When $o$ or $d = 2$, we specify $c$ (for cis-) for two adjacent sides/corners or $t$ (for trans-) for opposite sides/corners. We now have a hierarchy that relies only only on one concept ("how many directions do you need to reach every cell").
+But for now, we can replace our definitions on convexity with orthogonal directedness. We can use the notation $\text{Dir}_{o}^{d}$ where $o$ denotes the number of sides a mino is orthogonally directed from, and $d$ denotes the number of corners. When $o$ or $d = 2$, we have to specify whether the two sides/corners are opposite or adjacent, so we specify $c$ (for cis-) for two adjacent sides/corners or $t$ (for trans-) for opposite sides/corners. We now have a hierarchy that relies only only on one concept ("how many directions do you need to reach every cell").
 
-(TODO: normal hierarchy, but with the "semi-convex" definitions)
+![the hierachy of directedness classes]({chart3})
+
+Note that if a mino is corner-directed, it has to be orthogonally-directed in the two sides that adjacent to that corner. Specifically:
+
+**Theorem** If a polyomino is $vh$-directed, then it is $v$-directed and $h$-directed.
 
 Now that we have a finer-grained definition, we have more classes than before! In particular, we have some additional classes that the definitions of semi-convexity weren't granular enough to encode.
 
-But this is only the classification for _punctureless_ polyominoes. There's still a second concept of "holes" that we haven't dealt with, and a second hierarchy parallel to the one above but with the "punctureless" condition removed. In a way, we're still in the same place as before: instead of "semi-convex" and "directedness" as two unrelated building blocks, we have "directedness" and "punctures". We still need to find a way to relate the idea of holes to directedness _somehow_.
+Note that, with the current labels, this is only the classification for _punctureless_ polyominoes. There's still a second concept of "punctures" that we haven't dealt with, and a second hierarchy parallel to the one above but with the "punctureless" condition removed. In a way, we're still in the same place as before: instead of "semi-convex" and "directedness" as two unrelated building blocks, we have "directedness" and "punctures". We will see that punctures relate in a natural way to directedness, but to do so we will need to take a little detour to talk about _boundaries_.
+
+<style>
+  img {
+    max-width: 600px;
+  }
+
+</style>

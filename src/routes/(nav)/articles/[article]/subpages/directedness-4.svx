@@ -1,0 +1,35 @@
+# Further Research
+
+These definitions of directedness and boundary families inspire a flurry of research topics and generalizations. For one, going back to the original inspirations behind these, we generate a couple new classes that we can try to find the generating functions of. Some, like [wings](/classes/wing) and [crescents](/classes/crescent), should be feasible using existing methods, while others, like [trees](/classes/tree) [bent trees](/classes/bent-tree) might require more work.
+
+In particular, directedness classes relate in interesting ways in the other candidates for classification that we discussed in the first part.
+
+## Symmetry
+
+It should be apparent that only certain classes allow certain symmetry groups. We can denote this in the following table, with a minimal example for each:
+
+(TODO table of symmetries and directedness)
+
+## Graphs
+
+It should be easy to see that members of a boundary family tend to have the same graph. In fact, it should be easy to see when a mino has no 2x2s, the graphs are almost always the same, or split into a few sets of cases:
+
+(TODO example with the wing hexomino)
+
+Can we formalize this in any way, or determine what possible graphs there are for a given boundary family? Is there a further generalization we can make so that graphs with 2x2s belong in the same family as those without one?
+
+## Tiling
+
+Using directedness classes, we can rule out large swathes of polyominoes from tiling rectangles and other regions.
+
+**Theorem** proper staircases, forks, diamonds, crescents, and range charts can never tile a rectangle.
+
+The proof will be mostly left as an exercise to the reader, but the general argument is by infinite descent: fit a polyomino in the corner and show that the remaining space creates another corner that must be filled in the same way.
+
+## Generalizations to other polyforms
+
+What are the directedness classes for polyhexes, polyiamonds, and polykings? What are the corresponding boundary family classes?
+
+## Generalizations to continuous sets
+
+The polyomino definition of convexity is defined analogously to a [convex set](https://en.wikipedia.org/wiki/Convex_set). We can use analogous, continuous definitions of directedness to define generalizations to convexity for continuous sets.

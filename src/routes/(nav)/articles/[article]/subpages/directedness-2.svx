@@ -1,59 +1,99 @@
-## Boundaries
+<script lang="ts">
+  import pentominoNames from "../images/pentomino-names.png"
+</script>
 
-Let's take a break from this quandary and look at what we do have right now with our punctureless friends. In particular, I started noticing that a lot of our categories are getting a little unwieldy:
+# Boundaries
 
-(TODO: list of a single class)
+## Polyomino naming
 
-Having each class be a giant block is kind of boring, and it would be great if I could subdivide these polyominoes *further*, but how? I started noodling and organizing minos of a single class and made the observation that many of the minos in the same "family" belong to the same class. For example, the "I-shaped" minos are all rectangles:
+Let's take a break from directedness and talk about polyomino naming. What should you call a polyomino? Some enthusiasts create unique naming schemas based on [chemical nomenclature](https://www.youtube.com/watch?v=9imS9K8uuZ0) or [polyhedra naming](https://www.seximal.net/polyomino), but the most common scheme for small minos is to name them based on a letter or shape that the mino looks like. In particular, Samuel Golomb came up with the following naming scheme that is commonly used:
 
-(I shaped)
+![Golomb's pentomino names]({pentominoNames})
 
-The "L-shaped" minos are all Ferrers diagrams:
+There isn't a common letter-naming scheme for hexominoes or above (you end up running out of letters pretty fast) but it's common to label all polyominoes consisting of a straight line of squares as I-minos. Similarly, one could say that all polyominoes that form an L shape can be called a family of L-minos (or maybe V-minos if the lengths are the same).
 
 (L shaped)
 
-The S/Z-shaped ones are all staircases:
+By extension we can call minos that have an S shape S-minos (or maybe Z-minos):
 
 (S / Z minos)
 
-The T-shaped ones are stacks:
+Ones with a bar and a vertical line T-minos:
 
 (T minos)
 
-The U-shaped ones are bar graphs:
+And ones with a single concavity U-minos:
 
 (U minos)
 
-It seems like these directedness classes are pretty related to these "families" of polyominoes! But is there a way we can formalize what it means for a polyomino to be a certain shape? Is the 2x4 rectangle an "I" mino?
+While pondering the question of punctures, I ran across a different issue. I was starting to create pages for the directedness classes, and started to realize that there are big chunks of one class of polyomino. It would be nice if there was some more structure involved, if I could group each class into a further substructure, like polyomino graphs can be grouped into homeomorphism classes.
 
-(TODO naive attempt with lengthening)
+While I was staring at the different directedness classes, trying to make a further breakdown, I made a realization: the directedness classes seemed to contain many polyominoes that belonged to the same "family". Ferrer's graphs contained a lot of "L" minos. Staircases contained a lot of "S" and "W" minos. Stacks had a bunch of "T"s, and Bar charts contain a lot of "U"s.
 
-(TODO introduce boundary word idea)
+It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does (2x4 rectangle) count as an I-shape? Is a (6x4 L) an L?
 
-## Putting it Together
+One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments^1. Doing so, we can define some examples of classes:
 
-**Thereom** Every member of a boundary group belongs to the same directedness class.
+(examples like Ss)
 
-We don't need to check every class. We can just show that if a mino is directed from one side or corner, every member of its directedness class can be too.
+This is a nice start, but it leaves polyominoes with 2x2s in their own groups, which felt undesirable to me. It really seems that a scaled up version of a polyomino, should be part of the same family!
 
-_Proof_ Every member of a boundary family can be transformed into another by stretching or shrinking a segment. We will show that a single transformation will not change directedness status, and so any combination of these will not change the status.
+**Definition** A _boundary word_ is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ consists of all polyominoes that share the same boundary word (for some given reflection or rotation).[^3]
 
-<!-- TODO continue proof that members of a boundary family have same directedness -->
+(TODO simple example)
 
-I want to take a minute to state how _cool_ finding this theorem was. It feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders. As I mentioned before, I've been obsessed with these things for decades. It's nearly impossible to find properties of minos that are in perfect correspondence.
+Categorizing polyominoes by boundary words, we get all the groupings we desire: every I is a rectangle, every L is a Ferrers diagram. But there are some surprising ones:
+
+(TODO the two wing hexominoes).
+
+These two polyominoes belong to the same family, which is fine! Often creating formal definitions leads us to unexpected results. With this formal definition, we can now prove our main theorem.
+
+## Relating boundaries and directedness
+
+Now that we have a formal definition of boundary words, we can see if we can now state our observation formally:
+
+**Theorem** Every member of a boundary family belongs to the same directedness class.
+
+We don't need to check every class. We just need to relate orthogonal and diagonal directedness to the boundary word.
+
+**Lemma** A punctureless polyomino is `u`-directed iff its boundary word does not contain the string `urd`.
+
+_Proof_ Assume that a polyomino $M$ is `u`-directed and that its boundary word contains `urd`. Then there is a cell $c_l$ to the left of the `u` and a cell $c_r$ to the right of the `d` segment. There is a hole $h$ right below the `r` segment that is not part of the polyomino.
+
+(TODO diagram)
+
+Since we assume $M$ is `u`-directed, there is a cell $c$ on the bottom row of the polyomino that has a path to both $c_l$ and $c_r$. Now consider the path from $c$ to $c_l$ that goes through the `r` segments to $c_r$ then back to $c$. This path defines a loop that surrounds $h$, contradicting our earlier assertion that $M$ is punctureless.
+
+(TODO diagram showing this loop)
+
+**Lemma** A punctureless polyomino is `ur`-directed iff its boundary word does not contain the string `rd`.
+
+We can do a similar topological proof as above, as exemplified by this diagram:
+
+(TODO diagram for diagonals)
+
+Since each directedness class is a combination of directedness restrictions from different directions, each member of a boundary family will or will not be directed from each of the directions, and thus our proof is complete.
+
+I want to take a second to state how _cool_ finding this theorem was. As I mentioned before, it's difficult to find properties of polyominoes that are in perfect correspondence.^2
 
 ## Regular Expressions and State Machines
 
 Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition?
 
-We can do so using the language of _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for:
+We can do so using _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for:
 
 <!-- TODO list them -->
 
 Once we get out of convex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
 
-<!-- TODO interactive list of regexes -->
+<!-- TODO interactive list of regexes and state machines -->
 
-It's most apparent what's going on if you go up one step at a time and see what arrows are added or removed. For example, going from wings to antlers, a back-arrow from `ld` to `lu` is added.
+You can verify that these state machines are correct by taking the "forbidden paths" for each class (e.g. for antlers it's `urd` and `rdl`) and checking that these are the arrows that do not appear. Note that for simplicity, these state machines are only for a particular orientation, and start at the bottom-most `ru`. An `dru` occurs only once in a directed mino, and we are cutting the boundary word off at that location.
 
-The proof of this consists of looking at each missing arrow and showing that it would break that direction's directedness. We won't do it for every class, but let's do it for a couple to get a gist of things.
+With the relationship between boundary families and directedness, we can now see why punctures are fit naturally within the directedness schema: a punctured polyomino is one with internal boundary words. We will figure out how to relate a punctured polyomino's inner and outer boundaries to directedness in the next section.
+
+[^1]: I was inspired by [this puzzle](https://erich-friedman.github.io/mathmagic/0609.html) in Erich Friedman's Math Magic archive.
+
+[^2]: In particular, it feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders.
+
+[^3]: This definition is inspired by a similar definition of boundaries used in [tiling criteria](/tiling).
