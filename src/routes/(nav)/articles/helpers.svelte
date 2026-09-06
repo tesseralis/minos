@@ -110,6 +110,87 @@
       wedge: 34,
       wing: 3930,
     }, // TODO 12 and up
+    {
+      fork: 3674,
+      diamond: 1810,
+      staircase: 1756,
+      tree: 3121,
+      wing: 12406,
+      "range chart": 8515,
+      "bent tree": 10438,
+      "bar chart": 804,
+      crescent: 17505,
+      wedge: 54,
+      antler: 3203,
+      stack: 237,
+      rectangle: 5,
+      other: 72,
+    },
+
+    {
+      wedge: 84,
+      wing: 37696,
+      diamond: 4724,
+      staircase: 4077,
+      "bent tree": 48827,
+      crescent: 59850,
+      fork: 9090,
+      "range chart": 37811,
+      antler: 12378,
+      tree: 21046,
+      stack: 418,
+      other: 846,
+      "bar chart": 1741,
+      rectangle: 3,
+    },
+    {
+      rectangle: 7,
+      fork: 22224,
+      tree: 124039,
+      "range chart": 158073,
+      antler: 45487,
+      "bar chart": 3769,
+      staircase: 9571,
+      crescent: 196339,
+      wing: 111394,
+      diamond: 12256,
+      "bent tree": 210318,
+      stack: 770,
+      wedge: 132,
+      other: 7592,
+    },
+    {
+      "bar chart": 8035,
+      diamond: 31121,
+      wing: 322440,
+      "bent tree": 854560,
+      "range chart": 627741,
+      rectangle: 5,
+      stack: 1391,
+      tree: 662857,
+      antler: 160982,
+      other: 57798,
+      wedge: 212,
+      fork: 53912,
+      crescent: 623213,
+      staircase: 22309,
+    },
+    {
+      staircase: 52313,
+      "range chart": 2401615,
+      fork: 130089,
+      tree: 3290757,
+      other: 387708,
+      wing: 918786,
+      stack: 2578,
+      antler: 553085,
+      "bar chart": 17158,
+      wedge: 344,
+      rectangle: 12,
+      diamond: 78816,
+      "bent tree": 3315634,
+      crescent: 1930360,
+    },
   ]
 
   const classes = [
@@ -157,7 +238,7 @@
 <style>
   table {
     table-layout: fixed;
-    width: fit-content;
+    /* width: fit-content; */
     overflow-x: scroll;
   }
 
