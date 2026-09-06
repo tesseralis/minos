@@ -3,6 +3,10 @@
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
   import StateDiagramPicker from "../../StateDiagramPicker.svelte"
+
+  // We need to define these here because svx auto-turns ASCII quote marks into fancy ones.
+  const twoByFour = Polyomino.fromString("1111_1111")
+  const thickL = Polyomino.fromString("1111_1111_0011_0011")
 </script>
 
 # Boundaries
@@ -33,13 +37,13 @@ While pondering the question of punctures, I ran across a different issue. I was
 
 While I was staring at the different directedness classes, trying to make a further breakdown, I made a realization: the directedness classes seemed to contain many polyominoes that belonged to the same "family". Ferrer's graphs contained a lot of "L" minos. Staircases contained a lot of "S" and "W" minos. Stacks had a bunch of "T"s, and Bar charts contain a lot of "U"s.
 
-It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does (2x4 rectangle) count as an I-shape? Is a (6x4 L) an L?
+It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does <MinoDiv mino={twoByFour} size={10} /> count as an I-shape? Is <MinoDiv mino={thickL} size={10} /> an L?
 
 One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments^1. Doing so, we can define some examples of classes:
 
 (examples like Ss)
 
-This is a nice start, but it leaves polyominoes with 2x2s in their own groups, which felt undesirable to me. It really seems that a scaled up version of a polyomino, should be part of the same family!
+This is a nice start, but it leaves polyominoes with 2x2s, like the ones above, in their own solitary groups, which felt undesirable. Again, most minos above a certain size are going to have 2x2s, so you'll end up just getting a lot of singular classes! It really seems that a scaled up version of a mino should be part of the same family.
 
 **Definition** A _boundary word_ is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ consists of all polyominoes that share the same boundary word (for some given reflection or rotation).[^3]
 
