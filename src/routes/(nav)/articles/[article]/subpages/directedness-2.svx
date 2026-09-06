@@ -2,6 +2,7 @@
   import pentominoNames from "../images/pentomino-names.png"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
+  import StateDiagramPicker from "../../StateDiagramPicker.svelte"
 </script>
 
 # Boundaries
@@ -87,7 +88,7 @@ We can do so using _regular expressions_. The more restrictive classes are prett
 
 Once we get out of nonconvex territory though, things start to become cumbersome. It's more revealing to construct the possibilities as state machines. These are the "state machines" of all the different directedness classes:
 
-<!-- TODO interactive list of regexes and state machines -->
+<StateDiagramPicker />
 
 You can verify that these state machines are correct by taking the "forbidden paths" for each class (e.g. for antlers it's `urd` and `rdl`) and checking that these are the arrows that do not appear. Note that for simplicity, these state machines are only for a particular orientation, and start at the bottom-most `ru`. An `dru` occurs only once in a directed mino, and we are cutting the boundary word off at that location.
 
