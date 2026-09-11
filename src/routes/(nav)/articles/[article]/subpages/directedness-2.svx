@@ -39,7 +39,7 @@ While I was staring at the different directedness classes, trying to make a furt
 
 It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does <MinoDiv mino={twoByFour} size={10} /> count as an I-shape? Is <MinoDiv mino={thickL} size={10} /> an L?
 
-One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments^1. Doing so, we can define some examples of classes:
+One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments[^1]. Doing so, we can define some examples of classes:
 
 (examples like Ss)
 
@@ -82,7 +82,7 @@ We can do a similar topological proof as above, as exemplified by this diagram:
 
 Since each directedness class is a combination of directedness restrictions from different directions, each member of a boundary family will or will not be directed from each of the directions, and thus our proof is complete.
 
-I want to take a second to state how _cool_ finding this theorem was. As I mentioned before, it's difficult to find properties of polyominoes that are in perfect correspondence.^2
+I want to take a second to state how _cool_ finding this theorem was. As I mentioned before, it's difficult to find properties of polyominoes that are in perfect correspondence.[^2]
 
 ## Regular Expressions and State Machines
 

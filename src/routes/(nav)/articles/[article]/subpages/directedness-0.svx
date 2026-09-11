@@ -29,7 +29,7 @@ Most of these minos are boring ol' grey! That is, these are minos with [no symme
 
 And so we derive our first guideline for an ideal coloring:
 
-> The coloring must have a nice "spread": for the size we are going up to ($n = 8$)^1, most minos must have an "interesting" property, and not just the "default".
+> The coloring must have a nice "spread": for the size we are going up to ($n = 8$)[^1], most minos must have an "interesting" property, and not just the "default".
 
 ## Attempt 2: Graphs
 
