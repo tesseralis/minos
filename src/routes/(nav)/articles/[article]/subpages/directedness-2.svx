@@ -3,10 +3,18 @@
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
   import StateDiagramPicker from "../../StateDiagramPicker.svelte"
+  import { getBoundaryFamilies } from "../../../classes/helpers"
 
   // We need to define these here because svx auto-turns ASCII quote marks into fancy ones.
   const twoByFour = Polyomino.fromString("1111_1111")
   const thickL = Polyomino.fromString("1111_1111_0011_0011")
+
+  // TODO filter out 2x2s
+  const family_I = getBoundaryFamilies("rectangle").find(fam => fam.family === 'drul').minos.flat()
+  const family_L = getBoundaryFamilies("wedge").find(fam => fam.family === 'drurul').minos.flat()
+  const family_T = getBoundaryFamilies("stack").find(fam => fam.family === 'drurulul').minos.flat()
+  const family_S = getBoundaryFamilies("staircase").find(fam => fam.family === 'dldrurul').minos.flat()
+  const family_U = getBoundaryFamilies("bar chart").find(fam => fam.family === 'drulurul').minos.flat()
 </script>
 
 # Boundaries
@@ -17,33 +25,35 @@ Let's take a break from directedness and talk about polyomino naming. What shoul
 
 ![Golomb's pentomino names]({pentominoNames})
 
-There isn't a common letter-naming scheme for hexominoes or above (you end up running out of letters pretty fast) but it's common to label all polyominoes consisting of a straight line of squares as I-minos. Similarly, one could say that all polyominoes that form an L shape can be called a family of L-minos (or maybe V-minos if the lengths are the same).
+There isn't a common letter-naming scheme for hexominoes or above (you end up running out of letters pretty fast) but it's common to label all polyominoes consisting of a straight line of squares as I-minos:
 
-(L shaped)
+{@render minoList(family_I, 16)}
+
+Similarly, one could say that all polyominoes that form an L shape can be called a family of L-minos (or maybe V-minos if the lengths are the same).
+
+{@render minoList(family_L, 16)}
 
 By extension we can call minos that have an S shape S-minos (or maybe Z-minos):
 
-(S / Z minos)
+{@render minoList(family_S, 16)}
 
 Ones with a bar and a vertical line T-minos:
 
-(T minos)
+{@render minoList(family_T, 16)}
 
 And ones with a single concavity U-minos:
 
-(U minos)
+{@render minoList(family_U, 16)}
 
 While pondering the question of punctures, I ran across a different issue. I was starting to create pages for the directedness classes, and started to realize that there are big chunks of one class of polyomino. It would be nice if there was some more structure involved, if I could group each class into a further substructure, like polyomino graphs can be grouped into homeomorphism classes.
 
-While I was staring at the different directedness classes, trying to make a further breakdown, I made a realization: the directedness classes seemed to contain many polyominoes that belonged to the same "family". Ferrer's graphs contained a lot of "L" minos. Staircases contained a lot of "S" and "W" minos. Stacks had a bunch of "T"s, and Bar charts contain a lot of "U"s.
+While I was staring at the different directedness classes, trying to make a further breakdown, I made a realization: the  polyominoes that belonged to the same "family" all seemed to belong to the same directedness class. "L" minos all seemed to be Ferrer's graphs. "S" and "W" minos all seemed to be staircases. "T"s were stacks, and "U"s were bar charts.
 
 It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does <MinoDiv mino={twoByFour} size={10} /> count as an I-shape? Is <MinoDiv mino={thickL} size={10} /> an L?
 
-One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments[^1]. Doing so, we can define some examples of classes:
+One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments[^1]. This is how we organized the families in the above lists.
 
-(examples like Ss)
-
-This is a nice start, but it leaves polyominoes with 2x2s, like the ones above, in their own solitary groups, which felt undesirable. Again, most minos above a certain size are going to have 2x2s, so you'll end up just getting a lot of singular classes! It really seems that a scaled up version of a mino should be part of the same family.
+This is a nice start, but it leaves polyominoes with 2x2s in their own solitary groups, which felt undesirable. Again, most minos above a certain size are going to have 2x2s, so you'll end up just getting a lot of families with only one member, which is hardly a family. It really seems that a scaled up version of a mino should be part of the same family.
 
 **Definition** A _boundary word_ is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ consists of all polyominoes that share the same boundary word (for some given reflection or rotation).[^3]
 
@@ -103,3 +113,13 @@ With the relationship between boundary families and directedness, we can now see
 [^2]: In particular, it feels like a discrete version of [Green's Theorem](https://en.wikipedia.org/wiki/Green%27s_theorem), relating information about areas to information about borders.
 
 [^3]: This definition is inspired by a similar definition of boundaries used in [tiling criteria](/tiling).
+
+{#snippet minoList(minos, size)}
+  <div>
+    {#each minos as mino}
+      <span class="mino">
+        <MinoDiv {mino} {size} />
+      </span>
+    {/each}
+  </div>
+{/snippet}
