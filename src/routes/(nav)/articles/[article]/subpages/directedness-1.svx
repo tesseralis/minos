@@ -1,9 +1,88 @@
 <script lang="ts">
-  import chart1 from '../images/dir-chart-1.jpeg'
-  import chart2 from "../images/dir-chart-2.jpeg"
-  import chart3 from "../images/dir-chart-3.jpeg"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
+  import HierarchyChart from "../../HierarchyChart.svelte"
+
+  const hierarchy1Nodes = [
+    ["Ferrer's Diagram"],
+    ["Staircase", "Stack"],
+    ["Directed Convex", "Bar Graph"],
+    ["Convex"],
+    ["Semi-convex"],
+    ["N/A"]
+  ]
+
+  const hierarchy1Edges = [
+    ["Ferrer's Diagram", "Staircase"],
+    ["Ferrer's Diagram", "Stack"],
+    ["Staircase", "Directed Convex"],
+    ["Stack", "Directed Convex"],
+    ["Stack", "Bar Graph"],
+    ["Directed Convex", "Convex"],
+    ["Convex", "Semi-convex"],
+    ["Bar Graph", "Semi-convex"],
+    ["Semi-convex", "N/A"],
+  ]
+
+  const hierarchy2Nodes = [
+    ['Rectangle'],
+    ["Ferrer's Diagram"],
+    ["Staircase", "Stack"],
+    ["Directed Convex", "Bar Graph"],
+    ["Convex", "Directed Semi-convex"],
+    ["Semi-convex", "Directed"],
+    ["N/A"]
+  ]
+
+  const hierarchy2Edges = [
+    ["Rectangle", "Ferrer's Diagram"],
+    ["Ferrer's Diagram", "Staircase"],
+    ["Ferrer's Diagram", "Stack"],
+    ["Staircase", "Directed Convex"],
+    ["Stack", "Directed Convex"],
+    ["Stack", "Bar Graph"],
+    ["Directed Convex", "Convex"],
+    ["Directed Convex", "Directed Semi-convex"],
+    ["Bar Graph", "Directed Semi-convex"],
+    ["Convex", "Semi-convex"],
+    ["Directed Semi-convex", "Semi-convex"],
+    ["Directed Semi-convex", "Directed"],
+    ["Semi-convex", "N/A"],
+    ["Directed", "N/A"],
+  ]
+
+  const hierarchy3Nodes = [
+    ["Rectangle"],
+    ["Ferrer's Diagram"],
+    ["Staircase", "Stack"],
+    ["Directed Convex", "Bar Graph"],
+    ["Convex", "Directed Semi-convex"],
+    ["Crescent", "Corner Directed"],
+    ["Semi-convex", "Bent Tree"],
+    ["Side Directed"],
+    ["N/A"]
+  ]
+
+  const hierarchy3Edges = [
+    ["Rectangle", "Ferrer's Diagram"],
+    ["Ferrer's Diagram", "Staircase"],
+    ["Ferrer's Diagram", "Stack"],
+    ["Staircase", "Directed Convex"],
+    ["Stack", "Directed Convex"],
+    ["Stack", "Bar Graph"],
+    ["Directed Convex", "Convex"],
+    ["Directed Convex", "Directed Semi-convex"],
+    ["Bar Graph", "Directed Semi-convex"],
+    ["Convex", "Crescent"],
+    ["Directed Semi-convex", "Crescent"],
+    ["Directed Semi-convex", "Corner Directed"],
+    ["Crescent", "Semi-convex"],
+    ["Crescent", "Bent Tree"],
+    ["Corner Directed", "Bent Tree"],
+    ["Semi-convex", "Side Directed"],
+    ["Bent Tree", "Side Directed"],
+    ["Side Directed", "N/A"]
+  ]
 </script>
 
 # The Mathworld Classification and Directedness
@@ -30,7 +109,7 @@ For the first question, we have to go back to one of the fundamental things that
 
 For the second question... well, it's true. A directed convex polyomino is always convex, a convex polyomino is always column- and row-convex, and so on. But if we create a _hierarchy_ of classes, we can list a polyomino as belonging to the class of the "highest" condition it satisfies, just like symmetry:
 
-![the hierachy of mathworld classes]({chart1})
+<HierarchyChart nodes={hierarchy1Nodes} edges={hierarchy1Edges} />
 
 It's not too hard to show that, for example, a mino that is both a staircase and a stack necessarily has to be a Ferrers diagram polyomino.
 
@@ -52,7 +131,7 @@ If we want to specify directions (say, $v$, $h$), we can say a polyomino is $vh$
 
 We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on. We can use directedness and semi-convexity to refine our hierarchy from before:
 
-![the hierachy of mathworld classes]({chart2})
+<HierarchyChart nodes={hierarchy2Nodes} edges={hierarchy2Edges} />
 
 We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexiy, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
 
@@ -88,7 +167,7 @@ Note that we specify _punctureless_: that is, a mino with no internal holes. For
 
 But for now, we can replace our definitions on convexity with orthogonal directedness. We can use the notation $\text{Dir}_{o}^{d}$ where $o$ denotes the number of sides a mino is orthogonally directed from, and $d$ denotes the number of corners. When $o$ or $d = 2$, we have to specify whether the two sides/corners are opposite or adjacent, so we specify $c$ (for cis-) for two adjacent sides/corners or $t$ (for trans-) for opposite sides/corners. We now have a hierarchy that relies only only on one concept ("how many directions do you need to reach every cell").
 
-![the hierachy of directedness classes]({chart3})
+<HierarchyChart nodes={hierarchy3Nodes} edges={hierarchy3Edges} />
 
 Note that if a mino is corner-directed, it has to be orthogonally-directed in the two sides that adjacent to that corner. Specifically:
 
