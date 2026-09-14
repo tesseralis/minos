@@ -79,7 +79,7 @@ function getBoundaryFamily(mino: Polyomino) {
   // which puts "longer" segments on top
   const family = sortBy(families, (c) => {
     const counts = countLetters(c.family)
-    return [counts["l"], counts["d"]]
+    return [counts["l"], counts["d"], c.family] // do string sorting as a backup case
   })[0].family
 
   // Get the representative mino of the family
