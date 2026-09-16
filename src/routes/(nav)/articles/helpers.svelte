@@ -1,4 +1,90 @@
 <script lang="ts" module>
+  const symCounts = [
+    {
+      all: 1,
+    },
+    {
+      axis2: 1,
+    },
+    {
+      axis2: 1,
+      diag: 1,
+    },
+    {
+      all: 1,
+      axis: 1,
+      axis2: 1,
+      none: 1,
+      rot: 1,
+    },
+    {
+      all: 1,
+      axis: 2,
+      axis2: 1,
+      diag: 2,
+      none: 5,
+      rot: 1,
+    },
+    {
+      axis: 6,
+      axis2: 2,
+      diag: 2,
+      none: 20,
+      rot: 5,
+    },
+    {
+      axis: 9,
+      axis2: 3,
+      diag: 7,
+      diag2: 1,
+      none: 84,
+      rot: 4,
+    },
+    {
+      all: 1,
+      axis: 23,
+      axis2: 4,
+      diag: 5,
+      diag2: 1,
+      none: 316,
+      rot: 18,
+      rot2: 1,
+    },
+    {
+      all: 2,
+      axis: 38,
+      axis2: 4,
+      diag: 26,
+      none: 1196,
+      rot: 19,
+    },
+    {
+      axis: 90,
+      axis2: 8,
+      diag: 22,
+      diag2: 1,
+      none: 4461,
+      rot: 73,
+    },
+    {
+      axis: 147,
+      axis2: 10,
+      diag: 91,
+      diag2: 2,
+      none: 16750,
+      rot: 73,
+    },
+    {
+      axis: 341,
+      axis2: 15,
+      diag: 79,
+      diag2: 3,
+      none: 62878,
+      rot: 278,
+      rot2: 3,
+      all: 3,
+    },
+  ]
   // Values up to n=11 taken from stats.spec.ts. Larger values taken from calculations in Rust.
   const directednessCounts = [
     {
@@ -209,7 +295,18 @@
     "tree",
     "other",
   ]
-  export { classTable }
+
+  const symmetries = [
+    "none",
+    "axis",
+    "diag",
+    "rot",
+    "axis2",
+    "diag2",
+    "rot2",
+    "all",
+  ]
+  export { classTable, symmetryTable }
 </script>
 
 {#snippet classTable()}
@@ -228,6 +325,29 @@
           <td>{n + 1}</td>
           {#each classes as cls}
             <td>{(map as any)[cls]}</td>
+          {/each}
+        </tr>
+      {/each}
+    </tbody>
+  </table>
+{/snippet}
+
+{#snippet symmetryTable()}
+  <table>
+    <thead>
+      <tr>
+        <th>n</th>
+        {#each symmetries as sym}
+          <th>{sym}</th>
+        {/each}</tr
+      >
+    </thead>
+    <tbody>
+      {#each symCounts as map, n}
+        <tr>
+          <td>{n + 1}</td>
+          {#each symmetries as sym}
+            <td>{(map as any)[sym] ?? 0}</td>
           {/each}
         </tr>
       {/each}
