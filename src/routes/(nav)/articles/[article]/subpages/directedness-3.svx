@@ -2,6 +2,40 @@
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import { Polyomino } from "$lib/mino"
   import { classTable } from "../../helpers.svelte"
+  import HierarchyChart from "../../HierarchyChart.svelte"
+
+  const hierarchy3Nodes = [
+    ["Rectangle"],
+    ["Wedge"],
+    ["Staircase", "Stack"],
+    ["Fork", "Bar Graph"],
+    ["Diamond", "Wing"],
+    ["Crescent", "Antler"],
+    ["Range Chart", "Bent Tree"],
+    ["Tree"],
+    ["N/A"]
+  ]
+
+  const hierarchy3Edges = [
+    ["Rectangle", "Wedge"],
+    ["Wedge", "Staircase"],
+    ["Wedge", "Stack"],
+    ["Staircase", "Fork"],
+    ["Stack", "Fork"],
+    ["Stack", "Bar Graph"],
+    ["Fork", "Diamond"],
+    ["Fork", "Wing"],
+    ["Bar Graph", "Wing"],
+    ["Diamond", "Crescent"],
+    ["Wing", "Crescent"],
+    ["Wing", "Antler"],
+    ["Crescent", "Range Chart"],
+    ["Crescent", "Bent Tree"],
+    ["Antler", "Bent Tree"],
+    ["Range Chart", "Tree"],
+    ["Bent Tree", "Tree"],
+    ["Tree", "N/A"]
+  ]
 </script>
 
 ## Dealing with Punctures
@@ -32,7 +66,7 @@ Assume there is an inner boundary word that contains `dlu`. Let $c \in M$ be a c
 
 With this, we have a full classification system for polyominoes:
 
-(TODO do the full list)
+<HierarchyChart nodes={hierarchy3Nodes} edges={hierarchy3Edges} />
 
 Note that we have renamed some classes with more fanciful names. Instead of "convex", we call $\text{Dir}^0_4$ "diamonds", since punctured members of that class are obviously not convex. A convex polyomino is an unpunctured diamond. Let us remind ourselves of our criteria and see if this hierarchy fits the bill:
 
