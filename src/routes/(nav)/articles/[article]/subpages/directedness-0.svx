@@ -35,11 +35,13 @@
 
 # Directedness: A Classification of Polyominoes
 
-I'd always been fascinated with polyominoes since I was young. They always seemed to me like little abstract creatures, growing and evolving in strange ways. I'd always been frustrated how most of polyomino research is based on tiling and packing. While people have made [beautiful patterns](/packing) out of them, these are all mainly _computational_ results, made by running some clever algorithm over a long period of time. There's not really anything mathematically exciting going on, which is why polyominoes have remained in the realm of recreational mathematics. So, I set out to map their [evolution tree](/genealogy), and from there creating a labyrinth tracking their properties, in hopes of finding _something_ interesting about them.
+I'd always been fascinated by polyomiones. These little abstract creatures, growing and evolving in strange ways, a rich menagerie of creatures with different properties that you can dissect and analyze and compare.
 
-And in this process of creation, a seemingly superficial question percolated in my mind: what do I color the polyominoes? It felt too boring to just have everything be one color, and it seemed like a waste to just choose random colors. I wanted whatever coloring scheme I use to _mean_ something. Something that seems fundamental to the structure of these minos.
+Most of polyomino research is based on tiling and packing--finding ways for polyominoes to fit together in different combinations. People have made some truly [beautiful patterns](/packing) out of them. But there's always been something unsatisfying about these results: they're are all mainly _computational_, made by running some clever algorithm over a long period of time. There's not really anything mathematically exciting going on, which is why polyominoes have remained in the realm of recreational mathematics. It doesn't really fill the same itch in me as solving a really good logic puzzle.
 
-To put it another way, if the polyominoes were creatures, or animals, or Pokemon, what taxonomy would we put on them? What general categories like "plant" or "fungus" or "mammal" can we put them in? If you were to make a board game or video game involving polyominoes, what mathematical properties of them can you use to create interesting gameplay variations?
+I've always been more interested in the properties of the individual polyominoes. To that end, I've asked myself the question: what is the best way to _classify_ polyominoes? Is there a way to organize polyominoes into sets that have interesting properties, in the same way taxonomists organize living creatures into "animal", "plant", "fungi", etc.?
+
+There's a lot of reasons why you would want to classify polyominoes. If you wanted to come up with a [unique name for each polyomino](https://www.seximal.net/polyomino), what properties could you use to distinguish them? If you wanted to make a board game or video game about polyominoes, how would you give interesting powers to polyominoes in ways that make sense to the player? And, if you were, say, making a [polyomino encyclopedia](/), what color scheme do you want to use for it?
 
 ## Attempt 1: Symmetry
 
@@ -86,6 +88,11 @@ Let's formalize our criteria. We want a meaningful classification of polyominoes
 1. Has an interesting "spread" (i.e. is not mostly grey) for our desired size of $n \le 8$ (like graphs and tiling, but unlike symmetry).
 2. Is finite, and does not grow unbounded as the size $n$ increases (like symmetry and tiling, but unlike graphs).
 3. Is "easy" to intuit just by looking at a mino (like symmetry and graphs, but unlike tiling).
+
+There are also a couple "nice to have"s for classification:
+
+1. It should be based on variations of a single property, not a bunch of random properties put together.
+2. It should be granular: it should be able to broken up into subclasses.
 
 So with these criteria in mind, I went on a search for a classification scheme, and in doing so, discovered some very interesting mathematics.
 
