@@ -38,6 +38,8 @@ I'd always been fascinated with polyominoes since I was young. They always seeme
 
 And in this process of creation, a seemingly superficial question percolated in my mind: what do I color the polyominoes? It felt too boring to just have everything be one color, and it seemed like a waste to just choose random colors. I wanted whatever coloring scheme I use to _mean_ something. Something that seems fundamental to the structure of these minos.
 
+To put it another way, if the polyominoes were creatures, or animals, or Pokemon, what taxonomy would we put on them? What general categories like "plant" or "fungus" or "mammal" can we put them in? If you were to make a board game or video game involving polyominoes, what mathematical properties of them can you use to create interesting gameplay variations?
+
 ## Attempt 1: Symmetry
 
 Most literature on polyominoes classifies them by symmetry. It's what [Wikipedia uses](https://en.wikipedia.org/wiki/Polyomino) on most of its articles relating to polyominoes:
