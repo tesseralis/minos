@@ -2,7 +2,7 @@
   import { capitalize, range } from "lodash-es"
   import { page } from "$app/state"
   import NavAndContent from "$lib/components/NavAndContent"
-  import ClassIcon from "$lib/components/ClassIcon.svelte"
+  import ClassIcon from "$lib/components/classes/ClassIcon.svelte"
   import HierachyArrow from "$lib/components/HierachyArrow.svelte"
   import { getClassColor } from "$lib/components/graph"
   import { DirClass } from "$lib/mino"

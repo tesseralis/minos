@@ -2,11 +2,11 @@
   import Breadcrumbs from "$lib/components/Breadcrumbs.svelte"
   import { capitalize } from "lodash-es"
   import { DirClass } from "$lib/mino"
-  import ClassRegex from "../ClassRegex.svelte"
   import ClassList from "../ClassList.svelte"
   import type { PageProps } from "./$types"
   import ClassSymbol from "../ClassSymbol.svelte"
-  import StateDiagram from "../StateDiagram.svelte"
+  import ClassRegex from "$lib/components/classes/ClassRegex.svelte"
+  import StateDiagram from "$lib/components/classes/StateDiagram.svelte"
   import { pageTitle } from "$lib/components/theme"
   import {
     possibleOnlyIfPunctured,

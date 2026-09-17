@@ -1,7 +1,6 @@
 import { groupBy, sortBy } from "lodash-es"
 import { nodes } from "$lib/components/graph"
 import { Polyomino } from "$lib/mino"
-import { colors } from "$lib/components/theme"
 
 function countLetters(s: string) {
   const count: Record<string, number> = {}
@@ -80,7 +79,7 @@ export function getBoundaryFamily(mino: Polyomino) {
   // which puts "longer" segments on top
   const family = sortBy(families, (c) => {
     const counts = countLetters(c.family)
-    return [counts["l"], counts["d"]]
+    return [counts["l"], counts["d"], c.family] // do string sorting as a backup case
   })[0].family
 
   // Get the representative mino of the family
@@ -146,15 +145,4 @@ export function escapeClass(cls: string) {
 
 export function unescapeClass(cls: string): string {
   return cls.replace(/-/g, " ") as string
-}
-
-export function getDirColor(dir: string) {
-  return colorMap[dir]
-}
-
-const colorMap: Record<string, string> = {
-  ru: colors.palette[1],
-  lu: colors.palette[2],
-  ld: colors.palette[3],
-  rd: colors.palette[0],
 }

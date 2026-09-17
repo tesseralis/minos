@@ -1,11 +1,9 @@
 import { range } from "lodash-es"
+import { type Direction } from "$lib"
 import { type VectorLike } from "../vector"
 import type Polyomino from "./Polyomino"
 
 export type Dims = [number, number]
-// TODO deduplicate with the definition in 'edges'
-export const directions = ["left", "right", "up", "down"] as const
-export type Direction = (typeof directions)[number]
 
 const INT_WIDTH = 16
 
@@ -95,8 +93,7 @@ export function getHeight(mino: MinoData) {
 // Get a unique key for the encoded data.
 // Used for caching polyominoes.
 export function getKey(data: MinoData) {
-  const xs = data.toSorted()
-  return xs.join(",")
+  return data.join(",")
 }
 
 // Assumes positive coord

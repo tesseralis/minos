@@ -18,11 +18,11 @@ import {
   getDims,
   px,
   py,
-  directions,
   neighbors,
   kingwiseNeighbors,
 } from "./data"
-import { flip, type Direction } from "./edges"
+import { type Direction, directions } from "$lib"
+import { flip } from "./edges"
 
 // cache of all created minos
 const cache: Record<string, Polyomino> = {}
@@ -75,7 +75,10 @@ export default class Polyomino {
     return [this.width, this.height]
   }
 
-  static fromData(data: MinoData) {
+  static fromData(data: MinoData, presorted = false) {
+    if (!presorted) {
+      data.sort()
+    }
     const key = getKey(data)
     if (!cache[key]) {
       cache[key] = new Polyomino(data)

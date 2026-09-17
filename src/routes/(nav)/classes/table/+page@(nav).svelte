@@ -5,7 +5,7 @@
   import { DirClass } from "$lib/mino"
   import { capitalize } from "lodash-es"
   import { escapeClass } from "../helpers"
-  import ClassRegex from "../ClassRegex.svelte"
+  import ClassRegex from "$lib/components/classes/ClassRegex.svelte"
   import ClassList from "../ClassList.svelte"
   import ClassSymbol from "../ClassSymbol.svelte"
 

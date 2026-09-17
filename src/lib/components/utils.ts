@@ -63,10 +63,7 @@ export function getArc(src: Vector, tgt: Vector, origin: Vector) {
   return path.toString()
 }
 
-function getCoordAnchor(ns: number[], anchor: string) {
-  const min = Math.min(...ns)
-  const max = Math.max(...ns)
-
+function getAnchorValue(min: number, max: number, anchor: string) {
   switch (anchor) {
     case "left":
     case "top":
@@ -83,6 +80,12 @@ function getCoordAnchor(ns: number[], anchor: string) {
   }
 }
 
+function getCoordAnchor(ns: number[], anchor: string) {
+  const min = Math.min(...ns)
+  const max = Math.max(...ns)
+  return getAnchorValue(min, max, anchor)
+}
+
 // TODO better typing for anchors
 /**
  * Gets the "anchor" point given a list of points and anchor string
@@ -93,4 +96,15 @@ export function getAnchor(points: Vector[], anchor: string) {
 
   const [yAnchor, xAnchor = yAnchor] = anchor.split(" ")
   return new Vector(getCoordAnchor(xs, xAnchor), getCoordAnchor(ys, yAnchor))
+}
+
+/**
+ * Get the position for the anchor for the entity with the given width and height
+ */
+export function getAnchorPoint(anchor: string, width: number, height: number) {
+  const [yAnchor, xAnchor = yAnchor] = anchor.split(" ") // ..what
+  return new Vector(
+    getAnchorValue(0, width, xAnchor),
+    getAnchorValue(0, height, yAnchor),
+  )
 }

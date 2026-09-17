@@ -1,5 +1,5 @@
 <script lang="ts">
-  import ClassIcon from "$lib/components/ClassIcon.svelte"
+  import ClassIcon from "$lib/components/classes/ClassIcon.svelte"
   import { getClassColor, getSymmetryColor, nodes } from "$lib/components/graph"
   import MinoDiv from "$lib/components/MinoDiv.svelte"
   import SymmetryMarkers from "$lib/components/SymmetryMarkers.svelte"
