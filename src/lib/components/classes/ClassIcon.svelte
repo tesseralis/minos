@@ -45,113 +45,115 @@
   )
 </script>
 
-<MinoDiv
-  {mino}
-  strokeWidth={1}
-  size={size / Math.max(mino.height, mino.width)}
-  gridStyle="none"
-  --fill={fill}
-  --stroke="hsl(from {stroke} h s l / 0.75)"
->
-  {#snippet markings({ anchor: anchorFn })}
-    {@const centerPoint = anchorFn("center").add(centerOffset)}
-    {@const radius = size / 15}
+<div class="wrapper">
+  <MinoDiv
+    {mino}
+    strokeWidth={1}
+    size={size / Math.max(mino.height, mino.width)}
+    gridStyle="none"
+    --fill={fill}
+    --stroke="hsl(from {stroke} h s l / 0.75)"
+  >
+    {#snippet markings({ anchor: anchorFn })}
+      {@const centerPoint = anchorFn("center").add(centerOffset)}
+      {@const radius = size / 15}
 
-    {#snippet directed(anchor: string = "bottom left")}
-      {@const offset = size / 6}
-      {@const [vert, horiz] = anchor.split(" ")}
-      {@const ySign = vert === "top" ? -1 : 1}
-      {@const xSign = horiz === "left" ? -1 : 1}
-      {@const offsetVec = new Vector(xSign, ySign)}
-      {@const anchorPoint = anchorFn(anchor)}
-      <line
-        {...endpoints(anchorPoint, anchorPoint.sub(offsetVec.scale(offset)))}
-        {...markerProps}
-      />
-    {/snippet}
-    {#snippet semidirected(direction: Direction)}
-      {@const offset = size / 4}
-      <line
-        {...endpoints(
-          centerPoint,
-          centerPoint.add(Vector.direction(direction).scale(offset)),
-        )}
-        {...markerProps}
-      />
-    {/snippet}
+      {#snippet directed(anchor: string = "bottom left")}
+        {@const offset = size / 6}
+        {@const [vert, horiz] = anchor.split(" ")}
+        {@const ySign = vert === "top" ? -1 : 1}
+        {@const xSign = horiz === "left" ? -1 : 1}
+        {@const offsetVec = new Vector(xSign, ySign)}
+        {@const anchorPoint = anchorFn(anchor)}
+        <line
+          {...endpoints(anchorPoint, anchorPoint.sub(offsetVec.scale(offset)))}
+          {...markerProps}
+        />
+      {/snippet}
+      {#snippet semidirected(direction: Direction)}
+        {@const offset = size / 4}
+        <line
+          {...endpoints(
+            centerPoint,
+            centerPoint.add(Vector.direction(direction).scale(offset)),
+          )}
+          {...markerProps}
+        />
+      {/snippet}
 
-    {#snippet convex()}
-      {@render semidirected("up")}
-      {@render semidirected("right")}
-      {@render semidirected("down")}
-      {@render semidirected("left")}
-    {/snippet}
+      {#snippet convex()}
+        {@render semidirected("up")}
+        {@render semidirected("right")}
+        {@render semidirected("down")}
+        {@render semidirected("left")}
+      {/snippet}
 
-    {#if className !== "other"}
-      <circle
-        {...center(centerPoint)}
-        r={radius}
-        {...markerProps}
-        fill={stroke}
-      />
-    {/if}
-    {#if className === "rectangle"}
-      {@render convex()}
-      {@render directed("bottom left")}
-      {@render directed("top left")}
-      {@render directed("top right")}
-      {@render directed("bottom right")}
-    {:else if className === "wedge"}
-      {@render convex()}
-      {@render directed("bottom left")}
-      {@render directed("top left")}
-      {@render directed("top right")}
-    {:else if className === "staircase"}
-      {@render convex()}
-      {@render directed("bottom left")}
-      {@render directed("top right")}
-    {:else if className === "stack"}
-      {@render convex()}
-      {@render directed("bottom left")}
-      {@render directed("top left")}
-    {:else if className === "fork"}
-      {@render convex()}
-      {@render directed()}
-    {:else if className === "bar chart"}
-      {@render semidirected("up")}
-      {@render semidirected("down")}
-      {@render semidirected("right")}
-      {@render directed("bottom left")}
-      {@render directed("top left")}
-    {:else if className === "diamond"}
-      {@render convex()}
-    {:else if className === "wing"}
-      {@render directed()}
-      {@render semidirected("up")}
-      {@render semidirected("down")}
-      {@render semidirected("right")}
-    {:else if className === "crescent"}
-      {@render semidirected("up")}
-      {@render semidirected("down")}
-      {@render semidirected("right")}
-    {:else if className === "antler"}
-      {@render directed()}
-      {@render semidirected("up")}
-      {@render semidirected("right")}
-    {:else if className === "bent tree"}
-      {@render semidirected("up")}
-      {@render semidirected("right")}
-    {:else if className === "range chart"}
-      {@render semidirected("up")}
-      {@render semidirected("down")}
-    {:else if className === "tree"}
-      {@render semidirected("up")}
-    {/if}
-  {/snippet}
-</MinoDiv>
+      {#if className !== "other"}
+        <circle
+          {...center(centerPoint)}
+          r={radius}
+          {...markerProps}
+          fill={stroke}
+        />
+      {/if}
+      {#if className === "rectangle"}
+        {@render convex()}
+        {@render directed("bottom left")}
+        {@render directed("top left")}
+        {@render directed("top right")}
+        {@render directed("bottom right")}
+      {:else if className === "wedge"}
+        {@render convex()}
+        {@render directed("bottom left")}
+        {@render directed("top left")}
+        {@render directed("top right")}
+      {:else if className === "staircase"}
+        {@render convex()}
+        {@render directed("bottom left")}
+        {@render directed("top right")}
+      {:else if className === "stack"}
+        {@render convex()}
+        {@render directed("bottom left")}
+        {@render directed("top left")}
+      {:else if className === "fork"}
+        {@render convex()}
+        {@render directed()}
+      {:else if className === "bar chart"}
+        {@render semidirected("up")}
+        {@render semidirected("down")}
+        {@render semidirected("right")}
+        {@render directed("bottom left")}
+        {@render directed("top left")}
+      {:else if className === "diamond"}
+        {@render convex()}
+      {:else if className === "wing"}
+        {@render directed()}
+        {@render semidirected("up")}
+        {@render semidirected("down")}
+        {@render semidirected("right")}
+      {:else if className === "crescent"}
+        {@render semidirected("up")}
+        {@render semidirected("down")}
+        {@render semidirected("right")}
+      {:else if className === "antler"}
+        {@render directed()}
+        {@render semidirected("up")}
+        {@render semidirected("right")}
+      {:else if className === "bent tree"}
+        {@render semidirected("up")}
+        {@render semidirected("right")}
+      {:else if className === "range chart"}
+        {@render semidirected("up")}
+        {@render semidirected("down")}
+      {:else if className === "tree"}
+        {@render semidirected("up")}
+      {/if}
+    {/snippet}
+  </MinoDiv>
+</div>
 
 <style>
-  :global(svg) {
+  .wrapper :global(svg) {
     overflow: visible;
   }
 </style>
