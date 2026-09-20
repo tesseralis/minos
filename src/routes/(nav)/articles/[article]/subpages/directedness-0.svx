@@ -30,11 +30,30 @@
     ['Quadrant', 'Half Plane'],
     ['Strip', 'Half Plane'],
     ['Half Plane', 'Plane'],
-    ['Plane', 'Nothing']
+    ['Plane', 'Nothing'],
   ]
 
   const yPentomino = Polyomino.fromString("10_11_10_10")
   const yHexomino = Polyomino.fromString("10_11_10_10_10")
+
+  const pentominoLines = [
+    "11111",
+    "1111_1000",
+    "1110_0011",
+    "111_100_100",
+    "110_011_001",
+    "100_111_001",
+    "111_101",
+  ].map(s => Polyomino.fromString(s))
+
+  const pentominoTs = [
+    "1111_0100",
+    "111_010_010",
+    "100_111_010",
+  ].map(s => Polyomino.fromString(s))
+
+  const pentominoX = Polyomino.fromString("010_111_010")
+  const pentominoP = Polyomino.fromString("111_110")
 
 </script>
 
@@ -72,7 +91,13 @@ Our Labyrinth goes up to the octominoes--ironically, because it is the first siz
 
 Another possibility is classifying minos as [_graphs_](<https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>): put a node in the center of each square, join adjacent nodes by lines, and throw away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections" (formally, we say that these graphs are [homeomorphic](<https://en.wikipedia.org/wiki/Homeomorphism_(graph_theory)>)).
 
-(TODO pentominoes by graph)
+{@render minoList(pentominoLines, 10)}
+
+{@render minoList(pentominoTs, 10)}
+
+{@render minoList([pentominoX], 10)}
+
+{@render minoList([pentominoP], 10)}
 
 I like this classification because it is multileveled--you can organize minos that have the same exact graph, and you can organize those graphs by their families for different levels of granularity. But there is a problem with this classification: the number of types of graphs, or graph families, grows unbounded with the size of the mino. Every new size of polyomino introduces a new family of graphs, and even for the octominoes, there are already too many families to pick out, say, a reasonable set of colors for them.
 
