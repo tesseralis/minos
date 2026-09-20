@@ -21,7 +21,7 @@
 
 ## Polyomino naming
 
-Let's take a break from directedness and talk about polyomino naming. What should you call a polyomino? Some enthusiasts create unique naming schemas based on [chemical nomenclature](https://www.youtube.com/watch?v=9imS9K8uuZ0) or [polyhedra naming](https://www.seximal.net/polyomino), but the most common scheme for small minos is to name them based on a letter or shape that the mino looks like. In particular, Samuel Golomb came up with the following naming scheme that is commonly used:
+Let's take a break from directedness and talk about polyomino naming. What should you call a polyomino? Some enthusiasts create unique naming schemas based on [chemical nomenclature](https://www.youtube.com/watch?v=9imS9K8uuZ0) or [polyhedra naming](https://www.seximal.net/polyomino), but the most common scheme for small minos is to name them based on a letter or shape that the mino looks like. In particular, Solomon Golomb came up with the following naming scheme that is commonly used:
 
 ![Golomb's pentomino names]({pentominoNames})
 
@@ -51,11 +51,9 @@ While I was staring at the different directedness classes, trying to make a furt
 
 It seems like these directedness classes are pretty related to these "families" of polyominoes! But "looks like an L" is such a vague term, and we need to be mathematically precise. Does <MinoDiv mino={twoByFour} size={10} /> count as an I-shape? Is <MinoDiv mino={thickL} size={10} /> an L?
 
-One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments[^1]. This is how we organized the families in the above lists.
+One naive attempt is to say that two polyominoes belong in the same family if you can squash or stretch their single line segments[^1]. This is how we organized the families in the above lists. This is a nice start, but it leaves polyominoes with 2x2s in their own solitary groups, which felt undesirable. Again, most minos above a certain size are going to have 2x2s, so you'll end up just getting a lot of families with only one member, which hardly counts a family.
 
-This is a nice start, but it leaves polyominoes with 2x2s in their own solitary groups, which felt undesirable. Again, most minos above a certain size are going to have 2x2s, so you'll end up just getting a lot of families with only one member, which is hardly a family. It really seems that a scaled up version of a mino should be part of the same family.
-
-**Definition** A _boundary word_ is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ consists of all polyominoes that share the same boundary word (for some given reflection or rotation).[^3]
+**Definition** A _boundary word_ for a (punctureless) polyomino is a string of words taken from the alphabet `lurd` indicating the path the boundary of a polyomino goes in a counterclockwise direction. A _boundary family_ is the set of all polyominoes that share the same boundary word (for some reflection or rotation).[^3]
 
 (TODO simple example)
 
@@ -64,11 +62,11 @@ Categorizing polyominoes by boundary words, we get all the groupings we desire: 
 <MinoDiv mino={Polyomino.fromString("001_111_101")} size={12} />
 <MinoDiv mino={Polyomino.fromString("0111_1101")} size={12} />
 
-These two polyominoes belong to the same family, which is fine! Often creating formal definitions leads us to unexpected results. With this formal definition, we can now prove our main theorem.
+These two polyominoes belong to the same family, which is fine! Often, creating formal definitions leads us to unexpected results. That's part of the fun of mathematics!
 
 ## Relating boundaries and directedness
 
-Now that we have a formal definition of boundary words, we can see if we can now state our observation formally:
+Now that we have a formal definition of boundary words, we can now state our observation formally:
 
 **Theorem** Every member of a boundary family belongs to the same directedness class.
 
@@ -90,13 +88,11 @@ We can do a similar topological proof as above, as exemplified by this diagram:
 
 (TODO diagram for diagonals)
 
-Since each directedness class is a combination of directedness restrictions from different directions, each member of a boundary family will or will not be directed from each of the directions, and thus our proof is complete.
-
-I want to take a second to state how _cool_ finding this theorem was. As I mentioned before, it's difficult to find properties of polyominoes that are in perfect correspondence.[^2]
+Since each directedness class is a combination of directedness restrictions from different directions, we can apply the theorem to each orthogonal and diagonal direction that a mino is directed from.
 
 ## Regular Expressions and State Machines
 
-Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition?
+Now that we've found this correspondence, we can ask if there is a way to define each directedness class in terms of boundary words instead of our (admitedly clunky) path-based definition.
 
 We can do so using _regular expressions_. The more restrictive classes are pretty easy to find regular expressions for. A rectangle is just `ru ld`. A Ferrer's diagram is a repeating sequence of `ru` followed by `ld`, or in regex notation, `(ru)+ld`. A staircase is a set of `ru`s followed by a sequence of `ld`s (`(ru)+(ld)+`).
 
@@ -105,6 +101,8 @@ Once we get out of nonconvex territory though, things start to become cumbersome
 <StateDiagramPicker />
 
 You can verify that these state machines are correct by taking the "forbidden paths" for each class (e.g. for antlers it's `urd` and `rdl`) and checking that these are the arrows that do not appear. Note that for simplicity, these state machines are only for a particular orientation, and start at the bottom-most `ru`. An `dru` occurs only once in a directed mino, and we are cutting the boundary word off at that location.
+
+Now that we've defined a relationship between boundary families and directedness, we can 
 
 With the relationship between boundary families and directedness, we can now see why punctures are fit naturally within the directedness schema: a punctured polyomino is one with internal boundary words. We will figure out how to relate a punctured polyomino's inner and outer boundaries to directedness in the next section.
 
