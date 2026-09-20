@@ -8,6 +8,28 @@
   import HierarchyChart from "../../HierarchyChart.svelte"
   import { symmetryTable } from "../../helpers.svelte"
 
+  const symmetryHierarchy = [
+    ['All'],
+    ["Reflective (2 axes)", "4-fold rotational", "Reflective (2 diagonals)"],
+    ["Reflective (axis)", "2-fold rotational", "Reflective (diagonal)"],
+    ["None"]
+  ]
+
+  const symmetryEdges = [
+    ["All", "Reflective (2 axes)"],
+    ["All", "4-fold rotational"],
+    ["All", "Reflective (2 diagonals)"],
+    ["Reflective (2 axes)", "Reflective (axis)"],
+    ["Reflective (2 axes)", "2-fold rotational"],
+    ["4-fold rotational", "2-fold rotational"],
+    ["Reflective (2 diagonals)", "Reflective (diagonal)"],
+    ["Reflective (2 diagonals)", "2-fold rotational"],
+    ["Reflective (axis)", "None"],
+    ["2-fold rotational", "None"],
+    ["Reflective (diagonal)", "None"],
+  ]
+
+
   const tilingHierarchy = [
     ['Rectangle'],
     ['Half Strip'],
@@ -75,7 +97,11 @@ Most literature on polyominoes classifies them by _symmetry_: how many ways can 
 
 {@render minoList(nodes[5], 12)}
 
-It's a sensible color scheme. Human brains are wired to see symmetry and pattern and equate it to beauty. For polyominoes in particular, symmetries play an important role in enumerating them. The classes of symmetries also forms a nice hierarchy: a polymino that is [symmetric by two axes](/symmetry/axis-2) is necessarily [symmetric by one axis](/symmetry/axis) but also [rotationally symmetric](/symmetry/rot). But if we move up to the heptominoes and octominoes, we see a problem:
+It's a sensible color scheme. Human brains are wired to see symmetry and pattern and equate it to beauty. For polyominoes in particular, symmetries play an important role in enumerating them. The classes of symmetries also forms a nice hierarchy: a polymino that is [symmetric by two axes](/symmetry/axis-2) is necessarily [symmetric by one axis](/symmetry/axis) but also [rotationally symmetric](/symmetry/rot).
+
+<HierarchyChart nodes={symmetryHierarchy} edges={symmetryEdges} />
+
+But if we move up to the heptominoes and octominoes, we see a problem:
 
 {@render minoList(nodes[7], 5)}
 
