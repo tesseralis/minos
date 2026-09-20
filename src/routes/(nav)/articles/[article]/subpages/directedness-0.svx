@@ -109,7 +109,7 @@ There are also a couple "nice to have"s for classification:
 1. It should be based on variations of a single property, not a bunch of random properties put together.
 2. It should be granular: it should be able to broken up into subclasses.
 
-I'd like to share the classification scheme I ended up using for the labyrinth, a system based on a property called "directedness". I'd like to share my journey of how I came across it, and the mathematical rabbit hole I fell down while researching and refining this classification. A story of how pursuing silly, vague questions can lead to interesting mathematical discovery. And by the end, I hope to convince you that it is a useful and mathematically interesting categorization of polyominoes that is worthy of this Labyrinth and deserves further study.
+I'd like to share the classification scheme I ended up using for the labyrinth, a system based on a property called "directedness". I'd like to share my journey of how I came across it, and the rabbit hole I fell down while researching and refining this classification. A story of how pursuing silly, vague questions can lead to interesting mathematical discovery and some of those exciting "aha" moments I craved. And by the end, I hope to convince you that it is a useful and mathematically interesting categorization of polyominoes that is worthy of this Labyrinth and deserves further study.
 
 [Continue >](/articles/directedness-1)
 
