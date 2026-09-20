@@ -3,6 +3,8 @@
   import { Polyomino } from "$lib/mino"
   import HierarchyChart from "../../HierarchyChart.svelte"
 
+  const uPentomino = Polyomino.fromString("11_10_11")
+
   const hierarchy1Nodes = [
     ["Ferrer's Diagram"],
     ["Staircase", "Stack"],
@@ -102,12 +104,12 @@ These articles seem to specify different groups of polyominoes, so maybe that's 
 <!-- TODO I feel like I should go into more detail; either put definitions in there or something. -->
 
 1. Why _these_ classes? What makes them mathematically interesting?
-2. What if a polyomino belongs in two different classes?
+2. How are these classes related to each other?
 3. Is this categorization complete? What if someone discovers (or defines) a new class? Would we need to amend our list or move stuff around?
 
-For the first question, we have to go back to one of the fundamental things that makes polyominoes so fascinating: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find a kind of formula (more specifically: [generating function](https://en.wikipedia.org/wiki/Generating_function)) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles, and the [paper](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) they come from, list the (obscenely complicated) generating functions of the classes they describe.
+For the first question, we have to go back to one of the fundamental things that makes polyominoes fascinating combinatorial objects: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find a kind of formula (more specifically: [generating function](https://en.wikipedia.org/wiki/Generating_function)) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles, and the [paper](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) they come from, list the (obscenely complicated) generating functions of the classes they describe.
 
-For the second question... well, it's true. A directed convex polyomino is always convex, a convex polyomino is always column- and row-convex, and so on. But if we create a _hierarchy_ of classes, we can list a polyomino as belonging to the class of the "highest" condition it satisfies, just like symmetry:
+For the second question, yes! These classes form a hierarchy, just like with symmetry and tiling:
 
 <HierarchyChart nodes={hierarchy1Nodes} edges={hierarchy1Edges} />
 
@@ -133,11 +135,11 @@ We can use these two definitions to categorize all the classes. A staircase is a
 
 <HierarchyChart nodes={hierarchy2Nodes} edges={hierarchy2Edges} />
 
-We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexiy, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
+We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexity, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
 
 ## Orthogonal directedness
 
-One of my favorite things in math is to take a thing and loosen it up, expand it, ease up on restrictions, and see what mathematics comes out. We can do this with the notion of "directedness" to solve our conundrum. Instead of reaching any square by going right and up, what if we consider minos where you can reach any square by going left, right, or up? In our intuitive analogy, instead of hanging our mino by a corner we keep it loose and let a marble roll down:
+One of my favorite aspects of math is to take a concept and loosen it, ease up its restrictions, and see what mathematics comes out. This is how the natural numbers become integers, how groups become categories, how metrics become topologies. We can do this with the notion of "directedness" as well. Instead of reaching any square by going right and up, what if we consider minos where you can reach any square by going left, right, or up? In our intuitive analogy, instead of hanging our mino by a corner we keep it loose and let a marble roll down:
 
 (TODO: image of a marble run of a mino on its side)
 
@@ -147,13 +149,15 @@ Let's call our old form of directedness _diagonally directed_ and define this ne
 
 <MinoDiv mino={Polyomino.fromString("011_101_111_101")} size={16} />
 
-We can ask minos be diagonally directed from different sides and see what they look like:
+There are some differences between diagonal and orthogonal directedness. A diagonally directed mino must always have a single root cell, in the corner of its bounding box, while an orthogonally directed mino can have a straight line of cells on its side. Intuitively, a polyomino is `u`-directed if it doesn't have any downward facing concavities: it doesn't contain anything that looks like <MinoDiv mino={uPentomino} size={12} />.
+
+Just like we defined classes based on different corners that a mino is diagonally directed from, we can ask minos be orthogonally directed from different sides and see what they look like:
 
 (TODO: some examples of minos directed from multiple sides)
 
 It seems like, when a mino doesn't have holes, a semi-convex mino is one that's side-directed from two opposite sides!
 
-**Theorem** A polyomino is semi-convex iff it is [punctureless](/glossary/punctureless) and orthogonally directed from two opposite sides.
+**Theorem** A polyomino is semi-convex if and only if it is [punctureless](/glossary/punctureless) and orthogonally directed from two opposite sides.
 
 _Proof_ Assume a polyomino is row-convex. Then every row is a contiguous set of cells. The mino cannot have a puncture, since that would break up the row that the hole is in. We proceed by induction. Every cell in the bottom row can be reached by a series of `l` and `r` moves, since the row is contiguous. Assume all rows below can be reached, and consider a cell $c$ in a row. Ther is a cell $c'$ in the same row that can be reached from a cell $c''$ row below by using a `u` move. By the inductive hypothesis, $c''$ can be reached using `l`, `r`, and `u` moves, and so $c$ can be reached by going `u` to $c'$ then either `l` or `r`. A similar argument by replacing "below" with "above", and `u` with `d` shows that it is `d` directed as well, and rotating everything by 90deg will work for column-convex minos.
 
@@ -161,7 +165,7 @@ For the converse, Let $M$ be a mino that is is `u`-directed and `d`-directed and
 
 **Corollary** A polyomino is convex iff it is punctureless and orthogonally directed from all four sides.
 
-Note that we specify _punctureless_: that is, a mino with no internal holes. For the purposes of the labyrinth, we can set aside punctured polyominoes, since the only punctured polyomino is the "O" octomino:
+Note that we specify _punctureless_: that is, a mino with no internal holes. For the purposes of the labyrinth, we can mostly set aside punctured polyominoes, since the only punctured octomino is the "O" octomino:
 
 <MinoDiv mino={Polyomino.fromString("111_101_111")} size={16} />
 
@@ -173,9 +177,15 @@ Note that if a mino is corner-directed, it has to be orthogonally-directed in th
 
 **Theorem** If a polyomino is $vh$-directed, then it is $v$-directed and $h$-directed.
 
-Now that we have a finer-grained definition, we have more classes than before! In particular, we have some additional classes that the definitions of semi-convexity weren't granular enough to encode.
+Now that we have a finer-grained definition, we have more classes than before! In particular, we have some additional classes that the definitions of semi-convexity weren't granular enough to encode: ["crescents"](/classes/crescent), which side-directed in three out of four sides, and ["bent trees"](/classes/bent-tree), which are side-directed from three sides.
 
-Note that, with the current labels, this is only the classification for _punctureless_ polyominoes. There's still a second concept of "punctures" that we haven't dealt with, and a second hierarchy parallel to the one above but with the "punctureless" condition removed. In a way, we're still in the same place as before: instead of "semi-convex" and "directedness" as two unrelated building blocks, we have "directedness" and "punctures". We will see that punctures relate in a natural way to directedness, but to do so we will need to take a little detour to talk about _boundaries_.
+But is this all? Can we extend the definition of directedness even further? Well, diagonal directedness is when you can travel in two directions, and orthogonal directedness is when you can travel in three. If we're only allowed to travel in one direction, all we can make is a straight line polyomino, which doesn't seem interesting enough to get its own class. If we can travel in four directions... then we aren't restricted at all. We can be assured this hierarchy captures everything interesting related to this "directedness" property.
+
+I'm quite proud of this hierarchy. As far as I know, I'm the only one who has extended this notion of directedness to "orthogonal directedness" and found the relation to semi-convex minos. I think it's an elegant set up that's similar to the symmetry hierarchy.
+
+However, I'm still not _quite_ satisfied with it. With the current labels, this is only the classification for _punctureless_ polyominoes. There's still a second concept of "punctures" that we haven't dealt with, and a second hierarchy parallel to the one above but with the "punctureless" condition removed. We will have "punctured rectangles", "punctured staircases", "punctured convex" (which feels oxymoronic). In a way, we're still in the same place as before: instead of "directedness" and "semi-convexity" as two unrelated building blocks, we have "directedness" and "punctures" as two unrelated building blocks. We could just say we don't care whether a mino has a puncture or not, but "convexity" seems like a really useful concept to keep: there's a lot of things we can say about convex minos that we can't about "punctured convex" minos. In the next section, we will see that punctures relate in a natural way to directedness, but to do so we will need to take a little detour to talk about _boundaries_.
+
+[Continue >](/articles/directedness-2)
 
 <style>
   img {
