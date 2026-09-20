@@ -64,13 +64,13 @@ Most of these minos are boring ol' grey! That is, these are minos with [no symme
 
 {@render symmetryTable()}
 
-And so we derive our first guideline for an ideal coloring:
+Our Labyrinth goes up to the octominoes--ironically, because it is the first size where every single symmetry is possible. At one point, I colored the minos by symmetry, and colored the asymmetric polyominoes by "degree of asymmetry": how many squares you have to remove before you find a symmetric ancestor. But this was pretty confusing, so we move on and derive our first guideline for an ideal coloring:
 
-> The coloring must have a nice "spread": for the size we are going up to ($n = 8$)[^1], most minos must have an "interesting" property, and not just the "default".
+> The coloring must have a nice "spread": for the size we are going up to ($n = 8$), most minos must have an "interesting" property, and not just the "default".
 
 ## Classification 2: Graphs
 
-Another fun possibility is classifying minos as [_graphs_](<https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>): put a node in the center of each square, join adjacent nodes by lines, and throw away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections" (formally, we say that these graphs are [homeomorphic](<https://en.wikipedia.org/wiki/Homeomorphism_(graph_theory)>)).
+Another possibility is classifying minos as [_graphs_](<https://en.wikipedia.org/wiki/Graph_(discrete_mathematics)>): put a node in the center of each square, join adjacent nodes by lines, and throw away the original squares and any notion of turning or direction. You can take this further and get rid of the dots that don't connect more than two points, to get "families" of minos, such as "minos that are a straight line", and "minos that are T intersections" (formally, we say that these graphs are [homeomorphic](<https://en.wikipedia.org/wiki/Homeomorphism_(graph_theory)>)).
 
 (TODO pentominoes by graph)
 
@@ -112,8 +112,6 @@ There are also a couple "nice to have"s for classification:
 I'd like to share the classification scheme I ended up using for the labyrinth, a system based on a property called "directedness". I'd like to share my journey of how I came across it, and the mathematical rabbit hole I fell down while researching and refining this classification. A story of how pursuing silly, vague questions can lead to interesting mathematical discovery. And by the end, I hope to convince you that it is a useful and mathematically interesting categorization of polyominoes that is worthy of this Labyrinth and deserves further study.
 
 [Continue >](/articles/directedness-1)
-
-[^1]: Funnily enough, the reason I chose $n=8$ as the limit is mostly because of symmetry: it is the first size where every symmetry class is possible.
 
 {#snippet minoList(minos, size)}
   <div>
