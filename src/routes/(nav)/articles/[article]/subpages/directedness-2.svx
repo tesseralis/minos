@@ -4,6 +4,41 @@
   import { Polyomino } from "$lib/mino"
   import StateDiagramPicker from "../../StateDiagramPicker.svelte"
   import { getBoundaryFamilies } from "../../../classes/helpers"
+  import { classTable } from "../../helpers.svelte"
+  import HierarchyChart from "../../HierarchyChart.svelte"
+
+  const hierarchy3Nodes = [
+    ["Rectangle"],
+    ["Wedge"],
+    ["Staircase", "Stack"],
+    ["Fork", "Bar Graph"],
+    ["Diamond", "Wing"],
+    ["Crescent", "Antler"],
+    ["Range Chart", "Bent Tree"],
+    ["Tree"],
+    ["N/A"]
+  ]
+
+  const hierarchy3Edges = [
+    ["Rectangle", "Wedge"],
+    ["Wedge", "Staircase"],
+    ["Wedge", "Stack"],
+    ["Staircase", "Fork"],
+    ["Stack", "Fork"],
+    ["Stack", "Bar Graph"],
+    ["Fork", "Diamond"],
+    ["Fork", "Wing"],
+    ["Bar Graph", "Wing"],
+    ["Diamond", "Crescent"],
+    ["Wing", "Crescent"],
+    ["Wing", "Antler"],
+    ["Crescent", "Range Chart"],
+    ["Crescent", "Bent Tree"],
+    ["Antler", "Bent Tree"],
+    ["Range Chart", "Tree"],
+    ["Bent Tree", "Tree"],
+    ["Tree", "N/A"]
+  ]
 
   // We need to define these here because svx auto-turns ASCII quote marks into fancy ones.
   const twoByFour = Polyomino.fromString("1111_1111")
@@ -104,7 +139,70 @@ You can verify that these state machines are correct by taking the "forbidden pa
 
 Now that we've defined a relationship between boundary families and directedness, we can 
 
-With the relationship between boundary families and directedness, we can now see why punctures are fit naturally within the directedness schema: a punctured polyomino is one with internal boundary words. We will figure out how to relate a punctured polyomino's inner and outer boundaries to directedness in the next section.
+With the relationship between boundary families and directedness, we can now see why punctures are fit naturally within the directedness schema: a punctured polyomino is one with internal boundary words. 
+
+## Dealing with Punctures
+
+**Definition** An internal boundary word is a string from the alphabet `lrud` going counterclockwise surrounding each puncture of a polyomino.
+
+Note that punctures may be _polykings_: squares joined by diagonals and not necessarily edges. For example, for the polyomino below, we count it as having one puncture with internal boundary word `ululdrdr`:
+
+<MinoDiv mino={Polyomino.fromString("1110_1011_1101_0111")} size={16} />
+
+We would like to be able to deal with punctured polyominoes the same way we did for unpunctured ones: that is, we want a definition for directedness that depends on outer and inner boundary words. It's not a straightforward relationship. For example, consider the following polyomino:
+
+<MinoDiv mino={Polyomino.fromString("1111_1001_1011_1110")} size={16} />
+
+This mino's external boundary word is `ruruld`, and it _looks_ like it should be a Ferrer's diagram (well, a Ferrer's diagram with a hole), but it's actually a staircase: the little notch cannot be reached from the top-left corner by going down and right.
+
+To answer the question of how punctures relate to boundary words, we can try generating a bunch of minos of different classes and see what their punctures look like:
+
+(some examples; maybe just sketch drawing?)
+
+contains one puncture with boundary word `ru lu ld rd`, and not two punctures with boundary words `ru ld` each.
+
+After some inspection, you might notice that for every class, it seems like the holes are also members of the same class, but rotated 180 degrees!
+
+**Theorem** A punctured polyomino $M$ is `u`-directed iff its outer boundary word is `u`-directed and all its punctures are `d`-directed. In particular, its outer boundary word does not contain the string `urd` and none of its inner boundary words contain the string `dlu`.
+
+_Proof_ Assume a punctured polyomino's outer boundary word contains `urd`. Then by the same argument as before, this implies that the `urd` is the boundary of a puncture. But this contradicts our assumption that it is part of the outer boundary word.
+
+Assume there is an inner boundary word that contains `dlu`. Let $c \in M$ be a cell directly above the `l` segment. It is clear that $c$ is not in the bottom row of the polyomino, so it is not a root cell as defined by directedness. It is easy to see that it is impossible to reach $c$ from the root cell without a `d` move.
+
+(TODO diagram, maybe more formal proof)
+
+## Cleaning up the hierarchy
+
+With this, we have a full classification system for polyominoes:
+
+<HierarchyChart nodes={hierarchy3Nodes} edges={hierarchy3Edges} />
+
+Note that we have renamed some classes with more fanciful names. Instead of "convex", we call $\text{Dir}^0_4$ "diamonds", since punctured members of that class are obviously not convex. A convex polyomino is an unpunctured diamond. Similarly, Ferrer's diagrams are unpunctured stacks, convex directed minos are unpunctured forks, and so on.
+
+Let us remind ourselves of our criteria and see if this hierarchy fits the bill:
+
+### 1. Interesting Spread
+
+This is true up to octominoes. In fact, we won't have examples of any of the lower classes, or a completely undirected polyomino, until $n = 11$, which is not ideal, but at least we can provide the smallest examples of those kinds. In fact, directedness classes scale incredibly well. This is the distribution of classes up to $n = 16$:
+
+{@render classTable()}
+
+I conjecture that, like many other polyomino properties, the number of undirected polyominoes will eventually overtake directed ones, but for any reasonable size to display, they're still good.
+
+### 2. Finiteness
+
+There is a hierarchy of fourteen classes, each some valid combination of corner- and side-directedness. All possible classes are exhausted, and it is impossible to add a new one. Each class can be divided into boundary families, which do grow unbounded, but we can use fourteen colors for the main classes.
+
+### 3. Intuitive
+
+This one is hard to validate, but I hope it's pretty clear how (non-) directedness corresponds to having a concavity only on one side of a polyomino. To test whether any of this makes sense, I made a little puzzle including some polyomino properties (including symmetry and graphs) and tested it out with some friends:
+
+(TODO minoan tesserae puzzle)
+
+Through several group playthroughs, though people generally were not able to name the exact definition of "directedness", they were able to intuit the properties of concavities.
+
+So with that, I have determined the final classification that I use in this website, which you can see over in the ["Classes" section](/classes). But of course, any good mathematical rabbit hole inspires a dozen more questions with every answer it provides, and I will talk more about that in the next section.
+
 
 [^1]: I was inspired by [this puzzle](https://erich-friedman.github.io/mathmagic/0609.html) in Erich Friedman's Math Magic archive.
 

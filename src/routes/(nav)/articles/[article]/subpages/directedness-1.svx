@@ -186,10 +186,3 @@ I'm quite proud of this hierarchy. As far as I know, I'm the only one who has ex
 However, I'm still not _quite_ satisfied with it. With the current labels, this is only the classification for _punctureless_ polyominoes. There's still a second concept of "punctures" that we haven't dealt with, and a second hierarchy parallel to the one above but with the "punctureless" condition removed. We will have "punctured rectangles", "punctured staircases", "punctured convex" (which feels oxymoronic). In a way, we're still in the same place as before: instead of "directedness" and "semi-convexity" as two unrelated building blocks, we have "directedness" and "punctures" as two unrelated building blocks. We could just say we don't care whether a mino has a puncture or not, but "convexity" seems like a really useful concept to keep: there's a lot of things we can say about convex minos that we can't about "punctured convex" minos. In the next section, we will see that punctures relate in a natural way to directedness, but to do so we will need to take a little detour to talk about _boundaries_.
 
 [Continue >](/articles/directedness-2)
-
-<style>
-  img {
-    max-width: 600px;
-  }
-
-</style>

@@ -126,14 +126,6 @@ I'd like to share the classification scheme I ended up using for the labyrinth, 
 {/snippet}
 
 <style>
-  img {
-    max-width: 600px;
-  }
-
-  blockquote {
-    font-style: italic;
-  }
-
   .mino {
     margin: 0.5rem;
   }
