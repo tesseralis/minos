@@ -58,9 +58,9 @@ Most literature on polyominoes classifies them by _symmetry_: how many ways can 
 
 It's a sensible color scheme. Human brains are wired to see symmetry and pattern and equate it to beauty. For polyominoes in particular, symmetries play an important role in enumerating them. The classes of symmetries also forms a nice hierarchy: a polymino that is [symmetric by two axes](/symmetry/axis-2) is necessarily [symmetric by one axis](/symmetry/axis) but also [rotationally symmetric](/symmetry/rot). But if we move up to the heptominoes and octominoes, we see a problem:
 
-{@render minoList(nodes[7], 6)}
+{@render minoList(nodes[7], 5)}
 
-Most of these minos are boring ol' grey! That is, these are minos with [no symmetry](/symmetry/none) And the problem gets worse with bigger sizes of polyominoes:
+Most of these minos are boring ol' grey! That is, these are minos with [no symmetry](/symmetry/none). And the problem gets worse with bigger sizes of polyominoes:
 
 {@render symmetryTable()}
 
@@ -84,17 +84,17 @@ So we have a second rule:
 
 ## Classification 3: Tiling
 
-Another classification scheme I came across was [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can classify every mino based on the "best" shape it can tile. Some polyominoes can tile rectangles, some can tile shapes like strips or half-planes, some can only tile the plane, and others cannot tile the plane at all.
-
-// TODO some examples of minos and what they tile
+Another classification scheme I came across was [Golomb's tiling hierarchy](https://www.sciencedirect.com/science/article/pii/S0021980066800339). We can classify every mino based on the "best" shape it can tile. Some polyominoes can tile rectangles, some can tile shapes like strips or half-planes, some can only tile the plane, and others cannot tile the plane at all (see the linked paper for more examples).
 
 <HierarchyChart nodes={tilingHierarchy} edges={tilingEdges} />
 
-This fits our first two criteria: at size 8, only 26/369 octominoes do not tile the plane, which means most polyominoes fit somewhere higher on the hierarchy. It is a finite set with only 10 classes, meaning we have plenty of colors to choose from.
+This fits our first two criteria: at size 8, only 26 out of 369 octominoes do not tile the plane, which means most polyominoes fit somewhere higher on the hierarchy. It is a finite set with only 10 classes, meaning we have plenty of colors to choose from.
 
-But, as with the other attempts, tiling also carries its own problems. It's not easy to tell just by looking at a mino what it can tile. Golomb's paper has examples of polyominoes that tile a rectangle only with many repetitions. For example, <MinoDiv mino={yPentomino} size={12} /> tiles a 5 x 10 rectangle using 10 copies. It's impossible for someone just browsing through a website (or playing a game) to be able to intuit a polyomino's placement in this hierarchy just by inspection. In addition, for some polyominoes, like <MinoDiv mino={yHexomino} size={12} /> we just don't _know_ the best shape that it can tile. We know it tiles a half-strip, but we haven't proved whether it tiles a rectangle or not. Our hierarchy is incomplete: it is a catalogue of "what we've found so far" rather than a mathematical truth.
+But, as with the other attempts, tiling also carries its own problems. It's not easy to tell just by looking at a mino what it can tile. Golomb's paper has examples of polyominoes that tile a rectangle only with many repetitions. For example, <MinoDiv mino={yPentomino} size={12} /> tiles a 5 x 10 rectangle using 10 copies. It's impossible for someone just browsing through a catalog (or playing a game) to be able to intuit a polyomino's placement in this hierarchy just by inspection. In addition, for some polyominoes, like <MinoDiv mino={yHexomino} size={12} /> we just don't _know_ the best shape that it can tile. We know it tiles a half-strip, but we haven't proved whether it tiles a rectangle or not. Our hierarchy is incomplete: it is a catalogue of "what we've found so far" rather than a mathematical truth.
 
-> It should be relatively easy for people to understand on inspection why a polyomino is colored the way it is.
+Thus we have our final criterion for our ideal classification:
+
+> It should be relatively easy for people to understand on inspection why a polyomino is classified the way it is.
 
 ---
 
@@ -106,10 +106,11 @@ Let's formalize our criteria. We want a meaningful classification of polyominoes
 
 There are also a couple "nice to have"s for classification:
 
+1. It should be a hierarchy of properties.
 1. It should be based on variations of a single property, not a bunch of random properties put together.
 2. It should be granular: it should be able to broken up into subclasses.
 
-I'd like to share the classification scheme I ended up using for the labyrinth, a system based on a property called "directedness". I'd like to share my journey of how I came across it, and the rabbit hole I fell down while researching and refining this classification. A story of how pursuing silly, vague questions can lead to interesting mathematical discovery and some of those exciting "aha" moments I craved. And by the end, I hope to convince you that it is a useful and mathematically interesting categorization of polyominoes that is worthy of this Labyrinth and deserves further study.
+This is the story of the classification scheme I ended up using for the Labyrinth, a system based on a property called "directedness". I'd like to share my journey of how I came across it, and the rabbit hole I fell down while researching and refining this classification. A story of how pursuing silly, vague questions can lead to interesting mathematical discovery and some of those exciting "aha" moments I craved. And by the end, I hope to convince you that it is a useful and mathematically interesting categorization of polyominoes that is worthy of this Labyrinth and deserves further study.
 
 [Continue >](/articles/directedness-1)
 
