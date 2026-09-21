@@ -99,23 +99,11 @@ While doing research for the labyrinth, I came across a set of interesting artic
 - [Bar Graph Polygon](https://mathworld.wolfram.com/BarGraphPolygon.html)
 - [Ferrers Graph Polygon](https://mathworld.wolfram.com/FerrersGraphPolygon.html)
 
-These articles seem to specify different groups of polyominoes, so maybe that's what we're looking for? We could just assign a different color to each type of polyomino mentioned in one of these articles and call it a day. But I'm not satisfied with just an arbitrary categorization without understanding what it means. I had a couple of questions:
+Feel free to click on each of these articles to try to get a sense of the definitions, but don't worry about completely understanding them (we'll find a unifying set of definitions later).
 
-<!-- TODO I feel like I should go into more detail; either put definitions in there or something. -->
+Why are these classes mathematically interesting? To answer that, we have to go back to one of the fundamental things that makes polyominoes fascinating combinatorial objects: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find a kind of formula (more specifically: [generating function](https://en.wikipedia.org/wiki/Generating_function)) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles, and the [paper](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) they come from, list the (often obscenely complicated) generating functions of the classes they describe. In particular, Ferrers diagrams visualize the [number of partitions](https://en.wikipedia.org/wiki/Integer_partition) of an integer, while bar graphs visualize the [compositions](https://en.wikipedia.org/wiki/Composition_(combinatorics)) of an integer.
 
-1. Why _these_ classes? What makes them mathematically interesting?
-2. How are these classes related to each other?
-3. Is this categorization complete? What if someone discovers (or defines) a new class? Would we need to amend our list or move stuff around?
-
-For the first question, we have to go back to one of the fundamental things that makes polyominoes fascinating combinatorial objects: _we don't have a formula for how to calculate them_. Restricting polyominoes to certain classes allows us to find a kind of formula (more specifically: [generating function](https://en.wikipedia.org/wiki/Generating_function)) for counting the number of polyominoes, which might help us solve the bigger question of how many polyominoes there are. Indeed, most of these articles, and the [paper](https://www.sciencedirect.com/science/article/pii/0012365X9500003F) they come from, list the (obscenely complicated) generating functions of the classes they describe.
-
-For the second question, yes! These classes form a hierarchy, just like with symmetry and tiling:
-
-<HierarchyChart nodes={hierarchy1Nodes} edges={hierarchy1Edges} />
-
-It's not too hard to show that, for example, a mino that is both a staircase and a stack necessarily has to be a Ferrers diagram polyomino.
-
-The third condition is a little bit harder. After all, we could just add one of our symmetry classes to this list and that's a new color we can add. We want to some way to say that all these classes are related somehow. That they are the only possible categorizations based on some property of polyominoes, like with symmetry. And to do that, we need to look deeper at the definitions of these classes.
+Before we talk more about these classes, let's establish some terminology and conventions. A polyomino (or mino) $M$ is a set of points in the [integer lattice](https://en.wikipedia.org/wiki/Integer_lattice) such that point is orthogonally adjacent to one at least one other point. We write $c \in M$ to pick out a cell $c$ in the mino. We consider translations of a polyomino to be the same. A [fixed](/glossary/fixed) polyomino considers rotations and reflections of the points different, while a [free](/glossary/free) polyomino considers them the same. We are mostly interested in free polyominoes, but sometimes it will be useful to pick a specific orientation of one. We will refer to the directions left, down, right, up by the strings `l`, `d`, `r`, `u` respectively.
 
 ### Convexity and Directedness
 
@@ -125,17 +113,31 @@ A convex polyomino is easy to intuit: it's a polyomino where there aren't any "h
 
 (TODO: example of each kind)
 
-"Directed" is tougher to define. It means that every cell of the polyomino can be reached by going right or up from a starting square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without going against gravity.
+"Directed" is tougher to define. It means that every cell of the polyomino can be reached by going right or up from a starting "root" square. Intuitively, it means that if you hold the mino up diagonally and drop a marble in it, it can conceivably reach every square without going against gravity.
 
 (TODO: definition of directed and marble dropping example)
 
-If we want to specify directions (say, $v$, $h$), we can say a polyomino is $vh$-directed.
+A polyomino can be directed from multiple corners. Sometimes we want to specify the directions that a polyomino is directed in. If a polyomino is directed from the bottom-left (that is, every cell can be reached with a combination of `u` and `r` moves), we say that polyomino is `ur`-directed (and similarly for other directions).
 
-We can use these two definitions to categorize all the classes. A staircase is a convex polyomino that is directed from two opposite corners. A stack is a polyomino that is directed from two adjacent corners, and so on. We can use directedness and semi-convexity to refine our hierarchy from before:
+We can use these two definitions to define the rest of these classes:
+
+- A _bar graph_ is a polyomino that is directed from two adjacent corners.
+- A _convex_ polyomino is one that is both row- and column-directed.
+- A _directed convex_ polyomino is of course, convex and directed.
+- A _stack_ is a convex polyomino that is directed from two adjacent corners.
+- A _staircase_ is a convex polyomino that is directed from two opposite corners.
+- A _Ferrer's diagram_ is a convex polyomino that is directed from three corners.
+
+We can also define some more classes that this implies:
+
+- A _rectangle_ is a convex polyomino that is directed from four corners.
+- A _directed semi-convex_ polyomino is directed and semi-convex.
+
+This creates a nice hierarchy:
 
 <HierarchyChart nodes={hierarchy2Nodes} edges={hierarchy2Edges} />
 
-We can reasonably stop here and be satisfied with our classification. In fact, for a while this was the hierarchy that I used for the Labyrinth. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexity, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
+We can reasonably stop here and be satisfied with our classification. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexity, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
 
 ## Orthogonal directedness
 
