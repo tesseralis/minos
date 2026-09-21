@@ -137,7 +137,9 @@ This creates a nice hierarchy:
 
 <HierarchyChart nodes={hierarchy2Nodes} edges={hierarchy2Edges} />
 
-We can reasonably stop here and be satisfied with our classification. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Why not combine symmetry and convexity, or graphs and directedness? Is there something about these two properties that makes it easier to count polyominoes of that type?
+Each arrow represents an inclusion: all rectangles are Ferrer's diagrams, all Ferrer's diagrams are stacks and also staircases, and so on. Unless we specify otherwise, when we say "$M$ is a Ferrer's graph" (or stack, or convex) we usually mean a "proper" Ferrer's graph--one that isn't a member of a higher class.
+
+We can reasonably stop here and be satisfied with our classification. But something about this still felt slapdash to me. Why are _convexity_ and _directedness_ the two properties we care about? Is there something about these two properties that makes it easier to count polyominoes of that type? Why not create a hierarchy by combining symmetry and convexity, or graphs and directedness?
 
 ## Orthogonal directedness
 
